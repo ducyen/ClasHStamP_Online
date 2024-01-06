@@ -65,11 +65,11 @@ typedef struct tagSharedStm {
     HdStateMachine base;
 #define SharedStm_SharedTop_Dmy                 ( 1 <<  6 )
 #define SharedStm_SharedTop                     ( SharedStm_SharedTop_Dmy | SharedStm_Shared1 | SharedStm_Shared2 )
-#define SharedStm_InitPt                        ( 1 << ( 31 -  0 ) )
+#define SharedStm_Entry1                        ( 1 << ( 31 -  0 ) )
+#define SharedStm_Exit1                         ( 1 << ( 31 -  1 ) )
+#define SharedStm_InitPt                        ( 1 << ( 31 -  2 ) )
 #define SharedStm_Shared1                       ( 1 <<  7 )
 #define SharedStm_Shared2                       ( 1 <<  8 )
-#define SharedStm_Entry1                        ( 1 << ( 31 -  1 ) )
-#define SharedStm_Exit1                         ( 1 << ( 31 -  2 ) )
 }SharedStm;
 #define SharedStm_Init() {\
     .base = HdStateMachine_Ctor( HdStateMachine_Init(SharedStm_SharedTop, SharedStm_SharedTop), ),\
@@ -103,8 +103,8 @@ typedef struct tagMainStm {
 #define MainStm_S813                            ( 1 << 18 )
 #define MainStm_S812                            ( 1 << 19 )
 #define MainStm_InitPt3                         ( 1 << ( 31 -  5 ) )
-#define MainStm_InitialPseudostate0             ( 1 << ( 31 -  6 ) )
 #define MainStm_S711                            ( 1 << 20 )
+#define MainStm_InitialPseudostate0             ( 1 << ( 31 -  6 ) )
 #define MainStm_S712                            ( 1 << 21 )
 #define MainStm_S72                             ( 1 << 22 )
 #define MainStm_S10                             ( 1 << 23 )
