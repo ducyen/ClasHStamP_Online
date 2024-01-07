@@ -3,7 +3,7 @@ rem Batch file to run a sample of Astah API on Windows
 
 setlocal
 
-set ASTAH_HOME=D:\Workspace\Applications\astah-professional\
+set ASTAH_HOME=..\..\astah-com
 rem set PATH=%ASTAH_HOME%\jre\bin;%PATH%;
 SET TOOL_DIR=..\..\release
 SET PROJECT=Design.asta
@@ -15,7 +15,7 @@ pushd "..\..\"
 
 rem pushd %~dp0
 set BAT_DIR=%CD%
-set BIN_DIR="%BAT_DIR%\bin"
+set BIN_DIR="%BAT_DIR%\release\ClasHStamP.jar"
 set RES_DIR=%BAT_DIR%\samples\AllSymbols
 set LIB_DIR=%BAT_DIR%\lib
 rem popd

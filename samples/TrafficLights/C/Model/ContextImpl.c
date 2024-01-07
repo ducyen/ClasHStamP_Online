@@ -13,21 +13,9 @@ const TCHAR* AnEnum_toString( AnEnum value ){
 }
 const TCHAR* ContextImplEvent_toString( ContextImpl_EVENT value ){
     switch( value ){
-    case ContextImpl_E1: return _T( "E1" );
-    case ContextImpl_E2: return _T( "E2" );
-    case ContextImpl_E3: return _T( "E3" );
+    case ContextImpl_TMOUT: return _T( "TMOUT" );
     default: return _T( "ContextImpl_UNKNOWN" );
     }
-}
-BOOL ContextImpl_EventProc( ContextImpl* pContextImpl, ContextImpl_EVENT nEventId, void* pEventParams ){
-    return MainStm_EventProc( pContextImpl, &pContextImpl->mainStm, nEventId, pEventParams );
-}
-BOOL ContextImpl_Start( ContextImpl* pContextImpl ){
-    MainStm_Abort( pContextImpl, &pContextImpl->mainStm );
-    return MainStm_Reset( pContextImpl, &pContextImpl->mainStm, NULL, STATE_UNDEF );
-}
-BOOL ContextImpl_IsIn( ContextImpl* pContextImpl, UINT32 nState ){
-    return MainStm_IsIn( &pContextImpl->mainStm, nState );
 }
 /** @protected @memberof ContextImpl */
 static void ContextImpl_protectedMethod(
@@ -50,7 +38,7 @@ static BOOL SecondaryRoad_EventProc( ContextImpl* pSecondaryRoadTop, SecondaryRo
 static BOOL SecondaryRoad_RunToCompletion( ContextImpl* pSecondaryRoadTop, SecondaryRoad* pStm );
 static void SecondaryRoad_SRed_Entry( ContextImpl* pContextImpl, SecondaryRoad* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, SecondaryRoad_SRed ) ){
-        printf( "%s\n", __FUNCTION__ );
+        ShowEntry( "Model/ContextImpl/SecondaryRoad	197	488	166	62	66	19	349	572" );
     }
 }
 static BOOL SecondaryRoad_SRed_EventProc( ContextImpl* pContextImpl, SecondaryRoad* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
@@ -60,19 +48,20 @@ static BOOL SecondaryRoad_SRed_EventProc( ContextImpl* pContextImpl, SecondaryRo
 }
 static void SecondaryRoad_SRed_Exit( ContextImpl* pContextImpl, SecondaryRoad* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, SecondaryRoad_SRed ) ){ 
-        printf( "%s\n", __FUNCTION__ );
+        ShowExit( "Model/ContextImpl/SecondaryRoad	197	488	166	62	66	19	349	572" );
     }
 }
 static void SecondaryRoad_SYellow_Entry( ContextImpl* pContextImpl, SecondaryRoad* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, SecondaryRoad_SYellow ) ){
-        printf( "%s\n", __FUNCTION__ );
+        ShowEntry( "Model/ContextImpl/SecondaryRoad	197	236	166	62	66	19	349	572" );
+        start_timer(1);
     }
 }
 static BOOL SecondaryRoad_SYellow_EventProc( ContextImpl* pContextImpl, SecondaryRoad* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = SecondaryRoad_SYellow;
     switch( nEventId ){
-    case ContextImpl_E2:{
+    case ContextImpl_TMOUT:{
         SecondaryRoad_BgnTrans( pContextImpl, pStm, SecondaryRoad_PRedWait, STATE_UNDEF );
         SecondaryRoad_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
@@ -83,19 +72,20 @@ static BOOL SecondaryRoad_SYellow_EventProc( ContextImpl* pContextImpl, Secondar
 }
 static void SecondaryRoad_SYellow_Exit( ContextImpl* pContextImpl, SecondaryRoad* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, SecondaryRoad_SYellow ) ){ 
-        printf( "%s\n", __FUNCTION__ );
+        ShowExit( "Model/ContextImpl/SecondaryRoad	197	236	166	62	66	19	349	572" );
     }
 }
 static void SecondaryRoad_SGreen_Entry( ContextImpl* pContextImpl, SecondaryRoad* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, SecondaryRoad_SGreen ) ){
-        printf( "%s\n", __FUNCTION__ );
+        ShowEntry( "Model/ContextImpl/SecondaryRoad	197	111	166	62	66	19	349	572" );
+        start_timer(3);
     }
 }
 static BOOL SecondaryRoad_SGreen_EventProc( ContextImpl* pContextImpl, SecondaryRoad* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = SecondaryRoad_SGreen;
     switch( nEventId ){
-    case ContextImpl_E2:{
+    case ContextImpl_TMOUT:{
         SecondaryRoad_BgnTrans( pContextImpl, pStm, SecondaryRoad_SYellow, STATE_UNDEF );
         SecondaryRoad_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
@@ -106,22 +96,46 @@ static BOOL SecondaryRoad_SGreen_EventProc( ContextImpl* pContextImpl, Secondary
 }
 static void SecondaryRoad_SGreen_Exit( ContextImpl* pContextImpl, SecondaryRoad* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, SecondaryRoad_SGreen ) ){ 
-        printf( "%s\n", __FUNCTION__ );
+        ShowExit( "Model/ContextImpl/SecondaryRoad	197	111	166	62	66	19	349	572" );
     }
 }
 static void SecondaryRoad_PRedWait_Entry( ContextImpl* pContextImpl, SecondaryRoad* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, SecondaryRoad_PRedWait ) ){
-        printf( "%s\n", __FUNCTION__ );
+        ShowEntry( "Model/ContextImpl/SecondaryRoad	197	345	166	62	66	19	349	572" );
+        start_timer(1);
     }
 }
 static BOOL SecondaryRoad_PRedWait_EventProc( ContextImpl* pContextImpl, SecondaryRoad* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = SecondaryRoad_PRedWait;
+    switch( nEventId ){
+    case ContextImpl_TMOUT:{
+        SecondaryRoad_BgnTrans( pContextImpl, pStm, SecondaryRoad_PRedWaitJoin, STATE_UNDEF );
+        SecondaryRoad_EndTrans( pContextImpl, pStm );
+        bResult = TRUE;
+    } break;
+    default: break;
+    }
     return bResult;
 }
 static void SecondaryRoad_PRedWait_Exit( ContextImpl* pContextImpl, SecondaryRoad* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, SecondaryRoad_PRedWait ) ){ 
-        printf( "%s\n", __FUNCTION__ );
+        ShowExit( "Model/ContextImpl/SecondaryRoad	197	345	166	62	66	19	349	572" );
+    }
+}
+static void SecondaryRoad_PRedWaitJoin_Entry( ContextImpl* pContextImpl, SecondaryRoad* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, SecondaryRoad_PRedWaitJoin ) ){
+        ShowEntry( "Model/ContextImpl/SecondaryRoad	91	430	92	37	66	19	349	572" );
+    }
+}
+static BOOL SecondaryRoad_PRedWaitJoin_EventProc( ContextImpl* pContextImpl, SecondaryRoad* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->base.nSourceState = SecondaryRoad_PRedWaitJoin;
+    return bResult;
+}
+static void SecondaryRoad_PRedWaitJoin_Exit( ContextImpl* pContextImpl, SecondaryRoad* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, SecondaryRoad_PRedWaitJoin ) ){ 
+        ShowExit( "Model/ContextImpl/SecondaryRoad	91	430	92	37	66	19	349	572" );
     }
 }
 static void SecondaryRoad_EndTrans( ContextImpl *pContextImpl, SecondaryRoad* pStm ){
@@ -132,6 +146,7 @@ static void SecondaryRoad_EndTrans( ContextImpl *pContextImpl, SecondaryRoad* pS
     case SecondaryRoad_SYellow: SecondaryRoad_SYellow_Entry( pContextImpl, pStm ); break;
     case SecondaryRoad_SGreen:  SecondaryRoad_SGreen_Entry( pContextImpl, pStm ); break;
     case SecondaryRoad_PRedWait:SecondaryRoad_PRedWait_Entry( pContextImpl, pStm ); break;
+    case SecondaryRoad_PRedWaitJoin:SecondaryRoad_PRedWaitJoin_Entry( pContextImpl, pStm ); break;
     default: break;
     }
 }
@@ -146,6 +161,7 @@ static void SecondaryRoad_BgnTrans( ContextImpl *pContextImpl, SecondaryRoad* pS
     case SecondaryRoad_SYellow: SecondaryRoad_SYellow_Exit( pContextImpl, pStm ); break;
     case SecondaryRoad_SGreen:  SecondaryRoad_SGreen_Exit( pContextImpl, pStm ); break;
     case SecondaryRoad_PRedWait:SecondaryRoad_PRedWait_Exit( pContextImpl, pStm ); break;
+    case SecondaryRoad_PRedWaitJoin:SecondaryRoad_PRedWaitJoin_Exit( pContextImpl, pStm ); break;
     default: break;
     }
 }
@@ -198,6 +214,7 @@ static BOOL SecondaryRoad_EventProc( ContextImpl* pContextImpl, SecondaryRoad* p
     case SecondaryRoad_SYellow:                 bResult |= SecondaryRoad_SYellow_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case SecondaryRoad_SGreen:                  bResult |= SecondaryRoad_SGreen_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case SecondaryRoad_PRedWait:                bResult |= SecondaryRoad_PRedWait_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
+    case SecondaryRoad_PRedWaitJoin:            bResult |= SecondaryRoad_PRedWaitJoin_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     default: break;
     }
     SecondaryRoad_RunToCompletion( pContextImpl, pStm );
@@ -224,31 +241,22 @@ static BOOL MainStm_EventProc( ContextImpl* pMainTop, MainStm* pStm, ContextImpl
 static BOOL MainStm_RunToCompletion( ContextImpl* pMainTop, MainStm* pStm );
 static void MainStm_Starting_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_Starting ) ){
-        printf( "%s\n", __FUNCTION__ );
+        ShowEntry( "Model/ContextImpl/MainStm	170	124	126	62	69	22	1073	876" );
     }
 }
 static BOOL MainStm_Starting_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_Starting;
-    switch( nEventId ){
-    case ContextImpl_E1:{
-        E1Params* e = ( E1Params* )pEventParams;
-        MainStm_BgnTrans( pContextImpl, pStm, MainStm_ManagingThroughTraffic, MainStm_InitialPseudostate1 );
-        MainStm_EndTrans( pContextImpl, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
     return bResult;
 }
 static void MainStm_Starting_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_Starting ) ){ 
-        printf( "%s\n", __FUNCTION__ );
+        ShowExit( "Model/ContextImpl/MainStm	170	124	126	62	69	22	1073	876" );
     }
 }
 static void MainStm_ManagingThroughTraffic_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_ManagingThroughTraffic ) ){
-        printf( "%s\n", __FUNCTION__ );
+        ShowEntry( "Model/ContextImpl/MainStm	170	220	903	631	69	22	1073	876" );
         SecondaryRoad_Reset( pContextImpl, &pStm->SubmachineState0SecondaryRoad, &pStm->base, STATE_UNDEF );
     }
 }
@@ -260,48 +268,38 @@ static BOOL MainStm_ManagingThroughTraffic_EventProc( ContextImpl* pContextImpl,
 static void MainStm_ManagingThroughTraffic_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_ManagingThroughTraffic ) ){ 
         SecondaryRoad_Abort( pContextImpl, &pStm->SubmachineState0SecondaryRoad );
-        printf( "%s\n", __FUNCTION__ );
+        ShowExit( "Model/ContextImpl/MainStm	170	220	903	631	69	22	1073	876" );
     }
 }
 static void MainStm_PRed_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_PRed ) ){
         MainStm_ManagingThroughTraffic_Entry( pContextImpl, pStm );
-        printf( "%s\n", __FUNCTION__ );
+        ShowEntry( "Model/ContextImpl/MainStm	318	347	166	68	69	22	1073	876" );
     }
 }
 static BOOL MainStm_PRed_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_PRed;
-    switch( nEventId ){
-    case ContextImpl_E3:{
-        if (ContextImpl_IsIn( pContextImpl, SecondaryRoad_PRedWait )) {
-            MainStm_BgnTrans( pContextImpl, pStm, MainStm_PGreen, STATE_UNDEF );
-            SecondaryRoad_Reset( pContextImpl, &pStm->SubmachineState0SecondaryRoad, &pStm->base, SecondaryRoad_SRed );
-            MainStm_EndTrans( pContextImpl, pStm );
-            bResult = TRUE;
-        }
-    } break;
-    default: break;
-    }
     return bResult ? bResult : MainStm_ManagingThroughTraffic_EventProc( pContextImpl, pStm, nEventId, pEventParams );
 }
 static void MainStm_PRed_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_PRed ) ){ 
-        printf( "%s\n", __FUNCTION__ );
+        ShowExit( "Model/ContextImpl/MainStm	318	347	166	68	69	22	1073	876" );
         MainStm_ManagingThroughTraffic_Exit( pContextImpl, pStm );
     }
 }
 static void MainStm_PGreen_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_PGreen ) ){
         MainStm_ManagingThroughTraffic_Entry( pContextImpl, pStm );
-        printf( "%s\n", __FUNCTION__ );
+        ShowEntry( "Model/ContextImpl/MainStm	319	455	166	62	69	22	1073	876" );
+        start_timer(3);
     }
 }
 static BOOL MainStm_PGreen_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_PGreen;
     switch( nEventId ){
-    case ContextImpl_E2:{
+    case ContextImpl_TMOUT:{
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_PYellow, STATE_UNDEF );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
@@ -312,21 +310,22 @@ static BOOL MainStm_PGreen_EventProc( ContextImpl* pContextImpl, MainStm* pStm, 
 }
 static void MainStm_PGreen_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_PGreen ) ){ 
-        printf( "%s\n", __FUNCTION__ );
+        ShowExit( "Model/ContextImpl/MainStm	319	455	166	62	69	22	1073	876" );
         MainStm_ManagingThroughTraffic_Exit( pContextImpl, pStm );
     }
 }
 static void MainStm_PYellow_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_PYellow ) ){
         MainStm_ManagingThroughTraffic_Entry( pContextImpl, pStm );
-        printf( "%s\n", __FUNCTION__ );
+        ShowEntry( "Model/ContextImpl/MainStm	318	552	166	62	69	22	1073	876" );
+        start_timer(1);
     }
 }
 static BOOL MainStm_PYellow_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_PYellow;
     switch( nEventId ){
-    case ContextImpl_E2:{
+    case ContextImpl_TMOUT:{
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_SRedWait, STATE_UNDEF );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
@@ -337,21 +336,22 @@ static BOOL MainStm_PYellow_EventProc( ContextImpl* pContextImpl, MainStm* pStm,
 }
 static void MainStm_PYellow_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_PYellow ) ){ 
-        printf( "%s\n", __FUNCTION__ );
+        ShowExit( "Model/ContextImpl/MainStm	318	552	166	62	69	22	1073	876" );
         MainStm_ManagingThroughTraffic_Exit( pContextImpl, pStm );
     }
 }
 static void MainStm_SRedWait_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_SRedWait ) ){
         MainStm_ManagingThroughTraffic_Entry( pContextImpl, pStm );
-        printf( "%s\n", __FUNCTION__ );
+        ShowEntry( "Model/ContextImpl/MainStm	319	655	166	62	69	22	1073	876" );
+        start_timer(1);
     }
 }
 static BOOL MainStm_SRedWait_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_SRedWait;
     switch( nEventId ){
-    case ContextImpl_E3:{
+    case ContextImpl_TMOUT:{
         if (ContextImpl_IsIn( pContextImpl, SecondaryRoad_SRed )) {
             MainStm_BgnTrans( pContextImpl, pStm, MainStm_PRed, STATE_UNDEF );
             SecondaryRoad_Reset( pContextImpl, &pStm->SubmachineState0SecondaryRoad, &pStm->base, SecondaryRoad_SGreen );
@@ -365,7 +365,7 @@ static BOOL MainStm_SRedWait_EventProc( ContextImpl* pContextImpl, MainStm* pStm
 }
 static void MainStm_SRedWait_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_SRedWait ) ){ 
-        printf( "%s\n", __FUNCTION__ );
+        ShowExit( "Model/ContextImpl/MainStm	319	655	166	62	69	22	1073	876" );
         MainStm_ManagingThroughTraffic_Exit( pContextImpl, pStm );
     }
 }
@@ -407,10 +407,21 @@ static BOOL MainStm_StateDefaultTrans( ContextImpl* pContextImpl, MainStm* pStm 
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_Starting, STATE_UNDEF );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
+    }else if( pStm->base.nPseudostate == MainStm_Starting ){
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_ManagingThroughTraffic, MainStm_InitialPseudostate1 );
+        MainStm_EndTrans( pContextImpl, pStm );
+        bResult = TRUE;
     }else if( pStm->base.nCurrentState == MainStm_ManagingThroughTraffic && pStm->base.nPseudostate == MainStm_InitialPseudostate1 ){
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_PRed, STATE_UNDEF );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
+    }else if( pStm->base.nPseudostate == MainStm_PRed ){
+        if (ContextImpl_IsIn( pContextImpl, SecondaryRoad_PRedWaitJoin )) {
+            MainStm_BgnTrans( pContextImpl, pStm, MainStm_PGreen, STATE_UNDEF );
+            SecondaryRoad_Reset( pContextImpl, &pStm->SubmachineState0SecondaryRoad, &pStm->base, SecondaryRoad_SRed );
+            MainStm_EndTrans( pContextImpl, pStm );
+            bResult = TRUE;
+        }
     }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, MainStm_MainTop) ){
         MainStm_BgnTrans( pContextImpl, pStm, pStm->base.nPseudostate, STATE_UNDEF );
         MainStm_EndTrans( pContextImpl, pStm );
@@ -474,6 +485,16 @@ static BOOL MainStm_Abort( ContextImpl* pContextImpl, MainStm* pStm ) {
 }
 int MainStm_IsFinished(MainStm* pMainStm){
     return pMainStm->base.nCurrentState == MainStm_MainTop && pMainStm->base.nCurrentState == pMainStm->base.nPseudostate;
+}
+BOOL ContextImpl_EventProc( ContextImpl* pContextImpl, ContextImpl_EVENT nEventId, void* pEventParams ){
+    return MainStm_EventProc( pContextImpl, &pContextImpl->mainStm, nEventId, pEventParams );
+}
+BOOL ContextImpl_Start( ContextImpl* pContextImpl ){
+    MainStm_Abort( pContextImpl, &pContextImpl->mainStm );
+    return MainStm_Reset( pContextImpl, &pContextImpl->mainStm, NULL, STATE_UNDEF );
+}
+BOOL ContextImpl_IsIn( ContextImpl* pContextImpl, UINT32 nState ){
+    return MainStm_IsIn( &pContextImpl->mainStm, nState );
 }
 Context* ContextImpl_Copy( ContextImpl* pContextImpl, const ContextImpl* pSource ){
     Context_Copy( ( Context* )pContextImpl, ( Context* )pSource );
