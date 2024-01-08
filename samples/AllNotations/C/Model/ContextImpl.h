@@ -50,10 +50,11 @@ typedef struct tagS82Stm {
 typedef struct tagS83Stm {
     HdStateMachine base;
 #define S83Stm_S83Top_Dmy                       ( 1 <<  3 )
-#define S83Stm_S83Top                           ( S83Stm_S83Top_Dmy | S83Stm_S831 | S83Stm_S832 )
+#define S83Stm_S83Top                           ( S83Stm_S83Top_Dmy | S83Stm_S831 | S83Stm_S832 | S83Stm_S831Fin )
 #define S83Stm_InitPt                           ( 1 << ( 31 -  0 ) )
 #define S83Stm_S831                             ( 1 <<  4 )
 #define S83Stm_S832                             ( 1 <<  5 )
+#define S83Stm_S831Fin                          ( 1 <<  6 )
 }S83Stm;
 #define S83Stm_Init() {\
     .base = HdStateMachine_Ctor( HdStateMachine_Init(S83Stm_S83Top, S83Stm_S83Top), ),\
@@ -63,13 +64,13 @@ typedef struct tagS83Stm {
  */
 typedef struct tagSharedStm {
     HdStateMachine base;
-#define SharedStm_SharedTop_Dmy                 ( 1 <<  6 )
+#define SharedStm_SharedTop_Dmy                 ( 1 <<  7 )
 #define SharedStm_SharedTop                     ( SharedStm_SharedTop_Dmy | SharedStm_Shared1 | SharedStm_Shared2 )
 #define SharedStm_Entry1                        ( 1 << ( 31 -  0 ) )
 #define SharedStm_Exit1                         ( 1 << ( 31 -  1 ) )
 #define SharedStm_InitPt                        ( 1 << ( 31 -  2 ) )
-#define SharedStm_Shared1                       ( 1 <<  7 )
-#define SharedStm_Shared2                       ( 1 <<  8 )
+#define SharedStm_Shared1                       ( 1 <<  8 )
+#define SharedStm_Shared2                       ( 1 <<  9 )
 }SharedStm;
 #define SharedStm_Init() {\
     .base = HdStateMachine_Ctor( HdStateMachine_Init(SharedStm_SharedTop, SharedStm_SharedTop), ),\
@@ -85,40 +86,40 @@ typedef struct tagMainStm {
     SharedStm S9SharedStm;                                      
     UINT32 nS4History;
     UINT32 nS7History;
-#define MainStm_MainTop_Dmy                     ( 1 <<  9 )
-#define MainStm_MainTop                         ( MainStm_MainTop_Dmy | MainStm_S1 | MainStm_S2 | MainStm_S3 | MainStm_S4 | MainStm_S6 | MainStm_S8 | MainStm_S7 | MainStm_S10 | MainStm_S5 | MainStm_S9 )
+#define MainStm_MainTop_Dmy                     ( 1 << 10 )
+#define MainStm_MainTop                         ( MainStm_MainTop_Dmy | MainStm_S1 | MainStm_S2 | MainStm_S3 | MainStm_S4 | MainStm_Junction | MainStm_S6 | MainStm_S8 | MainStm_S7 | MainStm_S10 | MainStm_S5 | MainStm_S9 )
 #define MainStm_InitPt0                         ( 1 << ( 31 -  0 ) )
-#define MainStm_S1                              ( 1 << 10 )
-#define MainStm_S21                             ( 1 << 11 )
-#define MainStm_S22                             ( 1 << 12 )
+#define MainStm_S1                              ( 1 << 11 )
+#define MainStm_S21                             ( 1 << 12 )
+#define MainStm_S22                             ( 1 << 13 )
 #define MainStm_InitPt1                         ( 1 << ( 31 -  1 ) )
-#define MainStm_S3                              ( 1 << 13 )
-#define MainStm_S41                             ( 1 << 14 )
-#define MainStm_S42                             ( 1 << 15 )
+#define MainStm_S3                              ( 1 << 14 )
+#define MainStm_S41                             ( 1 << 15 )
+#define MainStm_S42                             ( 1 << 16 )
 #define MainStm_InitPt2                         ( 1 << ( 31 -  2 ) )
-#define MainStm_Junction                        ( 1 << ( 31 -  3 ) )
-#define MainStm_S6                              ( 1 << 16 )
-#define MainStm_InitPt4                         ( 1 << ( 31 -  4 ) )
-#define MainStm_S811                            ( 1 << 17 )
-#define MainStm_S813                            ( 1 << 18 )
-#define MainStm_S812                            ( 1 << 19 )
-#define MainStm_InitPt3                         ( 1 << ( 31 -  5 ) )
-#define MainStm_S711                            ( 1 << 20 )
-#define MainStm_InitialPseudostate0             ( 1 << ( 31 -  6 ) )
-#define MainStm_S712                            ( 1 << 21 )
-#define MainStm_S72                             ( 1 << 22 )
-#define MainStm_S10                             ( 1 << 23 )
-#define MainStm_S5                              ( 1 << 24 )
-#define MainStm_S9                              ( 1 << 25 )
-#define MainStm_S2_Dmy                          ( 1 << 26 )
+#define MainStm_Junction                        ( 1 << 17 )
+#define MainStm_S6                              ( 1 << 18 )
+#define MainStm_InitPt4                         ( 1 << ( 31 -  3 ) )
+#define MainStm_S811                            ( 1 << 19 )
+#define MainStm_S813                            ( 1 << 20 )
+#define MainStm_S812                            ( 1 << 21 )
+#define MainStm_InitPt3                         ( 1 << ( 31 -  4 ) )
+#define MainStm_S711                            ( 1 << 22 )
+#define MainStm_InitialPseudostate0             ( 1 << ( 31 -  5 ) )
+#define MainStm_S712                            ( 1 << 23 )
+#define MainStm_S72                             ( 1 << 24 )
+#define MainStm_S10                             ( 1 << 25 )
+#define MainStm_S5                              ( 1 << 26 )
+#define MainStm_S9                              ( 1 << 27 )
+#define MainStm_S2_Dmy                          ( 1 << 28 )
 #define MainStm_S2                              ( MainStm_S2_Dmy | MainStm_S21 | MainStm_S22 )
-#define MainStm_S4_Dmy                          ( 1 << 27 )
+#define MainStm_S4_Dmy                          ( 1 << 29 )
 #define MainStm_S4                              ( MainStm_S4_Dmy | MainStm_S41 | MainStm_S42 )
-#define MainStm_S8_Dmy                          ( 1 << 28 )
+#define MainStm_S8_Dmy                          ( 1 << 30 )
 #define MainStm_S8                              ( MainStm_S8_Dmy | MainStm_S811 | MainStm_S813 | MainStm_S812 )
-#define MainStm_S71_Dmy                         ( 1 << 29 )
+#define MainStm_S71_Dmy                         ( 1 << 31 )
 #define MainStm_S71                             ( MainStm_S71_Dmy | MainStm_S711 | MainStm_S712 )
-#define MainStm_S7_Dmy                          ( 1 << 30 )
+#define MainStm_S7_Dmy                          ( 1 << 32 )
 #define MainStm_S7                              ( MainStm_S7_Dmy | MainStm_S71 | MainStm_S72 )
 }MainStm;
 #define MainStm_Init() {\

@@ -31,13 +31,13 @@ boolean ContextImpl_checkE1Params( EventParams* e );
 typedef struct tagSecondaryRoad {
     HdStateMachine base;
 #define SecondaryRoad_SecondaryRoadTop_Dmy      ( 1 <<  0 )
-#define SecondaryRoad_SecondaryRoadTop          ( SecondaryRoad_SecondaryRoadTop_Dmy | SecondaryRoad_SRed | SecondaryRoad_SYellow | SecondaryRoad_SGreen | SecondaryRoad_PRedWait | SecondaryRoad_PRedWaitJoin )
+#define SecondaryRoad_SecondaryRoadTop          ( SecondaryRoad_SecondaryRoadTop_Dmy | SecondaryRoad_SRed | SecondaryRoad_SYellow | SecondaryRoad_SGreen | SecondaryRoad_PRedWait | SecondaryRoad_PRedWaitFin )
 #define SecondaryRoad_InitialPseudostate2       ( 1 << ( 31 -  0 ) )
 #define SecondaryRoad_SRed                      ( 1 <<  1 )
 #define SecondaryRoad_SYellow                   ( 1 <<  2 )
 #define SecondaryRoad_SGreen                    ( 1 <<  3 )
 #define SecondaryRoad_PRedWait                  ( 1 <<  4 )
-#define SecondaryRoad_PRedWaitJoin              ( 1 <<  5 )
+#define SecondaryRoad_PRedWaitFin               ( 1 <<  5 )
 }SecondaryRoad;
 #define SecondaryRoad_Init() {\
     .base = HdStateMachine_Ctor( HdStateMachine_Init(SecondaryRoad_SecondaryRoadTop, SecondaryRoad_SecondaryRoadTop), ),\

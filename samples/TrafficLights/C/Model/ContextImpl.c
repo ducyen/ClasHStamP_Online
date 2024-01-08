@@ -110,7 +110,7 @@ static BOOL SecondaryRoad_PRedWait_EventProc( ContextImpl* pContextImpl, Seconda
     pStm->base.nSourceState = SecondaryRoad_PRedWait;
     switch( nEventId ){
     case ContextImpl_TMOUT:{
-        SecondaryRoad_BgnTrans( pContextImpl, pStm, SecondaryRoad_PRedWaitJoin, STATE_UNDEF );
+        SecondaryRoad_BgnTrans( pContextImpl, pStm, SecondaryRoad_PRedWaitFin, STATE_UNDEF );
         SecondaryRoad_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
     } break;
@@ -123,21 +123,6 @@ static void SecondaryRoad_PRedWait_Exit( ContextImpl* pContextImpl, SecondaryRoa
         ShowExit( "Model/ContextImpl/SecondaryRoad	197	345	166	62	66	19	349	572" );
     }
 }
-static void SecondaryRoad_PRedWaitJoin_Entry( ContextImpl* pContextImpl, SecondaryRoad* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, SecondaryRoad_PRedWaitJoin ) ){
-        ShowEntry( "Model/ContextImpl/SecondaryRoad	91	430	92	37	66	19	349	572" );
-    }
-}
-static BOOL SecondaryRoad_PRedWaitJoin_EventProc( ContextImpl* pContextImpl, SecondaryRoad* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = SecondaryRoad_PRedWaitJoin;
-    return bResult;
-}
-static void SecondaryRoad_PRedWaitJoin_Exit( ContextImpl* pContextImpl, SecondaryRoad* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, SecondaryRoad_PRedWaitJoin ) ){ 
-        ShowExit( "Model/ContextImpl/SecondaryRoad	91	430	92	37	66	19	349	572" );
-    }
-}
 static void SecondaryRoad_EndTrans( ContextImpl *pContextImpl, SecondaryRoad* pStm ){
     pStm->base.nCurrentState = pStm->base.nTargetState;
     pStm->base.bIsExternTrans = FALSE;
@@ -146,7 +131,6 @@ static void SecondaryRoad_EndTrans( ContextImpl *pContextImpl, SecondaryRoad* pS
     case SecondaryRoad_SYellow: SecondaryRoad_SYellow_Entry( pContextImpl, pStm ); break;
     case SecondaryRoad_SGreen:  SecondaryRoad_SGreen_Entry( pContextImpl, pStm ); break;
     case SecondaryRoad_PRedWait:SecondaryRoad_PRedWait_Entry( pContextImpl, pStm ); break;
-    case SecondaryRoad_PRedWaitJoin:SecondaryRoad_PRedWaitJoin_Entry( pContextImpl, pStm ); break;
     default: break;
     }
 }
@@ -161,7 +145,6 @@ static void SecondaryRoad_BgnTrans( ContextImpl *pContextImpl, SecondaryRoad* pS
     case SecondaryRoad_SYellow: SecondaryRoad_SYellow_Exit( pContextImpl, pStm ); break;
     case SecondaryRoad_SGreen:  SecondaryRoad_SGreen_Exit( pContextImpl, pStm ); break;
     case SecondaryRoad_PRedWait:SecondaryRoad_PRedWait_Exit( pContextImpl, pStm ); break;
-    case SecondaryRoad_PRedWaitJoin:SecondaryRoad_PRedWaitJoin_Exit( pContextImpl, pStm ); break;
     default: break;
     }
 }
@@ -214,7 +197,6 @@ static BOOL SecondaryRoad_EventProc( ContextImpl* pContextImpl, SecondaryRoad* p
     case SecondaryRoad_SYellow:                 bResult |= SecondaryRoad_SYellow_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case SecondaryRoad_SGreen:                  bResult |= SecondaryRoad_SGreen_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case SecondaryRoad_PRedWait:                bResult |= SecondaryRoad_PRedWait_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
-    case SecondaryRoad_PRedWaitJoin:            bResult |= SecondaryRoad_PRedWaitJoin_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     default: break;
     }
     SecondaryRoad_RunToCompletion( pContextImpl, pStm );
@@ -416,7 +398,7 @@ static BOOL MainStm_StateDefaultTrans( ContextImpl* pContextImpl, MainStm* pStm 
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
     }else if( pStm->base.nPseudostate == MainStm_PRed ){
-        if (ContextImpl_IsIn( pContextImpl, SecondaryRoad_PRedWaitJoin )) {
+        if (ContextImpl_IsIn( pContextImpl, SecondaryRoad_PRedWaitFin )) {
             MainStm_BgnTrans( pContextImpl, pStm, MainStm_PGreen, STATE_UNDEF );
             SecondaryRoad_Reset( pContextImpl, &pStm->SubmachineState0SecondaryRoad, &pStm->base, SecondaryRoad_SRed );
             MainStm_EndTrans( pContextImpl, pStm );

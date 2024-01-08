@@ -460,7 +460,7 @@ junction,"[->]pStm->base.nPseudostate = [sCOPE]_[vALUE];
 ","[->]do{   if( pStm->base.nPseudostate == [cONTAINER]_[nAME] ){
 ","[->]}else if( pStm->base.nPseudostate == [cONTAINER]_[nAME] ){
 ","[tYPE]_IsIn( p[tYPE], [mODIFIER]_[vALUE] )","
-[->] || [tYPE]_IsIn( p[tYPE], [mODIFIER]_[vALUE] )"
+[->] && [tYPE]_IsIn( p[tYPE], [mODIFIER]_[vALUE] )"
 api_call,"BOOL [tYPE]_EventProc( [tYPE]* p[tYPE], [tYPE]_EVENT nEventId, void* pEventParams ){
     return [Scope]_EventProc( p[tYPE], &p[tYPE]->mainStm, nEventId, pEventParams );
 }
