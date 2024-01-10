@@ -1,24 +1,38 @@
-compile = ["make", "-s"]
-run = "./main"
-entrypoint = "main.c"
-hidden = ["main", "main-debug", "**/*.o", "**/*.d", ".ccls-cache", "Makefile"]
+#compile = "javac -classpath .:target/dependency/* -d . $(find . -type f -name '*.java')"
+compile = "javac Main.java"
+#run = "java -classpath .:target/dependency/* Main"
+run = "java Main"
+entrypoint = "Main.java"
+hidden = ["**/*.class"]
+
+[packager]
+language = "java"
+
+[packager.features]
+packageSearch = true
+
+[languages.java]
+pattern = "**/*.java"
+
+[languages.java.languageServer]
+start = "jdt-language-server"
+
+[unitTest]
+language = "java"
 
 [nix]
-channel = "stable-22_11"
-
-[gitHubImport]
-requiredFiles = [".replit", "replit.nix", ".ccls-cache"]
+channel = "stable-21_11"
 
 [debugger]
 support = true
 
 [debugger.compile]
-command = ["make", "main-debug"]
-noFileArgs = true
+command = "javac -classpath .:/run_dir/junit-4.12.jar:target/dependency/* -g -d . $(find . -type f -name '*.java')"
 
 [debugger.interactive]
-transport = "stdio"
-startCommand = ["dap-cpp"]
+transport = "localhost:0"
+connectTimeout = 60
+startCommand = "java-debug"
 
 [debugger.interactive.initializeMessage]
 command = "initialize"
@@ -43,26 +57,9 @@ command = "launch"
 type = "request"
 
 [debugger.interactive.launchMessage.arguments]
-MIMode = "gdb"
-arg = []
-cwd = "."
-environment = []
-externalConsole = false
-logging = {}
-miDebuggerPath = "gdb"
-name = "g++ - Build and debug active file"
-program = "./main-debug"
-request = "launch"
-setupCommands = [
-	{ description = "Enable pretty-printing for gdb", ignoreFailures = true, text = "-enable-pretty-printing" }
-]
-stopAtEntry = false
-type = "cppdbg"
+classPaths = ["."]
+mainClass = "Main"
 
-[languages]
-
-[languages.c]
-pattern = "**/*.{c,h}"
-
-[languages.c.languageServer]
-start = "ccls"
+[deployment]
+deploymentTarget = "cloudrun"
+run = ["sh", "-c", "java Main"]
