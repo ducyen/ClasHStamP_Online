@@ -7,6 +7,7 @@
 #include <windows.h>
 #include <wincodec.h>
 #endif
+#include <assert.h>
 
 int InputValue(char* pMsg);
 void DisplayMsg(char* pMsg);
@@ -32,6 +33,11 @@ void DisplayMsg(char* pMsg) {
 #if defined( _MSC_VER )
 #define CALL(ptr, method, ...) ((ptr)->lpVtbl->method((ptr), __VA_ARGS__))
 
+void SavePngImage( char* sPath );
+
+/**
+ * Convert char to wide char
+ */
 WCHAR* ConvertCharToWChar(const char* charString, UINT codePage) {
     int requiredSize = MultiByteToWideChar(codePage, 0, charString, -1, NULL, 0);
     if (requiredSize == 0) {
@@ -54,33 +60,15 @@ WCHAR* ConvertCharToWChar(const char* charString, UINT codePage) {
     return wideString;
 }
 
-int DrawRectangle( char* sPath, int nLeft, int nTop, int nWidth, int nHeight, int nDgrLeft, int nDgrTop, int nDgrWidth, int nDgrHeight, uint8_t byRed, uint8_t byGreen, uint8_t byBlue )
-{
+IWICImagingFactory* m_pIWICFactory = NULL;
+/**
+ * Load image from png file
+ */
+IWICBitmap* LoadPngImage( char* sPath ){
     WCHAR* wideString = ConvertCharToWChar(sPath, CP_UTF8);  // Using UTF-8 code page
     WCHAR strInputFile[ 256 ];
-    WCHAR strOutputFile[ 256 ];
-
     swprintf( strInputFile, sizeof( strInputFile ) / sizeof( strInputFile[ 0 ] ), L"../Image/Design/%s.png", wideString );
-    swprintf( strOutputFile, sizeof( strOutputFile ) / sizeof( strOutputFile[ 0 ] ), L"../TransImg/Design/%s.png", wideString );
-
     HRESULT hr = S_OK;
-
-    hr = CoInitialize( NULL );
-    if( FAILED( hr ) ){
-        printf( "Failed to initialize COM: %08X\n", hr );
-        return 1;
-    }
-
-    IWICImagingFactory* m_pIWICFactory = NULL;
-
-    // Create WIC factory
-    hr = CoCreateInstance(
-        &CLSID_WICImagingFactory,
-        NULL,
-        CLSCTX_INPROC_SERVER,
-        &IID_IWICImagingFactory,
-        &m_pIWICFactory
-    );
 
     IWICBitmapDecoder *pIDecoder = NULL;
     IWICBitmapFrameDecode *pIDecoderFrame = NULL;
@@ -99,7 +87,6 @@ int DrawRectangle( char* sPath, int nLeft, int nTop, int nWidth, int nHeight, in
     }
 
     IWICBitmap *pIBitmap = NULL;
-    IWICBitmapLock *pILock = NULL;
 
     // Create the bitmap from the image frame.
     if( SUCCEEDED( hr ) ){
@@ -108,6 +95,64 @@ int DrawRectangle( char* sPath, int nLeft, int nTop, int nWidth, int nHeight, in
             WICBitmapCacheOnDemand,  // Cache bitmap pixels on first access
             &pIBitmap );              // Pointer to the bitmap
     }
+    if( pIDecoder ) CALL( pIDecoder, Release );
+    if( pIDecoderFrame ) CALL( pIDecoderFrame, Release );
+
+    return pIBitmap;
+}
+
+/**
+ * find bitmap from path
+ */
+static int g_nPathToBitmapCnt = 0;
+static struct{
+    char m_sPath[ 256 ];
+    IWICBitmap* m_pIBitmap;
+} g_arrPathToBitmap[ 10 ];
+
+void LoadAllImages( void ){
+    for( int i = 0; i < g_nPathToBitmapCnt; i++ ){
+        g_arrPathToBitmap[ i ].m_pIBitmap = LoadPngImage( g_arrPathToBitmap[ i ].m_sPath );
+    }
+}
+
+void ReleaseAllImages( void ){
+    for( int i = 0; i < g_nPathToBitmapCnt; i++ ){
+        if( g_arrPathToBitmap[ i ].m_pIBitmap ) CALL( g_arrPathToBitmap[ i ].m_pIBitmap, Release );
+    }
+}
+
+void SaveAllImages( void ){
+    for( int i = 0; i < g_nPathToBitmapCnt; i++ ){
+        SavePngImage( g_arrPathToBitmap[ i ].m_sPath );
+    }
+}
+
+IWICBitmap* FindBitmapFromPath( char* sPath ){
+    // Find if existed or not
+    for( int i = 0; i < g_nPathToBitmapCnt; i++ ){
+        if( strcmp( sPath, g_arrPathToBitmap[ i ].m_sPath ) == 0 ){
+            return g_arrPathToBitmap[ i ].m_pIBitmap;
+        }
+    }
+    // If not exsited, add new
+    strcpy( g_arrPathToBitmap[ g_nPathToBitmapCnt ].m_sPath, sPath );
+    IWICBitmap* pIBitmap = LoadPngImage( sPath );
+    g_arrPathToBitmap[ g_nPathToBitmapCnt ].m_pIBitmap = pIBitmap;
+    g_nPathToBitmapCnt++;
+    assert( g_nPathToBitmapCnt < sizeof( g_arrPathToBitmap ) / sizeof( g_arrPathToBitmap[ 0 ] ) );
+    return pIBitmap;
+}
+
+
+/**
+ * Draw rectangle on a png file
+ */
+int DrawRectangle( char* sPath, int nLeft, int nTop, int nWidth, int nHeight, int nDgrLeft, int nDgrTop, int nDgrWidth, int nDgrHeight, uint8_t byRed, uint8_t byGreen, uint8_t byBlue )
+{
+    HRESULT hr = S_OK;
+    IWICBitmap *pIBitmap = FindBitmapFromPath( sPath );
+    IWICBitmapLock *pILock = NULL;
 
     if( SUCCEEDED( hr ) ){
         UINT uiWidth = 10;
@@ -165,8 +210,18 @@ int DrawRectangle( char* sPath, int nLeft, int nTop, int nWidth, int nHeight, in
 
         }
     }
-    if( pIDecoder ) CALL( pIDecoder, Release );
-    if( pIDecoderFrame ) CALL( pIDecoderFrame, Release );
+    SavePngImage( sPath );
+}
+
+/**
+ * Save png image to file
+ */
+void SavePngImage( char* sPath ){
+    WCHAR* wideString = ConvertCharToWChar(sPath, CP_UTF8);  // Using UTF-8 code page
+    WCHAR strOutputFile[ 256 ];
+    swprintf( strOutputFile, sizeof( strOutputFile ) / sizeof( strOutputFile[ 0 ] ), L"../TransImg/Design/%s.png", wideString );
+    HRESULT hr = S_OK;
+    IWICBitmap *pIBitmap = FindBitmapFromPath( sPath );
 
     if( SUCCEEDED( hr ) ){
         IWICStream* pStream = NULL;
@@ -211,11 +266,7 @@ int DrawRectangle( char* sPath, int nLeft, int nTop, int nWidth, int nHeight, in
         if( pStream ) CALL( pStream, Release );
     }
 
-    if( pIBitmap ) CALL( pIBitmap, Release );
-    if( m_pIWICFactory ) CALL( m_pIWICFactory, Release );
-    CoUninitialize();
     free(wideString);
-
 }
 
 // Linker pragmas
@@ -243,6 +294,22 @@ void ShowExit( char* pMsg ){
 }
 
 int main( void ){
+    HRESULT hr = CoInitialize( NULL );
+    if( FAILED( hr ) ){
+        printf( "Failed to initialize COM: %08X\n", hr );
+        return 1;
+    }
+
+    // Create WIC factory
+    hr = CoCreateInstance(
+        &CLSID_WICImagingFactory,
+        NULL,
+        CLSCTX_INPROC_SERVER,
+        &IID_IWICImagingFactory,
+        &m_pIWICFactory
+    );
+
+
     ContextImpl context = ContextImpl_Ctor( ContextImpl_Init( 
         4, "", 1, 2, 3, { 0 },
         Composition_Ctor( Composition_Init( 3 ), )
@@ -250,7 +317,9 @@ int main( void ){
     char n;
     do {
         ContextImpl_Start( &context );
+
         do {
+            LoadAllImages();
             n = InputValue( "Enter event number('q': quit, 'r':restart): E" );
             EventParams* pParams = NULL;
             E1Params e1Params = { .x = Two };
@@ -260,5 +329,12 @@ int main( void ){
             ContextImpl_EventProc( &context, (ContextImpl_EVENT)n, pParams);
         } while (n+'0' != 'q' && n+'0' != 'r');
     }while (n+'0' != 'q');
+
+
+
+    ReleaseAllImages();
+    if( m_pIWICFactory ) CALL( m_pIWICFactory, Release );
+    CoUninitialize();
+
     return 0;
 }

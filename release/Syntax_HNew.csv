@@ -170,9 +170,9 @@ event_decl,"typedef enum tag[nAME]Event {
 }[nAME]_EVENT;
 const TCHAR* [nAME]Event_toString( [nAME]_EVENT value );
 "
-state_decl,"#define [sCOPE]_[nAME] [->48]( 1 << [vALUE] )
-","#define [sCOPE]_[nAME]_Dmy [->48]( 1 << [mODIFIER] )
-#define [sCOPE]_[nAME] [->48]( [sCOPE]_[nAME]_Dmy | [sCOPE]_[vALUE]", | [sCOPE]_[vALUE],"#define [sCOPE]_[nAME] [->48]( 1 << ( 31 - [vALUE] ) )
+state_decl,"#define [sCOPE]_[nAME] [->48]( 1ULL << [vALUE] )
+","#define [sCOPE]_[nAME]_Dmy [->48]( 1ULL << [mODIFIER] )
+#define [sCOPE]_[nAME] [->48]( [sCOPE]_[nAME]_Dmy | [sCOPE]_[vALUE]", | [sCOPE]_[vALUE],"#define [sCOPE]_[nAME] [->48]( 1ULL << ( MAX_STATE_NUM - [vALUE] ) )
 "," )
 "
 state_entry,,,,,
@@ -209,7 +209,7 @@ substm_impl,,,,,
 substm_decl,"    .[nAME][tYPE] = [tYPE]_Init(),\
 ","    [tYPE][mODIFIER] [nAME][tYPE];[->64][dESC]
 ",,,
-history,"    UINT32 n[nAME]History;
+history,"    uint64_t n[nAME]History;
 ","    .n[nAME]History = 0,\
 ",,,
 junction,"#error junction@name;

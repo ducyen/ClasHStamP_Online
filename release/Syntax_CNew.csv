@@ -280,7 +280,7 @@ state_entry,"static void [Scope]_EndTrans( [tYPE] *p[tYPE], [sCOPE]* pStm ){
     }
 ","}
 "
-state_exit,"static void [Scope]_BgnTrans( [tYPE] *p[tYPE], [sCOPE]* pStm, UINT32 targetState, UINT32 initState ){
+state_exit,"static void [Scope]_BgnTrans( [tYPE] *p[tYPE], [sCOPE]* pStm, uint64_t targetState, uint64_t initState ){
     pStm->base.nTargetState = targetState;
     pStm->base.nPseudostate = targetState;
     if( initState ){
@@ -293,7 +293,7 @@ state_exit,"static void [Scope]_BgnTrans( [tYPE] *p[tYPE], [sCOPE]* pStm, UINT32
     }
 ","}
 "
-state_impl,"static BOOL [Scope]_Reset( [tYPE]* p[tYPE], [sCOPE]* pStm, HdStateMachine* pParentStm, UINT32 nEntryPoint ) {
+state_impl,"static BOOL [Scope]_Reset( [tYPE]* p[tYPE], [sCOPE]* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
     pStm->base.pParentStm = pParentStm;
     if( nEntryPoint == NULL ){
         if( [Scope]_IsFinished( &pStm->base ) ){
@@ -322,7 +322,7 @@ static BOOL [Scope]_EventProc( [tYPE]* p[tYPE], [sCOPE]* pStm, [tYPE]_EVENT nEve
 ","    [Scope]_RunToCompletion( p[tYPE], pStm );
     return bResult;
 }
-static BOOL [Scope]_IsIn( [sCOPE]* pStm, UINT32 nCompositeState ) {
+static BOOL [Scope]_IsIn( [sCOPE]* pStm, uint64_t nCompositeState ) {
 [vALUE]    if( IS_IN( pStm->base.nCurrentState, nCompositeState ) ){ return TRUE; }
     return FALSE;
 }
@@ -406,9 +406,9 @@ action,"[->][nAME]Params* e = ( [nAME]Params* )pEventParams;
 param_dir,,,,-2,
 inheritance,,,,,
 template,,,,,
-statemachine,,,,"static void [nAME]_BgnTrans( [cONTAINER] *p[tYPE], [nAME]* pStm, UINT32 targetState, UINT32 initState );
+statemachine,,,,"static void [nAME]_BgnTrans( [cONTAINER] *p[tYPE], [nAME]* pStm, uint64_t targetState, uint64_t initState );
 static void [nAME]_EndTrans( [cONTAINER] *p[tYPE], [nAME]* pStm );
-static BOOL [nAME]_Reset( [cONTAINER]* p[tYPE], [nAME]* pStm, HdStateMachine* pParentStm, UINT32 nEntryPoint );
+static BOOL [nAME]_Reset( [cONTAINER]* p[tYPE], [nAME]* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 static BOOL [nAME]_Abort( [cONTAINER]* p[tYPE], [nAME]* pStm );
 static BOOL [nAME]_EventProc( [cONTAINER]* p[tYPE], [nAME]* pStm, [cONTAINER]_EVENT nEventId, void* pEventParams );
 static BOOL [nAME]_RunToCompletion( [cONTAINER]* p[tYPE], [nAME]* pStm );
@@ -468,7 +468,7 @@ BOOL [tYPE]_Start( [tYPE]* p[tYPE] ){
     [Scope]_Abort( p[tYPE], &p[tYPE]->mainStm );
     return [Scope]_Reset( p[tYPE], &p[tYPE]->mainStm, NULL, STATE_UNDEF );
 }
-BOOL [tYPE]_IsIn( [tYPE]* p[tYPE], UINT32 nState ){
+BOOL [tYPE]_IsIn( [tYPE]* p[tYPE], uint64_t nState ){
     return [Scope]_IsIn( &p[tYPE]->mainStm, nState );
 }
 ","[->]pStm->base.bIsExternTrans = TRUE;

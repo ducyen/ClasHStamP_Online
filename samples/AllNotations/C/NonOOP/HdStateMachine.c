@@ -5,7 +5,7 @@
 /** @public @memberof HdStateMachine */
 int HdStateMachine_Enterable(
     HdStateMachine* pHdStateMachine,
-    int nThisState
+    uint64_t nThisState
 ){
     BOOL isThisLCA = IS_IN( pHdStateMachine->nLCAState, nThisState );
     if( !isThisLCA || pHdStateMachine->nLCAState == STATE_UNDEF ){
@@ -17,7 +17,7 @@ int HdStateMachine_Enterable(
 /** @public @memberof HdStateMachine */
 int HdStateMachine_Exitable(
     HdStateMachine* pHdStateMachine,
-    int nThisState
+    uint64_t nThisState
 ){
     BOOL isThisLCA = IS_IN( pHdStateMachine->nSourceState, nThisState ) && IS_IN( pHdStateMachine->nTargetState, nThisState );
     if( !isThisLCA || pHdStateMachine->bIsExternTrans ){ 
