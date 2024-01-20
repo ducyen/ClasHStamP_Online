@@ -36,26 +36,6 @@ public class ImageLoader extends JFrame {
         startDirectoryWatchService();
     }
 
-    private void loadImagesFromDirectory(File directory) {
-        File[] files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                if (file.isDirectory()) {
-                    loadImagesFromDirectory(file);
-                } else if (file.getName().endsWith(".png")) {
-                    try {
-                        BufferedImage image = ImageIO.read(file);
-                        if (image != null) {
-                            images.add(image);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-    }
-
 	private void initUI() {
 		setTitle("Image Viewer");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -106,9 +86,16 @@ public class ImageLoader extends JFrame {
 
 			@Override
 			protected void process(List<JPanel> chunks) {
+				// Remove all existing panels before adding new ones
+				panel.removeAll();
+
 				for (JPanel imgPanel : chunks) {
 					panel.add(imgPanel, "ImagePanel");
 				}
+
+				// Refresh the layout
+				panel.revalidate();
+				panel.repaint();
 			}
 
 			@Override

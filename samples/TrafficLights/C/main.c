@@ -442,16 +442,11 @@ static struct{
     IWICBitmap* m_pIBitmap;
 } g_arrPathToBitmap[ 10 ];
 
-void LoadAllImages( void ){
-    for( int i = 0; i < g_nPathToBitmapCnt; i++ ){
-        g_arrPathToBitmap[ i ].m_pIBitmap = LoadPngImage( g_arrPathToBitmap[ i ].m_sPath );
-    }
-}
-
 void ReleaseAllImages( void ){
     for( int i = 0; i < g_nPathToBitmapCnt; i++ ){
         if( g_arrPathToBitmap[ i ].m_pIBitmap ) CALL( g_arrPathToBitmap[ i ].m_pIBitmap, Release );
     }
+    g_nPathToBitmapCnt = 0;
 }
 
 void SaveAllImages( void ){
@@ -553,10 +548,11 @@ int DrawRectangle( char* sPath,
                 }
                 placeCharacterInBitmap( pv, sText[ i ], nCharLeftPos, nCharTopPos, cbStride, byRed, byGreen, byBlue );
             }
-
-            // Release the bitmap lock.
-            CALL( pILock, Release );
-
+        }
+        // Release the lock
+        if (pILock) {
+            CALL(pILock, Release);
+            pILock = NULL; // Clear the pointer after releasing
         }
     }
 }
@@ -689,8 +685,11 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 // Timer with identifier 1 has expired
                 // Perform timer-related actions here
                 KillTimer(hWnd, wParam);
-                ContextImpl_EventProc( pContext, ContextImpl_TMOUT, NULL);
                 timerId = NULL;
+                g_nActionCounter = 0;
+                ContextImpl_EventProc( pContext, ContextImpl_TMOUT, NULL);
+                SaveAllImages();
+                ReleaseAllImages();
             }
             return 0;
 
@@ -734,14 +733,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     // Main message loop
     MSG msg;
     while (GetMessage(&msg, NULL, 0, 0)) {
-        g_nActionCounter = 0;
-        LoadAllImages();
-
         TranslateMessage(&msg);
         DispatchMessage(&msg);
-
-        SaveAllImages();
-
     }
 
     // Destroy timer
