@@ -4,12 +4,13 @@
 #include <stddef.h>
 #if defined( _MSC_VER )
 #include <windows.h>
+#include <stdint.h>
 #endif
 
+#if !defined( _MSC_VER )
 typedef unsigned long   uint32_t;
 typedef unsigned short  uint16_t;
 typedef unsigned char   uint8_t;
-#if !defined( _MSC_VER )
 typedef int             boolean;
 #endif
 typedef int             bool;
@@ -29,12 +30,10 @@ typedef char            TCHAR;
 #define FALSE   ( 0 )
 #define TRUE    ( 1 )
 
-#define STATE_UNDEF                 ( 0x00000000UL )
-#define STATE_TOP                   ( 0x00FFFFFFUL )
+#define STATE_UNDEF                 ( 0x0000000000000000ULL )
 #define IS_IN( leaf, composite )    ( composite >= leaf && ( composite & leaf ) > 0 )
-#define POWER_OF_TWO( x )           ( ( ( x ) & ( ( x ) - 1 ) ) == 0 )
-#define IS_COMPOSITE( s )           ( !POWER_OF_TWO( s ) )
 #define UNREF( x )                  ( ( x ) = ( x ) )
+#define MAX_STATE_NUM               ( 63 )
 
 #define null                        ( ( void* )0 )
 #ifndef NULL

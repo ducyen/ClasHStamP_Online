@@ -5,7 +5,7 @@
 /** @public @memberof HdStateMachine */
 int HdStateMachine_Enterable(
     HdStateMachine* pHdStateMachine,
-    int nThisState
+    uint64_t nThisState
 ){
     BOOL isThisLCA = IS_IN( pHdStateMachine->nLCAState, nThisState );
     if( !isThisLCA || pHdStateMachine->nLCAState == STATE_UNDEF ){
@@ -17,7 +17,7 @@ int HdStateMachine_Enterable(
 /** @public @memberof HdStateMachine */
 int HdStateMachine_Exitable(
     HdStateMachine* pHdStateMachine,
-    int nThisState
+    uint64_t nThisState
 ){
     BOOL isThisLCA = IS_IN( pHdStateMachine->nSourceState, nThisState ) && IS_IN( pHdStateMachine->nTargetState, nThisState );
     if( !isThisLCA || pHdStateMachine->bIsExternTrans ){ 
@@ -28,13 +28,6 @@ int HdStateMachine_Exitable(
     }
     return FALSE;
 } /* HdStateMachine_Exitable */
-
-/** @public @memberof HdStateMachine */
-int HdStateMachine_IsFinished(
-    HdStateMachine* pHdStateMachine
-){
-    return pHdStateMachine->nCurrentState == STATE_TOP && pHdStateMachine->nCurrentState == pHdStateMachine->nPseudostate;
-} /* HdStateMachine_IsFinished */
 
 HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdStateMachine* pSource ){
     pHdStateMachine->pParentStm = pSource->pParentStm;

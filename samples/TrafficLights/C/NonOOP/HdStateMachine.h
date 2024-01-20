@@ -1,9 +1,8 @@
 #ifndef __HdStateMachine_H__
 #define __HdStateMachine_H__
 typedef struct tagHdStateMachine HdStateMachine;
-int HdStateMachine_Enterable( HdStateMachine* pHdStateMachine, int nThisState );
-int HdStateMachine_Exitable( HdStateMachine* pHdStateMachine, int nThisState );
-int HdStateMachine_IsFinished( HdStateMachine* pHdStateMachine );
+int HdStateMachine_Enterable( HdStateMachine* pHdStateMachine, uint64_t nThisState );
+int HdStateMachine_Exitable( HdStateMachine* pHdStateMachine, uint64_t nThisState );
 #endif//__HdStateMachine_H__
 #if !defined( HdStateMachine_Init ) && ( defined( __HdStateMachine_INTERNAL__ )  )
 /** @memberof HdStateMachine
@@ -29,11 +28,11 @@ HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdSt
 #define HdStateMachine_CLASS                                                                    \
     size_t cbSize;                                                                              \
     HdStateMachine* pParentStm;                                 \
-    uint32_t nCurrentState;                                                                                           \
-    uint32_t nLCAState;                                                                                                   \
-    uint32_t nTargetState;                                                                                             \
-    uint32_t nSourceState;                                                                                             \
-    uint32_t nPseudostate;                                                                                             \
+    uint64_t nCurrentState;                                                                                           \
+    uint64_t nLCAState;                                                                                                   \
+    uint64_t nTargetState;                                                                                             \
+    uint64_t nSourceState;                                                                                             \
+    uint64_t nPseudostate;                                                                                             \
     bool bIsExternTrans;                                                                                                 \
 
 typedef struct tagHdStateMachine{

@@ -580,6 +580,29 @@ void SavePngImage( char* sPath ){
     free(wideString);
 }
 
+void InitializeResources( void ){
+    HRESULT hr = CoInitialize( NULL );
+    if( FAILED( hr ) ){
+        printf( "Failed to initialize COM: %08X\n", hr );
+        return 1;
+    }
+
+    // Create WIC factory
+    hr = CoCreateInstance(
+        &CLSID_WICImagingFactory,
+        NULL,
+        CLSCTX_INPROC_SERVER,
+        &IID_IWICImagingFactory,
+        &m_pIWICFactory
+    );
+}
+
+void ReleaseResources( void ){
+    ReleaseAllImages();
+    if( m_pIWICFactory ) CALL( m_pIWICFactory, Release );
+    CoUninitialize();
+}
+
 // Linker pragmas
 #pragma comment(lib, "windowscodecs.lib")
 
@@ -614,21 +637,7 @@ void ShowExit( char* pMsg ){
 }
 
 int main( void ){
-    HRESULT hr = CoInitialize( NULL );
-    if( FAILED( hr ) ){
-        printf( "Failed to initialize COM: %08X\n", hr );
-        return 1;
-    }
-
-    // Create WIC factory
-    hr = CoCreateInstance(
-        &CLSID_WICImagingFactory,
-        NULL,
-        CLSCTX_INPROC_SERVER,
-        &IID_IWICImagingFactory,
-        &m_pIWICFactory
-    );
-
+    InitializeResources();
 
     ContextImpl context = ContextImpl_Ctor( ContextImpl_Init( 
         4, "", 1, 2, 3, { 0 },
@@ -653,9 +662,7 @@ int main( void ){
         } while (n+'0' != 'q' && n+'0' != 'r');
     }while (n+'0' != 'q');
        
-    ReleaseAllImages();
-    if( m_pIWICFactory ) CALL( m_pIWICFactory, Release );
-    CoUninitialize();
+    ReleaseResources();
 
     return 0;
 }
