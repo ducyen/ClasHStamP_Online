@@ -30,7 +30,7 @@ public class Main extends JFrame {
 
         // Launch the target application
         try {
-            Process process = new ProcessBuilder("./astah-com_linux/astah-run.sh", "").start();
+            Process process = new ProcessBuilder("./astah-edu/astah-run.sh", "").start();
 
             // Monitor the status of the launched application
             new Thread(() -> {
