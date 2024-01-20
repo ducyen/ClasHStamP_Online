@@ -307,8 +307,6 @@ state_impl,"static BOOL [Scope]_Reset( [tYPE]* p[tYPE], [sCOPE]* pStm, HdStateMa
             pStm->base.nPseudostate = nEntryPoint;
         }
     }
-    if( nEntryPoint != STATE_UNDEF && nEntryPoint <= STATE_TOP ){
-[vALUE]    }
     return [Scope]_RunToCompletion( p[tYPE], pStm );
 }
 static BOOL [Scope]_EventProc( [tYPE]* p[tYPE], [sCOPE]* pStm, [tYPE]_EVENT nEventId, void* pEventParams ){
@@ -345,6 +343,7 @@ transition,"static void [Scope]_[nAME]_Entry( [tYPE]* p[tYPE], [sCOPE]* pStm ){
 static BOOL [Scope]_[nAME]_EventProc( [tYPE]* p[tYPE], [sCOPE]* pStm, [tYPE]_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = [sCOPE]_[nAME];
+    ShowDoing( ""[dESC]"" );
 ","    switch( nEventId ){
     case [tYPE]_[nAME]:{
 ","    } break;
@@ -369,6 +368,7 @@ trans_top,"static void [Scope]_[nAME]_Entry( [tYPE]* p[tYPE], [sCOPE]* pStm ){
 static BOOL [Scope]_[nAME]_EventProc( [tYPE]* p[tYPE], [sCOPE]* pStm, [tYPE]_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = [sCOPE]_[nAME];
+    ShowDoing( ""[dESC]"" );
 ","    switch( nEventId ){
     case [tYPE]_[nAME]:{
 ","    } break;
