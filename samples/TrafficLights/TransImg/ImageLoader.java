@@ -19,6 +19,7 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 public class ImageLoader extends JFrame {
 
@@ -55,58 +56,72 @@ public class ImageLoader extends JFrame {
         }
     }
 
-    private void initUI() {
-        setTitle("Image Viewer");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	private void initUI() {
+		setTitle("Image Viewer");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        panel = new DoubleBufferedPanel();
-        panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        updatePanelImages();
+		panel = new JPanel(new CardLayout()); // Set to CardLayout
 
-        JScrollPane scrollPane = new JScrollPane(panel);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane scrollPane = new JScrollPane(panel);
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        add(scrollPane);
+		add(scrollPane);
 
-        setSize(800, 600);
-        setLocationRelativeTo(null);
-    }
-
-    // Custom JPanel with double buffering
-    private class DoubleBufferedPanel extends JPanel {
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            // Custom painting code here if needed
-        }
-
-        public DoubleBufferedPanel() {
-            super(true); // Enable double buffering
-        }
-    }
-
+		setSize(800, 600);
+		setLocationRelativeTo(null);
+	}
 
 	private void updatePanelImages() {
-		// Clear existing images from the list
-		images.clear();
+		SwingWorker<Void, JPanel> worker = new SwingWorker<Void, JPanel>() {
+			@Override
+			protected Void doInBackground() throws Exception {
+				loadImagesFromDirectoryRecursively(new File(directoryPath));
+				return null;
+			}
 
-		// Remove all components from the panel
-		panel.removeAll();
+			private void loadImagesFromDirectoryRecursively(File directory) {
+				File[] files = directory.listFiles();
+				if (files != null) {
+					for (File file : files) {
+						if (file.isDirectory()) {
+							loadImagesFromDirectoryRecursively(file);
+						} else if (file.getName().toLowerCase().endsWith(".png")) {
+							try {
+								System.out.println("Loading image: " + file.getAbsolutePath()); // Debugging
+								BufferedImage image = ImageIO.read(file);
+								if (image != null) {
+									JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+									imagePanel.add(new JLabel(new ImageIcon(image)));
+									publish(imagePanel);
+								}
+							} catch (IOException e) {
+								System.err.println("Failed to load image: " + file.getAbsolutePath()); // Debugging
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+			}
 
-		// Reload images from the directory
-		loadImagesFromDirectory(new File(directoryPath));
+			@Override
+			protected void process(List<JPanel> chunks) {
+				for (JPanel imgPanel : chunks) {
+					panel.add(imgPanel, "ImagePanel");
+				}
+			}
 
-		// Add reloaded images to the panel
-		for (BufferedImage image : images) {
-			JLabel label = new JLabel(new ImageIcon(image));
-			panel.add(label);
-		}
+			@Override
+			protected void done() {
+				CardLayout cl = (CardLayout) (panel.getLayout());
+				cl.show(panel, "ImagePanel");
+				panel.revalidate();
+			}
+		};
 
-		// Refresh the panel to show updated images
-		panel.revalidate();
-		panel.repaint();
+		worker.execute();
 	}
+
 
     private void startDirectoryWatchService() {
         Thread watchThread = new Thread(() -> {
