@@ -31,10 +31,7 @@ typedef char            TCHAR;
 #define TRUE    ( 1 )
 
 #define STATE_UNDEF                 ( 0x0000000000000000ULL )
-#define STATE_TOP                   ( 0x0000FFFFFFFFFFFFULL )
 #define IS_IN( leaf, composite )    ( composite >= leaf && ( composite & leaf ) > 0 )
-#define POWER_OF_TWO( x )           ( ( ( x ) & ( ( x ) - 1 ) ) == 0 )
-#define IS_COMPOSITE( s )           ( !POWER_OF_TWO( s ) )
 #define UNREF( x )                  ( ( x ) = ( x ) )
 #define MAX_STATE_NUM               ( 63 )
 

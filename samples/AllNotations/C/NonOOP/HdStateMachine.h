@@ -3,7 +3,6 @@
 typedef struct tagHdStateMachine HdStateMachine;
 int HdStateMachine_Enterable( HdStateMachine* pHdStateMachine, uint64_t nThisState );
 int HdStateMachine_Exitable( HdStateMachine* pHdStateMachine, uint64_t nThisState );
-int HdStateMachine_IsFinished( HdStateMachine* pHdStateMachine );
 #endif//__HdStateMachine_H__
 #if !defined( HdStateMachine_Init ) && ( defined( __HdStateMachine_INTERNAL__ )  )
 /** @memberof HdStateMachine

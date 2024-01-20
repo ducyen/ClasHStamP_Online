@@ -30,8 +30,12 @@ void DisplayMsg(char* pMsg) {
     printf( "%s\n", pMsg );
 }
 
-#define FONT_CHAR_HEIGHT 7
-#define FONT_CHAR_WIDTH 5
+#define FONT_CHAR_HEIGHT    ( 7 )
+#define FONT_CHAR_WIDTH     ( 5 )
+#define FONT_CHAR_SCALE     ( 1 )
+#define TEXT_ALIGN_LEFT     ( 0 )
+#define TEXT_ALIGN_RIGHT    ( 1 )
+#define TEXT_ALIGN_BTM      ( 2 )
 
 /* Generic to compute font bit on/off for this font */
 #define FONT_BIT(c, column, row) \
@@ -296,28 +300,16 @@ static const unsigned char font_data[][5] = {
 	{ 0x00, 0x00, 0x00, 0x00, 0x00 }
 };
 // Function to place a character from the font into an RGBA bitmap
-void placeCharacterInBitmap(BYTE *pv, unsigned char ch, int scale, int x, int y, int cbStride, uint8_t byRed, uint8_t byGreen, uint8_t byBlue ) {
+void placeCharacterInBitmap(BYTE *pv, unsigned char ch, int x, int y, int cbStride, uint8_t byRed, uint8_t byGreen, uint8_t byBlue ) {
     int fontIndex, i, j;
-#if 0
-    // Check if the character is in the font
-    if (ch >= 'A' && ch <= 'Z') {
-        fontIndex = ch - 'A';
-    } else if (ch >= '0' && ch <= '9') {
-        fontIndex = ch - '0' + 26;
-    } else {
-        // Character not in font
-        return;
-    }
-#else
     fontIndex = ch;
-#endif
 
     // Place the character into the bitmap
     for (i = 0; i < FONT_CHAR_WIDTH; ++i) {
         for (j = 0; j < FONT_CHAR_HEIGHT; ++j) {
             if ((font_data[fontIndex][i] >> j) & 1) {
                 // Set the pixel to white (RGBA: 255, 255, 255, 255)
-                UINT destIndex = ( y + j*scale ) * cbStride + ( x + i*scale ) * 4;
+                UINT destIndex = ( y + j*FONT_CHAR_SCALE ) * cbStride + ( x + i*FONT_CHAR_SCALE ) * 4;
 
                 // For simplicity, we'll just set the pixel to red (assuming 32bpp BGRA format)
                 pv[ destIndex ] = byBlue;       // Blue
@@ -401,6 +393,10 @@ IWICBitmap* LoadPngImage( char* sPath ){
 }
 
 /**
+ * action counter
+ */
+static int g_nActionCounter = 0;
+/**
  * find bitmap from path
  */
 static int g_nPathToBitmapCnt = 0;
@@ -447,11 +443,12 @@ IWICBitmap* FindBitmapFromPath( char* sPath ){
 /**
  * Draw rectangle on a png file
  */
-int DrawRectangle( char* 
-    sPath, 
+int DrawRectangle( char* sPath, 
     int nLeft, int nTop, int nWidth, int nHeight, 
     int nDgrLeft, int nDgrTop, int nDgrWidth, int nDgrHeight,
-    uint8_t byRed, uint8_t byGreen, uint8_t byBlue 
+    uint8_t byRed, uint8_t byGreen, uint8_t byBlue,
+    unsigned char* sText,
+    int nMargin, int nAlign
 ){
     HRESULT hr = S_OK;
     IWICBitmap *pIBitmap = FindBitmapFromPath( sPath );
@@ -507,14 +504,17 @@ int DrawRectangle( char*
                 }
             }
             // Draw some text
-            for( int i = 0; i < sizeof( font_data ) / sizeof( font_data[ 0 ] ) / 2; i++ ){
-                int scale = 2;
-                placeCharacterInBitmap( pv, i, scale, 
-                    10 + i * ( FONT_CHAR_WIDTH + 1 )*scale, 
-                    50, 
-                    cbStride, 
-                    0, 0, 255 
-                );
+            for( int i = 0; i < strlen( sText ); i++ ){
+                int nCharLeftPos = nLeft + nMargin + i * ( FONT_CHAR_WIDTH + 1 )*FONT_CHAR_SCALE;
+                int nCharTopPos = nTop + nMargin;
+
+                if( ( nAlign & TEXT_ALIGN_RIGHT ) != 0 ){
+                    nCharLeftPos = nLeft + nWidth - nMargin + ( i - strlen( sText ) ) * ( FONT_CHAR_WIDTH + 1 )*FONT_CHAR_SCALE;
+                }
+                if( ( nAlign & TEXT_ALIGN_BTM ) != 0 ){
+                    nCharTopPos = nTop + nHeight - nMargin - FONT_CHAR_HEIGHT *FONT_CHAR_SCALE;
+                }
+                placeCharacterInBitmap( pv, sText[ i ], nCharLeftPos, nCharTopPos, cbStride, byRed, byGreen, byBlue );
             }
 
             // Release the bitmap lock.
@@ -522,7 +522,6 @@ int DrawRectangle( char*
 
         }
     }
-    SavePngImage( sPath );
 }
 
 /**
@@ -592,8 +591,8 @@ void ShowEntry( char* pMsg ){
     int l, t, w, h, dgrX, dgrY, dgrW, dgrH;
     sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", s, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
     
-    DrawRectangle( s, l, t, w, h, dgrX, dgrY, dgrW, dgrH, 0, 255, 0 );
-    Sleep( 500 );
+    char sCounter[ 10 ];
+    DrawRectangle( s, l, t, w, h, dgrX, dgrY, dgrW, dgrH, 0, 255, 0, itoa( g_nActionCounter++, sCounter, 10 ), 5, TEXT_ALIGN_LEFT );
 }
 
 void ShowDoing( char* pMsg ){
@@ -602,7 +601,7 @@ void ShowDoing( char* pMsg ){
     int l, t, w, h, dgrX, dgrY, dgrW, dgrH;
     sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", s, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
     
-    DrawRectangle( s, l, t, w, h, dgrX, dgrY, dgrW, dgrH, 255, 255, 0 );
+    DrawRectangle( s, l, t, w, h, dgrX, dgrY, dgrW, dgrH, 0, 0, 255, "", 5, TEXT_ALIGN_BTM );
 }
 
 void ShowExit( char* pMsg ){
@@ -610,8 +609,8 @@ void ShowExit( char* pMsg ){
     int l, t, w, h, dgrX, dgrY, dgrW, dgrH;
     sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", s, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
     
-    DrawRectangle( s, l, t, w, h, dgrX, dgrY, dgrW, dgrH, 255, 0, 0 );
-    Sleep( 500 );
+    char sCounter[ 10 ];
+    DrawRectangle( s, l, t, w, h, dgrX, dgrY, dgrW, dgrH, 255, 0, 0, itoa( g_nActionCounter++, sCounter, 10 ), 5, TEXT_ALIGN_RIGHT );
 }
 
 int main( void ){
@@ -638,8 +637,10 @@ int main( void ){
     char n;
     do {
         ContextImpl_Start( &context );
+        SaveAllImages();
 
         do {
+            g_nActionCounter = 0;
             LoadAllImages();
             n = InputValue( "Enter event number('q': quit, 'r':restart): E" );
             EventParams* pParams = NULL;
@@ -648,6 +649,7 @@ int main( void ){
                 pParams = &e1Params;
             }
             ContextImpl_EventProc( &context, (ContextImpl_EVENT)n, pParams);
+            SaveAllImages();
         } while (n+'0' != 'q' && n+'0' != 'r');
     }while (n+'0' != 'q');
        

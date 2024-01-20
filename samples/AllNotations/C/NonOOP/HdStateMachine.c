@@ -29,13 +29,6 @@ int HdStateMachine_Exitable(
     return FALSE;
 } /* HdStateMachine_Exitable */
 
-/** @public @memberof HdStateMachine */
-int HdStateMachine_IsFinished(
-    HdStateMachine* pHdStateMachine
-){
-    return pHdStateMachine->nCurrentState == STATE_TOP && pHdStateMachine->nCurrentState == pHdStateMachine->nPseudostate;
-} /* HdStateMachine_IsFinished */
-
 HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdStateMachine* pSource ){
     pHdStateMachine->pParentStm = pSource->pParentStm;
     pHdStateMachine->nCurrentState = pSource->nCurrentState;
