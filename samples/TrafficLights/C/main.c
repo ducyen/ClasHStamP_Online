@@ -33,7 +33,7 @@ void DisplayMsg(char* pMsg) {
 
 #define FONT_CHAR_HEIGHT    ( 7 )
 #define FONT_CHAR_WIDTH     ( 5 )
-#define FONT_CHAR_SCALE     ( 1 )
+#define FONT_CHAR_SCALE     ( 2 )
 #define TEXT_ALIGN_LEFT     ( 0 )
 #define TEXT_ALIGN_RIGHT    ( 1 )
 #define TEXT_ALIGN_BTM      ( 2 )
@@ -309,14 +309,18 @@ void placeCharacterInBitmap(BYTE *pv, unsigned char ch, int x, int y, int cbStri
     for (i = 0; i < FONT_CHAR_WIDTH; ++i) {
         for (j = 0; j < FONT_CHAR_HEIGHT; ++j) {
             if ((font_data[fontIndex][i] >> j) & 1) {
-                // Set the pixel to white (RGBA: 255, 255, 255, 255)
-                UINT destIndex = ( y + j*FONT_CHAR_SCALE ) * cbStride + ( x + i*FONT_CHAR_SCALE ) * 4;
+                for( int u = 0; u < FONT_CHAR_SCALE; u++ ){
+                    for( int v = 0; v < FONT_CHAR_SCALE; v++ ){
+                        // Set the pixel to white (RGBA: 255, 255, 255, 255)
+                        UINT destIndex = ( y + j*FONT_CHAR_SCALE + v ) * cbStride + ( x + i*FONT_CHAR_SCALE + u ) * 4;
 
-                // For simplicity, we'll just set the pixel to red (assuming 32bpp BGRA format)
-                pv[ destIndex ] = byBlue;       // Blue
-                pv[ destIndex + 1 ] = byGreen;   // Green
-                pv[ destIndex + 2 ] = byRed; // Red
-                pv[ destIndex + 3 ] = 255; // Alpha
+                        // For simplicity, we'll just set the pixel to red (assuming 32bpp BGRA format)
+                        pv[ destIndex ] = byBlue;       // Blue
+                        pv[ destIndex + 1 ] = byGreen;   // Green
+                        pv[ destIndex + 2 ] = byRed; // Red
+                        pv[ destIndex + 3 ] = 255; // Alpha
+                    }
+                }
             }
         }
     }
