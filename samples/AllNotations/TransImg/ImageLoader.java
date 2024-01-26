@@ -54,6 +54,7 @@ public class ImageLoader extends JFrame {
 
 	private void updatePanelImages() {
 		SwingWorker<Void, JPanel> worker = new SwingWorker<Void, JPanel>() {
+			private JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 			@Override
 			protected Void doInBackground() throws Exception {
 				loadImagesFromDirectoryRecursively(new File(directoryPath));
@@ -71,7 +72,6 @@ public class ImageLoader extends JFrame {
 								System.out.println("Loading image: " + file.getAbsolutePath()); // Debugging
 								BufferedImage image = ImageIO.read(file);
 								if (image != null) {
-									JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 									imagePanel.add(new JLabel(new ImageIcon(image)));
 									publish(imagePanel);
 								}
