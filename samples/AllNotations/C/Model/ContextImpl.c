@@ -35,21 +35,37 @@ boolean ContextImpl_checkE1Params(
     #define checkE1Params ContextImpl_checkE1Params             // Just for demonstration
 } /* ContextImpl_checkE1Params */
 
-static void S8_Region1_BgnTrans( ContextImpl *pS8_Rgn1, S8_Region1* pStm, uint64_t targetState, uint64_t initState );
-static void S8_Region1_EndTrans( ContextImpl *pS8_Rgn1, S8_Region1* pStm );
-static BOOL S8_Region1_Reset( ContextImpl* pS8_Rgn1, S8_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
-static BOOL S8_Region1_Abort( ContextImpl* pS8_Rgn1, S8_Region1* pStm );
-static BOOL S8_Region1_EventProc( ContextImpl* pS8_Rgn1, S8_Region1* pStm, ContextImpl_EVENT nEventId, void* pEventParams );
-static BOOL S8_Region1_RunToCompletion( ContextImpl* pS8_Rgn1, S8_Region1* pStm );
+static void S8_Region1_BgnTrans( ContextImpl *pS8_Top, S8_Region1* pStm, uint64_t targetState, uint64_t initState );
+static void S8_Region1_EndTrans( ContextImpl *pS8_Top, S8_Region1* pStm );
+static BOOL S8_Region1_Reset( ContextImpl* pS8_Top, S8_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
+static BOOL S8_Region1_Abort( ContextImpl* pS8_Top, S8_Region1* pStm );
+static BOOL S8_Region1_EventProc( ContextImpl* pS8_Top, S8_Region1* pStm, ContextImpl_EVENT nEventId, void* pEventParams );
+static BOOL S8_Region1_RunToCompletion( ContextImpl* pS8_Top, S8_Region1* pStm );
+static void S8_Region1_S821_Entry( ContextImpl* pContextImpl, S8_Region1* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, S8_Region1_S821 ) ){
+        ShowEntry( "Model/ContextImpl/MainStm	427	717	61	53	5	-71	1245	1055" );
+    }
+}
+static BOOL S8_Region1_S821_EventProc( ContextImpl* pContextImpl, S8_Region1* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->base.nSourceState = S8_Region1_S821;
+    ShowDoing( "Model/ContextImpl/MainStm	427	717	61	53	5	-71	1245	1055" );
+    return bResult;
+}
+static void S8_Region1_S821_Exit( ContextImpl* pContextImpl, S8_Region1* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, S8_Region1_S821 ) ){ 
+        ShowExit( "Model/ContextImpl/MainStm	427	717	61	53	5	-71	1245	1055" );
+    }
+}
 static void S8_Region1_S822_Entry( ContextImpl* pContextImpl, S8_Region1* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, S8_Region1_S822 ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	720	770	61	53	9	-22	1269	1060" );
+        ShowEntry( "Model/ContextImpl/MainStm	748	717	61	53	5	-71	1245	1055" );
     }
 }
 static BOOL S8_Region1_S822_EventProc( ContextImpl* pContextImpl, S8_Region1* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = S8_Region1_S822;
-    ShowDoing( "Model/ContextImpl/MainStm	720	770	61	53	9	-22	1269	1060" );
+    ShowDoing( "Model/ContextImpl/MainStm	748	717	61	53	5	-71	1245	1055" );
     switch( nEventId ){
     case ContextImpl_E1:{
         E1Params* e = ( E1Params* )pEventParams;
@@ -63,31 +79,15 @@ static BOOL S8_Region1_S822_EventProc( ContextImpl* pContextImpl, S8_Region1* pS
 }
 static void S8_Region1_S822_Exit( ContextImpl* pContextImpl, S8_Region1* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, S8_Region1_S822 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	720	770	61	53	9	-22	1269	1060" );
-    }
-}
-static void S8_Region1_S821_Entry( ContextImpl* pContextImpl, S8_Region1* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, S8_Region1_S821 ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	478	770	61	53	9	-22	1269	1060" );
-    }
-}
-static BOOL S8_Region1_S821_EventProc( ContextImpl* pContextImpl, S8_Region1* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = S8_Region1_S821;
-    ShowDoing( "Model/ContextImpl/MainStm	478	770	61	53	9	-22	1269	1060" );
-    return bResult;
-}
-static void S8_Region1_S821_Exit( ContextImpl* pContextImpl, S8_Region1* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, S8_Region1_S821 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	478	770	61	53	9	-22	1269	1060" );
+        ShowExit( "Model/ContextImpl/MainStm	748	717	61	53	5	-71	1245	1055" );
     }
 }
 static void S8_Region1_EndTrans( ContextImpl *pContextImpl, S8_Region1* pStm ){
     pStm->base.nCurrentState = pStm->base.nTargetState;
     pStm->base.bIsExternTrans = FALSE;
     switch( pStm->base.nCurrentState ){
-    case S8_Region1_S822:       S8_Region1_S822_Entry( pContextImpl, pStm ); break;
     case S8_Region1_S821:       S8_Region1_S821_Entry( pContextImpl, pStm ); break;
+    case S8_Region1_S822:       S8_Region1_S822_Entry( pContextImpl, pStm ); break;
     default: break;
     }
 }
@@ -98,8 +98,8 @@ static void S8_Region1_BgnTrans( ContextImpl *pContextImpl, S8_Region1* pStm, ui
         pStm->base.nPseudostate = initState;
     }
     switch( pStm->base.nCurrentState ){
-    case S8_Region1_S822:       S8_Region1_S822_Exit( pContextImpl, pStm ); break;
     case S8_Region1_S821:       S8_Region1_S821_Exit( pContextImpl, pStm ); break;
+    case S8_Region1_S822:       S8_Region1_S822_Exit( pContextImpl, pStm ); break;
     default: break;
     }
 }
@@ -107,11 +107,11 @@ static BOOL S8_Region1_StateDefaultTrans( ContextImpl* pContextImpl, S8_Region1*
     BOOL bResult = FALSE;
     pStm->base.nSourceState = pStm->base.nCurrentState;
     pStm->base.nLCAState = STATE_UNDEF;
-    do{   if( pStm->base.nCurrentState == S8_Region1_S8_Rgn1 && pStm->base.nPseudostate == S8_Region1_InitPt ){
+    do{   if( pStm->base.nCurrentState == S8_Region1_S8_Top && pStm->base.nPseudostate == S8_Region1_InitialPseudostate0 ){
         S8_Region1_BgnTrans( pContextImpl, pStm, S8_Region1_S822, STATE_UNDEF );
         S8_Region1_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
-    }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, S8_Region1_S8_Rgn1) ){
+    }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, S8_Region1_S8_Top) ){
         S8_Region1_BgnTrans( pContextImpl, pStm, pStm->base.nPseudostate, STATE_UNDEF );
         S8_Region1_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
@@ -130,7 +130,7 @@ static BOOL S8_Region1_Reset( ContextImpl* pContextImpl, S8_Region1* pStm, HdSta
     pStm->base.pParentStm = pParentStm;
     if( nEntryPoint == NULL ){
         if( S8_Region1_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = S8_Region1_InitPt;
+            pStm->base.nPseudostate = S8_Region1_InitialPseudostate0;
         }
     }else{
         if( S8_Region1_IsFinished( &pStm->base ) ){
@@ -146,8 +146,8 @@ static BOOL S8_Region1_EventProc( ContextImpl* pContextImpl, S8_Region1* pStm, C
     BOOL bResult = FALSE;
     pStm->base.nLCAState = STATE_UNDEF;
     switch( pStm->base.nCurrentState ){
-    case S8_Region1_S822:                       bResult |= S8_Region1_S822_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case S8_Region1_S821:                       bResult |= S8_Region1_S821_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
+    case S8_Region1_S822:                       bResult |= S8_Region1_S822_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     default: break;
     }
     S8_Region1_RunToCompletion( pContextImpl, pStm );
@@ -158,34 +158,38 @@ static BOOL S8_Region1_IsIn( S8_Region1* pStm, uint64_t nCompositeState ) {
     return FALSE;
 }
 static BOOL S8_Region1_Abort( ContextImpl* pContextImpl, S8_Region1* pStm ) {
-    pStm->base.nSourceState = S8_Region1_S8_Rgn1;
-    S8_Region1_BgnTrans( pContextImpl, pStm, S8_Region1_S8_Rgn1, STATE_UNDEF );
+    pStm->base.nSourceState = S8_Region1_S8_Top;
+    S8_Region1_BgnTrans( pContextImpl, pStm, S8_Region1_S8_Top, STATE_UNDEF );
     S8_Region1_EndTrans( pContextImpl, pStm );
     return TRUE;
 }
 int S8_Region1_IsFinished(S8_Region1* pS8_Region1){
-    return pS8_Region1->base.nCurrentState == S8_Region1_S8_Rgn1 && pS8_Region1->base.nCurrentState == pS8_Region1->base.nPseudostate;
+    return pS8_Region1->base.nCurrentState == S8_Region1_S8_Top && pS8_Region1->base.nCurrentState == pS8_Region1->base.nPseudostate;
 }
-static void S8_Region2_BgnTrans( ContextImpl *pS8_Rgn2, S8_Region2* pStm, uint64_t targetState, uint64_t initState );
-static void S8_Region2_EndTrans( ContextImpl *pS8_Rgn2, S8_Region2* pStm );
-static BOOL S8_Region2_Reset( ContextImpl* pS8_Rgn2, S8_Region2* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
-static BOOL S8_Region2_Abort( ContextImpl* pS8_Rgn2, S8_Region2* pStm );
-static BOOL S8_Region2_EventProc( ContextImpl* pS8_Rgn2, S8_Region2* pStm, ContextImpl_EVENT nEventId, void* pEventParams );
-static BOOL S8_Region2_RunToCompletion( ContextImpl* pS8_Rgn2, S8_Region2* pStm );
+static void S8_Region2_BgnTrans( ContextImpl *pS8_Top, S8_Region2* pStm, uint64_t targetState, uint64_t initState );
+static void S8_Region2_EndTrans( ContextImpl *pS8_Top, S8_Region2* pStm );
+static BOOL S8_Region2_Reset( ContextImpl* pS8_Top, S8_Region2* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
+static BOOL S8_Region2_Abort( ContextImpl* pS8_Top, S8_Region2* pStm );
+static BOOL S8_Region2_EventProc( ContextImpl* pS8_Top, S8_Region2* pStm, ContextImpl_EVENT nEventId, void* pEventParams );
+static BOOL S8_Region2_RunToCompletion( ContextImpl* pS8_Top, S8_Region2* pStm );
 static void S8_Region2_S831_Entry( ContextImpl* pContextImpl, S8_Region2* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, S8_Region2_S831 ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	431	887	61	53	9	-22	1269	1060" );
+        ShowEntry( "Model/ContextImpl/MainStm	427	832	61	53	5	-71	1245	1055" );
     }
 }
 static BOOL S8_Region2_S831_EventProc( ContextImpl* pContextImpl, S8_Region2* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = S8_Region2_S831;
-    ShowDoing( "Model/ContextImpl/MainStm	431	887	61	53	9	-22	1269	1060" );
+    ShowDoing( "Model/ContextImpl/MainStm	427	832	61	53	5	-71	1245	1055" );
     switch( nEventId ){
     case ContextImpl_E3:{
-        S8_Region2_BgnTrans( pContextImpl, pStm, S8_Region2_S831Fin, STATE_UNDEF );
-        S8_Region2_EndTrans( pContextImpl, pStm );
-        bResult = TRUE;
+        if (ContextImpl_IsIn( pContextImpl, S8_Region1_S821 )
+         && ContextImpl_IsIn( pContextImpl, MainStm_S811 )) {
+            S8_Region2_BgnTrans( pContextImpl, pStm, S8_Region2_S8_Top, STATE_UNDEF );
+            pStm->base.pParentStm->nPseudostate = S8_Region2_ForkPseudostate2;
+            S8_Region2_EndTrans( pContextImpl, pStm );
+            bResult = TRUE;
+        }
     } break;
     default: break;
     }
@@ -193,23 +197,23 @@ static BOOL S8_Region2_S831_EventProc( ContextImpl* pContextImpl, S8_Region2* pS
 }
 static void S8_Region2_S831_Exit( ContextImpl* pContextImpl, S8_Region2* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, S8_Region2_S831 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	431	887	61	53	9	-22	1269	1060" );
+        ShowExit( "Model/ContextImpl/MainStm	427	832	61	53	5	-71	1245	1055" );
     }
 }
 static void S8_Region2_S832_Entry( ContextImpl* pContextImpl, S8_Region2* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, S8_Region2_S832 ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	600	887	61	53	9	-22	1269	1060" );
+        ShowEntry( "Model/ContextImpl/MainStm	748	832	61	53	5	-71	1245	1055" );
     }
 }
 static BOOL S8_Region2_S832_EventProc( ContextImpl* pContextImpl, S8_Region2* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = S8_Region2_S832;
-    ShowDoing( "Model/ContextImpl/MainStm	600	887	61	53	9	-22	1269	1060" );
+    ShowDoing( "Model/ContextImpl/MainStm	748	832	61	53	5	-71	1245	1055" );
     return bResult;
 }
 static void S8_Region2_S832_Exit( ContextImpl* pContextImpl, S8_Region2* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, S8_Region2_S832 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	600	887	61	53	9	-22	1269	1060" );
+        ShowExit( "Model/ContextImpl/MainStm	748	832	61	53	5	-71	1245	1055" );
     }
 }
 static void S8_Region2_EndTrans( ContextImpl *pContextImpl, S8_Region2* pStm ){
@@ -237,11 +241,11 @@ static BOOL S8_Region2_StateDefaultTrans( ContextImpl* pContextImpl, S8_Region2*
     BOOL bResult = FALSE;
     pStm->base.nSourceState = pStm->base.nCurrentState;
     pStm->base.nLCAState = STATE_UNDEF;
-    do{   if( pStm->base.nCurrentState == S8_Region2_S8_Rgn2 && pStm->base.nPseudostate == S8_Region2_InitPt ){
+    do{   if( pStm->base.nCurrentState == S8_Region2_S8_Top && pStm->base.nPseudostate == S8_Region2_InitialPseudostate1 ){
         S8_Region2_BgnTrans( pContextImpl, pStm, S8_Region2_S831, STATE_UNDEF );
         S8_Region2_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
-    }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, S8_Region2_S8_Rgn2) ){
+    }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, S8_Region2_S8_Top) ){
         S8_Region2_BgnTrans( pContextImpl, pStm, pStm->base.nPseudostate, STATE_UNDEF );
         S8_Region2_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
@@ -260,7 +264,7 @@ static BOOL S8_Region2_Reset( ContextImpl* pContextImpl, S8_Region2* pStm, HdSta
     pStm->base.pParentStm = pParentStm;
     if( nEntryPoint == NULL ){
         if( S8_Region2_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = S8_Region2_InitPt;
+            pStm->base.nPseudostate = S8_Region2_InitialPseudostate1;
         }
     }else{
         if( S8_Region2_IsFinished( &pStm->base ) ){
@@ -288,13 +292,13 @@ static BOOL S8_Region2_IsIn( S8_Region2* pStm, uint64_t nCompositeState ) {
     return FALSE;
 }
 static BOOL S8_Region2_Abort( ContextImpl* pContextImpl, S8_Region2* pStm ) {
-    pStm->base.nSourceState = S8_Region2_S8_Rgn2;
-    S8_Region2_BgnTrans( pContextImpl, pStm, S8_Region2_S8_Rgn2, STATE_UNDEF );
+    pStm->base.nSourceState = S8_Region2_S8_Top;
+    S8_Region2_BgnTrans( pContextImpl, pStm, S8_Region2_S8_Top, STATE_UNDEF );
     S8_Region2_EndTrans( pContextImpl, pStm );
     return TRUE;
 }
 int S8_Region2_IsFinished(S8_Region2* pS8_Region2){
-    return pS8_Region2->base.nCurrentState == S8_Region2_S8_Rgn2 && pS8_Region2->base.nCurrentState == pS8_Region2->base.nPseudostate;
+    return pS8_Region2->base.nCurrentState == S8_Region2_S8_Top && pS8_Region2->base.nCurrentState == pS8_Region2->base.nPseudostate;
 }
 static void SharedStm_BgnTrans( ContextImpl *pSharedTop, SharedStm* pStm, uint64_t targetState, uint64_t initState );
 static void SharedStm_EndTrans( ContextImpl *pSharedTop, SharedStm* pStm );
@@ -452,54 +456,44 @@ static BOOL MainStm_EventProc( ContextImpl* pMainTop, MainStm* pStm, ContextImpl
 static BOOL MainStm_RunToCompletion( ContextImpl* pMainTop, MainStm* pStm );
 static void MainStm_S1_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S1 ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	171	106	61	53	9	-22	1269	1060" );
+        ShowEntry( "Model/ContextImpl/MainStm	151	52	61	53	5	-71	1245	1055" );
     }
 }
 static BOOL MainStm_S1_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S1;
-    ShowDoing( "Model/ContextImpl/MainStm	171	106	61	53	9	-22	1269	1060" );
+    ShowDoing( "Model/ContextImpl/MainStm	151	52	61	53	5	-71	1245	1055" );
     switch( nEventId ){
     case ContextImpl_E1:{
         E1Params* e = ( E1Params* )pEventParams;
-        if (checkE1Params(e)) {
-            MainStm_BgnTrans( pContextImpl, pStm, MainStm_S2, MainStm_InitPt1 );
-            MainStm_EndTrans( pContextImpl, pStm );
-            bResult = TRUE;
-        }
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S2, MainStm_InitPt );
+        MainStm_EndTrans( pContextImpl, pStm );
+        bResult = TRUE;
     } break;
     case ContextImpl_E2:{
         int n = InputValue("Enter condition1: ");
         if (n == 0) {
             if( pStm->nS4History && pStm->nS4History != MainStm_S4 ){
                 MainStm_BgnTrans( pContextImpl, pStm, pStm->nS4History, STATE_UNDEF );
-                DisplayMsg("Do an action4");
                 MainStm_EndTrans( pContextImpl, pStm );
                 bResult = TRUE;
                 break;
             }
-            MainStm_BgnTrans( pContextImpl, pStm, MainStm_S4, MainStm_InitPt2 );
-            DisplayMsg("Do an action4");
+            MainStm_BgnTrans( pContextImpl, pStm, MainStm_S4, MainStm_InitPt );
             MainStm_EndTrans( pContextImpl, pStm );
             bResult = TRUE;
         } else if (InputValue("Enter condition2: ") == 1) {
             MainStm_BgnTrans( pContextImpl, pStm, MainStm_S5, STATE_UNDEF );
-            DisplayMsg("Do an action1");
-            DisplayMsg("Do an action2");
             MainStm_EndTrans( pContextImpl, pStm );
             bResult = TRUE;
         } else {
             if( pStm->nS7History && pStm->nS7History != MainStm_S7 ){
                 MainStm_BgnTrans( pContextImpl, pStm, pStm->nS7History, STATE_UNDEF );
-                DisplayMsg("Do an action1");
-                DisplayMsg("Do an action3");
                 MainStm_EndTrans( pContextImpl, pStm );
                 bResult = TRUE;
                 break;
             }
-            MainStm_BgnTrans( pContextImpl, pStm, MainStm_S7, MainStm_InitPt3 );
-            DisplayMsg("Do an action1");
-            DisplayMsg("Do an action3");
+            MainStm_BgnTrans( pContextImpl, pStm, MainStm_S7, MainStm_InitPt );
             MainStm_EndTrans( pContextImpl, pStm );
             bResult = TRUE;
         }
@@ -510,19 +504,19 @@ static BOOL MainStm_S1_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Cont
 }
 static void MainStm_S1_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S1 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	171	106	61	53	9	-22	1269	1060" );
+        ShowExit( "Model/ContextImpl/MainStm	151	52	61	53	5	-71	1245	1055" );
     }
 }
 static void MainStm_S2_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S2 ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	321	62	599	143	9	-22	1269	1060" );
+        ShowEntry( "Model/ContextImpl/MainStm	301	8	599	143	5	-71	1245	1055" );
         DisplayMsg("Do something");
     }
 }
 static BOOL MainStm_S2_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S2;
-    ShowDoing( "Model/ContextImpl/MainStm	321	62	599	143	9	-22	1269	1060" );
+    ShowDoing( "Model/ContextImpl/MainStm	301	8	599	143	5	-71	1245	1055" );
     switch( nEventId ){
     case ContextImpl_E2:{
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_S3, STATE_UNDEF );
@@ -536,7 +530,7 @@ static BOOL MainStm_S2_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Cont
             bResult = TRUE;
             break;
         }
-        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S4, MainStm_InitPt2 );
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S4, MainStm_InitPt );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
     } break;
@@ -547,19 +541,45 @@ static BOOL MainStm_S2_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Cont
 static void MainStm_S2_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S2 ) ){ 
         DisplayMsg("Do another thing");
-        ShowExit( "Model/ContextImpl/MainStm	321	62	599	143	9	-22	1269	1060" );
+        ShowExit( "Model/ContextImpl/MainStm	301	8	599	143	5	-71	1245	1055" );
+    }
+}
+static void MainStm_S22_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, MainStm_S22 ) ){
+        MainStm_S2_Entry( pContextImpl, pStm );
+        ShowEntry( "Model/ContextImpl/MainStm	748	77	61	53	5	-71	1245	1055" );
+    }
+}
+static BOOL MainStm_S22_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->base.nSourceState = MainStm_S22;
+    ShowDoing( "Model/ContextImpl/MainStm	748	77	61	53	5	-71	1245	1055" );
+    switch( nEventId ){
+    case ContextImpl_E0:{
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S2, STATE_UNDEF );
+        MainStm_EndTrans( pContextImpl, pStm );
+        bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainStm_S2_EventProc( pContextImpl, pStm, nEventId, pEventParams );
+}
+static void MainStm_S22_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, MainStm_S22 ) ){ 
+        ShowExit( "Model/ContextImpl/MainStm	748	77	61	53	5	-71	1245	1055" );
+        MainStm_S2_Exit( pContextImpl, pStm );
     }
 }
 static void MainStm_S21_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S21 ) ){
         MainStm_S2_Entry( pContextImpl, pStm );
-        ShowEntry( "Model/ContextImpl/MainStm	561	131	61	53	9	-22	1269	1060" );
+        ShowEntry( "Model/ContextImpl/MainStm	541	77	61	53	5	-71	1245	1055" );
     }
 }
 static BOOL MainStm_S21_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S21;
-    ShowDoing( "Model/ContextImpl/MainStm	561	131	61	53	9	-22	1269	1060" );
+    ShowDoing( "Model/ContextImpl/MainStm	541	77	61	53	5	-71	1245	1055" );
     switch( nEventId ){
     case ContextImpl_E0:{
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_S22, STATE_UNDEF );
@@ -578,45 +598,19 @@ static BOOL MainStm_S21_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Con
 }
 static void MainStm_S21_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S21 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	561	131	61	53	9	-22	1269	1060" );
-        MainStm_S2_Exit( pContextImpl, pStm );
-    }
-}
-static void MainStm_S22_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S22 ) ){
-        MainStm_S2_Entry( pContextImpl, pStm );
-        ShowEntry( "Model/ContextImpl/MainStm	769	131	61	53	9	-22	1269	1060" );
-    }
-}
-static BOOL MainStm_S22_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S22;
-    ShowDoing( "Model/ContextImpl/MainStm	769	131	61	53	9	-22	1269	1060" );
-    switch( nEventId ){
-    case ContextImpl_E0:{
-        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S2, STATE_UNDEF );
-        MainStm_EndTrans( pContextImpl, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult ? bResult : MainStm_S2_EventProc( pContextImpl, pStm, nEventId, pEventParams );
-}
-static void MainStm_S22_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S22 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	769	131	61	53	9	-22	1269	1060" );
+        ShowExit( "Model/ContextImpl/MainStm	541	77	61	53	5	-71	1245	1055" );
         MainStm_S2_Exit( pContextImpl, pStm );
     }
 }
 static void MainStm_S3_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S3 ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	1008	106	61	53	9	-22	1269	1060" );
+        ShowEntry( "Model/ContextImpl/MainStm	988	52	61	53	5	-71	1245	1055" );
     }
 }
 static BOOL MainStm_S3_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S3;
-    ShowDoing( "Model/ContextImpl/MainStm	1008	106	61	53	9	-22	1269	1060" );
+    ShowDoing( "Model/ContextImpl/MainStm	988	52	61	53	5	-71	1245	1055" );
     switch( nEventId ){
     case ContextImpl_E0:{
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_Junction, STATE_UNDEF );
@@ -629,18 +623,18 @@ static BOOL MainStm_S3_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Cont
 }
 static void MainStm_S3_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S3 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	1008	106	61	53	9	-22	1269	1060" );
+        ShowExit( "Model/ContextImpl/MainStm	988	52	61	53	5	-71	1245	1055" );
     }
 }
 static void MainStm_S4_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S4 ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	383	282	537	141	9	-22	1269	1060" );
+        ShowEntry( "Model/ContextImpl/MainStm	363	228	537	141	5	-71	1245	1055" );
     }
 }
 static BOOL MainStm_S4_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S4;
-    ShowDoing( "Model/ContextImpl/MainStm	383	282	537	141	9	-22	1269	1060" );
+    ShowDoing( "Model/ContextImpl/MainStm	363	228	537	141	5	-71	1245	1055" );
     switch( nEventId ){
     case ContextImpl_E2:{
         pStm->base.bIsExternTrans = TRUE;
@@ -654,48 +648,20 @@ static BOOL MainStm_S4_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Cont
 }
 static void MainStm_S4_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S4 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	383	282	537	141	9	-22	1269	1060" );
-    }
-}
-static void MainStm_S41_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S41 ) ){
-        MainStm_S4_Entry( pContextImpl, pStm );
-        ShowEntry( "Model/ContextImpl/MainStm	492	329	61	53	9	-22	1269	1060" );
-        pStm->nS4History = MainStm_S41;
-    }
-}
-static BOOL MainStm_S41_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S41;
-    ShowDoing( "Model/ContextImpl/MainStm	492	329	61	53	9	-22	1269	1060" );
-    switch( nEventId ){
-    case ContextImpl_E1:{
-        E1Params* e = ( E1Params* )pEventParams;
-        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S42, STATE_UNDEF );
-        MainStm_EndTrans( pContextImpl, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult ? bResult : MainStm_S4_EventProc( pContextImpl, pStm, nEventId, pEventParams );
-}
-static void MainStm_S41_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S41 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	492	329	61	53	9	-22	1269	1060" );
-        MainStm_S4_Exit( pContextImpl, pStm );
+        ShowExit( "Model/ContextImpl/MainStm	363	228	537	141	5	-71	1245	1055" );
     }
 }
 static void MainStm_S42_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S42 ) ){
         MainStm_S4_Entry( pContextImpl, pStm );
-        ShowEntry( "Model/ContextImpl/MainStm	690	329	61	53	9	-22	1269	1060" );
+        ShowEntry( "Model/ContextImpl/MainStm	669	275	61	53	5	-71	1245	1055" );
         pStm->nS4History = MainStm_S42;
     }
 }
 static BOOL MainStm_S42_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S42;
-    ShowDoing( "Model/ContextImpl/MainStm	690	329	61	53	9	-22	1269	1060" );
+    ShowDoing( "Model/ContextImpl/MainStm	669	275	61	53	5	-71	1245	1055" );
     switch( nEventId ){
     case ContextImpl_E1:{
         E1Params* e = ( E1Params* )pEventParams;
@@ -709,20 +675,48 @@ static BOOL MainStm_S42_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Con
 }
 static void MainStm_S42_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S42 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	690	329	61	53	9	-22	1269	1060" );
+        ShowExit( "Model/ContextImpl/MainStm	669	275	61	53	5	-71	1245	1055" );
+        MainStm_S4_Exit( pContextImpl, pStm );
+    }
+}
+static void MainStm_S41_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, MainStm_S41 ) ){
+        MainStm_S4_Entry( pContextImpl, pStm );
+        ShowEntry( "Model/ContextImpl/MainStm	472	275	61	53	5	-71	1245	1055" );
+        pStm->nS4History = MainStm_S41;
+    }
+}
+static BOOL MainStm_S41_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->base.nSourceState = MainStm_S41;
+    ShowDoing( "Model/ContextImpl/MainStm	472	275	61	53	5	-71	1245	1055" );
+    switch( nEventId ){
+    case ContextImpl_E1:{
+        E1Params* e = ( E1Params* )pEventParams;
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S42, STATE_UNDEF );
+        MainStm_EndTrans( pContextImpl, pStm );
+        bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainStm_S4_EventProc( pContextImpl, pStm, nEventId, pEventParams );
+}
+static void MainStm_S41_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, MainStm_S41 ) ){ 
+        ShowExit( "Model/ContextImpl/MainStm	472	275	61	53	5	-71	1245	1055" );
         MainStm_S4_Exit( pContextImpl, pStm );
     }
 }
 static void MainStm_S6_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S6 ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	973	431	130	114	9	-22	1269	1060" );
+        ShowEntry( "Model/ContextImpl/MainStm	953	377	130	114	5	-71	1245	1055" );
         SharedStm_Reset( pContextImpl, &pStm->S6SharedStm, &pStm->base, STATE_UNDEF );
     }
 }
 static BOOL MainStm_S6_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S6;
-    ShowDoing( "Model/ContextImpl/MainStm	973	431	130	114	9	-22	1269	1060" );
+    ShowDoing( "Model/ContextImpl/MainStm	953	377	130	114	5	-71	1245	1055" );
     switch( nEventId ){
     case ContextImpl_E3:{
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_S9, STATE_UNDEF );
@@ -736,7 +730,7 @@ static BOOL MainStm_S6_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Cont
             bResult = TRUE;
             break;
         }
-        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S4, MainStm_InitPt2 );
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S4, MainStm_InitPt );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
     } break;
@@ -747,20 +741,20 @@ static BOOL MainStm_S6_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Cont
 static void MainStm_S6_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S6 ) ){ 
         SharedStm_Abort( pContextImpl, &pStm->S6SharedStm );
-        ShowExit( "Model/ContextImpl/MainStm	973	431	130	114	9	-22	1269	1060" );
+        ShowExit( "Model/ContextImpl/MainStm	953	377	130	114	5	-71	1245	1055" );
     }
 }
 static void MainStm_S8_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S8 ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	380	592	519	366	9	-22	1269	1060" );
-        S8_Region1_Reset( pContextImpl, &pStm->S8_Rgn1S8_Region1, &pStm->base, STATE_UNDEF );
-        S8_Region2_Reset( pContextImpl, &pStm->S8_Rgn2S8_Region2, &pStm->base, STATE_UNDEF );
+        ShowEntry( "Model/ContextImpl/MainStm	362	538	522	366	5	-71	1245	1055" );
+        S8_Region1_Reset( pContextImpl, &pStm->S8_TopS8_Region1, &pStm->base, STATE_UNDEF );
+        S8_Region2_Reset( pContextImpl, &pStm->S8_TopS8_Region2, &pStm->base, STATE_UNDEF );
     }
 }
 static BOOL MainStm_S8_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S8;
-    ShowDoing( "Model/ContextImpl/MainStm	380	592	519	366	9	-22	1269	1060" );
+    ShowDoing( "Model/ContextImpl/MainStm	362	538	522	366	5	-71	1245	1055" );
     switch( nEventId ){
     case ContextImpl_E4:{
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_MainTop, STATE_UNDEF );
@@ -774,7 +768,7 @@ static BOOL MainStm_S8_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Cont
             bResult = TRUE;
             break;
         }
-        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S7, MainStm_InitPt3 );
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S7, MainStm_InitPt );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
     } break;
@@ -784,47 +778,51 @@ static BOOL MainStm_S8_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Cont
 }
 static void MainStm_S8_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S8 ) ){ 
-        S8_Region1_Abort( pContextImpl, &pStm->S8_Rgn1S8_Region1 );
-        S8_Region2_Abort( pContextImpl, &pStm->S8_Rgn2S8_Region2 );
-        ShowExit( "Model/ContextImpl/MainStm	380	592	519	366	9	-22	1269	1060" );
+        S8_Region1_Abort( pContextImpl, &pStm->S8_TopS8_Region1 );
+        S8_Region2_Abort( pContextImpl, &pStm->S8_TopS8_Region2 );
+        ShowExit( "Model/ContextImpl/MainStm	362	538	522	366	5	-71	1245	1055" );
     }
 }
-static void MainStm_S811_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S811 ) ){
+static void MainStm_S812_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, MainStm_S812 ) ){
         MainStm_S8_Entry( pContextImpl, pStm );
-        ShowEntry( "Model/ContextImpl/MainStm	447	623	61	53	9	-22	1269	1060" );
+        ShowEntry( "Model/ContextImpl/MainStm	569	569	61	53	5	-71	1245	1055" );
     }
 }
-static BOOL MainStm_S811_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
+static BOOL MainStm_S812_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S811;
-    ShowDoing( "Model/ContextImpl/MainStm	447	623	61	53	9	-22	1269	1060" );
+    pStm->base.nSourceState = MainStm_S812;
+    ShowDoing( "Model/ContextImpl/MainStm	569	569	61	53	5	-71	1245	1055" );
     switch( nEventId ){
-    case ContextImpl_E2:{
-        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S812, STATE_UNDEF );
-        MainStm_EndTrans( pContextImpl, pStm );
-        bResult = TRUE;
+    case ContextImpl_E1:{
+        E1Params* e = ( E1Params* )pEventParams;
+        if (ContextImpl_IsIn( pContextImpl, S8_Region1_S821 )) {
+            MainStm_BgnTrans( pContextImpl, pStm, MainStm_S813, STATE_UNDEF );
+            S8_Region1_Reset( pContextImpl, &pStm->S8_TopS8_Region1, &pStm->base, S8_Region1_S822 );
+            MainStm_EndTrans( pContextImpl, pStm );
+            bResult = TRUE;
+        }
     } break;
     default: break;
     }
     return bResult ? bResult : MainStm_S8_EventProc( pContextImpl, pStm, nEventId, pEventParams );
 }
-static void MainStm_S811_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S811 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	447	623	61	53	9	-22	1269	1060" );
+static void MainStm_S812_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, MainStm_S812 ) ){ 
+        ShowExit( "Model/ContextImpl/MainStm	569	569	61	53	5	-71	1245	1055" );
         MainStm_S8_Exit( pContextImpl, pStm );
     }
 }
 static void MainStm_S813_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S813 ) ){
         MainStm_S8_Entry( pContextImpl, pStm );
-        ShowEntry( "Model/ContextImpl/MainStm	769	623	61	53	9	-22	1269	1060" );
+        ShowEntry( "Model/ContextImpl/MainStm	748	569	61	53	5	-71	1245	1055" );
     }
 }
 static BOOL MainStm_S813_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S813;
-    ShowDoing( "Model/ContextImpl/MainStm	769	623	61	53	9	-22	1269	1060" );
+    ShowDoing( "Model/ContextImpl/MainStm	748	569	61	53	5	-71	1245	1055" );
     switch( nEventId ){
     case ContextImpl_E5:{
         if (ContextImpl_IsIn( pContextImpl, S8_Region1_S822 )) {
@@ -839,54 +837,51 @@ static BOOL MainStm_S813_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Co
 }
 static void MainStm_S813_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S813 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	769	623	61	53	9	-22	1269	1060" );
+        ShowExit( "Model/ContextImpl/MainStm	748	569	61	53	5	-71	1245	1055" );
         MainStm_S8_Exit( pContextImpl, pStm );
     }
 }
-static void MainStm_S812_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S812 ) ){
+static void MainStm_S811_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, MainStm_S811 ) ){
         MainStm_S8_Entry( pContextImpl, pStm );
-        ShowEntry( "Model/ContextImpl/MainStm	590	623	61	53	9	-22	1269	1060" );
+        ShowEntry( "Model/ContextImpl/MainStm	427	569	61	53	5	-71	1245	1055" );
     }
 }
-static BOOL MainStm_S812_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
+static BOOL MainStm_S811_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S812;
-    ShowDoing( "Model/ContextImpl/MainStm	590	623	61	53	9	-22	1269	1060" );
+    pStm->base.nSourceState = MainStm_S811;
+    ShowDoing( "Model/ContextImpl/MainStm	427	569	61	53	5	-71	1245	1055" );
     switch( nEventId ){
     case ContextImpl_E1:{
         E1Params* e = ( E1Params* )pEventParams;
-        if (ContextImpl_IsIn( pContextImpl, S8_Region1_S821 )) {
-            MainStm_BgnTrans( pContextImpl, pStm, MainStm_S813, STATE_UNDEF );
-            S8_Region1_Reset( pContextImpl, &pStm->S8_Rgn1S8_Region1, &pStm->base, S8_Region1_S822 );
-            MainStm_EndTrans( pContextImpl, pStm );
-            bResult = TRUE;
-        }
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S812, STATE_UNDEF );
+        MainStm_EndTrans( pContextImpl, pStm );
+        bResult = TRUE;
     } break;
     default: break;
     }
     return bResult ? bResult : MainStm_S8_EventProc( pContextImpl, pStm, nEventId, pEventParams );
 }
-static void MainStm_S812_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S812 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	590	623	61	53	9	-22	1269	1060" );
+static void MainStm_S811_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, MainStm_S811 ) ){ 
+        ShowExit( "Model/ContextImpl/MainStm	427	569	61	53	5	-71	1245	1055" );
         MainStm_S8_Exit( pContextImpl, pStm );
     }
 }
 static void MainStm_S7_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S7 ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	138	592	130	366	9	-22	1269	1060" );
+        ShowEntry( "Model/ContextImpl/MainStm	118	538	132	366	5	-71	1245	1055" );
     }
 }
 static BOOL MainStm_S7_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S7;
-    ShowDoing( "Model/ContextImpl/MainStm	138	592	130	366	9	-22	1269	1060" );
+    ShowDoing( "Model/ContextImpl/MainStm	118	538	132	366	5	-71	1245	1055" );
     switch( nEventId ){
     case ContextImpl_E1:{
         E1Params* e = ( E1Params* )pEventParams;
         pStm->base.bIsExternTrans = TRUE;
-        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S71, MainStm_InitialPseudostate0 );
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S71, MainStm_Initpseudostate0 );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
     } break;
@@ -896,9 +891,9 @@ static BOOL MainStm_S7_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Cont
         bResult = TRUE;
     } break;
     case ContextImpl_E3:{
-        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S8, MainStm_InitPt4 );
-        S8_Region1_Reset( pContextImpl, &pStm->S8_Rgn1S8_Region1, &pStm->base, S8_Region1_S821 );
-        S8_Region2_Reset( pContextImpl, &pStm->S8_Rgn2S8_Region2, &pStm->base, S8_Region2_S831 );
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S8, MainStm_InitPt );
+        S8_Region1_Reset( pContextImpl, &pStm->S8_TopS8_Region1, &pStm->base, S8_Region1_S821 );
+        S8_Region2_Reset( pContextImpl, &pStm->S8_TopS8_Region2, &pStm->base, S8_Region2_S831 );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
     } break;
@@ -908,42 +903,60 @@ static BOOL MainStm_S7_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Cont
 }
 static void MainStm_S7_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S7 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	138	592	130	366	9	-22	1269	1060" );
+        ShowExit( "Model/ContextImpl/MainStm	118	538	132	366	5	-71	1245	1055" );
+    }
+}
+static void MainStm_S72_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, MainStm_S72 ) ){
+        MainStm_S7_Entry( pContextImpl, pStm );
+        ShowEntry( "Model/ContextImpl/MainStm	137	821	61	53	5	-71	1245	1055" );
+        pStm->nS7History = MainStm_S72;
+    }
+}
+static BOOL MainStm_S72_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->base.nSourceState = MainStm_S72;
+    ShowDoing( "Model/ContextImpl/MainStm	137	821	61	53	5	-71	1245	1055" );
+    return bResult ? bResult : MainStm_S7_EventProc( pContextImpl, pStm, nEventId, pEventParams );
+}
+static void MainStm_S72_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, MainStm_S72 ) ){ 
+        ShowExit( "Model/ContextImpl/MainStm	137	821	61	53	5	-71	1245	1055" );
+        MainStm_S7_Exit( pContextImpl, pStm );
     }
 }
 static void MainStm_S71_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S71 ) ){
         MainStm_S7_Entry( pContextImpl, pStm );
-        ShowEntry( "Model/ContextImpl/MainStm	148	660	110	196	9	-22	1269	1060" );
+        ShowEntry( "Model/ContextImpl/MainStm	133	617	105	187	5	-71	1245	1055" );
         pStm->nS7History = MainStm_S71;
     }
 }
 static BOOL MainStm_S71_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S71;
-    ShowDoing( "Model/ContextImpl/MainStm	148	660	110	196	9	-22	1269	1060" );
+    ShowDoing( "Model/ContextImpl/MainStm	133	617	105	187	5	-71	1245	1055" );
     return bResult ? bResult : MainStm_S7_EventProc( pContextImpl, pStm, nEventId, pEventParams );
 }
 static void MainStm_S71_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S71 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	148	660	110	196	9	-22	1269	1060" );
+        ShowExit( "Model/ContextImpl/MainStm	133	617	105	187	5	-71	1245	1055" );
         MainStm_S7_Exit( pContextImpl, pStm );
     }
 }
 static void MainStm_S711_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S711 ) ){
         MainStm_S71_Entry( pContextImpl, pStm );
-        ShowEntry( "Model/ContextImpl/MainStm	176	721	44	37	9	-22	1269	1060" );
+        ShowEntry( "Model/ContextImpl/MainStm	162	690	44	37	5	-71	1245	1055" );
         pStm->nS7History = MainStm_S711;
     }
 }
 static BOOL MainStm_S711_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S711;
-    ShowDoing( "Model/ContextImpl/MainStm	176	721	44	37	9	-22	1269	1060" );
+    ShowDoing( "Model/ContextImpl/MainStm	162	690	44	37	5	-71	1245	1055" );
     switch( nEventId ){
-    case ContextImpl_E1:{
-        E1Params* e = ( E1Params* )pEventParams;
+    case ContextImpl_E0:{
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_S712, STATE_UNDEF );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
@@ -954,57 +967,38 @@ static BOOL MainStm_S711_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Co
 }
 static void MainStm_S711_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S711 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	176	721	44	37	9	-22	1269	1060" );
+        ShowExit( "Model/ContextImpl/MainStm	162	690	44	37	5	-71	1245	1055" );
         MainStm_S71_Exit( pContextImpl, pStm );
     }
 }
 static void MainStm_S712_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S712 ) ){
         MainStm_S71_Entry( pContextImpl, pStm );
-        ShowEntry( "Model/ContextImpl/MainStm	176	796	44	37	9	-22	1269	1060" );
+        ShowEntry( "Model/ContextImpl/MainStm	162	757	44	37	5	-71	1245	1055" );
         pStm->nS7History = MainStm_S712;
     }
 }
 static BOOL MainStm_S712_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S712;
-    ShowDoing( "Model/ContextImpl/MainStm	176	796	44	37	9	-22	1269	1060" );
+    ShowDoing( "Model/ContextImpl/MainStm	162	757	44	37	5	-71	1245	1055" );
     return bResult ? bResult : MainStm_S71_EventProc( pContextImpl, pStm, nEventId, pEventParams );
 }
 static void MainStm_S712_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S712 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	176	796	44	37	9	-22	1269	1060" );
+        ShowExit( "Model/ContextImpl/MainStm	162	757	44	37	5	-71	1245	1055" );
         MainStm_S71_Exit( pContextImpl, pStm );
-    }
-}
-static void MainStm_S72_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S72 ) ){
-        MainStm_S7_Entry( pContextImpl, pStm );
-        ShowEntry( "Model/ContextImpl/MainStm	157	870	61	53	9	-22	1269	1060" );
-        pStm->nS7History = MainStm_S72;
-    }
-}
-static BOOL MainStm_S72_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S72;
-    ShowDoing( "Model/ContextImpl/MainStm	157	870	61	53	9	-22	1269	1060" );
-    return bResult ? bResult : MainStm_S7_EventProc( pContextImpl, pStm, nEventId, pEventParams );
-}
-static void MainStm_S72_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S72 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	157	870	61	53	9	-22	1269	1060" );
-        MainStm_S7_Exit( pContextImpl, pStm );
     }
 }
 static void MainStm_S10_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S10 ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	1009	802	231	53	9	-22	1269	1060" );
+        ShowEntry( "Model/ContextImpl/MainStm	988	748	231	53	5	-71	1245	1055" );
     }
 }
 static BOOL MainStm_S10_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S10;
-    ShowDoing( "Model/ContextImpl/MainStm	1009	802	231	53	9	-22	1269	1060" );
+    ShowDoing( "Model/ContextImpl/MainStm	988	748	231	53	5	-71	1245	1055" );
     switch( nEventId ){
     case ContextImpl_E1:{
         E1Params* e = ( E1Params* )pEventParams;
@@ -1013,8 +1007,8 @@ static BOOL MainStm_S10_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Con
         bResult = TRUE;
     } break;
     case ContextImpl_E2:{
-        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S8, MainStm_InitPt4 );
-        S8_Region2_Reset( pContextImpl, &pStm->S8_Rgn2S8_Region2, &pStm->base, S8_Region2_S832 );
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S8, MainStm_InitPt );
+        S8_Region2_Reset( pContextImpl, &pStm->S8_TopS8_Region2, &pStm->base, S8_Region2_S832 );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
     } break;
@@ -1024,18 +1018,18 @@ static BOOL MainStm_S10_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Con
 }
 static void MainStm_S10_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S10 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	1009	802	231	53	9	-22	1269	1060" );
+        ShowExit( "Model/ContextImpl/MainStm	988	748	231	53	5	-71	1245	1055" );
     }
 }
 static void MainStm_S5_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S5 ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	321	471	130	53	9	-22	1269	1060" );
+        ShowEntry( "Model/ContextImpl/MainStm	301	417	130	53	5	-71	1245	1055" );
     }
 }
 static BOOL MainStm_S5_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S5;
-    ShowDoing( "Model/ContextImpl/MainStm	321	471	130	53	9	-22	1269	1060" );
+    ShowDoing( "Model/ContextImpl/MainStm	301	417	130	53	5	-71	1245	1055" );
     switch( nEventId ){
     case ContextImpl_E1:{
         E1Params* e = ( E1Params* )pEventParams;
@@ -1051,7 +1045,7 @@ static BOOL MainStm_S5_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Cont
             MainStm_EndTrans( pContextImpl, pStm );
             bResult = TRUE;
         } else if (n == 1) {
-            MainStm_BgnTrans( pContextImpl, pStm, MainStm_S8, MainStm_InitPt4 );
+            MainStm_BgnTrans( pContextImpl, pStm, MainStm_S8, MainStm_InitPt );
             MainStm_EndTrans( pContextImpl, pStm );
             bResult = TRUE;
         } else {
@@ -1067,25 +1061,25 @@ static BOOL MainStm_S5_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Cont
 }
 static void MainStm_S5_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S5 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	321	471	130	53	9	-22	1269	1060" );
+        ShowExit( "Model/ContextImpl/MainStm	301	417	130	53	5	-71	1245	1055" );
     }
 }
 static void MainStm_S9_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S9 ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	1111	592	135	60	9	-22	1269	1060" );
+        ShowEntry( "Model/ContextImpl/MainStm	1090	538	134	60	5	-71	1245	1055" );
         SharedStm_Reset( pContextImpl, &pStm->S9SharedStm, &pStm->base, STATE_UNDEF );
     }
 }
 static BOOL MainStm_S9_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S9;
-    ShowDoing( "Model/ContextImpl/MainStm	1111	592	135	60	9	-22	1269	1060" );
+    ShowDoing( "Model/ContextImpl/MainStm	1090	538	134	60	5	-71	1245	1055" );
     return bResult;
 }
 static void MainStm_S9_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S9 ) ){ 
         SharedStm_Abort( pContextImpl, &pStm->S9SharedStm );
-        ShowExit( "Model/ContextImpl/MainStm	1111	592	135	60	9	-22	1269	1060" );
+        ShowExit( "Model/ContextImpl/MainStm	1090	538	134	60	5	-71	1245	1055" );
     }
 }
 static void MainStm_EndTrans( ContextImpl *pContextImpl, MainStm* pStm ){
@@ -1094,22 +1088,22 @@ static void MainStm_EndTrans( ContextImpl *pContextImpl, MainStm* pStm ){
     switch( pStm->base.nCurrentState ){
     case MainStm_S1:            MainStm_S1_Entry( pContextImpl, pStm ); break;
     case MainStm_S2:            MainStm_S2_Entry( pContextImpl, pStm ); break;
-    case MainStm_S21:           MainStm_S21_Entry( pContextImpl, pStm ); break;
     case MainStm_S22:           MainStm_S22_Entry( pContextImpl, pStm ); break;
+    case MainStm_S21:           MainStm_S21_Entry( pContextImpl, pStm ); break;
     case MainStm_S3:            MainStm_S3_Entry( pContextImpl, pStm ); break;
     case MainStm_S4:            MainStm_S4_Entry( pContextImpl, pStm ); break;
-    case MainStm_S41:           MainStm_S41_Entry( pContextImpl, pStm ); break;
     case MainStm_S42:           MainStm_S42_Entry( pContextImpl, pStm ); break;
+    case MainStm_S41:           MainStm_S41_Entry( pContextImpl, pStm ); break;
     case MainStm_S6:            MainStm_S6_Entry( pContextImpl, pStm ); break;
     case MainStm_S8:            MainStm_S8_Entry( pContextImpl, pStm ); break;
-    case MainStm_S811:          MainStm_S811_Entry( pContextImpl, pStm ); break;
-    case MainStm_S813:          MainStm_S813_Entry( pContextImpl, pStm ); break;
     case MainStm_S812:          MainStm_S812_Entry( pContextImpl, pStm ); break;
+    case MainStm_S813:          MainStm_S813_Entry( pContextImpl, pStm ); break;
+    case MainStm_S811:          MainStm_S811_Entry( pContextImpl, pStm ); break;
     case MainStm_S7:            MainStm_S7_Entry( pContextImpl, pStm ); break;
+    case MainStm_S72:           MainStm_S72_Entry( pContextImpl, pStm ); break;
     case MainStm_S71:           MainStm_S71_Entry( pContextImpl, pStm ); break;
     case MainStm_S711:          MainStm_S711_Entry( pContextImpl, pStm ); break;
     case MainStm_S712:          MainStm_S712_Entry( pContextImpl, pStm ); break;
-    case MainStm_S72:           MainStm_S72_Entry( pContextImpl, pStm ); break;
     case MainStm_S10:           MainStm_S10_Entry( pContextImpl, pStm ); break;
     case MainStm_S5:            MainStm_S5_Entry( pContextImpl, pStm ); break;
     case MainStm_S9:            MainStm_S9_Entry( pContextImpl, pStm ); break;
@@ -1125,22 +1119,22 @@ static void MainStm_BgnTrans( ContextImpl *pContextImpl, MainStm* pStm, uint64_t
     switch( pStm->base.nCurrentState ){
     case MainStm_S1:            MainStm_S1_Exit( pContextImpl, pStm ); break;
     case MainStm_S2:            MainStm_S2_Exit( pContextImpl, pStm ); break;
-    case MainStm_S21:           MainStm_S21_Exit( pContextImpl, pStm ); break;
     case MainStm_S22:           MainStm_S22_Exit( pContextImpl, pStm ); break;
+    case MainStm_S21:           MainStm_S21_Exit( pContextImpl, pStm ); break;
     case MainStm_S3:            MainStm_S3_Exit( pContextImpl, pStm ); break;
     case MainStm_S4:            MainStm_S4_Exit( pContextImpl, pStm ); break;
-    case MainStm_S41:           MainStm_S41_Exit( pContextImpl, pStm ); break;
     case MainStm_S42:           MainStm_S42_Exit( pContextImpl, pStm ); break;
+    case MainStm_S41:           MainStm_S41_Exit( pContextImpl, pStm ); break;
     case MainStm_S6:            MainStm_S6_Exit( pContextImpl, pStm ); break;
     case MainStm_S8:            MainStm_S8_Exit( pContextImpl, pStm ); break;
-    case MainStm_S811:          MainStm_S811_Exit( pContextImpl, pStm ); break;
-    case MainStm_S813:          MainStm_S813_Exit( pContextImpl, pStm ); break;
     case MainStm_S812:          MainStm_S812_Exit( pContextImpl, pStm ); break;
+    case MainStm_S813:          MainStm_S813_Exit( pContextImpl, pStm ); break;
+    case MainStm_S811:          MainStm_S811_Exit( pContextImpl, pStm ); break;
     case MainStm_S7:            MainStm_S7_Exit( pContextImpl, pStm ); break;
+    case MainStm_S72:           MainStm_S72_Exit( pContextImpl, pStm ); break;
     case MainStm_S71:           MainStm_S71_Exit( pContextImpl, pStm ); break;
     case MainStm_S711:          MainStm_S711_Exit( pContextImpl, pStm ); break;
     case MainStm_S712:          MainStm_S712_Exit( pContextImpl, pStm ); break;
-    case MainStm_S72:           MainStm_S72_Exit( pContextImpl, pStm ); break;
     case MainStm_S10:           MainStm_S10_Exit( pContextImpl, pStm ); break;
     case MainStm_S5:            MainStm_S5_Exit( pContextImpl, pStm ); break;
     case MainStm_S9:            MainStm_S9_Exit( pContextImpl, pStm ); break;
@@ -1152,10 +1146,14 @@ static BOOL MainStm_StateDefaultTrans( ContextImpl* pContextImpl, MainStm* pStm 
     pStm->base.nSourceState = pStm->base.nCurrentState;
     pStm->base.nLCAState = STATE_UNDEF;
     bResult |= SharedStm_StateDefaultTrans( pContextImpl, &pStm->S6SharedStm );
-    bResult |= S8_Region1_StateDefaultTrans( pContextImpl, &pStm->S8_Rgn1S8_Region1 );
-    bResult |= S8_Region2_StateDefaultTrans( pContextImpl, &pStm->S8_Rgn2S8_Region2 );
+    bResult |= S8_Region1_StateDefaultTrans( pContextImpl, &pStm->S8_TopS8_Region1 );
+    bResult |= S8_Region2_StateDefaultTrans( pContextImpl, &pStm->S8_TopS8_Region2 );
     bResult |= SharedStm_StateDefaultTrans( pContextImpl, &pStm->S9SharedStm );
-    do{   if( pStm->base.nCurrentState == MainStm_S2 && pStm->base.nPseudostate == MainStm_InitPt1 ){
+    do{   if( pStm->base.nCurrentState == MainStm_MainTop && pStm->base.nPseudostate == MainStm_InitPt ){
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S1, STATE_UNDEF );
+        MainStm_EndTrans( pContextImpl, pStm );
+        bResult = TRUE;
+    }else if( pStm->base.nCurrentState == MainStm_S2 && pStm->base.nPseudostate == MainStm_InitPt ){
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_S21, STATE_UNDEF );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
@@ -1163,7 +1161,7 @@ static BOOL MainStm_StateDefaultTrans( ContextImpl* pContextImpl, MainStm* pStm 
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_Junction, STATE_UNDEF );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
-    }else if( pStm->base.nCurrentState == MainStm_S4 && pStm->base.nPseudostate == MainStm_InitPt2 ){
+    }else if( pStm->base.nCurrentState == MainStm_S4 && pStm->base.nPseudostate == MainStm_InitPt ){
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_S41, STATE_UNDEF );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
@@ -1171,33 +1169,30 @@ static BOOL MainStm_StateDefaultTrans( ContextImpl* pContextImpl, MainStm* pStm 
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_S6, STATE_UNDEF );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
-    }else if( pStm->base.nCurrentState == MainStm_S8 && pStm->base.nPseudostate == MainStm_InitPt4 ){
+    }else if( pStm->base.nCurrentState == MainStm_S6 && pStm->base.nPseudostate == SharedStm_Exit1 ){
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S9, STATE_UNDEF );
+        MainStm_EndTrans( pContextImpl, pStm );
+        bResult = TRUE;
+    }else if( pStm->base.nPseudostate == S8_Region2_ForkPseudostate2 ){
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S812, STATE_UNDEF );
+        S8_Region2_Reset( pContextImpl, &pStm->S8_TopS8_Region2, &pStm->base, S8_Region2_S832 );
+        MainStm_EndTrans( pContextImpl, pStm );
+        bResult = TRUE;
+    }else if( pStm->base.nCurrentState == MainStm_S8 && pStm->base.nPseudostate == MainStm_InitPt ){
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_S811, STATE_UNDEF );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
-    }else if( pStm->base.nPseudostate == MainStm_S811 ){
-        if (ContextImpl_IsIn( pContextImpl, S8_Region2_S831Fin )
-         && ContextImpl_IsIn( pContextImpl, S8_Region1_S821 )) {
-            MainStm_BgnTrans( pContextImpl, pStm, MainStm_S812, STATE_UNDEF );
-            S8_Region2_Reset( pContextImpl, &pStm->S8_Rgn2S8_Region2, &pStm->base, S8_Region2_S832 );
-            MainStm_EndTrans( pContextImpl, pStm );
-            bResult = TRUE;
-        }
-    }else if( pStm->base.nCurrentState == MainStm_S7 && pStm->base.nPseudostate == MainStm_InitPt3 ){
-        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S71, MainStm_InitialPseudostate0 );
+    }else if( pStm->base.nCurrentState == MainStm_S71 && pStm->base.nPseudostate == MainStm_Initpseudostate0 ){
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S711, STATE_UNDEF );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
-    }else if( pStm->base.nCurrentState == MainStm_S71 && pStm->base.nPseudostate == MainStm_InitialPseudostate0 ){
-        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S711, STATE_UNDEF );
+    }else if( pStm->base.nCurrentState == MainStm_S7 && pStm->base.nPseudostate == MainStm_InitPt ){
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S71, MainStm_Initpseudostate0 );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
     }else if( pStm->base.nPseudostate == MainStm_S9 ){
         if( !SharedStm_IsFinished( &pStm->S9SharedStm.base ) ){ break; }
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_S10, STATE_UNDEF );
-        MainStm_EndTrans( pContextImpl, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nCurrentState == MainStm_MainTop && pStm->base.nPseudostate == MainStm_InitialPseudostate0 ){
-        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S1, STATE_UNDEF );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
     }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, MainStm_MainTop) ){
@@ -1219,7 +1214,7 @@ static BOOL MainStm_Reset( ContextImpl* pContextImpl, MainStm* pStm, HdStateMach
     pStm->base.pParentStm = pParentStm;
     if( nEntryPoint == NULL ){
         if( MainStm_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = MainStm_InitialPseudostate0;
+            pStm->base.nPseudostate = MainStm_InitPt;
         }
     }else{
         if( MainStm_IsFinished( &pStm->base ) ){
@@ -1235,28 +1230,28 @@ static BOOL MainStm_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Context
     BOOL bResult = FALSE;
     pStm->base.nLCAState = STATE_UNDEF;
     bResult |= SharedStm_EventProc( pContextImpl, &pStm->S6SharedStm, nEventId, pEventParams );
-    bResult |= S8_Region1_EventProc( pContextImpl, &pStm->S8_Rgn1S8_Region1, nEventId, pEventParams );
-    bResult |= S8_Region2_EventProc( pContextImpl, &pStm->S8_Rgn2S8_Region2, nEventId, pEventParams );
+    bResult |= S8_Region1_EventProc( pContextImpl, &pStm->S8_TopS8_Region1, nEventId, pEventParams );
+    bResult |= S8_Region2_EventProc( pContextImpl, &pStm->S8_TopS8_Region2, nEventId, pEventParams );
     bResult |= SharedStm_EventProc( pContextImpl, &pStm->S9SharedStm, nEventId, pEventParams );
     switch( pStm->base.nCurrentState ){
     case MainStm_S1:                            bResult |= MainStm_S1_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case MainStm_S2:                            bResult |= MainStm_S2_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
-    case MainStm_S21:                           bResult |= MainStm_S21_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case MainStm_S22:                           bResult |= MainStm_S22_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
+    case MainStm_S21:                           bResult |= MainStm_S21_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case MainStm_S3:                            bResult |= MainStm_S3_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case MainStm_S4:                            bResult |= MainStm_S4_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
-    case MainStm_S41:                           bResult |= MainStm_S41_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case MainStm_S42:                           bResult |= MainStm_S42_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
+    case MainStm_S41:                           bResult |= MainStm_S41_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case MainStm_S6:                            bResult |= MainStm_S6_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case MainStm_S8:                            bResult |= MainStm_S8_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
-    case MainStm_S811:                          bResult |= MainStm_S811_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
-    case MainStm_S813:                          bResult |= MainStm_S813_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case MainStm_S812:                          bResult |= MainStm_S812_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
+    case MainStm_S813:                          bResult |= MainStm_S813_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
+    case MainStm_S811:                          bResult |= MainStm_S811_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case MainStm_S7:                            bResult |= MainStm_S7_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
+    case MainStm_S72:                           bResult |= MainStm_S72_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case MainStm_S71:                           bResult |= MainStm_S71_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case MainStm_S711:                          bResult |= MainStm_S711_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case MainStm_S712:                          bResult |= MainStm_S712_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
-    case MainStm_S72:                           bResult |= MainStm_S72_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case MainStm_S10:                           bResult |= MainStm_S10_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case MainStm_S5:                            bResult |= MainStm_S5_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case MainStm_S9:                            bResult |= MainStm_S9_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
@@ -1267,8 +1262,8 @@ static BOOL MainStm_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Context
 }
 static BOOL MainStm_IsIn( MainStm* pStm, uint64_t nCompositeState ) {
     if( SharedStm_IsIn( &pStm->S6SharedStm, nCompositeState ) ){ return TRUE; }
-    if( S8_Region1_IsIn( &pStm->S8_Rgn1S8_Region1, nCompositeState ) ){ return TRUE; }
-    if( S8_Region2_IsIn( &pStm->S8_Rgn2S8_Region2, nCompositeState ) ){ return TRUE; }
+    if( S8_Region1_IsIn( &pStm->S8_TopS8_Region1, nCompositeState ) ){ return TRUE; }
+    if( S8_Region2_IsIn( &pStm->S8_TopS8_Region2, nCompositeState ) ){ return TRUE; }
     if( SharedStm_IsIn( &pStm->S9SharedStm, nCompositeState ) ){ return TRUE; }
     if( IS_IN( pStm->base.nCurrentState, nCompositeState ) ){ return TRUE; }
     return FALSE;

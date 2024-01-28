@@ -30,34 +30,34 @@ const TCHAR* ContextImplEvent_toString( ContextImpl_EVENT value );
 #define __HdStateMachine_INTERNAL__
 #include "HdStateMachine.h"
 boolean ContextImpl_checkE1Params( EventParams* e );
-/** @class S8_Region1
- * @extends HdStateMachine
- */
-typedef struct tagS8_Region1 {
-    HdStateMachine base;
-#define S8_Region1_S8_Rgn1_Dmy                  ( 1ULL <<  0 )
-#define S8_Region1_S8_Rgn1                      ( S8_Region1_S8_Rgn1_Dmy | S8_Region1_S822 | S8_Region1_S821 )
-#define S8_Region1_S822                         ( 1ULL <<  1 )
-#define S8_Region1_S821                         ( 1ULL <<  2 )
-#define S8_Region1_InitPt                       ( 1ULL << ( MAX_STATE_NUM -  0 ) )
-}S8_Region1;
-#define S8_Region1_Init() {\
-    .base = HdStateMachine_Ctor( HdStateMachine_Init(S8_Region1_S8_Rgn1, S8_Region1_S8_Rgn1), ),\
-}
 /** @class S8_Region2
  * @extends HdStateMachine
  */
 typedef struct tagS8_Region2 {
     HdStateMachine base;
-#define S8_Region2_S8_Rgn2_Dmy                  ( 1ULL <<  3 )
-#define S8_Region2_S8_Rgn2                      ( S8_Region2_S8_Rgn2_Dmy | S8_Region2_S831 | S8_Region2_S832 | S8_Region2_S831Fin )
-#define S8_Region2_InitPt                       ( 1ULL << ( MAX_STATE_NUM -  0 ) )
-#define S8_Region2_S831                         ( 1ULL <<  4 )
-#define S8_Region2_S832                         ( 1ULL <<  5 )
-#define S8_Region2_S831Fin                      ( 1ULL <<  6 )
+#define S8_Region2_S8_Top_Dmy                   ( 1ULL <<  0 )
+#define S8_Region2_S8_Top                       ( S8_Region2_S8_Top_Dmy | S8_Region2_S831 | S8_Region2_S832 )
+#define S8_Region2_ForkPseudostate2             ( 1ULL <<  1 )
+#define S8_Region2_InitialPseudostate1          ( 1ULL << ( MAX_STATE_NUM -  0 ) )
+#define S8_Region2_S831                         ( 1ULL <<  2 )
+#define S8_Region2_S832                         ( 1ULL <<  3 )
 }S8_Region2;
 #define S8_Region2_Init() {\
-    .base = HdStateMachine_Ctor( HdStateMachine_Init(S8_Region2_S8_Rgn2, S8_Region2_S8_Rgn2), ),\
+    .base = HdStateMachine_Ctor( HdStateMachine_Init(S8_Region2_S8_Top, S8_Region2_S8_Top), ),\
+}
+/** @class S8_Region1
+ * @extends HdStateMachine
+ */
+typedef struct tagS8_Region1 {
+    HdStateMachine base;
+#define S8_Region1_S8_Top_Dmy                   ( 1ULL <<  4 )
+#define S8_Region1_S8_Top                       ( S8_Region1_S8_Top_Dmy | S8_Region1_S821 | S8_Region1_S822 )
+#define S8_Region1_InitialPseudostate0          ( 1ULL << ( MAX_STATE_NUM -  0 ) )
+#define S8_Region1_S821                         ( 1ULL <<  5 )
+#define S8_Region1_S822                         ( 1ULL <<  6 )
+}S8_Region1;
+#define S8_Region1_Init() {\
+    .base = HdStateMachine_Ctor( HdStateMachine_Init(S8_Region1_S8_Top, S8_Region1_S8_Top), ),\
 }
 /** @class SharedStm
  * @extends HdStateMachine
@@ -81,51 +81,48 @@ typedef struct tagSharedStm {
 typedef struct tagMainStm {
     HdStateMachine base;
     SharedStm S6SharedStm;                                      
-    S8_Region1 S8_Rgn1S8_Region1;                               
-    S8_Region2 S8_Rgn2S8_Region2;                               
+    S8_Region1 S8_TopS8_Region1;                                
+    S8_Region2 S8_TopS8_Region2;                                
     SharedStm S9SharedStm;                                      
     uint64_t nS4History;
     uint64_t nS7History;
 #define MainStm_MainTop_Dmy                     ( 1ULL << 10 )
 #define MainStm_MainTop                         ( MainStm_MainTop_Dmy | MainStm_S1 | MainStm_S2 | MainStm_S3 | MainStm_S4 | MainStm_Junction | MainStm_S6 | MainStm_S8 | MainStm_S7 | MainStm_S10 | MainStm_S5 | MainStm_S9 )
+#define MainStm_InitPt                          ( 1ULL << ( MAX_STATE_NUM -  0 ) )
 #define MainStm_S1                              ( 1ULL << 11 )
-#define MainStm_S21                             ( 1ULL << 12 )
-#define MainStm_S22                             ( 1ULL << 13 )
-#define MainStm_InitPt1                         ( 1ULL << ( MAX_STATE_NUM -  0 ) )
+#define MainStm_S22                             ( 1ULL << 12 )
+#define MainStm_S21                             ( 1ULL << 13 )
 #define MainStm_S3                              ( 1ULL << 14 )
-#define MainStm_S41                             ( 1ULL << 15 )
-#define MainStm_S42                             ( 1ULL << 16 )
-#define MainStm_InitPt2                         ( 1ULL << ( MAX_STATE_NUM -  1 ) )
+#define MainStm_S42                             ( 1ULL << 15 )
+#define MainStm_S41                             ( 1ULL << 16 )
 #define MainStm_Junction                        ( 1ULL << 17 )
 #define MainStm_S6                              ( 1ULL << 18 )
-#define MainStm_InitPt4                         ( 1ULL << ( MAX_STATE_NUM -  2 ) )
-#define MainStm_S811                            ( 1ULL << 19 )
+#define MainStm_S812                            ( 1ULL << 19 )
 #define MainStm_S813                            ( 1ULL << 20 )
-#define MainStm_S812                            ( 1ULL << 21 )
-#define MainStm_InitPt3                         ( 1ULL << ( MAX_STATE_NUM -  3 ) )
-#define MainStm_S711                            ( 1ULL << 22 )
-#define MainStm_InitialPseudostate0             ( 1ULL << ( MAX_STATE_NUM -  4 ) )
-#define MainStm_S712                            ( 1ULL << 23 )
-#define MainStm_S72                             ( 1ULL << 24 )
+#define MainStm_S811                            ( 1ULL << 21 )
+#define MainStm_S72                             ( 1ULL << 22 )
+#define MainStm_S711                            ( 1ULL << 23 )
+#define MainStm_S712                            ( 1ULL << 24 )
+#define MainStm_Initpseudostate0                ( 1ULL << ( MAX_STATE_NUM -  1 ) )
 #define MainStm_S10                             ( 1ULL << 25 )
 #define MainStm_S5                              ( 1ULL << 26 )
 #define MainStm_S9                              ( 1ULL << 27 )
 #define MainStm_S2_Dmy                          ( 1ULL << 28 )
-#define MainStm_S2                              ( MainStm_S2_Dmy | MainStm_S21 | MainStm_S22 )
+#define MainStm_S2                              ( MainStm_S2_Dmy | MainStm_S22 | MainStm_S21 )
 #define MainStm_S4_Dmy                          ( 1ULL << 29 )
-#define MainStm_S4                              ( MainStm_S4_Dmy | MainStm_S41 | MainStm_S42 )
+#define MainStm_S4                              ( MainStm_S4_Dmy | MainStm_S42 | MainStm_S41 )
 #define MainStm_S8_Dmy                          ( 1ULL << 30 )
-#define MainStm_S8                              ( MainStm_S8_Dmy | MainStm_S811 | MainStm_S813 | MainStm_S812 )
+#define MainStm_S8                              ( MainStm_S8_Dmy | MainStm_S812 | MainStm_S813 | MainStm_S811 )
 #define MainStm_S71_Dmy                         ( 1ULL << 31 )
 #define MainStm_S71                             ( MainStm_S71_Dmy | MainStm_S711 | MainStm_S712 )
 #define MainStm_S7_Dmy                          ( 1ULL << 32 )
-#define MainStm_S7                              ( MainStm_S7_Dmy | MainStm_S71 | MainStm_S72 )
+#define MainStm_S7                              ( MainStm_S7_Dmy | MainStm_S72 | MainStm_S71 )
 }MainStm;
 #define MainStm_Init() {\
     .base = HdStateMachine_Ctor( HdStateMachine_Init(MainStm_MainTop, MainStm_MainTop), ),\
     .S6SharedStm = SharedStm_Init(),\
-    .S8_Rgn1S8_Region1 = S8_Region1_Init(),\
-    .S8_Rgn2S8_Region2 = S8_Region2_Init(),\
+    .S8_TopS8_Region1 = S8_Region1_Init(),\
+    .S8_TopS8_Region2 = S8_Region2_Init(),\
     .S9SharedStm = SharedStm_Init(),\
 }
 BOOL ContextImpl_EventProc( ContextImpl* pContextImpl, ContextImpl_EVENT nEventId, void* pEventParams );
