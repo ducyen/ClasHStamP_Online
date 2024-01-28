@@ -30,24 +30,24 @@ boolean ContextImpl_checkE1Params( EventParams* e );
  */
 typedef struct tagManagingThroughTraffic_Region1 {
     HdStateMachine base;
-#define ManagingThroughTraffic_Region1_ManagingThroughTraffic_Rgn1_Dmy ( 1ULL <<  0 )
-#define ManagingThroughTraffic_Region1_ManagingThroughTraffic_Rgn1 ( ManagingThroughTraffic_Region1_ManagingThroughTraffic_Rgn1_Dmy | ManagingThroughTraffic_Region1_SGreen | ManagingThroughTraffic_Region1_SYellow | ManagingThroughTraffic_Region1_PRedWait | ManagingThroughTraffic_Region1_SRed | ManagingThroughTraffic_Region1_PRedWaitFin )
+#define ManagingThroughTraffic_Region1_ManagingThroughTraffic_Top_Dmy ( 1ULL <<  0 )
+#define ManagingThroughTraffic_Region1_ManagingThroughTraffic_Top ( ManagingThroughTraffic_Region1_ManagingThroughTraffic_Top_Dmy | ManagingThroughTraffic_Region1_SGreen | ManagingThroughTraffic_Region1_SYellow | ManagingThroughTraffic_Region1_PRedWait | ManagingThroughTraffic_Region1_SRed )
 #define ManagingThroughTraffic_Region1_SGreen   ( 1ULL <<  1 )
 #define ManagingThroughTraffic_Region1_SYellow  ( 1ULL <<  2 )
 #define ManagingThroughTraffic_Region1_PRedWait ( 1ULL <<  3 )
 #define ManagingThroughTraffic_Region1_SRed     ( 1ULL <<  4 )
 #define ManagingThroughTraffic_Region1_InitialPseudostate2 ( 1ULL << ( MAX_STATE_NUM -  0 ) )
-#define ManagingThroughTraffic_Region1_PRedWaitFin ( 1ULL <<  5 )
+#define ManagingThroughTraffic_Region1_ForkPseudostate1 ( 1ULL <<  5 )
 }ManagingThroughTraffic_Region1;
 #define ManagingThroughTraffic_Region1_Init() {\
-    .base = HdStateMachine_Ctor( HdStateMachine_Init(ManagingThroughTraffic_Region1_ManagingThroughTraffic_Rgn1, ManagingThroughTraffic_Region1_ManagingThroughTraffic_Rgn1), ),\
+    .base = HdStateMachine_Ctor( HdStateMachine_Init(ManagingThroughTraffic_Region1_ManagingThroughTraffic_Top, ManagingThroughTraffic_Region1_ManagingThroughTraffic_Top), ),\
 }
 /** @class MainStm
  * @extends HdStateMachine
  */
 typedef struct tagMainStm {
     HdStateMachine base;
-    ManagingThroughTraffic_Region1 ManagingThroughTraffic_Rgn1ManagingThroughTraffic_Region1;
+    ManagingThroughTraffic_Region1 ManagingThroughTraffic_TopManagingThroughTraffic_Region1;
 #define MainStm_MainTop_Dmy                     ( 1ULL <<  6 )
 #define MainStm_MainTop                         ( MainStm_MainTop_Dmy | MainStm_Starting | MainStm_ManagingThroughTraffic )
 #define MainStm_InitialPseudostate0             ( 1ULL << ( MAX_STATE_NUM -  0 ) )
@@ -62,7 +62,7 @@ typedef struct tagMainStm {
 }MainStm;
 #define MainStm_Init() {\
     .base = HdStateMachine_Ctor( HdStateMachine_Init(MainStm_MainTop, MainStm_MainTop), ),\
-    .ManagingThroughTraffic_Rgn1ManagingThroughTraffic_Region1 = ManagingThroughTraffic_Region1_Init(),\
+    .ManagingThroughTraffic_TopManagingThroughTraffic_Region1 = ManagingThroughTraffic_Region1_Init(),\
 }
 BOOL ContextImpl_EventProc( ContextImpl* pContextImpl, ContextImpl_EVENT nEventId, void* pEventParams );
 BOOL ContextImpl_Start( ContextImpl* pContextImpl );
