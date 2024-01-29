@@ -9,7 +9,7 @@ set ASTAH_JAR=astah-community.jar
 set INITIAL_HEAP_SIZE=16m
 set MAXIMUM_HEAP_SIZE=384m
 
-set USER_LANGUAGE=en
+set USER_LANGUAGE=vi
 rem set USER_LANGUAGE=ja
 rem set USER_LANGUAGE=en
 

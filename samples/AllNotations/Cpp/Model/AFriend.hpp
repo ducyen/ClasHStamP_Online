@@ -3,7 +3,7 @@
 #include "Generic/CommonInclude.h"
 #include "Model/Composition.hpp"                                
 #include "Model/Aggregration.hpp"                               
-template<typename T0 , Composition* T1 , typename T2  = T0, Aggregration* T3  = null>
+template<typename T0 , Composition* T1 , typename T2  = T0, Aggregration* T3  = Aggregration*>
 class AFriend{
     public:  AFriend(
         int _attribute3

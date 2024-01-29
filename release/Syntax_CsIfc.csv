@@ -367,7 +367,7 @@ junction,"[->]    pStm.m_pPseudostate = [sCOPE].[vALUE].GetInstance();
 [->]    if (m_pPseudostate == [sCOPE].[nAME].GetInstance()) {
 ","[->]    } else if (m_pPseudostate == [cONTAINER].[nAME].GetInstance()) {
 ",(([tYPE])pContext).IsIn([mODIFIER].[vALUE].GetInstance()),"
-[->]     || (([tYPE])pContext).IsIn([mODIFIER].[vALUE].GetInstance())"
+[->]     && (([tYPE])pContext).IsIn([mODIFIER].[vALUE].GetInstance())"
 api_call,"[->]public bool Start() {
 [->]    mainStm.Abort(this);
 [->]    return mainStm.Reset(this, null, null);

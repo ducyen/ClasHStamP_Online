@@ -9,7 +9,10 @@ using EventId = int;
 class Statemachine;
 
 class StateBase { 
-    virtual void dummy() {};
+public:
+    virtual void Entry(Context* pContext, Statemachine* pStm) { return; }
+    virtual void Exit(Context* pContext, Statemachine* pStm) { return; }
+    virtual bool EventProc(Context* pContext, Statemachine* pStm, int nEventId, EventParams* pParams) { return false; }
 };
 
 template < typename T >
@@ -22,21 +25,17 @@ public:
 };
 
 class TopState : public Pseudostate<TopState> {
-public:
-    virtual void Entry(Context* pContext, Statemachine* pStm) { return; }
-    virtual void Exit(Context* pContext, Statemachine* pStm) { return; }
-    virtual bool EventProc(Context* pContext, Statemachine* pStm, int nEventId, EventParams* pParams) { return false; }
 };
 
 class Statemachine {
 public:
     bool          m_bIsExternTrans;
-    TopState*     m_pLCAState;
-    TopState*     m_pTargetState;
+    StateBase*    m_pLCAState;
+    StateBase*    m_pTargetState;
     StateBase*    m_pPseudostate;
-    TopState*     m_pCurrentState;
+    StateBase*    m_pCurrentState;
     Statemachine* m_pParentStm;
-    TopState*     m_pSourceState;
+    StateBase*    m_pSourceState;
 
 public:
     Statemachine(TopState* pCurrentState, TopState* pPseudostate):
@@ -87,10 +86,10 @@ public:
         m_pCurrentState = m_pTargetState;
         m_pCurrentState->Entry(pContext, this);
     }
-    void BgnTrans(Context* pContext, TopState* pTargetState) {
+    void BgnTrans(Context* pContext, StateBase* pTargetState) {
         BgnTrans(pContext, pTargetState, pTargetState);
     }
-    void BgnTrans(Context* pContext, TopState* pTargetState, StateBase* pPseudostate) {
+    void BgnTrans(Context* pContext, StateBase* pTargetState, StateBase* pPseudostate) {
         m_pTargetState = pTargetState;
         m_pPseudostate = pPseudostate;
         m_pCurrentState->Exit(pContext, this);

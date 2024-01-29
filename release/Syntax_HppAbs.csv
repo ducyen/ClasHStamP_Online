@@ -270,8 +270,6 @@ state_impl,"[->]virtual bool Reset(Context* pContext, Statemachine* pParentStm, 
 [->]            m_pPseudostate = pEntryPoint;
 [->]        }                    
 [->]    }
-[->]    if (pEntryPoint != null) {
-[vALUE][->]    }
 [->]    return RunToCompletion(pContext);
 [->]}
 [->]virtual bool EventProc(Context* pContext, int nEventId, EventParams* pParams){
@@ -412,7 +410,7 @@ substm_decl,,"[->][tYPE][mODIFIER] m_[nAME][tYPE];[->64][dESC]
 history,"[->]TopState* m_p[Name]History;
 ","[->]m_p[Name]History( nullptr ),\
 ","[->]    (([sCOPE]*)pStm)->m_p[Name]History = [vALUE]::GetInstance();
-","[->]    if (( ( [sCOPE]* )pStm )->m_p[nAME]History) {
+","[->]    if ((([sCOPE]*)pStm)->m_p[nAME]History && (([sCOPE]*)pStm)->m_p[nAME]History != [nAME]::GetInstance()) {
 [->]        pStm->BgnTrans( pContext, ( ( [sCOPE]* )pStm )->m_p[nAME]History );
 [mODIFIER][->]        pStm->EndTrans( pContext );
 [->]        bResult = true;
@@ -427,7 +425,7 @@ junction,"[->]    pStm->m_pPseudostate = [sCOPE]::[vALUE]::GetInstance();
 [->]    if (m_pPseudostate == [sCOPE]::[nAME]::GetInstance()) {
 ","[->]    } else if (m_pPseudostate == [cONTAINER]::[nAME]::GetInstance()) {
 ",(([tYPE]*)pContext)->IsIn<[mODIFIER]::[vALUE]>(),"
-[->] || (([tYPE]*)pContext)->IsIn<[mODIFIER]::[vALUE]>()"
+[->] && (([tYPE]*)pContext)->IsIn<[mODIFIER]::[vALUE]>()"
 api_call,"public:
     bool Start() {
         mainStm.Abort(this);
