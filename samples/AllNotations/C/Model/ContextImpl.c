@@ -718,11 +718,6 @@ static BOOL MainStm_S6_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Cont
     pStm->base.nSourceState = MainStm_S6;
     ShowDoing( "Model/ContextImpl/MainStm	953	377	130	114	5	-71	1245	1055" );
     switch( nEventId ){
-    case ContextImpl_E3:{
-        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S9, STATE_UNDEF );
-        MainStm_EndTrans( pContextImpl, pStm );
-        bResult = TRUE;
-    } break;
     case ContextImpl_E4:{
         if( pStm->nS4History && pStm->nS4History != MainStm_S4 ){
             MainStm_BgnTrans( pContextImpl, pStm, pStm->nS4History, STATE_UNDEF );
@@ -1167,6 +1162,11 @@ static BOOL MainStm_StateDefaultTrans( ContextImpl* pContextImpl, MainStm* pStm 
         bResult = TRUE;
     }else if( pStm->base.nPseudostate == MainStm_Junction ){
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_S6, STATE_UNDEF );
+        MainStm_EndTrans( pContextImpl, pStm );
+        bResult = TRUE;
+    }else if( pStm->base.nPseudostate == MainStm_S6 ){
+        if( !SharedStm_IsFinished( &pStm->S6SharedStm.base ) ){ break; }
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S9, STATE_UNDEF );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
     }else if( pStm->base.nCurrentState == MainStm_S6 && pStm->base.nPseudostate == SharedStm_Exit1 ){

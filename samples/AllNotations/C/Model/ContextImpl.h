@@ -30,34 +30,34 @@ const TCHAR* ContextImplEvent_toString( ContextImpl_EVENT value );
 #define __HdStateMachine_INTERNAL__
 #include "HdStateMachine.h"
 boolean ContextImpl_checkE1Params( EventParams* e );
-/** @class S8_Region2
- * @extends HdStateMachine
- */
-typedef struct tagS8_Region2 {
-    HdStateMachine base;
-#define S8_Region2_S8_Top_Dmy                   ( 1ULL <<  0 )
-#define S8_Region2_S8_Top                       ( S8_Region2_S8_Top_Dmy | S8_Region2_S831 | S8_Region2_S832 )
-#define S8_Region2_ForkPseudostate2             ( 1ULL <<  1 )
-#define S8_Region2_InitialPseudostate1          ( 1ULL << ( MAX_STATE_NUM -  0 ) )
-#define S8_Region2_S831                         ( 1ULL <<  2 )
-#define S8_Region2_S832                         ( 1ULL <<  3 )
-}S8_Region2;
-#define S8_Region2_Init() {\
-    .base = HdStateMachine_Ctor( HdStateMachine_Init(S8_Region2_S8_Top, S8_Region2_S8_Top), ),\
-}
 /** @class S8_Region1
  * @extends HdStateMachine
  */
 typedef struct tagS8_Region1 {
     HdStateMachine base;
-#define S8_Region1_S8_Top_Dmy                   ( 1ULL <<  4 )
+#define S8_Region1_S8_Top_Dmy                   ( 1ULL <<  0 )
 #define S8_Region1_S8_Top                       ( S8_Region1_S8_Top_Dmy | S8_Region1_S821 | S8_Region1_S822 )
 #define S8_Region1_InitialPseudostate0          ( 1ULL << ( MAX_STATE_NUM -  0 ) )
-#define S8_Region1_S821                         ( 1ULL <<  5 )
-#define S8_Region1_S822                         ( 1ULL <<  6 )
+#define S8_Region1_S821                         ( 1ULL <<  1 )
+#define S8_Region1_S822                         ( 1ULL <<  2 )
 }S8_Region1;
 #define S8_Region1_Init() {\
     .base = HdStateMachine_Ctor( HdStateMachine_Init(S8_Region1_S8_Top, S8_Region1_S8_Top), ),\
+}
+/** @class S8_Region2
+ * @extends HdStateMachine
+ */
+typedef struct tagS8_Region2 {
+    HdStateMachine base;
+#define S8_Region2_S8_Top_Dmy                   ( 1ULL <<  3 )
+#define S8_Region2_S8_Top                       ( S8_Region2_S8_Top_Dmy | S8_Region2_S831 | S8_Region2_S832 )
+#define S8_Region2_ForkPseudostate2             ( 1ULL <<  4 )
+#define S8_Region2_InitialPseudostate1          ( 1ULL << ( MAX_STATE_NUM -  0 ) )
+#define S8_Region2_S831                         ( 1ULL <<  5 )
+#define S8_Region2_S832                         ( 1ULL <<  6 )
+}S8_Region2;
+#define S8_Region2_Init() {\
+    .base = HdStateMachine_Ctor( HdStateMachine_Init(S8_Region2_S8_Top, S8_Region2_S8_Top), ),\
 }
 /** @class SharedStm
  * @extends HdStateMachine
