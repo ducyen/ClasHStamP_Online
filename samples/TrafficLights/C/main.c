@@ -31,6 +31,37 @@ void DisplayMsg(char* pMsg) {
     printf( "%s\n", pMsg );
 }
 
+/**
+ * Directions
+ */
+enum{
+    EAST,
+    WEST,
+    NORTH,
+    SOUTH
+};
+/**
+ * Light types
+ */
+enum{
+    RED,
+    YELLOW,
+    GREEN,
+    LIGHT_TYPE_NUM
+};
+/**
+ * Light positions
+ */
+static const struct tagLightPositions{
+    int x, y;
+} LIGHT_POSITIONS[][ LIGHT_TYPE_NUM ] = {
+    /*  red         yellow      green */
+    { { 42, 37 }, { 47, 37 }, { 52, 37 } },   /* east  */
+    { { 22, 26 }, { 17, 26 }, { 12, 26 } },   /* west  */
+    { { 36, 21 }, { 36, 16 }, { 36, 11 } },   /* north */
+    { { 28, 42 }, { 28, 48 }, { 28, 53 } },   /* south */
+};
+
 #define FONT_CHAR_HEIGHT    ( 7 )
 #define FONT_CHAR_WIDTH     ( 5 )
 #define TEXT_ALIGN_LEFT     ( 0 )
@@ -301,7 +332,7 @@ static const unsigned char font_data[][5] = {
 };
 
 // Function to place a character from the font into an RGBA bitmap
-void placeCharacterInBitmap(BYTE *pv, unsigned char ch, int scale, int x, int y, int cbStride, uint8_t byRed, uint8_t byGreen, uint8_t byBlue ) {
+void placeCharacterInBitmap(BYTE *pv, unsigned char ch, int scale, int x, int y, int cbStride, COLORREF color ) {
     int fontIndex, i, j;
     fontIndex = ch;
 
@@ -315,9 +346,9 @@ void placeCharacterInBitmap(BYTE *pv, unsigned char ch, int scale, int x, int y,
                         UINT destIndex = ( y + j*scale + v ) * cbStride + ( x + i*scale + u ) * 4;
 
                         // For simplicity, we'll just set the pixel to red (assuming 32bpp BGRA format)
-                        pv[ destIndex ] = byBlue;       // Blue
-                        pv[ destIndex + 1 ] = byGreen;   // Green
-                        pv[ destIndex + 2 ] = byRed; // Red
+                        pv[ destIndex ] = GetBValue( color );       // Blue
+                        pv[ destIndex + 1 ] = GetGValue( color );   // Green
+                        pv[ destIndex + 2 ] = GetRValue( color );   // Red
                         pv[ destIndex + 3 ] = 255; // Alpha
                     }
                 }
@@ -326,10 +357,40 @@ void placeCharacterInBitmap(BYTE *pv, unsigned char ch, int scale, int x, int y,
     }
 }
 
+// Function to set pixel
+void setPixel( BYTE *pv, int x, int y, int cbStride, COLORREF color ){
+    UINT destIndex = y * cbStride + x * 4;
+    pv[ destIndex ] = GetBValue( color );       // Blue
+    pv[ destIndex + 1 ] = GetGValue( color );   // Green
+    pv[ destIndex + 2 ] = GetRValue( color );   // Red
+    pv[ destIndex + 3 ] = 255; // Alpha
+}
+
+// Function to set pixel
+COLORREF getPixel( BYTE *pv, int x, int y, int cbStride ){
+    UINT destIndex = y * cbStride + x * 4;
+    return RGB( pv[ destIndex + 2 ], pv[ destIndex + 1 ], pv[ destIndex ] );
+}
+
+// Function to fill color
+void fillColor( BYTE *pv, int x, int y, int cbStride, int cHeight, COLORREF oldColor, COLORREF color ){
+    if( 0 <= x && x * 4 < cbStride && 0 <= y && y < cHeight ){
+        COLORREF curColor = getPixel( pv, x, y, cbStride );
+        if( curColor == oldColor ){
+            setPixel( pv, x, y, cbStride, color );
+            fillColor( pv, x+1, y, cbStride, cHeight, oldColor, color );
+            fillColor( pv, x-1, y, cbStride, cHeight, oldColor, color );
+            fillColor( pv, x, y+1, cbStride, cHeight, oldColor, color );
+            fillColor( pv, x, y-1, cbStride, cHeight, oldColor, color );
+        }
+    }
+}
+
 #if defined( _MSC_VER )
 #define CALL(ptr, method, ...) ((ptr)->lpVtbl->method((ptr), __VA_ARGS__))
 
-void SavePngImage( char* sPath );
+void SavePngImage( char*, IWICBitmap* );
+IWICBitmap* FindBitmapFromPath( char* );
 
 int directory_exists(const char *path) {
     DWORD attribs = GetFileAttributes(path);
@@ -398,15 +459,13 @@ IWICBitmap* LoadPngImage( char* sPath ){
     WCHAR* wideString = ConvertCharToWChar(sPath, CP_UTF8);  // Using UTF-8 code page
     WCHAR strInputFile[ 256 ];
 
-    swprintf( strInputFile, sizeof( strInputFile ) / sizeof( strInputFile[ 0 ] ), L"../Image/Design/%s.png", wideString );
-
     HRESULT hr = S_OK;
 
     IWICBitmapDecoder *pIDecoder = NULL;
     IWICBitmapFrameDecode *pIDecoderFrame = NULL;
 
     hr = CALL( m_pIWICFactory, CreateDecoderFromFilename,
-        strInputFile,                   // Image to be decoded
+        wideString,                   // Image to be decoded
         NULL,                           // Do not prefer a particular vendor
         GENERIC_READ,                   // Desired read access to the file
         WICDecodeMetadataCacheOnDemand, // Cache metadata when needed
@@ -455,7 +514,11 @@ void ReleaseAllImages( void ){
 
 void SaveAllImages( void ){
     for( int i = 0; i < g_nPathToBitmapCnt; i++ ){
-        SavePngImage( g_arrPathToBitmap[ i ].m_sPath );
+        IWICBitmap *pIBitmap = FindBitmapFromPath( g_arrPathToBitmap[ i ].m_sPath );
+        char sRelPath[ 256 ];
+        sprintf( sRelPath, "../TransImg/Design/%s.png", g_arrPathToBitmap[ i ].m_sPath );
+        make_dir( sRelPath );
+        SavePngImage( sRelPath, pIBitmap );
     }
 }
 
@@ -468,13 +531,61 @@ IWICBitmap* FindBitmapFromPath( char* sPath ){
     }
     // If not exsited, add new
     strcpy( g_arrPathToBitmap[ g_nPathToBitmapCnt ].m_sPath, sPath );
-    IWICBitmap* pIBitmap = LoadPngImage( sPath );
+    char sFullPath[ 255 ];
+    sprintf( sFullPath, "../Image/Design/%s.png", sPath );
+    IWICBitmap* pIBitmap = LoadPngImage( sFullPath );
     g_arrPathToBitmap[ g_nPathToBitmapCnt ].m_pIBitmap = pIBitmap;
     g_nPathToBitmapCnt++;
     assert( g_nPathToBitmapCnt < sizeof( g_arrPathToBitmap ) / sizeof( g_arrPathToBitmap[ 0 ] ) );
     return pIBitmap;
 }
 
+/**
+ * Draw rectangle on a png file
+ */
+int MyFloodFill( IWICBitmap *pIBitmap, int x, int y, COLORREF color ){
+    HRESULT hr = S_OK;
+    IWICBitmapLock *pILock = NULL;
+
+    if( SUCCEEDED( hr ) ){
+        UINT uiWidth = 10;
+        UINT uiHeight = 10;
+
+        hr = CALL( pIBitmap, GetSize, &uiWidth, &uiHeight );
+        if( FAILED( hr ) ) return hr;
+
+        WICRect rcLock = { 0, 0, uiWidth, uiHeight };
+
+        // Obtain a bitmap lock for exclusive write.
+        // The lock is for a 10x10 rectangle starting at the top left of the
+        // bitmap.
+        hr = CALL( pIBitmap, Lock, &rcLock, WICBitmapLockWrite, &pILock );
+
+        if( SUCCEEDED( hr ) ){
+            UINT cbBufferSize = 0;
+            BYTE *pv = NULL;
+
+            // Retrieve a pointer to the pixel data.
+            if( SUCCEEDED( hr ) ){
+                hr = CALL( pILock, GetDataPointer, &cbBufferSize, &pv );
+            }
+
+            // Pixel manipulation using the image data pointer pv.
+            UINT cbStride;
+            hr = CALL( pILock, GetStride, &cbStride );
+
+            COLORREF oldColor = getPixel( pv, x, y, cbStride );
+            if( oldColor != color ){
+                fillColor( pv, x, y, cbStride, uiHeight, oldColor, color );
+            }
+        }
+        // Release the lock
+        if (pILock) {
+            CALL(pILock, Release);
+            pILock = NULL; // Clear the pointer after releasing
+        }
+    }
+}
 
 /**
  * Draw rectangle on a png file
@@ -482,7 +593,7 @@ IWICBitmap* FindBitmapFromPath( char* sPath ){
 int DrawRectangle( char* sPath, 
     int nLeft, int nTop, int nWidth, int nHeight, 
     int nDgrLeft, int nDgrTop, int nDgrWidth, int nDgrHeight,
-    uint8_t byRed, uint8_t byGreen, uint8_t byBlue,
+    COLORREF color,
     unsigned char* sText,
     int nMargin, int nAlign
 ){
@@ -532,9 +643,9 @@ int DrawRectangle( char* sPath,
                         UINT destIndex = y * cbStride + x * 4;
 
                         // For simplicity, we'll just set the pixel to red (assuming 32bpp BGRA format)
-                        pv[ destIndex ] = byBlue;       // Blue
-                        pv[ destIndex + 1 ] = byGreen;   // Green
-                        pv[ destIndex + 2 ] = byRed; // Red
+                        pv[ destIndex ] = GetBValue( color );      // Blue
+                        pv[ destIndex + 1 ] = GetGValue( color ); // Green
+                        pv[ destIndex + 2 ] = GetRValue( color );   // Red
                         pv[ destIndex + 3 ] = 255; // Alpha
                     }
                 }
@@ -575,7 +686,7 @@ int DrawRectangle( char* sPath,
                 if( ( nAlign & TEXT_ALIGN_BTM ) != 0 ){
                     nCharTopPos = nTop + nHeight - nMargin - FONT_CHAR_HEIGHT *scale;
                 }
-                placeCharacterInBitmap( pv, sText[ i ], scale, nCharLeftPos, nCharTopPos, cbStride, byRed, byGreen, byBlue );
+                placeCharacterInBitmap( pv, sText[ i ], scale, nCharLeftPos, nCharTopPos, cbStride, color );
             }
         }
         // Release the lock
@@ -589,16 +700,9 @@ int DrawRectangle( char* sPath,
 /**
  * Save png image to file
  */
-void SavePngImage( char* sPath ){
-    char sRelPath[ 256 ];
-    sprintf( sRelPath, "../TransImg/Design/%s", sPath );
-    make_dir( sRelPath );
-
+void SavePngImage( char* sPath, IWICBitmap *pIBitmap ){
     WCHAR* wideString = ConvertCharToWChar(sPath, CP_UTF8);  // Using UTF-8 code page
-    WCHAR strOutputFile[ 256 ];
-    swprintf( strOutputFile, sizeof( strOutputFile ) / sizeof( strOutputFile[ 0 ] ), L"../TransImg/Design/%s.png", wideString );
     HRESULT hr = S_OK;
-    IWICBitmap *pIBitmap = FindBitmapFromPath( sPath );
 
     if( SUCCEEDED( hr ) ){
         IWICStream* pStream = NULL;
@@ -608,7 +712,7 @@ void SavePngImage( char* sPath ){
         hr = CALL( m_pIWICFactory, CreateStream, &pStream );
 
         if( SUCCEEDED( hr ) ){
-            hr = CALL( pStream, InitializeFromFilename, strOutputFile, GENERIC_WRITE );
+            hr = CALL( pStream, InitializeFromFilename, wideString, GENERIC_WRITE );
         }
 
         if( SUCCEEDED( hr ) ){
@@ -681,7 +785,7 @@ void ShowEntry( char* pMsg ){
     sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", s, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
     
     char sCounter[ 10 ];
-    DrawRectangle( s, l, t, w, h, dgrX, dgrY, dgrW, dgrH, 0, 255, 0, itoa( g_nActionCounter++, sCounter, 10 ), 5, TEXT_ALIGN_LEFT );
+    DrawRectangle( s, l, t, w, h, dgrX, dgrY, dgrW, dgrH, RGB( 0, 255, 0 ), itoa( g_nActionCounter++, sCounter, 10 ), 5, TEXT_ALIGN_LEFT );
 }
 
 void ShowDoing( char* pMsg ){
@@ -690,7 +794,7 @@ void ShowDoing( char* pMsg ){
     int l, t, w, h, dgrX, dgrY, dgrW, dgrH;
     sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", s, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
     
-    DrawRectangle( s, l, t, w, h, dgrX, dgrY, dgrW, dgrH, 0, 0, 255, "", 5, TEXT_ALIGN_BTM );
+    DrawRectangle( s, l, t, w, h, dgrX, dgrY, dgrW, dgrH, RGB( 0, 0, 255 ), "", 5, TEXT_ALIGN_BTM );
 }
 
 void ShowExit( char* pMsg ){
@@ -699,13 +803,14 @@ void ShowExit( char* pMsg ){
     sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", s, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
     
     char sCounter[ 10 ];
-    DrawRectangle( s, l, t, w, h, dgrX, dgrY, dgrW, dgrH, 255, 0, 0, itoa( g_nActionCounter++, sCounter, 10 ), 5, TEXT_ALIGN_RIGHT );
+    DrawRectangle( s, l, t, w, h, dgrX, dgrY, dgrW, dgrH, RGB( 255, 0, 0 ), itoa( g_nActionCounter++, sCounter, 10 ), 5, TEXT_ALIGN_RIGHT );
 }
 
 #define WM_CUSTOM_MESSAGE (WM_USER + 1)
 static HWND hWnd;
 static UINT_PTR timerId;
 static ContextImpl* pContext = NULL;
+static IWICBitmap* g_pIBmpSim;
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
@@ -719,6 +824,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 ContextImpl_EventProc( pContext, ContextImpl_TMOUT, NULL);
                 SaveAllImages();
                 ReleaseAllImages();
+                SavePngImage( "../TransImg/Visualized_2x_TrafficLights.png", g_pIBmpSim );
             }
             return 0;
 
@@ -733,9 +839,62 @@ void startTimer( int tmout ){
     timerId = SetTimer(hWnd, 1, tmout*1000, NULL);  // Creates a timer that fires every 1000 milliseconds (1 second)
 }
 
+void TurnOnPrimaryRed( void ){
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ EAST ][ RED ].x, LIGHT_POSITIONS[ EAST ][ RED ].y, RGB( 255, 0, 0 ) );
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ WEST ][ RED ].x, LIGHT_POSITIONS[ WEST ][ RED ].y, RGB( 255, 0, 0 ) );
+}
+void TurnOffPrimaryRed( void ){
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ EAST ][ RED ].x, LIGHT_POSITIONS[ EAST ][ RED ].y, RGB( 64, 0, 0 ) );
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ WEST ][ RED ].x, LIGHT_POSITIONS[ WEST ][ RED ].y, RGB( 64, 0, 0 ) );
+}
+void TurnOnPrimaryYellow( void ){
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ EAST ][ YELLOW ].x, LIGHT_POSITIONS[ EAST ][ YELLOW ].y, RGB( 255, 255, 0 ) );
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ WEST ][ YELLOW ].x, LIGHT_POSITIONS[ WEST ][ YELLOW ].y, RGB( 255, 255, 0 ) );
+}
+void TurnOffPrimaryYellow( void ){
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ EAST ][ YELLOW ].x, LIGHT_POSITIONS[ EAST ][ YELLOW ].y, RGB( 64, 64, 0 ) );
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ WEST ][ YELLOW ].x, LIGHT_POSITIONS[ WEST ][ YELLOW ].y, RGB( 64, 64, 0 ) );
+}
+void TurnOnPrimaryGreen( void ){
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ EAST ][ GREEN ].x, LIGHT_POSITIONS[ EAST ][ GREEN ].y, RGB( 0, 255, 0 ) );
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ WEST ][ GREEN ].x, LIGHT_POSITIONS[ WEST ][ GREEN ].y, RGB( 0, 255, 0 ) );
+}
+void TurnOffPrimaryGreen( void ){
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ EAST ][ GREEN ].x, LIGHT_POSITIONS[ EAST ][ GREEN ].y, RGB( 0, 64, 0 ) );
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ WEST ][ GREEN ].x, LIGHT_POSITIONS[ WEST ][ GREEN ].y, RGB( 0, 64, 0 ) );
+}
+
+void TurnOnSecondaryRed( void ){
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ NORTH ][ RED ].x, LIGHT_POSITIONS[ NORTH ][ RED ].y, RGB( 255, 0, 0 ) );
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ SOUTH ][ RED ].x, LIGHT_POSITIONS[ SOUTH ][ RED ].y, RGB( 255, 0, 0 ) );
+}
+void TurnOffSecondaryRed( void ){
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ NORTH ][ RED ].x, LIGHT_POSITIONS[ NORTH ][ RED ].y, RGB( 64, 0, 0 ) );
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ SOUTH ][ RED ].x, LIGHT_POSITIONS[ SOUTH ][ RED ].y, RGB( 64, 0, 0 ) );
+}
+void TurnOnSecondaryYellow( void ){
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ NORTH ][ YELLOW ].x, LIGHT_POSITIONS[ NORTH ][ YELLOW ].y, RGB( 255, 255, 0 ) );
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ SOUTH ][ YELLOW ].x, LIGHT_POSITIONS[ SOUTH ][ YELLOW ].y, RGB( 255, 255, 0 ) );
+}
+void TurnOffSecondaryYellow( void ){
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ NORTH ][ YELLOW ].x, LIGHT_POSITIONS[ NORTH ][ YELLOW ].y, RGB( 64, 64, 0 ) );
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ SOUTH ][ YELLOW ].x, LIGHT_POSITIONS[ SOUTH ][ YELLOW ].y, RGB( 64, 64, 0 ) );
+}
+void TurnOnSecondaryGreen( void ){
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ NORTH ][ GREEN ].x, LIGHT_POSITIONS[ NORTH ][ GREEN ].y, RGB( 0, 255, 0 ) );
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ SOUTH ][ GREEN ].x, LIGHT_POSITIONS[ SOUTH ][ GREEN ].y, RGB( 0, 255, 0 ) );
+}
+void TurnOffSecondaryGreen( void ){
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ NORTH ][ GREEN ].x, LIGHT_POSITIONS[ NORTH ][ GREEN ].y, RGB( 0, 64, 0 ) );
+    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ SOUTH ][ GREEN ].x, LIGHT_POSITIONS[ SOUTH ][ GREEN ].y, RGB( 0, 64, 0 ) );
+}
+
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 
     InitializeResources();
+
+    g_pIBmpSim = LoadPngImage( "../Image/Visualized_2x_TrafficLights.png" );
 
     // Register window class
     const char *className = "MyWindowClass";
@@ -771,6 +930,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         KillTimer(hWnd, timerId);
     }
 
+    if( g_pIBmpSim ) CALL( g_pIBmpSim, Release );
     ReleaseResources();
 
     return 0;
