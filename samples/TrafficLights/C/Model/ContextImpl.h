@@ -31,13 +31,15 @@ boolean ContextImpl_checkE1Params( EventParams* e );
 typedef struct tagManagingThroughTraffic_Region1 {
     HdStateMachine base;
 #define ManagingThroughTraffic_Region1_ManagingThroughTraffic_Top_Dmy ( 1ULL <<  0 )
-#define ManagingThroughTraffic_Region1_ManagingThroughTraffic_Top ( ManagingThroughTraffic_Region1_ManagingThroughTraffic_Top_Dmy | ManagingThroughTraffic_Region1_SGreen | ManagingThroughTraffic_Region1_SYellow | ManagingThroughTraffic_Region1_PRedWait | ManagingThroughTraffic_Region1_SRed )
+#define ManagingThroughTraffic_Region1_ManagingThroughTraffic_Top ( ManagingThroughTraffic_Region1_ManagingThroughTraffic_Top_Dmy | ManagingThroughTraffic_Region1_SGreen | ManagingThroughTraffic_Region1_SYellow | ManagingThroughTraffic_Region1_SRedOn )
 #define ManagingThroughTraffic_Region1_SGreen   ( 1ULL <<  1 )
 #define ManagingThroughTraffic_Region1_SYellow  ( 1ULL <<  2 )
-#define ManagingThroughTraffic_Region1_PRedWait ( 1ULL <<  3 )
-#define ManagingThroughTraffic_Region1_SRed     ( 1ULL <<  4 )
 #define ManagingThroughTraffic_Region1_InitialPseudostate2 ( 1ULL << ( MAX_STATE_NUM -  0 ) )
-#define ManagingThroughTraffic_Region1_ForkPseudostate1 ( 1ULL <<  5 )
+#define ManagingThroughTraffic_Region1_ForkPseudostate1 ( 1ULL << ( MAX_STATE_NUM -  1 ) )
+#define ManagingThroughTraffic_Region1_SRed     ( 1ULL <<  3 )
+#define ManagingThroughTraffic_Region1_PRedWait ( 1ULL <<  4 )
+#define ManagingThroughTraffic_Region1_SRedOn_Dmy ( 1ULL <<  5 )
+#define ManagingThroughTraffic_Region1_SRedOn   ( ManagingThroughTraffic_Region1_SRedOn_Dmy | ManagingThroughTraffic_Region1_SRed | ManagingThroughTraffic_Region1_PRedWait )
 }ManagingThroughTraffic_Region1;
 #define ManagingThroughTraffic_Region1_Init() {\
     .base = HdStateMachine_Ctor( HdStateMachine_Init(ManagingThroughTraffic_Region1_ManagingThroughTraffic_Top, ManagingThroughTraffic_Region1_ManagingThroughTraffic_Top), ),\
@@ -52,13 +54,16 @@ typedef struct tagMainStm {
 #define MainStm_MainTop                         ( MainStm_MainTop_Dmy | MainStm_Starting | MainStm_ManagingThroughTraffic )
 #define MainStm_InitialPseudostate0             ( 1ULL << ( MAX_STATE_NUM -  0 ) )
 #define MainStm_Starting                        ( 1ULL <<  7 )
-#define MainStm_InitialPseudostate1             ( 1ULL << ( MAX_STATE_NUM -  1 ) )
-#define MainStm_PRed                            ( 1ULL <<  8 )
-#define MainStm_PGreen                          ( 1ULL <<  9 )
-#define MainStm_PYellow                         ( 1ULL << 10 )
+#define MainStm_PGreen                          ( 1ULL <<  8 )
+#define MainStm_PYellow                         ( 1ULL <<  9 )
+#define MainStm_PRed                            ( 1ULL << 10 )
 #define MainStm_SRedWait                        ( 1ULL << 11 )
-#define MainStm_ManagingThroughTraffic_Dmy      ( 1ULL << 12 )
-#define MainStm_ManagingThroughTraffic          ( MainStm_ManagingThroughTraffic_Dmy | MainStm_PRed | MainStm_PGreen | MainStm_PYellow | MainStm_SRedWait )
+#define MainStm_InitialPseudostate1             ( 1ULL << ( MAX_STATE_NUM -  1 ) )
+#define MainStm_Initpseudostate0                ( 1ULL << ( MAX_STATE_NUM -  2 ) )
+#define MainStm_PRedOn_Dmy                      ( 1ULL << 12 )
+#define MainStm_PRedOn                          ( MainStm_PRedOn_Dmy | MainStm_PRed | MainStm_SRedWait )
+#define MainStm_ManagingThroughTraffic_Dmy      ( 1ULL << 13 )
+#define MainStm_ManagingThroughTraffic          ( MainStm_ManagingThroughTraffic_Dmy | MainStm_PGreen | MainStm_PYellow | MainStm_PRedOn )
 }MainStm;
 #define MainStm_Init() {\
     .base = HdStateMachine_Ctor( HdStateMachine_Init(MainStm_MainTop, MainStm_MainTop), ),\

@@ -38,7 +38,7 @@ static BOOL ManagingThroughTraffic_Region1_EventProc( ContextImpl* pManagingThro
 static BOOL ManagingThroughTraffic_Region1_RunToCompletion( ContextImpl* pManagingThroughTraffic_Top, ManagingThroughTraffic_Region1* pStm );
 static void ManagingThroughTraffic_Region1_SGreen_Entry( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, ManagingThroughTraffic_Region1_SGreen ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	870	348	224	84	69	17	1240	1151" );
+        ShowEntry( "Model/ContextImpl/MainStm	870	348	224	84	225	28	976	919" );
         TurnOnSecondaryGreen();
         startTimer(2);
     }
@@ -46,7 +46,7 @@ static void ManagingThroughTraffic_Region1_SGreen_Entry( ContextImpl* pContextIm
 static BOOL ManagingThroughTraffic_Region1_SGreen_EventProc( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = ManagingThroughTraffic_Region1_SGreen;
-    ShowDoing( "Model/ContextImpl/MainStm	870	348	224	84	69	17	1240	1151" );
+    ShowDoing( "Model/ContextImpl/MainStm	870	348	224	84	225	28	976	919" );
     switch( nEventId ){
     case ContextImpl_TMOUT:{
         ManagingThroughTraffic_Region1_BgnTrans( pContextImpl, pStm, ManagingThroughTraffic_Region1_SYellow, STATE_UNDEF );
@@ -60,12 +60,12 @@ static BOOL ManagingThroughTraffic_Region1_SGreen_EventProc( ContextImpl* pConte
 static void ManagingThroughTraffic_Region1_SGreen_Exit( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, ManagingThroughTraffic_Region1_SGreen ) ){ 
         TurnOffSecondaryGreen();
-        ShowExit( "Model/ContextImpl/MainStm	870	348	224	84	69	17	1240	1151" );
+        ShowExit( "Model/ContextImpl/MainStm	870	348	224	84	225	28	976	919" );
     }
 }
 static void ManagingThroughTraffic_Region1_SYellow_Entry( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, ManagingThroughTraffic_Region1_SYellow ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	870	451	224	84	69	17	1240	1151" );
+        ShowEntry( "Model/ContextImpl/MainStm	870	451	224	84	225	28	976	919" );
         TurnOnSecondaryYellow();
         startTimer(1);
     }
@@ -73,7 +73,7 @@ static void ManagingThroughTraffic_Region1_SYellow_Entry( ContextImpl* pContextI
 static BOOL ManagingThroughTraffic_Region1_SYellow_EventProc( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = ManagingThroughTraffic_Region1_SYellow;
-    ShowDoing( "Model/ContextImpl/MainStm	870	451	224	84	69	17	1240	1151" );
+    ShowDoing( "Model/ContextImpl/MainStm	870	451	224	84	225	28	976	919" );
     switch( nEventId ){
     case ContextImpl_TMOUT:{
         ManagingThroughTraffic_Region1_BgnTrans( pContextImpl, pStm, ManagingThroughTraffic_Region1_PRedWait, STATE_UNDEF );
@@ -87,20 +87,56 @@ static BOOL ManagingThroughTraffic_Region1_SYellow_EventProc( ContextImpl* pCont
 static void ManagingThroughTraffic_Region1_SYellow_Exit( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, ManagingThroughTraffic_Region1_SYellow ) ){ 
         TurnOffSecondaryYellow();
-        ShowExit( "Model/ContextImpl/MainStm	870	451	224	84	69	17	1240	1151" );
+        ShowExit( "Model/ContextImpl/MainStm	870	451	224	84	225	28	976	919" );
+    }
+}
+static void ManagingThroughTraffic_Region1_SRedOn_Entry( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, ManagingThroughTraffic_Region1_SRedOn ) ){
+        ShowEntry( "Model/ContextImpl/MainStm	828	555	306	330	225	28	976	919" );
+        TurnOnSecondaryRed();
+    }
+}
+static BOOL ManagingThroughTraffic_Region1_SRedOn_EventProc( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->base.nSourceState = ManagingThroughTraffic_Region1_SRedOn;
+    ShowDoing( "Model/ContextImpl/MainStm	828	555	306	330	225	28	976	919" );
+    return bResult;
+}
+static void ManagingThroughTraffic_Region1_SRedOn_Exit( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, ManagingThroughTraffic_Region1_SRedOn ) ){ 
+        TurnOffSecondaryRed();
+        ShowExit( "Model/ContextImpl/MainStm	828	555	306	330	225	28	976	919" );
+    }
+}
+static void ManagingThroughTraffic_Region1_SRed_Entry( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, ManagingThroughTraffic_Region1_SRed ) ){
+        ManagingThroughTraffic_Region1_SRedOn_Entry( pContextImpl, pStm );
+        ShowEntry( "Model/ContextImpl/MainStm	870	780	224	84	225	28	976	919" );
+    }
+}
+static BOOL ManagingThroughTraffic_Region1_SRed_EventProc( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->base.nSourceState = ManagingThroughTraffic_Region1_SRed;
+    ShowDoing( "Model/ContextImpl/MainStm	870	780	224	84	225	28	976	919" );
+    return bResult ? bResult : ManagingThroughTraffic_Region1_SRedOn_EventProc( pContextImpl, pStm, nEventId, pEventParams );
+}
+static void ManagingThroughTraffic_Region1_SRed_Exit( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, ManagingThroughTraffic_Region1_SRed ) ){ 
+        ShowExit( "Model/ContextImpl/MainStm	870	780	224	84	225	28	976	919" );
+        ManagingThroughTraffic_Region1_SRedOn_Exit( pContextImpl, pStm );
     }
 }
 static void ManagingThroughTraffic_Region1_PRedWait_Entry( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, ManagingThroughTraffic_Region1_PRedWait ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	870	562	224	84	69	17	1240	1151" );
-        TurnOnSecondaryRed();
+        ManagingThroughTraffic_Region1_SRedOn_Entry( pContextImpl, pStm );
+        ShowEntry( "Model/ContextImpl/MainStm	870	630	224	84	225	28	976	919" );
         startTimer(1);
     }
 }
 static BOOL ManagingThroughTraffic_Region1_PRedWait_EventProc( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = ManagingThroughTraffic_Region1_PRedWait;
-    ShowDoing( "Model/ContextImpl/MainStm	870	562	224	84	69	17	1240	1151" );
+    ShowDoing( "Model/ContextImpl/MainStm	870	630	224	84	225	28	976	919" );
     switch( nEventId ){
     case ContextImpl_TMOUT:{
         ManagingThroughTraffic_Region1_BgnTrans( pContextImpl, pStm, ManagingThroughTraffic_Region1_ManagingThroughTraffic_Top, STATE_UNDEF );
@@ -110,28 +146,12 @@ static BOOL ManagingThroughTraffic_Region1_PRedWait_EventProc( ContextImpl* pCon
     } break;
     default: break;
     }
-    return bResult;
+    return bResult ? bResult : ManagingThroughTraffic_Region1_SRedOn_EventProc( pContextImpl, pStm, nEventId, pEventParams );
 }
 static void ManagingThroughTraffic_Region1_PRedWait_Exit( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, ManagingThroughTraffic_Region1_PRedWait ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	870	562	224	84	69	17	1240	1151" );
-    }
-}
-static void ManagingThroughTraffic_Region1_SRed_Entry( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, ManagingThroughTraffic_Region1_SRed ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	870	724	224	293	69	17	1240	1151" );
-    }
-}
-static BOOL ManagingThroughTraffic_Region1_SRed_EventProc( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = ManagingThroughTraffic_Region1_SRed;
-    ShowDoing( "Model/ContextImpl/MainStm	870	724	224	293	69	17	1240	1151" );
-    return bResult;
-}
-static void ManagingThroughTraffic_Region1_SRed_Exit( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, ManagingThroughTraffic_Region1_SRed ) ){ 
-        TurnOffSecondaryRed();
-        ShowExit( "Model/ContextImpl/MainStm	870	724	224	293	69	17	1240	1151" );
+        ShowExit( "Model/ContextImpl/MainStm	870	630	224	84	225	28	976	919" );
+        ManagingThroughTraffic_Region1_SRedOn_Exit( pContextImpl, pStm );
     }
 }
 static void ManagingThroughTraffic_Region1_EndTrans( ContextImpl *pContextImpl, ManagingThroughTraffic_Region1* pStm ){
@@ -140,8 +160,9 @@ static void ManagingThroughTraffic_Region1_EndTrans( ContextImpl *pContextImpl, 
     switch( pStm->base.nCurrentState ){
     case ManagingThroughTraffic_Region1_SGreen:ManagingThroughTraffic_Region1_SGreen_Entry( pContextImpl, pStm ); break;
     case ManagingThroughTraffic_Region1_SYellow:ManagingThroughTraffic_Region1_SYellow_Entry( pContextImpl, pStm ); break;
-    case ManagingThroughTraffic_Region1_PRedWait:ManagingThroughTraffic_Region1_PRedWait_Entry( pContextImpl, pStm ); break;
+    case ManagingThroughTraffic_Region1_SRedOn:ManagingThroughTraffic_Region1_SRedOn_Entry( pContextImpl, pStm ); break;
     case ManagingThroughTraffic_Region1_SRed:ManagingThroughTraffic_Region1_SRed_Entry( pContextImpl, pStm ); break;
+    case ManagingThroughTraffic_Region1_PRedWait:ManagingThroughTraffic_Region1_PRedWait_Entry( pContextImpl, pStm ); break;
     default: break;
     }
 }
@@ -154,8 +175,9 @@ static void ManagingThroughTraffic_Region1_BgnTrans( ContextImpl *pContextImpl, 
     switch( pStm->base.nCurrentState ){
     case ManagingThroughTraffic_Region1_SGreen:ManagingThroughTraffic_Region1_SGreen_Exit( pContextImpl, pStm ); break;
     case ManagingThroughTraffic_Region1_SYellow:ManagingThroughTraffic_Region1_SYellow_Exit( pContextImpl, pStm ); break;
-    case ManagingThroughTraffic_Region1_PRedWait:ManagingThroughTraffic_Region1_PRedWait_Exit( pContextImpl, pStm ); break;
+    case ManagingThroughTraffic_Region1_SRedOn:ManagingThroughTraffic_Region1_SRedOn_Exit( pContextImpl, pStm ); break;
     case ManagingThroughTraffic_Region1_SRed:ManagingThroughTraffic_Region1_SRed_Exit( pContextImpl, pStm ); break;
+    case ManagingThroughTraffic_Region1_PRedWait:ManagingThroughTraffic_Region1_PRedWait_Exit( pContextImpl, pStm ); break;
     default: break;
     }
 }
@@ -204,8 +226,9 @@ static BOOL ManagingThroughTraffic_Region1_EventProc( ContextImpl* pContextImpl,
     switch( pStm->base.nCurrentState ){
     case ManagingThroughTraffic_Region1_SGreen: bResult |= ManagingThroughTraffic_Region1_SGreen_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case ManagingThroughTraffic_Region1_SYellow:bResult |= ManagingThroughTraffic_Region1_SYellow_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
-    case ManagingThroughTraffic_Region1_PRedWait:bResult |= ManagingThroughTraffic_Region1_PRedWait_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
+    case ManagingThroughTraffic_Region1_SRedOn: bResult |= ManagingThroughTraffic_Region1_SRedOn_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case ManagingThroughTraffic_Region1_SRed:   bResult |= ManagingThroughTraffic_Region1_SRed_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
+    case ManagingThroughTraffic_Region1_PRedWait:bResult |= ManagingThroughTraffic_Region1_PRedWait_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     default: break;
     }
     ManagingThroughTraffic_Region1_RunToCompletion( pContextImpl, pStm );
@@ -232,7 +255,7 @@ static BOOL MainStm_EventProc( ContextImpl* pMainTop, MainStm* pStm, ContextImpl
 static BOOL MainStm_RunToCompletion( ContextImpl* pMainTop, MainStm* pStm );
 static void MainStm_Starting_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_Starting ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	249	79	237	131	69	17	1240	1151" );
+        ShowEntry( "Model/ContextImpl/MainStm	388	79	237	131	225	28	976	919" );
         TurnOffPrimaryRed();
         TurnOffPrimaryYellow();
         TurnOffPrimaryGreen();
@@ -244,55 +267,36 @@ static void MainStm_Starting_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
 static BOOL MainStm_Starting_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_Starting;
-    ShowDoing( "Model/ContextImpl/MainStm	249	79	237	131	69	17	1240	1151" );
+    ShowDoing( "Model/ContextImpl/MainStm	388	79	237	131	225	28	976	919" );
     return bResult;
 }
 static void MainStm_Starting_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_Starting ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	249	79	237	131	69	17	1240	1151" );
+        ShowExit( "Model/ContextImpl/MainStm	388	79	237	131	225	28	976	919" );
     }
 }
 static void MainStm_ManagingThroughTraffic_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_ManagingThroughTraffic ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	219	225	1002	873	69	17	1240	1151" );
+        ShowEntry( "Model/ContextImpl/MainStm	265	225	911	698	225	28	976	919" );
         ManagingThroughTraffic_Region1_Reset( pContextImpl, &pStm->ManagingThroughTraffic_TopManagingThroughTraffic_Region1, &pStm->base, STATE_UNDEF );
     }
 }
 static BOOL MainStm_ManagingThroughTraffic_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_ManagingThroughTraffic;
-    ShowDoing( "Model/ContextImpl/MainStm	219	225	1002	873	69	17	1240	1151" );
+    ShowDoing( "Model/ContextImpl/MainStm	265	225	911	698	225	28	976	919" );
     return bResult;
 }
 static void MainStm_ManagingThroughTraffic_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_ManagingThroughTraffic ) ){ 
         ManagingThroughTraffic_Region1_Abort( pContextImpl, &pStm->ManagingThroughTraffic_TopManagingThroughTraffic_Region1 );
-        ShowExit( "Model/ContextImpl/MainStm	219	225	1002	873	69	17	1240	1151" );
-    }
-}
-static void MainStm_PRed_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_PRed ) ){
-        MainStm_ManagingThroughTraffic_Entry( pContextImpl, pStm );
-        ShowEntry( "Model/ContextImpl/MainStm	368	348	210	281	69	17	1240	1151" );
-    }
-}
-static BOOL MainStm_PRed_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_PRed;
-    ShowDoing( "Model/ContextImpl/MainStm	368	348	210	281	69	17	1240	1151" );
-    return bResult ? bResult : MainStm_ManagingThroughTraffic_EventProc( pContextImpl, pStm, nEventId, pEventParams );
-}
-static void MainStm_PRed_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_PRed ) ){ 
-        TurnOffPrimaryRed();
-        ShowExit( "Model/ContextImpl/MainStm	368	348	210	281	69	17	1240	1151" );
-        MainStm_ManagingThroughTraffic_Exit( pContextImpl, pStm );
+        ShowExit( "Model/ContextImpl/MainStm	265	225	911	698	225	28	976	919" );
     }
 }
 static void MainStm_PGreen_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_PGreen ) ){
         MainStm_ManagingThroughTraffic_Entry( pContextImpl, pStm );
-        ShowEntry( "Model/ContextImpl/MainStm	368	711	210	84	69	17	1240	1151" );
+        ShowEntry( "Model/ContextImpl/MainStm	368	711	210	84	225	28	976	919" );
         TurnOnPrimaryGreen();
         startTimer(3);
     }
@@ -300,7 +304,7 @@ static void MainStm_PGreen_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
 static BOOL MainStm_PGreen_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_PGreen;
-    ShowDoing( "Model/ContextImpl/MainStm	368	711	210	84	69	17	1240	1151" );
+    ShowDoing( "Model/ContextImpl/MainStm	368	711	210	84	225	28	976	919" );
     switch( nEventId ){
     case ContextImpl_TMOUT:{
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_PYellow, STATE_UNDEF );
@@ -314,14 +318,14 @@ static BOOL MainStm_PGreen_EventProc( ContextImpl* pContextImpl, MainStm* pStm, 
 static void MainStm_PGreen_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_PGreen ) ){ 
         TurnOffPrimaryGreen();
-        ShowExit( "Model/ContextImpl/MainStm	368	711	210	84	69	17	1240	1151" );
+        ShowExit( "Model/ContextImpl/MainStm	368	711	210	84	225	28	976	919" );
         MainStm_ManagingThroughTraffic_Exit( pContextImpl, pStm );
     }
 }
 static void MainStm_PYellow_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_PYellow ) ){
         MainStm_ManagingThroughTraffic_Entry( pContextImpl, pStm );
-        ShowEntry( "Model/ContextImpl/MainStm	368	829	210	84	69	17	1240	1151" );
+        ShowEntry( "Model/ContextImpl/MainStm	368	829	210	84	225	28	976	919" );
         TurnOnPrimaryYellow();
         startTimer(1);
     }
@@ -329,7 +333,7 @@ static void MainStm_PYellow_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
 static BOOL MainStm_PYellow_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_PYellow;
-    ShowDoing( "Model/ContextImpl/MainStm	368	829	210	84	69	17	1240	1151" );
+    ShowDoing( "Model/ContextImpl/MainStm	368	829	210	84	225	28	976	919" );
     switch( nEventId ){
     case ContextImpl_TMOUT:{
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_SRedWait, STATE_UNDEF );
@@ -343,22 +347,59 @@ static BOOL MainStm_PYellow_EventProc( ContextImpl* pContextImpl, MainStm* pStm,
 static void MainStm_PYellow_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_PYellow ) ){ 
         TurnOffPrimaryYellow();
-        ShowExit( "Model/ContextImpl/MainStm	368	829	210	84	69	17	1240	1151" );
+        ShowExit( "Model/ContextImpl/MainStm	368	829	210	84	225	28	976	919" );
         MainStm_ManagingThroughTraffic_Exit( pContextImpl, pStm );
+    }
+}
+static void MainStm_PRedOn_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, MainStm_PRedOn ) ){
+        MainStm_ManagingThroughTraffic_Entry( pContextImpl, pStm );
+        ShowEntry( "Model/ContextImpl/MainStm	336	322	278	330	225	28	976	919" );
+        TurnOnPrimaryRed();
+    }
+}
+static BOOL MainStm_PRedOn_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->base.nSourceState = MainStm_PRedOn;
+    ShowDoing( "Model/ContextImpl/MainStm	336	322	278	330	225	28	976	919" );
+    return bResult ? bResult : MainStm_ManagingThroughTraffic_EventProc( pContextImpl, pStm, nEventId, pEventParams );
+}
+static void MainStm_PRedOn_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, MainStm_PRedOn ) ){ 
+        TurnOffPrimaryRed();
+        ShowExit( "Model/ContextImpl/MainStm	336	322	278	330	225	28	976	919" );
+        MainStm_ManagingThroughTraffic_Exit( pContextImpl, pStm );
+    }
+}
+static void MainStm_PRed_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, MainStm_PRed ) ){
+        MainStm_PRedOn_Entry( pContextImpl, pStm );
+        ShowEntry( "Model/ContextImpl/MainStm	368	545	210	84	225	28	976	919" );
+    }
+}
+static BOOL MainStm_PRed_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->base.nSourceState = MainStm_PRed;
+    ShowDoing( "Model/ContextImpl/MainStm	368	545	210	84	225	28	976	919" );
+    return bResult ? bResult : MainStm_PRedOn_EventProc( pContextImpl, pStm, nEventId, pEventParams );
+}
+static void MainStm_PRed_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, MainStm_PRed ) ){ 
+        ShowExit( "Model/ContextImpl/MainStm	368	545	210	84	225	28	976	919" );
+        MainStm_PRedOn_Exit( pContextImpl, pStm );
     }
 }
 static void MainStm_SRedWait_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_SRedWait ) ){
-        MainStm_ManagingThroughTraffic_Entry( pContextImpl, pStm );
-        ShowEntry( "Model/ContextImpl/MainStm	368	941	210	84	69	17	1240	1151" );
-        TurnOnPrimaryRed();
+        MainStm_PRedOn_Entry( pContextImpl, pStm );
+        ShowEntry( "Model/ContextImpl/MainStm	368	391	210	84	225	28	976	919" );
         startTimer(1);
     }
 }
 static BOOL MainStm_SRedWait_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_SRedWait;
-    ShowDoing( "Model/ContextImpl/MainStm	368	941	210	84	69	17	1240	1151" );
+    ShowDoing( "Model/ContextImpl/MainStm	368	391	210	84	225	28	976	919" );
     switch( nEventId ){
     case ContextImpl_TMOUT:{
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_PRed, STATE_UNDEF );
@@ -368,12 +409,12 @@ static BOOL MainStm_SRedWait_EventProc( ContextImpl* pContextImpl, MainStm* pStm
     } break;
     default: break;
     }
-    return bResult ? bResult : MainStm_ManagingThroughTraffic_EventProc( pContextImpl, pStm, nEventId, pEventParams );
+    return bResult ? bResult : MainStm_PRedOn_EventProc( pContextImpl, pStm, nEventId, pEventParams );
 }
 static void MainStm_SRedWait_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_SRedWait ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	368	941	210	84	69	17	1240	1151" );
-        MainStm_ManagingThroughTraffic_Exit( pContextImpl, pStm );
+        ShowExit( "Model/ContextImpl/MainStm	368	391	210	84	225	28	976	919" );
+        MainStm_PRedOn_Exit( pContextImpl, pStm );
     }
 }
 static void MainStm_EndTrans( ContextImpl *pContextImpl, MainStm* pStm ){
@@ -382,9 +423,10 @@ static void MainStm_EndTrans( ContextImpl *pContextImpl, MainStm* pStm ){
     switch( pStm->base.nCurrentState ){
     case MainStm_Starting:      MainStm_Starting_Entry( pContextImpl, pStm ); break;
     case MainStm_ManagingThroughTraffic:MainStm_ManagingThroughTraffic_Entry( pContextImpl, pStm ); break;
-    case MainStm_PRed:          MainStm_PRed_Entry( pContextImpl, pStm ); break;
     case MainStm_PGreen:        MainStm_PGreen_Entry( pContextImpl, pStm ); break;
     case MainStm_PYellow:       MainStm_PYellow_Entry( pContextImpl, pStm ); break;
+    case MainStm_PRedOn:        MainStm_PRedOn_Entry( pContextImpl, pStm ); break;
+    case MainStm_PRed:          MainStm_PRed_Entry( pContextImpl, pStm ); break;
     case MainStm_SRedWait:      MainStm_SRedWait_Entry( pContextImpl, pStm ); break;
     default: break;
     }
@@ -398,9 +440,10 @@ static void MainStm_BgnTrans( ContextImpl *pContextImpl, MainStm* pStm, uint64_t
     switch( pStm->base.nCurrentState ){
     case MainStm_Starting:      MainStm_Starting_Exit( pContextImpl, pStm ); break;
     case MainStm_ManagingThroughTraffic:MainStm_ManagingThroughTraffic_Exit( pContextImpl, pStm ); break;
-    case MainStm_PRed:          MainStm_PRed_Exit( pContextImpl, pStm ); break;
     case MainStm_PGreen:        MainStm_PGreen_Exit( pContextImpl, pStm ); break;
     case MainStm_PYellow:       MainStm_PYellow_Exit( pContextImpl, pStm ); break;
+    case MainStm_PRedOn:        MainStm_PRedOn_Exit( pContextImpl, pStm ); break;
+    case MainStm_PRed:          MainStm_PRed_Exit( pContextImpl, pStm ); break;
     case MainStm_SRedWait:      MainStm_SRedWait_Exit( pContextImpl, pStm ); break;
     default: break;
     }
@@ -415,7 +458,7 @@ static BOOL MainStm_StateDefaultTrans( ContextImpl* pContextImpl, MainStm* pStm 
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
     }else if( pStm->base.nPseudostate == MainStm_Starting ){
-        MainStm_BgnTrans( pContextImpl, pStm, MainStm_ManagingThroughTraffic, MainStm_InitialPseudostate1 );
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_ManagingThroughTraffic, MainStm_Initpseudostate0 );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
     }else if( pStm->base.nPseudostate == ManagingThroughTraffic_Region1_ForkPseudostate1 ){
@@ -423,8 +466,12 @@ static BOOL MainStm_StateDefaultTrans( ContextImpl* pContextImpl, MainStm* pStm 
         ManagingThroughTraffic_Region1_Reset( pContextImpl, &pStm->ManagingThroughTraffic_TopManagingThroughTraffic_Region1, &pStm->base, ManagingThroughTraffic_Region1_SRed );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
-    }else if( pStm->base.nCurrentState == MainStm_ManagingThroughTraffic && pStm->base.nPseudostate == MainStm_InitialPseudostate1 ){
+    }else if( pStm->base.nCurrentState == MainStm_PRedOn && pStm->base.nPseudostate == MainStm_InitialPseudostate1 ){
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_PRed, STATE_UNDEF );
+        MainStm_EndTrans( pContextImpl, pStm );
+        bResult = TRUE;
+    }else if( pStm->base.nCurrentState == MainStm_ManagingThroughTraffic && pStm->base.nPseudostate == MainStm_Initpseudostate0 ){
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_PRedOn, MainStm_InitialPseudostate1 );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
     }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, MainStm_MainTop) ){
@@ -465,9 +512,10 @@ static BOOL MainStm_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Context
     switch( pStm->base.nCurrentState ){
     case MainStm_Starting:                      bResult |= MainStm_Starting_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case MainStm_ManagingThroughTraffic:        bResult |= MainStm_ManagingThroughTraffic_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
-    case MainStm_PRed:                          bResult |= MainStm_PRed_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case MainStm_PGreen:                        bResult |= MainStm_PGreen_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case MainStm_PYellow:                       bResult |= MainStm_PYellow_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
+    case MainStm_PRedOn:                        bResult |= MainStm_PRedOn_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
+    case MainStm_PRed:                          bResult |= MainStm_PRed_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case MainStm_SRedWait:                      bResult |= MainStm_SRedWait_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     default: break;
     }
