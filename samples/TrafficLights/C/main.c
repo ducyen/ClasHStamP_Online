@@ -1,36 +1,11 @@
 #pragma warning(disable : 4996)
 #define __Main_INTERNAL__
 #include <stdio.h>
-#include <stdlib.h>
+#include <conio.h>
 #include <string.h>
 #include <stdint.h>
-#if defined( _MSC_VER )
 #include <windows.h>
 #include <wincodec.h>
-#else
-#include <stdio.h> 
-#include <stdlib.h> 
-#include <unistd.h> 
-#include <pthread.h> 
-#include <termios.h> 
-#include <fcntl.h>
-#include <png.h>
-typedef unsigned long   COLORREF;
-typedef unsigned char   BYTE;
-typedef unsigned int    UINT;
-typedef unsigned short      WORD;
-typedef unsigned long       DWORD;
-
-typedef unsigned long  ULONG_PTR;
-typedef ULONG_PTR DWORD_PTR, *PDWORD_PTR;
-#define LOBYTE(w)           ((BYTE)(((DWORD_PTR)(w)) & 0xff))
-
-#define RGB(r,g,b)          ((COLORREF)(((BYTE)(r)|((WORD)((BYTE)(g))<<8))|(((DWORD)(BYTE)(b))<<16)))
-#define GetRValue(rgb)      (LOBYTE(rgb))
-#define GetGValue(rgb)      (LOBYTE(((WORD)(rgb)) >> 8))
-#define GetBValue(rgb)      (LOBYTE((rgb)>>16))
-
-#endif
 #include <assert.h>
 
 int InputValue(char* pMsg);
@@ -409,12 +384,6 @@ void fillColor( BYTE *pv, int x, int y, int cbStride, int cHeight, COLORREF oldC
     }
 }
 
-/**
- * action counter
- */
-static int g_nActionCounter = 0;
-
-#if defined( _MSC_VER )
 #define CALL(ptr, method, ...) ((ptr)->lpVtbl->method((ptr), __VA_ARGS__))
 
 void SavePngImage( char*, IWICBitmap* );
@@ -521,6 +490,10 @@ IWICBitmap* LoadPngImage( char* sPath ){
 }
 
 /**
+ * action counter
+ */
+static int g_nActionCounter = 0;
+/**
  * find bitmap from path
  */
 static int g_nPathToBitmapCnt = 0;
@@ -565,7 +538,7 @@ IWICBitmap* FindBitmapFromPath( char* sPath ){
 }
 
 /**
- * Draw rectangle on a png file
+ * Flood fill on a png file
  */
 int MyFloodFill( IWICBitmap *pIBitmap, int x, int y, COLORREF color ){
     HRESULT hr = S_OK;
@@ -800,21 +773,6 @@ void ReleaseResources( void ){
 // Linker pragmas
 #pragma comment(lib, "windowscodecs.lib")
 
-#else
-/**
- * Draw rectangle on a png file
- */
-int DrawRectangle( char* sPath, 
-    int nLeft, int nTop, int nWidth, int nHeight, 
-    int nDgrLeft, int nDgrTop, int nDgrWidth, int nDgrHeight,
-    COLORREF color,
-    unsigned char* sText,
-    int nMargin, int nAlign
-){
-}
-
-#endif
-
 void ShowEntry( char* pMsg ){
 
     char s[ 256 ];
@@ -842,7 +800,7 @@ void ShowExit( char* pMsg ){
     char sCounter[ 10 ];
     DrawRectangle( s, l, t, w, h, dgrX, dgrY, dgrW, dgrH, RGB( 255, 0, 0 ), itoa( g_nActionCounter++, sCounter, 10 ), 5, TEXT_ALIGN_RIGHT );
 }
-#if defined( _MSC_VER )
+
 #define WM_CUSTOM_MESSAGE (WM_USER + 1)
 static HWND hWnd;
 static UINT_PTR timerId;
@@ -972,227 +930,3 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     return 0;
 }
-
-#else
-
-
-/**
- * Load image from png file
- */
-png_structp LoadPngImage( char* file_name ){
-    png_byte header[ 8 ];
-    FILE *fp = fopen( file_name, "rb" );
-    if( !fp )
-        abort_( "[read_png_file] File %s could not be opened for reading",
-        file_name );
-    fread( header, 1, 8, fp );
-    if( png_sig_cmp( header, 0, 8 ) )
-        abort_( "[read_png_file] File %s is not recognized as a PNG file",
-        file_name );
-
-    png_structp png_ptr =
-        png_create_read_struct( PNG_LIBPNG_VER_STRING, NULL, NULL, NULL );
-    if( !png_ptr )
-        abort_( "[read_png_file] png_create_read_struct failed" );
-
-    png_infop info_ptr = png_create_info_struct( png_ptr );
-    if( !info_ptr )
-        abort_( "[read_png_file] png_create_info_struct failed" );
-
-    if( setjmp( png_jmpbuf( png_ptr ) ) )
-        abort_( "[read_png_file] Error during init_io" );
-
-    png_init_io( png_ptr, fp );
-    png_set_sig_bytes( png_ptr, 8 );
-    png_read_info( png_ptr, info_ptr );
-
-    int width = png_get_image_width( png_ptr, info_ptr );
-    int height = png_get_image_height( png_ptr, info_ptr );
-
-    if( png_get_color_type( png_ptr, info_ptr ) != PNG_COLOR_TYPE_RGBA ){
-        abort_( "Unsupported color type" );
-    }
-}
-
-/**
- * Save png image to file
- */
-void SavePngImage( char* sPath, png_structp pIBitmap ){
-}
-
-
-#define INTERVAL_SEC 2
-
-// Node for the message queue 
-typedef struct node { char data; struct node* next; } Node;
-
-// Queue structure 
-typedef struct { 
-    Node* front; 
-    Node* rear; 
-    pthread_mutex_t lock; 
-} Queue;
-
-// Initialize the queue 
-void initQueue(Queue* q) { 
-    q->front = q->rear = NULL;
-    pthread_mutex_init(&q->lock, NULL); 
-}
-
-// Enqueue a message 
-void enqueue( Queue* q, char data ){
-    Node* temp = ( Node* )malloc( sizeof( Node ) );
-    temp->data = data;
-    temp->next = NULL;
-
-    pthread_mutex_lock( &q->lock );
-    if( q->rear == NULL ){
-        q->front = q->rear = temp;
-    } else{
-        q->rear->next = temp;
-        q->rear = temp;
-    }
-    pthread_mutex_unlock( &q->lock );
-}
-
-// Dequeue a message 
-char dequeue( Queue* q ){
-    pthread_mutex_lock( &q->lock );
-    if( q->front == NULL ){
-        pthread_mutex_unlock( &q->lock ); return '\0';
-    }
-
-    Node* temp = q->front;
-    char data = temp->data;
-    q->front = q->front->next;
-
-    if( q->front == NULL ){
-        q->rear = NULL;
-    }
-
-    free( temp );
-    pthread_mutex_unlock( &q->lock );
-    return data;
-}
-
-// Check for keyboard hit 
-int kbhit(void) { 
-    // [Implementation remains the same as before] 
-}
-
-// Keyboard Thread 
-void* keyboard_thread(void* arg) { 
-    Queue* q = (Queue*)arg; 
-    printf("Keyboard thread started. Press 'q' to exit.\n");
-
-while( 1 ){
-    if( kbhit() ){
-        char c = getchar();
-        enqueue( q, c );
-        if( c == 'q' ){
-            printf( "Exiting program.\n" );
-            exit( EXIT_SUCCESS );
-        }
-    }
-    usleep( 100000 ); // Sleep for 100 milliseconds
-}
-return NULL;
-}
-
-// Timer Thread 
-void* timer_thread( void* arg ){
-    Queue* q = ( Queue* )arg;
-
-    while( 1 ){
-        sleep( INTERVAL_SEC );
-        char msg = dequeue( q );
-        if( msg != '\0' ){
-            printf( "Timer received message: %c\n", msg );
-        }
-    }
-    return NULL;
-}
-
-png_structp g_pIBmpSim;
-
-int MyFloodFill( png_structp pIBitmap, int x, int y, COLORREF color ){
-
-}
-
-void startTimer( int tmout ){
-}
-
-void TurnOnPrimaryRed( void ){
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ EAST ][ RED ].x, LIGHT_POSITIONS[ EAST ][ RED ].y, RGB( 255, 0, 0 ) );
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ WEST ][ RED ].x, LIGHT_POSITIONS[ WEST ][ RED ].y, RGB( 255, 0, 0 ) );
-}
-void TurnOffPrimaryRed( void ){
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ EAST ][ RED ].x, LIGHT_POSITIONS[ EAST ][ RED ].y, RGB( 64, 0, 0 ) );
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ WEST ][ RED ].x, LIGHT_POSITIONS[ WEST ][ RED ].y, RGB( 64, 0, 0 ) );
-}
-void TurnOnPrimaryYellow( void ){
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ EAST ][ YELLOW ].x, LIGHT_POSITIONS[ EAST ][ YELLOW ].y, RGB( 255, 255, 0 ) );
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ WEST ][ YELLOW ].x, LIGHT_POSITIONS[ WEST ][ YELLOW ].y, RGB( 255, 255, 0 ) );
-}
-void TurnOffPrimaryYellow( void ){
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ EAST ][ YELLOW ].x, LIGHT_POSITIONS[ EAST ][ YELLOW ].y, RGB( 64, 64, 0 ) );
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ WEST ][ YELLOW ].x, LIGHT_POSITIONS[ WEST ][ YELLOW ].y, RGB( 64, 64, 0 ) );
-}
-void TurnOnPrimaryGreen( void ){
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ EAST ][ GREEN ].x, LIGHT_POSITIONS[ EAST ][ GREEN ].y, RGB( 0, 255, 0 ) );
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ WEST ][ GREEN ].x, LIGHT_POSITIONS[ WEST ][ GREEN ].y, RGB( 0, 255, 0 ) );
-}
-void TurnOffPrimaryGreen( void ){
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ EAST ][ GREEN ].x, LIGHT_POSITIONS[ EAST ][ GREEN ].y, RGB( 0, 64, 0 ) );
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ WEST ][ GREEN ].x, LIGHT_POSITIONS[ WEST ][ GREEN ].y, RGB( 0, 64, 0 ) );
-}
-
-void TurnOnSecondaryRed( void ){
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ NORTH ][ RED ].x, LIGHT_POSITIONS[ NORTH ][ RED ].y, RGB( 255, 0, 0 ) );
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ SOUTH ][ RED ].x, LIGHT_POSITIONS[ SOUTH ][ RED ].y, RGB( 255, 0, 0 ) );
-}
-void TurnOffSecondaryRed( void ){
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ NORTH ][ RED ].x, LIGHT_POSITIONS[ NORTH ][ RED ].y, RGB( 64, 0, 0 ) );
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ SOUTH ][ RED ].x, LIGHT_POSITIONS[ SOUTH ][ RED ].y, RGB( 64, 0, 0 ) );
-}
-void TurnOnSecondaryYellow( void ){
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ NORTH ][ YELLOW ].x, LIGHT_POSITIONS[ NORTH ][ YELLOW ].y, RGB( 255, 255, 0 ) );
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ SOUTH ][ YELLOW ].x, LIGHT_POSITIONS[ SOUTH ][ YELLOW ].y, RGB( 255, 255, 0 ) );
-}
-void TurnOffSecondaryYellow( void ){
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ NORTH ][ YELLOW ].x, LIGHT_POSITIONS[ NORTH ][ YELLOW ].y, RGB( 64, 64, 0 ) );
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ SOUTH ][ YELLOW ].x, LIGHT_POSITIONS[ SOUTH ][ YELLOW ].y, RGB( 64, 64, 0 ) );
-}
-void TurnOnSecondaryGreen( void ){
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ NORTH ][ GREEN ].x, LIGHT_POSITIONS[ NORTH ][ GREEN ].y, RGB( 0, 255, 0 ) );
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ SOUTH ][ GREEN ].x, LIGHT_POSITIONS[ SOUTH ][ GREEN ].y, RGB( 0, 255, 0 ) );
-}
-void TurnOffSecondaryGreen( void ){
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ NORTH ][ GREEN ].x, LIGHT_POSITIONS[ NORTH ][ GREEN ].y, RGB( 0, 64, 0 ) );
-    MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ SOUTH ][ GREEN ].x, LIGHT_POSITIONS[ SOUTH ][ GREEN ].y, RGB( 0, 64, 0 ) );
-}
-
-int main(){
-    pthread_t thread1, thread2; Queue q;
-
-    initQueue( &q );
-
-    // Create threads
-    if( pthread_create( &thread1, NULL, keyboard_thread, ( void* )&q ) != 0 ){
-        perror( "pthread_create for keyboard thread" );
-        return EXIT_FAILURE;
-    }
-
-    if( pthread_create( &thread2, NULL, timer_thread, ( void* )&q ) != 0 ){
-        perror( "pthread_create for timer thread" );
-        return EXIT_FAILURE;
-    }
-
-    // Join Threads
-    pthread_join( thread1, NULL );
-    pthread_join( thread2, NULL );
-
-    return EXIT_SUCCESS;
-}
-
-#endif
