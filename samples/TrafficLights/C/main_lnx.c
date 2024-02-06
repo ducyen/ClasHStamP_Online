@@ -28,6 +28,7 @@ typedef ULONG_PTR DWORD_PTR, *PDWORD_PTR;
 typedef struct IWICBitmap{
     png_structp png_ptr;
     png_infop info_ptr;
+    png_bytep *row_pointers;
 }IWICBitmap;
 
 static char* itoa(
@@ -497,9 +498,17 @@ IWICBitmap* LoadPngImage( char* sPath ){
         abort_( "Unsupported color type" );
     }
 
-    fclose( fp );
     pNewBitmap->png_ptr = png_ptr;
     pNewBitmap->info_ptr = info_ptr;
+    png_bytep *row_pointers = calloc( height, sizeof( png_bytep ) );
+    for( int y = 0; y < height; y++ ){
+        row_pointers[ y ] = ( png_bytep )malloc( 4 * width );
+        png_read_row( png_ptr, row_pointers[ y ], NULL );
+    }
+    pNewBitmap->row_pointers = row_pointers;
+
+    fclose( fp );
+    return pNewBitmap;
 }
 
 /**
@@ -524,6 +533,10 @@ void ReleaseAllImages( void ){
                 &g_arrPathToBitmap[ i ].m_pIBitmap->info_ptr, 
                 NULL 
             );
+            for( int y = 0; y < sizeof( g_arrPathToBitmap[ i ].m_pIBitmap->row_pointers ) / sizeof( g_arrPathToBitmap[ i ].m_pIBitmap->row_pointers[ 0 ] ); y++ ){
+                free( g_arrPathToBitmap[ i ].m_pIBitmap->row_pointers[ y ] );
+            }
+            free( g_arrPathToBitmap[ i ].m_pIBitmap->row_pointers );
             free( g_arrPathToBitmap[ i ].m_pIBitmap );
         }
     }
@@ -583,11 +596,9 @@ int DrawRectangle( char* sPath,
     int width = png_get_image_width( png_ptr, info_ptr );
     int height = png_get_image_height( png_ptr, info_ptr );
 
-    png_bytep row_pointers[ height ];
     UINT uiWidth = width;
     UINT uiHeight = height;
-    //memcpy( row, row_pointers[ y ], 4 * width );
-    //flip_horizontally( row, width, 4 );
+
     // Pixel manipulation using the image data pointer pv.
     UINT cbStride = 4 * width;
     uiHeight -= ( 40 - 14 );
@@ -599,9 +610,7 @@ int DrawRectangle( char* sPath,
     UINT nDotSize = 3;
     // Draw the rectangle on the destination bitmap
     for( UINT y = nTop; y < nTop + nHeight; y++ ){
-        row_pointers[ y ] = ( png_bytep )malloc( 4 * width );
-        png_read_row( png_ptr, row_pointers[ y ], NULL );
-        png_bytep pv = row_pointers[ y ];
+        png_bytep pv = pIBitmap->row_pointers[ y ];
 
         for( UINT x = nLeft; x < nLeft + nWidth; x++ ){
             if( y >= nTop + nDotSize && y < nTop + nHeight - nDotSize && x >= nLeft + nDotSize && x < nLeft + nWidth - nDotSize ){
@@ -616,10 +625,8 @@ int DrawRectangle( char* sPath,
                 pv[ destIndex + 3 ] = 255; // Alpha
             }
         }
-
-        png_write_row( png_ptr, row_pointers[ y ] );
-        free( row_pointers[ y ] );
     }
+    return 0;
 }
 
 /**
@@ -652,6 +659,11 @@ void SavePngImage( char* sPath, IWICBitmap *pIBitmap ){
         PNG_COLOR_TYPE_RGBA, PNG_INTERLACE_NONE,
         PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT );
     png_write_info( output_png_ptr, output_info_ptr );
+
+    for( int y = 0; y < height; y++ ){
+        png_bytep row = pIBitmap->row_pointers[y];
+        png_write_row( output_png_ptr, row );
+    }
 
     png_write_end( output_png_ptr, NULL );
     fclose( output_file );
@@ -895,12 +907,12 @@ int main(){
             ContextImpl_EventProc( &context, ContextImpl_TMOUT, NULL);
             SaveAllImages();
             ReleaseAllImages();
-            SavePngImage( "../TransImg/Visualized_2x_TrafficLights.png", g_pIBmpSim );
+            //SavePngImage( "../TransImg/Visualized_2x_TrafficLights.png", g_pIBmpSim );
         } else{
 
         }
     }
-
+    
     // Join Threads
     if( thread1 ) pthread_join( thread1, NULL );
     if( thread2 ) pthread_join( thread2, NULL );
