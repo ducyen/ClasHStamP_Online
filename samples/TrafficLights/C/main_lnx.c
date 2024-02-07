@@ -25,8 +25,7 @@ typedef ULONG_PTR DWORD_PTR, *PDWORD_PTR;
 #define GetBValue(rgb)      (LOBYTE((rgb)>>16))
 
 typedef struct IWICBitmap{
-    png_structp png_ptr;
-    png_infop info_ptr;
+    int width, height;
     png_bytep *row_pointers;
 }IWICBitmap;
 
@@ -497,16 +496,18 @@ IWICBitmap* LoadPngImage( char* sPath ){
         abort_( "Unsupported color type" );
     }
 
-    pNewBitmap->png_ptr = png_ptr;
-    pNewBitmap->info_ptr = info_ptr;
     png_bytep *row_pointers = calloc( height, sizeof( png_bytep ) );
     for( int y = 0; y < height; y++ ){
         row_pointers[ y ] = ( png_bytep )malloc( 4 * width );
         png_read_row( png_ptr, row_pointers[ y ], NULL );
     }
+    pNewBitmap->width = width;
+    pNewBitmap->height = height;
     pNewBitmap->row_pointers = row_pointers;
 
     fclose( fp );
+    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+
     return pNewBitmap;
 }
 
@@ -527,11 +528,6 @@ static struct{
 void ReleaseAllImages( void ){
     for( int i = 0; i < g_nPathToBitmapCnt; i++ ){
         if( g_arrPathToBitmap[ i ].m_pIBitmap ){
-            png_destroy_read_struct( 
-                &g_arrPathToBitmap[ i ].m_pIBitmap->png_ptr, 
-                &g_arrPathToBitmap[ i ].m_pIBitmap->info_ptr, 
-                NULL 
-            );
             for( int y = 0; y < sizeof( g_arrPathToBitmap[ i ].m_pIBitmap->row_pointers ) / sizeof( g_arrPathToBitmap[ i ].m_pIBitmap->row_pointers[ 0 ] ); y++ ){
                 free( g_arrPathToBitmap[ i ].m_pIBitmap->row_pointers[ y ] );
             }
@@ -574,11 +570,9 @@ IWICBitmap* FindBitmapFromPath( char* sPath ){
  * Flood fill on a png file
  */
 int MyFloodFill( IWICBitmap *pIBitmap, int x, int y, COLORREF color ){
-    png_structp png_ptr  = pIBitmap->png_ptr;
-    png_infop   info_ptr = pIBitmap->info_ptr;
 
-    int width = png_get_image_width( png_ptr, info_ptr );
-    int height = png_get_image_height( png_ptr, info_ptr );
+    int width = pIBitmap->width;
+    int height = pIBitmap->height;
 
     UINT uiWidth = width;
     UINT uiHeight = height;
@@ -608,11 +602,8 @@ int DrawRectangle( char* sPath,
 ){
     IWICBitmap *pIBitmap = FindBitmapFromPath( sPath );
 
-    png_structp png_ptr  = pIBitmap->png_ptr;
-    png_infop   info_ptr = pIBitmap->info_ptr;
-
-    int width = png_get_image_width( png_ptr, info_ptr );
-    int height = png_get_image_height( png_ptr, info_ptr );
+    int width = pIBitmap->width;
+    int height = pIBitmap->height;
 
     UINT uiWidth = width;
     UINT uiHeight = height;
@@ -665,8 +656,8 @@ void SavePngImage( char* sPath, IWICBitmap *pIBitmap ){
     if( !output_info_ptr )
         abort_( "png_create_info_struct failed" );
 
-    int width = png_get_image_width( pIBitmap->png_ptr, pIBitmap->info_ptr );
-    int height = png_get_image_height( pIBitmap->png_ptr, pIBitmap->info_ptr );
+    int width = pIBitmap->width;
+    int height = pIBitmap->height;
 
     if( setjmp( png_jmpbuf( output_png_ptr ) ) )
         abort_( "Error during init_io" );
@@ -943,11 +934,6 @@ int main(){
 
     ReleaseAllImages();
     if( g_pIBmpSim ){
-    //    png_destroy_read_struct( 
-    //        g_pIBmpSim->png_ptr, 
-    //        g_pIBmpSim->info_ptr, 
-    //        NULL 
-    //    );
         for( int y = 0; y < sizeof( g_pIBmpSim->row_pointers ) / sizeof( g_pIBmpSim->row_pointers[ 0 ] ); y++ ){
             free( g_pIBmpSim->row_pointers[ y ] );
         }
