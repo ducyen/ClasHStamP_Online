@@ -1,4 +1,4 @@
-#pragma warning(disable : 4996)
+#if !defined( _MSC_VER )
 #define __Main_INTERNAL__
 #include <stdio.h>
 #include <stdlib.h>
@@ -923,3 +923,4 @@ int main(){
 
     return EXIT_SUCCESS;
 }
+#endif

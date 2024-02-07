@@ -1,3 +1,4 @@
+#if defined( _MSC_VER )
 #pragma warning(disable : 4996)
 #define __Main_INTERNAL__
 #include <stdio.h>
@@ -930,3 +931,4 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     return 0;
 }
+#endif
