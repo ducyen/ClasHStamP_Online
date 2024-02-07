@@ -1,4 +1,3 @@
-#if !defined( _MSC_VER )
 #define __Main_INTERNAL__
 #include <stdio.h>
 #include <stdlib.h>
@@ -397,22 +396,22 @@ void placeCharacterInBitmap(BYTE *pv, unsigned char ch, int scale, int x, int y,
 }
 
 // Function to set pixel
-void setPixel( BYTE *pv, int x, int y, int cbStride, COLORREF color ){
-    UINT destIndex = y * cbStride + x * 4;
-    pv[ destIndex ] = GetBValue( color );       // Blue
-    pv[ destIndex + 1 ] = GetGValue( color );   // Green
-    pv[ destIndex + 2 ] = GetRValue( color );   // Red
-    pv[ destIndex + 3 ] = 255; // Alpha
+static void setPixel( png_bytep *pv, int x, int y, int cbStride, COLORREF color ){
+    UINT destIndex = x * 4;
+    pv[ y ][ destIndex ] = GetBValue( color );       // Blue
+    pv[ y ][ destIndex + 1 ] = GetGValue( color );   // Green
+    pv[ y ][ destIndex + 2 ] = GetRValue( color );   // Red
+    pv[ y ][ destIndex + 3 ] = 255; // Alpha
 }
 
 // Function to set pixel
-COLORREF getPixel( BYTE *pv, int x, int y, int cbStride ){
-    UINT destIndex = y * cbStride + x * 4;
-    return RGB( pv[ destIndex + 2 ], pv[ destIndex + 1 ], pv[ destIndex ] );
+static COLORREF getPixel( png_bytep *pv, int x, int y, int cbStride ){
+    UINT destIndex = x * 4;
+    return RGB( pv[ y ][ destIndex + 2 ], pv[ y ][ destIndex + 1 ], pv[ y ][ destIndex ] );
 }
 
 // Function to fill color
-void fillColor( BYTE *pv, int x, int y, int cbStride, int cHeight, COLORREF oldColor, COLORREF color ){
+void fillColor( png_bytep *pv, int x, int y, int cbStride, int cHeight, COLORREF oldColor, COLORREF color ){
     if( 0 <= x && x * 4 < cbStride && 0 <= y && y < cHeight ){
         COLORREF curColor = getPixel( pv, x, y, cbStride );
         if( curColor == oldColor ){
@@ -575,6 +574,25 @@ IWICBitmap* FindBitmapFromPath( char* sPath ){
  * Flood fill on a png file
  */
 int MyFloodFill( IWICBitmap *pIBitmap, int x, int y, COLORREF color ){
+    png_structp png_ptr  = pIBitmap->png_ptr;
+    png_infop   info_ptr = pIBitmap->info_ptr;
+
+    int width = png_get_image_width( png_ptr, info_ptr );
+    int height = png_get_image_height( png_ptr, info_ptr );
+
+    UINT uiWidth = width;
+    UINT uiHeight = height;
+
+    // Pixel manipulation using the image data pointer pv.
+    UINT cbStride = 4 * width;
+
+    png_bytep *pv = pIBitmap->row_pointers;
+    COLORREF oldColor = getPixel( pv, x, y, cbStride );
+    if( oldColor != color ){
+        fillColor( pv, x, y, cbStride, uiHeight, oldColor, color );
+    }
+
+    return 0;
 
 }
 
@@ -818,7 +836,7 @@ void* timer_thread( void* arg ){
     return NULL;
 }
 
-static png_structp g_pIBmpSim;
+static IWICBitmap* g_pIBmpSim;
 
 void startTimer( int tmout ){
     struct timer_data* pmsg = malloc( sizeof( struct timer_data ) );
@@ -882,6 +900,8 @@ void TurnOffSecondaryGreen( void ){
 int main(){
     initQueue( &q );
 
+    g_pIBmpSim = LoadPngImage( "../Image/Visualized_2x_TrafficLights.png" );
+
     ContextImpl context = ContextImpl_Ctor( ContextImpl_Init( 
         4, "", 1, 2, 3, { 0 },
         Composition_Ctor( Composition_Init( 3 ), )
@@ -907,7 +927,7 @@ int main(){
             ContextImpl_EventProc( &context, ContextImpl_TMOUT, NULL);
             SaveAllImages();
             ReleaseAllImages();
-            //SavePngImage( "../TransImg/Visualized_2x_TrafficLights.png", g_pIBmpSim );
+            SavePngImage( "../TransImg/Visualized_2x_TrafficLights.png", g_pIBmpSim );
         } else{
 
         }
@@ -921,6 +941,19 @@ int main(){
     pthread_mutex_destroy(&q.lock);
     pthread_cond_destroy(&q.cond);
 
+    ReleaseAllImages();
+    if( g_pIBmpSim ){
+    //    png_destroy_read_struct( 
+    //        g_pIBmpSim->png_ptr, 
+    //        g_pIBmpSim->info_ptr, 
+    //        NULL 
+    //    );
+        for( int y = 0; y < sizeof( g_pIBmpSim->row_pointers ) / sizeof( g_pIBmpSim->row_pointers[ 0 ] ); y++ ){
+            free( g_pIBmpSim->row_pointers[ y ] );
+        }
+        free( g_pIBmpSim->row_pointers );
+        free( g_pIBmpSim );
+    }
+
     return EXIT_SUCCESS;
 }
-#endif
