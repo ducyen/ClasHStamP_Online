@@ -383,9 +383,9 @@ void placeCharacterInBitmap(BYTE *pv, unsigned char ch, int scale, int x, int y,
                         UINT destIndex = ( y + j*scale + v ) * cbStride + ( x + i*scale + u ) * 4;
 
                         // For simplicity, we'll just set the pixel to red (assuming 32bpp BGRA format)
-                        pv[ destIndex ] = GetBValue( color );       // Blue
+                        pv[ destIndex ] = GetRValue( color );       // Blue
                         pv[ destIndex + 1 ] = GetGValue( color );   // Green
-                        pv[ destIndex + 2 ] = GetRValue( color );   // Red
+                        pv[ destIndex + 2 ] = GetBValue( color );   // Red
                         pv[ destIndex + 3 ] = 255; // Alpha
                     }
                 }
@@ -397,9 +397,9 @@ void placeCharacterInBitmap(BYTE *pv, unsigned char ch, int scale, int x, int y,
 // Function to set pixel
 static void setPixel( png_bytep *pv, int x, int y, int cbStride, COLORREF color ){
     UINT destIndex = x * 4;
-    pv[ y ][ destIndex ] = GetBValue( color );       // Blue
+    pv[ y ][ destIndex ] = GetRValue( color );       // Blue
     pv[ y ][ destIndex + 1 ] = GetGValue( color );   // Green
-    pv[ y ][ destIndex + 2 ] = GetRValue( color );   // Red
+    pv[ y ][ destIndex + 2 ] = GetBValue( color );   // Red
     pv[ y ][ destIndex + 3 ] = 255; // Alpha
 }
 
@@ -628,9 +628,9 @@ int DrawRectangle( char* sPath,
                 UINT destIndex = x * 4;
 
                 // For simplicity, we'll just set the pixel to red (assuming 32bpp BGRA format)
-                pv[ destIndex ] = GetBValue( color );      // Blue
+                pv[ destIndex ] = GetRValue( color );      // Blue
                 pv[ destIndex + 1 ] = GetGValue( color ); // Green
-                pv[ destIndex + 2 ] = GetRValue( color );   // Red
+                pv[ destIndex + 2 ] = GetBValue( color );   // Red
                 pv[ destIndex + 3 ] = 255; // Alpha
             }
         }
