@@ -74,34 +74,23 @@ public class ImageLoader extends JFrame {
 									}
 								}
 							}
+							int newWidth = image.getWidth() * 90 / 100;
+							int newHeight = image.getHeight() * 90 / 100;
+							if (file.getAbsolutePath().contains("Visualized_")) {
+								newWidth = 400;
+								newHeight = 400;
+							}
+							BufferedImage scaledImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+							Graphics2D graphics = scaledImage.createGraphics();
+							graphics.drawImage(image, 0, 0, newWidth, newHeight, null);
+							graphics.dispose();									
 							if (oldLabel == null) {
 								System.out.println("Add label: " + file.getAbsolutePath()); // Debugging
-								JLabel newLabel;
-								if (file.getAbsolutePath().contains("Visualized_")) {
-									int newWidth = 400;
-									int newHeight = 400;
-									BufferedImage scaledImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
-									Graphics2D graphics = scaledImage.createGraphics();
-									graphics.drawImage(image, 0, 0, newWidth, newHeight, null);
-									graphics.dispose();									
-									newLabel = new JLabel(new ImageIcon(scaledImage));
-								} else {
-									newLabel = new JLabel(new ImageIcon(image));
-								}
+								JLabel newLabel = new JLabel(new ImageIcon(scaledImage));
 								newLabel.setName(file.getAbsolutePath());
 								imagePanel.add(newLabel);
 							} else {
-								if (file.getAbsolutePath().contains("Visualized_")) {
-									int newWidth = 400;
-									int newHeight = 400;
-									BufferedImage scaledImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
-									Graphics2D graphics = scaledImage.createGraphics();
-									graphics.drawImage(image, 0, 0, newWidth, newHeight, null);
-									graphics.dispose();									
-									oldLabel = new JLabel(new ImageIcon(scaledImage));
-								} else {
-									oldLabel.setIcon(new ImageIcon(image));
-								}
+								oldLabel.setIcon(new ImageIcon(scaledImage));
 							}
 						}
 					} catch (IOException e) {
