@@ -24,7 +24,6 @@ public class ImageLoader extends JFrame {
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 1L;
-	private JPanel panel;
     private final String directoryPath;
     private Map<WatchKey, Path> keyPathMap;
 
@@ -32,6 +31,7 @@ public class ImageLoader extends JFrame {
         this.directoryPath = directoryPath;
         keyPathMap = new HashMap<>();
         initUI();
+        updatePanelImages();
         startDirectoryWatchService();
     }
 
@@ -39,9 +39,9 @@ public class ImageLoader extends JFrame {
 		setTitle("Image Viewer");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		panel = new JPanel(new CardLayout()); // Set to CardLayout
+		imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-		JScrollPane scrollPane = new JScrollPane(panel);
+		JScrollPane scrollPane = new JScrollPane(imagePanel);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
@@ -63,23 +63,34 @@ public class ImageLoader extends JFrame {
 						//System.out.println("Loading image: " + file.getAbsolutePath()); // Debugging
 						BufferedImage image = ImageIO.read(file);
 						if (image != null) {
-							boolean isLabelExisted = false;
+							JLabel oldLabel = null;
 							for (Component component: imagePanel.getComponents()) {
 								System.out.println("Checking " + component.getName() + " in " + Thread.currentThread().getId());
 								if (component instanceof JLabel) {
 									JLabel label = (JLabel)component;
 									if (label.getName().compareToIgnoreCase(file.getAbsolutePath()) == 0) {
-										isLabelExisted = true;
-										label.setIcon(new ImageIcon(image));
+										oldLabel = label;
 										break;
 									}
 								}
 							}
-							if (!isLabelExisted) {
+							int newWidth = image.getWidth() * 90 / 100;
+							int newHeight = image.getHeight() * 90 / 100;
+							if (file.getAbsolutePath().contains("Visualized_")) {
+								newWidth = 400;
+								newHeight = 400;
+							}
+							BufferedImage scaledImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+							Graphics2D graphics = scaledImage.createGraphics();
+							graphics.drawImage(image, 0, 0, newWidth, newHeight, null);
+							graphics.dispose();									
+							if (oldLabel == null) {
 								System.out.println("Add label: " + file.getAbsolutePath()); // Debugging
-								JLabel newLabel = new JLabel(new ImageIcon(image));
+								JLabel newLabel = new JLabel(new ImageIcon(scaledImage));
 								newLabel.setName(file.getAbsolutePath());
 								imagePanel.add(newLabel);
+							} else {
+								oldLabel.setIcon(new ImageIcon(scaledImage));
 							}
 						}
 					} catch (IOException e) {
@@ -93,14 +104,10 @@ public class ImageLoader extends JFrame {
 	
 	private void updatePanelImages() {
 		loadImagesFromDirectoryRecursively(new File(directoryPath));
-		panel.add(imagePanel, "ImagePanel");
 
 		// Refresh the layout
-		panel.revalidate();
-		panel.repaint();
-		CardLayout cl = (CardLayout) (panel.getLayout());
-		cl.show(panel, "ImagePanel");
-		panel.revalidate();
+		imagePanel.revalidate();
+		imagePanel.repaint();
 	}
 
 	private Thread watchThread;
@@ -172,10 +179,10 @@ public class ImageLoader extends JFrame {
     }
 
     public static void main(String[] args) {
-        if (args.length == 0) {
-            System.out.println("usage: java ImageLoader path/to/TransImg");
-            return;
-        }
+    	if (args.length == 0) {
+    		System.out.println("usage: java ImageLoader path/to/TransImg");
+    		return;
+    	}
         EventQueue.invokeLater(() -> {
             String directoryPath = args[0]; // Replace with your directory path
             ImageLoader frame = new ImageLoader(directoryPath);
@@ -183,3 +190,6 @@ public class ImageLoader extends JFrame {
         });
     }
 }
+
+
+

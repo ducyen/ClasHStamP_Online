@@ -473,7 +473,6 @@ BOOL [tYPE]_IsIn( [tYPE]* p[tYPE], uint64_t nState ){
 }
 ","[->]pStm->base.bIsExternTrans = TRUE;
 ","[->]    if( [tYPE]_IsIn( &pStm->[nAME][tYPE], nCompositeState ) ){ return TRUE; }
-","[->]        [sCOPE]_Reset( p[cONTAINER], &pStm->[nAME][sCOPE], &pStm->base, nEntryPoint );
-",_
+",,_
 friend,,,,,
 visibility,,,,,

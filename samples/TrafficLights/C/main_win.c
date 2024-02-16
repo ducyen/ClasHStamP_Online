@@ -823,7 +823,19 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 SavePngImage( "../TransImg/Visualized_2x_TrafficLights.png", g_pIBmpSim );
             }
             return 0;
-
+        case WM_KEYDOWN:
+            g_nActionCounter = 0;
+            if (wParam == 'i' || wParam == 'I') {
+                ContextImpl_EventProc( pContext, ContextImpl_TrainComeIn, NULL);
+            } else if(wParam == 'o' || wParam == 'O'){
+                ContextImpl_EventProc( pContext, ContextImpl_TrainComeOut, NULL);
+            } else if(wParam == 'r' || wParam == 'R'){
+                ContextImpl_Start( pContext );
+            }
+            SaveAllImages();
+            ReleaseAllImages();
+            SavePngImage( "../TransImg/Visualized_2x_TrafficLights.png", g_pIBmpSim );
+            return 0;
         case WM_DESTROY:
             PostQuitMessage(0);
             return 0;
@@ -906,8 +918,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     ), );
     pContext = &context;
 
-    // Create window
-    hWnd = CreateWindow(className, "Window Title", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hInstance, NULL);
+    // Create window  lpClassName, lpWindowName  , dwStyle            , x            , y            , nWidth, nHeight, hWndParent, hMenu, hInstance,lpParam
+    hWnd = CreateWindow(className, "Window Title", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 320   , 240    , NULL      , NULL , hInstance, NULL );
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);

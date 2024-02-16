@@ -185,8 +185,8 @@ static BOOL S8_Region2_S831_EventProc( ContextImpl* pContextImpl, S8_Region2* pS
     case ContextImpl_E3:{
         if (ContextImpl_IsIn( pContextImpl, S8_Region1_S821 )
          && ContextImpl_IsIn( pContextImpl, MainStm_S811 )) {
-            S8_Region2_BgnTrans( pContextImpl, pStm, S8_Region2_S8_Top, STATE_UNDEF );
-            pStm->base.pParentStm->nPseudostate = S8_Region2_ForkPseudostate2;
+            S8_Region2_BgnTrans( pContextImpl, pStm, S8_Region2_S832, STATE_UNDEF );
+            pStm->base.pParentStm->nPseudostate = MainStm_S812;
             S8_Region2_EndTrans( pContextImpl, pStm );
             bResult = TRUE;
         }
@@ -1171,11 +1171,6 @@ static BOOL MainStm_StateDefaultTrans( ContextImpl* pContextImpl, MainStm* pStm 
         bResult = TRUE;
     }else if( pStm->base.nCurrentState == MainStm_S6 && pStm->base.nPseudostate == SharedStm_Exit1 ){
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_S9, STATE_UNDEF );
-        MainStm_EndTrans( pContextImpl, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nPseudostate == S8_Region2_ForkPseudostate2 ){
-        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S812, STATE_UNDEF );
-        S8_Region2_Reset( pContextImpl, &pStm->S8_TopS8_Region2, &pStm->base, S8_Region2_S832 );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
     }else if( pStm->base.nCurrentState == MainStm_S8 && pStm->base.nPseudostate == MainStm_InitPt ){
