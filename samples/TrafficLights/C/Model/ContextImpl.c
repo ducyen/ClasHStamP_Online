@@ -215,6 +215,7 @@ static BOOL ManagingThroughTraffic_Region1_Reset( ContextImpl* pContextImpl, Man
         if( ManagingThroughTraffic_Region1_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = ManagingThroughTraffic_Region1_InitialPseudostate2;
         }
+        return FALSE;
     }else{
         if( ManagingThroughTraffic_Region1_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = nEntryPoint;
@@ -362,6 +363,7 @@ static BOOL ManagingThroughTraffic_Region2_Reset( ContextImpl* pContextImpl, Man
         if( ManagingThroughTraffic_Region2_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = ManagingThroughTraffic_Region2_InitialPseudostate0;
         }
+        return FALSE;
     }else{
         if( ManagingThroughTraffic_Region2_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = nEntryPoint;
@@ -679,6 +681,7 @@ static BOOL MainStm_Reset( ContextImpl* pContextImpl, MainStm* pStm, HdStateMach
         if( MainStm_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = MainStm_InitialPseudostate0;
         }
+        return FALSE;
     }else{
         if( MainStm_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = nEntryPoint;
