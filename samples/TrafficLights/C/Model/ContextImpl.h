@@ -64,6 +64,8 @@ typedef struct tagManagingThroughTraffic_Region2 {
  */
 typedef struct tagMainStm {
     HdStateMachine base;
+    ManagingThroughTraffic_Region1 ManagingThroughTraffic_TopManagingThroughTraffic_Region1;
+    ManagingThroughTraffic_Region2 ManagingThroughTraffic_TopManagingThroughTraffic_Region2;
 #define MainStm_MainTop_Dmy                     ( 1ULL <<  9 )
 #define MainStm_MainTop                         ( MainStm_MainTop_Dmy | MainStm_Starting | MainStm_ManagingThroughTraffic )
 #define MainStm_InitialPseudostate0             ( 1ULL << ( MAX_STATE_NUM -  0 ) )
@@ -75,14 +77,17 @@ typedef struct tagMainStm {
 #define MainStm_SRedWait                        ( 1ULL << 14 )
 #define MainStm_Initpseudostate0                ( 1ULL << ( MAX_STATE_NUM -  2 ) )
 #define MainStm_PGreen_Dmy                      ( 1ULL << 15 )
-#define MainStm_PGreen                          ( MainStm_PGreen_Dmy | MainStm_PGreen1 )
+#define MainStm_PGreen                          ( MainStm_PGreen_Dmy | MainStm_PGreen1 | MainStm_PGreenInit )
 #define MainStm_PRedOn_Dmy                      ( 1ULL << 16 )
 #define MainStm_PRedOn                          ( MainStm_PRedOn_Dmy | MainStm_PRed | MainStm_SRedWait )
 #define MainStm_ManagingThroughTraffic_Dmy      ( 1ULL << 17 )
+#define MainStm_PGreenInit                      ( 1ULL << 18 )
 #define MainStm_ManagingThroughTraffic          ( MainStm_ManagingThroughTraffic_Dmy | MainStm_PGreen | MainStm_PYellow | MainStm_PRedOn )
 }MainStm;
 #define MainStm_Init() {\
     .base = HdStateMachine_Ctor( HdStateMachine_Init(MainStm_MainTop, MainStm_MainTop), ),\
+    .ManagingThroughTraffic_TopManagingThroughTraffic_Region1 = ManagingThroughTraffic_Region1_Init(),\
+    .ManagingThroughTraffic_TopManagingThroughTraffic_Region2 = ManagingThroughTraffic_Region2_Init(),\
 }
 BOOL ContextImpl_EventProc( ContextImpl* pContextImpl, ContextImpl_EVENT nEventId, void* pEventParams );
 BOOL ContextImpl_Start( ContextImpl* pContextImpl );
@@ -93,8 +98,6 @@ BOOL ContextImpl_Start( ContextImpl* pContextImpl );
     Context_Init( P( _derivableAttribute ), P( _publicAttribute ), P( _privateAttribute ), P( _internalAttribute ), P( _readOnlyAttribute ), P( _anAggregation ), P( _aProtectedComposition ) )\
     .vTbl = &gContextImplVtbl,\
     .mainStm = MainStm_Init(),\
-    .ManagingThroughTraffic_TopManagingThroughTraffic_Region1 = ManagingThroughTraffic_Region1_Init(),\
-    .ManagingThroughTraffic_TopManagingThroughTraffic_Region2 = ManagingThroughTraffic_Region2_Init(),\
 
 #define ContextImpl_Ctor( InitFunc, optionParams )    ( ContextImpl ){\
     InitFunc\
@@ -107,9 +110,7 @@ Context* ContextImpl_Copy( ContextImpl* pContextImpl, const ContextImpl* pSource
  */
 #define ContextImpl_CLASS                                                                       \
     Context_CLASS                                                                               \
-    MainStm mainStm;                                                                            \
-    ManagingThroughTraffic_Region1 ManagingThroughTraffic_TopManagingThroughTraffic_Region1;    \
-    ManagingThroughTraffic_Region2 ManagingThroughTraffic_TopManagingThroughTraffic_Region2;
+    MainStm mainStm;                                            
 
 typedef struct tagContextImpl{
     ContextImpl_CLASS    

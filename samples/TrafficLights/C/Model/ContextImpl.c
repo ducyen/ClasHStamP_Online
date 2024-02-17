@@ -144,7 +144,7 @@ static BOOL ManagingThroughTraffic_Region1_PRedWait_EventProc( ContextImpl* pCon
     switch( nEventId ){
     case ContextImpl_TMOUT:{
         ManagingThroughTraffic_Region1_BgnTrans( pContextImpl, pStm, ManagingThroughTraffic_Region1_SRed, STATE_UNDEF );
-        pStm->base.pParentStm->nPseudostate = MainStm_PGreen;
+        ContextImpl_Reset( pContextImpl, MainStm_PGreenInit );
         ManagingThroughTraffic_Region1_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
     } break;
@@ -210,6 +210,7 @@ static BOOL ManagingThroughTraffic_Region1_RunToCompletion( ContextImpl* pContex
 }
 static BOOL ManagingThroughTraffic_Region1_Reset( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
     pStm->base.pParentStm = pParentStm;
+    if( nEntryPoint != STATE_UNDEF && !IS_IN( nEntryPoint, ManagingThroughTraffic_Region1_ManagingThroughTraffic_Top ) ){ return FALSE; }
     if( nEntryPoint == NULL ){
         if( ManagingThroughTraffic_Region1_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = ManagingThroughTraffic_Region1_InitialPseudostate2;
@@ -222,7 +223,7 @@ static BOOL ManagingThroughTraffic_Region1_Reset( ContextImpl* pContextImpl, Man
             pStm->base.nPseudostate = nEntryPoint;
         }
     }
-    return ManagingThroughTraffic_Region1_RunToCompletion( pContextImpl, pStm );
+    return TRUE;
 }
 static BOOL ManagingThroughTraffic_Region1_EventProc( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
@@ -269,7 +270,7 @@ static BOOL ManagingThroughTraffic_Region2_NoTrain_EventProc( ContextImpl* pCont
     switch( nEventId ){
     case ContextImpl_TrainComeIn:{
         if (ContextImpl_IsIn( pContextImpl, ManagingThroughTraffic_Region1_SGreen )) {
-            ManagingThroughTraffic_Region1_Reset( pContextImpl, &pContextImpl->ManagingThroughTraffic_TopManagingThroughTraffic_Region1, &pStm->base, ManagingThroughTraffic_Region1_SYellow );
+            ContextImpl_Reset( pContextImpl, ManagingThroughTraffic_Region1_SYellow );
         }
         else {
             if (ContextImpl_IsIn( pContextImpl, MainStm_PYellow )) {
@@ -356,6 +357,7 @@ static BOOL ManagingThroughTraffic_Region2_RunToCompletion( ContextImpl* pContex
 }
 static BOOL ManagingThroughTraffic_Region2_Reset( ContextImpl* pContextImpl, ManagingThroughTraffic_Region2* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
     pStm->base.pParentStm = pParentStm;
+    if(  nEntryPoint != STATE_UNDEF && !IS_IN( nEntryPoint, ManagingThroughTraffic_Region2_ManagingThroughTraffic_Top ) ){ return FALSE; }
     if( nEntryPoint == NULL ){
         if( ManagingThroughTraffic_Region2_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = ManagingThroughTraffic_Region2_InitialPseudostate0;
@@ -425,8 +427,8 @@ static void MainStm_Starting_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
 static void MainStm_ManagingThroughTraffic_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_ManagingThroughTraffic ) ){
         ShowEntry( "Model/ContextImpl/MainStm	265	225	1360	976	225	28	1463	1214" );
-        ManagingThroughTraffic_Region1_Reset( pContextImpl, &pContextImpl->ManagingThroughTraffic_TopManagingThroughTraffic_Region1, &pStm->base, STATE_UNDEF );
-        ManagingThroughTraffic_Region2_Reset( pContextImpl, &pContextImpl->ManagingThroughTraffic_TopManagingThroughTraffic_Region2, &pStm->base, STATE_UNDEF );
+        ManagingThroughTraffic_Region1_Reset( pContextImpl, &pStm->ManagingThroughTraffic_TopManagingThroughTraffic_Region1, &pStm->base, STATE_UNDEF );
+        ManagingThroughTraffic_Region2_Reset( pContextImpl, &pStm->ManagingThroughTraffic_TopManagingThroughTraffic_Region2, &pStm->base, STATE_UNDEF );
     }
 }
 static BOOL MainStm_ManagingThroughTraffic_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
@@ -437,8 +439,8 @@ static BOOL MainStm_ManagingThroughTraffic_EventProc( ContextImpl* pContextImpl,
 }
 static void MainStm_ManagingThroughTraffic_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_ManagingThroughTraffic ) ){ 
-        ManagingThroughTraffic_Region1_Abort( pContextImpl, &pContextImpl->ManagingThroughTraffic_TopManagingThroughTraffic_Region1 );
-        ManagingThroughTraffic_Region2_Abort( pContextImpl, &pContextImpl->ManagingThroughTraffic_TopManagingThroughTraffic_Region2 );
+        ManagingThroughTraffic_Region1_Abort( pContextImpl, &pStm->ManagingThroughTraffic_TopManagingThroughTraffic_Region1 );
+        ManagingThroughTraffic_Region2_Abort( pContextImpl, &pStm->ManagingThroughTraffic_TopManagingThroughTraffic_Region2 );
         ShowExit( "Model/ContextImpl/MainStm	265	225	1360	976	225	28	1463	1214" );
     }
 }
@@ -572,7 +574,7 @@ static BOOL MainStm_SRedWait_EventProc( ContextImpl* pContextImpl, MainStm* pStm
     switch( nEventId ){
     case ContextImpl_TMOUT:{
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_PRed, STATE_UNDEF );
-        ManagingThroughTraffic_Region1_Reset( pContextImpl, &pContextImpl->ManagingThroughTraffic_TopManagingThroughTraffic_Region1, &pStm->base, ManagingThroughTraffic_Region1_SGreen );
+        ContextImpl_Reset( pContextImpl, ManagingThroughTraffic_Region1_SGreen );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
     } break;
@@ -623,23 +625,23 @@ static BOOL MainStm_StateDefaultTrans( ContextImpl* pContextImpl, MainStm* pStm 
     BOOL bResult = FALSE;
     pStm->base.nSourceState = pStm->base.nCurrentState;
     pStm->base.nLCAState = STATE_UNDEF;
-    bResult |= ManagingThroughTraffic_Region1_StateDefaultTrans( pContextImpl, &pContextImpl->ManagingThroughTraffic_TopManagingThroughTraffic_Region1 );
-    bResult |= ManagingThroughTraffic_Region2_StateDefaultTrans( pContextImpl, &pContextImpl->ManagingThroughTraffic_TopManagingThroughTraffic_Region2 );
+    bResult |= ManagingThroughTraffic_Region1_StateDefaultTrans( pContextImpl, &pStm->ManagingThroughTraffic_TopManagingThroughTraffic_Region1 );
+    bResult |= ManagingThroughTraffic_Region2_StateDefaultTrans( pContextImpl, &pStm->ManagingThroughTraffic_TopManagingThroughTraffic_Region2 );
     do{   if( pStm->base.nCurrentState == MainStm_MainTop && pStm->base.nPseudostate == MainStm_InitialPseudostate0 ){
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_Starting, STATE_UNDEF );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
-    }else if( pStm->base.nPseudostate == MainStm_Starting ){
+    }else if( pStm->base.nCurrentState == MainStm_Starting ){
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_ManagingThroughTraffic, MainStm_Initpseudostate0 );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
-    }else if( pStm->base.nPseudostate == MainStm_PGreen ){
+    }else if( pStm->base.nCurrentState == MainStm_PGreen ){
         if (ContextImpl_IsIn( pContextImpl, ManagingThroughTraffic_Region2_NoTrain )) {
             MainStm_BgnTrans( pContextImpl, pStm, MainStm_PYellow, STATE_UNDEF );
             MainStm_EndTrans( pContextImpl, pStm );
             bResult = TRUE;
         }
-    }else if( pStm->base.nCurrentState == MainStm_PGreen && pStm->base.nPseudostate == MainStm_InitialPseudostate1 ){
+    }else if( pStm->base.nPseudostate == MainStm_PGreenInit ){
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_PGreen1, STATE_UNDEF );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
@@ -667,7 +669,12 @@ static BOOL MainStm_RunToCompletion( ContextImpl* pContextImpl, MainStm* pStm ){
     return bResult;
 }
 static BOOL MainStm_Reset( ContextImpl* pContextImpl, MainStm* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
+    if( ManagingThroughTraffic_Region1_Reset( pContextImpl, &pStm->ManagingThroughTraffic_TopManagingThroughTraffic_Region1, pParentStm, nEntryPoint ) ){ return TRUE; }
+    if( ManagingThroughTraffic_Region2_Reset( pContextImpl, &pStm->ManagingThroughTraffic_TopManagingThroughTraffic_Region2, pParentStm, nEntryPoint ) ){ return TRUE; }
     pStm->base.pParentStm = pParentStm;
+
+    if( nEntryPoint != STATE_UNDEF && !IS_IN( nEntryPoint, MainStm_MainTop ) ){ return FALSE; }
+
     if( nEntryPoint == NULL ){
         if( MainStm_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = MainStm_InitialPseudostate0;
@@ -680,13 +687,13 @@ static BOOL MainStm_Reset( ContextImpl* pContextImpl, MainStm* pStm, HdStateMach
             pStm->base.nPseudostate = nEntryPoint;
         }
     }
-    return MainStm_RunToCompletion( pContextImpl, pStm );
+    return TRUE;
 }
 static BOOL MainStm_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nLCAState = STATE_UNDEF;
-    bResult |= ManagingThroughTraffic_Region1_EventProc( pContextImpl, &pContextImpl->ManagingThroughTraffic_TopManagingThroughTraffic_Region1, nEventId, pEventParams );
-    bResult |= ManagingThroughTraffic_Region2_EventProc( pContextImpl, &pContextImpl->ManagingThroughTraffic_TopManagingThroughTraffic_Region2, nEventId, pEventParams );
+    bResult |= ManagingThroughTraffic_Region1_EventProc( pContextImpl, &pStm->ManagingThroughTraffic_TopManagingThroughTraffic_Region1, nEventId, pEventParams );
+    bResult |= ManagingThroughTraffic_Region2_EventProc( pContextImpl, &pStm->ManagingThroughTraffic_TopManagingThroughTraffic_Region2, nEventId, pEventParams );
     switch( pStm->base.nCurrentState ){
     case MainStm_Starting:                      bResult |= MainStm_Starting_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     case MainStm_ManagingThroughTraffic:        bResult |= MainStm_ManagingThroughTraffic_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
@@ -702,8 +709,8 @@ static BOOL MainStm_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Context
     return bResult;
 }
 static BOOL MainStm_IsIn( MainStm* pStm, uint64_t nCompositeState ) {
-    if( ManagingThroughTraffic_Region1_IsIn( &pContextImpl->ManagingThroughTraffic_TopManagingThroughTraffic_Region1, nCompositeState ) ){ return TRUE; }
-    if( ManagingThroughTraffic_Region2_IsIn( &pContextImpl->ManagingThroughTraffic_TopManagingThroughTraffic_Region2, nCompositeState ) ){ return TRUE; }
+    if( ManagingThroughTraffic_Region1_IsIn( &pStm->ManagingThroughTraffic_TopManagingThroughTraffic_Region1, nCompositeState ) ){ return TRUE; }
+    if( ManagingThroughTraffic_Region2_IsIn( &pStm->ManagingThroughTraffic_TopManagingThroughTraffic_Region2, nCompositeState ) ){ return TRUE; }
     if( IS_IN( pStm->base.nCurrentState, nCompositeState ) ){ return TRUE; }
     return FALSE;
 }
@@ -721,7 +728,11 @@ BOOL ContextImpl_EventProc( ContextImpl* pContextImpl, ContextImpl_EVENT nEventI
 }
 BOOL ContextImpl_Start( ContextImpl* pContextImpl ){
     MainStm_Abort( pContextImpl, &pContextImpl->mainStm );
-    return MainStm_Reset( pContextImpl, &pContextImpl->mainStm, NULL, STATE_UNDEF );
+    MainStm_Reset( pContextImpl, &pContextImpl->mainStm, NULL, STATE_UNDEF );
+    return MainStm_RunToCompletion( pContextImpl, &pContextImpl->mainStm );
+}
+BOOL ContextImpl_Reset( ContextImpl* pContextImpl, uint64_t nEntryPoint ){
+    return MainStm_Reset( pContextImpl, &pContextImpl->mainStm, NULL, nEntryPoint );
 }
 BOOL ContextImpl_IsIn( ContextImpl* pContextImpl, uint64_t nState ){
     return MainStm_IsIn( &pContextImpl->mainStm, nState );
