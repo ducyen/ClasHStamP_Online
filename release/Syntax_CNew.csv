@@ -294,11 +294,13 @@ state_exit,"static void [Scope]_BgnTrans( [tYPE] *p[tYPE], [sCOPE]* pStm, uint64
 ","}
 "
 state_impl,"static BOOL [Scope]_Reset( [tYPE]* p[tYPE], [sCOPE]* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
-    pStm->base.pParentStm = pParentStm;
+[vALUE]    pStm->base.pParentStm = pParentStm;
+    if( nEntryPoint != STATE_UNDEF && !IS_IN( nEntryPoint, [sCOPE]_[nAME] ) ){ return FALSE; }
     if( nEntryPoint == NULL ){
         if( [Scope]_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = [sCOPE]_[mODIFIER];
         }
+        return FALSE;
     }else{
         if( [Scope]_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = nEntryPoint;
@@ -307,7 +309,7 @@ state_impl,"static BOOL [Scope]_Reset( [tYPE]* p[tYPE], [sCOPE]* pStm, HdStateMa
             pStm->base.nPseudostate = nEntryPoint;
         }
     }
-    return [Scope]_RunToCompletion( p[tYPE], pStm );
+    return TRUE;
 }
 static BOOL [Scope]_EventProc( [tYPE]* p[tYPE], [sCOPE]* pStm, [tYPE]_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
@@ -442,10 +444,10 @@ substm_impl,"[->]if( ![sCOPE]_IsIn( &pStm->[nAME][sCOPE], [mODIFIER]_[vALUE] ) )
 ","[->][tYPE]_Abort( p[cONTAINER], &pStm->[nAME][tYPE] );
 "
 substm_decl,,,"[->]bResult |= [tYPE]_StateDefaultTrans( p[cONTAINER], &pStm->[nAME][tYPE] );
-","[->]pStm->base.pParentStm->nPseudostate = [sCOPE]_[vALUE];
+","[->]ContextImpl_Reset( pContextImpl, [sCOPE]_[vALUE] );
 ","[->][Scope]_Reset( p[tYPE], &pStm->[nAME][sCOPE], &pStm->base, [mODIFIER]_[vALUE] );
 "
-history,,,"[->]pStm->n[nAME]History = [sCOPE]_[VALUE];
+history,,,"[->]pStm->n[nAME]History = [sCOPE]_[vALUE];
 ","[->]if( pStm->n[nAME]History && pStm->n[nAME]History != [Scope]_[nAME] ){
 [->]    [Scope]_BgnTrans( p[tYPE], pStm, pStm->n[nAME]History, STATE_UNDEF );
 [mODIFIER][->]    [Scope]_EndTrans( p[tYPE], pStm );
@@ -466,13 +468,18 @@ api_call,"BOOL [tYPE]_EventProc( [tYPE]* p[tYPE], [tYPE]_EVENT nEventId, void* p
 }
 BOOL [tYPE]_Start( [tYPE]* p[tYPE] ){
     [Scope]_Abort( p[tYPE], &p[tYPE]->mainStm );
-    return [Scope]_Reset( p[tYPE], &p[tYPE]->mainStm, NULL, STATE_UNDEF );
+    [Scope]_Reset( p[tYPE], &p[tYPE]->mainStm, NULL, STATE_UNDEF );
+    return [Scope]_RunToCompletion( p[tYPE], &p[tYPE]->mainStm );
+}
+BOOL [tYPE]_Reset( [tYPE]* p[tYPE], uint64_t nEntryPoint ){
+    return [Scope]_Reset( p[tYPE], &p[tYPE]->mainStm, NULL, nEntryPoint );
 }
 BOOL [tYPE]_IsIn( [tYPE]* p[tYPE], uint64_t nState ){
     return [Scope]_IsIn( &p[tYPE]->mainStm, nState );
 }
 ","[->]pStm->base.bIsExternTrans = TRUE;
-","[->]    if( [tYPE]_IsIn( &pStm->[nAME][tYPE], nCompositeState ) ){ return TRUE; }
-",,_
+","[->]if( [tYPE]_IsIn( &pStm->[nAME][tYPE], nCompositeState ) ){ return TRUE; }
+","[->]if( [sCOPE]_Reset( p[cONTAINER], &pStm->[nAME][sCOPE], &pStm->base, nEntryPoint ) ){ return TRUE; }
+",_
 friend,,,,,
 visibility,,,,,

@@ -829,6 +829,8 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 ContextImpl_EventProc( pContext, ContextImpl_TrainComeIn, NULL);
             } else if(wParam == 'o' || wParam == 'O'){
                 ContextImpl_EventProc( pContext, ContextImpl_TrainComeOut, NULL);
+            } else if(wParam == 't' || wParam == 'T'){
+                ContextImpl_EventProc( pContext, ContextImpl_TMOUT, NULL);
             } else if(wParam == 'r' || wParam == 'R'){
                 ContextImpl_Start( pContext );
             }
@@ -844,7 +846,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 }
 
 void startTimer( int tmout ){
-    timerId = SetTimer(hWnd, 1, tmout*1000, NULL);  // Creates a timer that fires every 1000 milliseconds (1 second)
+    //timerId = SetTimer(hWnd, 1, tmout*1000, NULL);  // Creates a timer that fires every 1000 milliseconds (1 second)
 }
 
 void TurnOnPrimaryRed( void ){
