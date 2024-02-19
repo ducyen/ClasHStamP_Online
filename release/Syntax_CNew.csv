@@ -294,14 +294,14 @@ state_exit,"static void [Scope]_BgnTrans( [tYPE] *p[tYPE], [sCOPE]* pStm, uint64
 ","}
 "
 state_impl,"static BOOL [Scope]_Reset( [tYPE]* p[tYPE], [sCOPE]* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
-[vALUE]    pStm->base.pParentStm = pParentStm;
-    if( nEntryPoint != STATE_UNDEF && !IS_IN( nEntryPoint, [sCOPE]_[nAME] ) ){ return FALSE; }
+    pStm->base.pParentStm = pParentStm;
     if( nEntryPoint == NULL ){
         if( [Scope]_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = [sCOPE]_[mODIFIER];
         }
         return FALSE;
     }else{
+[vALUE]    if( !IS_IN( nEntryPoint, [sCOPE]_[nAME] ) ){ return FALSE; }
         if( [Scope]_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = nEntryPoint;
             return FALSE;

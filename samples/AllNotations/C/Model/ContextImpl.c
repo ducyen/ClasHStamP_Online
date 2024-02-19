@@ -128,13 +128,13 @@ static BOOL S8_Region1_RunToCompletion( ContextImpl* pContextImpl, S8_Region1* p
 }
 static BOOL S8_Region1_Reset( ContextImpl* pContextImpl, S8_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
     pStm->base.pParentStm = pParentStm;
-    if( nEntryPoint != STATE_UNDEF && !IS_IN( nEntryPoint, S8_Region1_S8_Top ) ){ return FALSE; }
     if( nEntryPoint == NULL ){
         if( S8_Region1_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = S8_Region1_S82Init;
         }
         return FALSE;
     }else{
+    if( !IS_IN( nEntryPoint, S8_Region1_S8_Top ) ){ return FALSE; }
         if( S8_Region1_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = nEntryPoint;
             return FALSE;
@@ -264,13 +264,13 @@ static BOOL S8_Region2_RunToCompletion( ContextImpl* pContextImpl, S8_Region2* p
 }
 static BOOL S8_Region2_Reset( ContextImpl* pContextImpl, S8_Region2* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
     pStm->base.pParentStm = pParentStm;
-    if( nEntryPoint != STATE_UNDEF && !IS_IN( nEntryPoint, S8_Region2_S8_Top ) ){ return FALSE; }
     if( nEntryPoint == NULL ){
         if( S8_Region2_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = S8_Region2_S83Init;
         }
         return FALSE;
     }else{
+    if( !IS_IN( nEntryPoint, S8_Region2_S8_Top ) ){ return FALSE; }
         if( S8_Region2_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = nEntryPoint;
             return FALSE;
@@ -414,13 +414,13 @@ static BOOL SharedStm_RunToCompletion( ContextImpl* pContextImpl, SharedStm* pSt
 }
 static BOOL SharedStm_Reset( ContextImpl* pContextImpl, SharedStm* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
     pStm->base.pParentStm = pParentStm;
-    if( nEntryPoint != STATE_UNDEF && !IS_IN( nEntryPoint, SharedStm_SharedTop ) ){ return FALSE; }
     if( nEntryPoint == NULL ){
         if( SharedStm_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = SharedStm_InitPt;
         }
         return FALSE;
     }else{
+    if( !IS_IN( nEntryPoint, SharedStm_SharedTop ) ){ return FALSE; }
         if( SharedStm_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = nEntryPoint;
             return FALSE;
@@ -1139,6 +1139,9 @@ static BOOL MainStm_StateDefaultTrans( ContextImpl* pContextImpl, MainStm* pStm 
             bResult = TRUE;
             break;
         }
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S41, STATE_UNDEF );
+        MainStm_EndTrans( pContextImpl, pStm );
+        bResult = TRUE;
     }else if( pStm->base.nPseudostate == MainStm_Junction ){
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_S6, STATE_UNDEF );
         MainStm_EndTrans( pContextImpl, pStm );
@@ -1167,6 +1170,9 @@ static BOOL MainStm_StateDefaultTrans( ContextImpl* pContextImpl, MainStm* pStm 
             bResult = TRUE;
             break;
         }
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_S71, MainStm_S71Init );
+        MainStm_EndTrans( pContextImpl, pStm );
+        bResult = TRUE;
     }else if( pStm->base.nPseudostate == MainStm_S9 ){
         if( !SharedStm_IsFinished( &pStm->S9SharedStm.base ) ){ break; }
         MainStm_BgnTrans( pContextImpl, pStm, MainStm_S10, STATE_UNDEF );
@@ -1188,18 +1194,18 @@ static BOOL MainStm_RunToCompletion( ContextImpl* pContextImpl, MainStm* pStm ){
     return bResult;
 }
 static BOOL MainStm_Reset( ContextImpl* pContextImpl, MainStm* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
-    if( SharedStm_Reset( pContextImpl, &pStm->S6SharedStm, &pStm->base, nEntryPoint ) ){ return TRUE; }
-    if( S8_Region1_Reset( pContextImpl, &pStm->S8_TopS8_Region1, &pStm->base, nEntryPoint ) ){ return TRUE; }
-    if( S8_Region2_Reset( pContextImpl, &pStm->S8_TopS8_Region2, &pStm->base, nEntryPoint ) ){ return TRUE; }
-    if( SharedStm_Reset( pContextImpl, &pStm->S9SharedStm, &pStm->base, nEntryPoint ) ){ return TRUE; }
     pStm->base.pParentStm = pParentStm;
-    if( nEntryPoint != STATE_UNDEF && !IS_IN( nEntryPoint, MainStm_MainTop ) ){ return FALSE; }
     if( nEntryPoint == NULL ){
         if( MainStm_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = MainStm_MainStmInit;
         }
         return FALSE;
     }else{
+    if( SharedStm_Reset( pContextImpl, &pStm->S6SharedStm, &pStm->base, nEntryPoint ) ){ return TRUE; }
+    if( S8_Region1_Reset( pContextImpl, &pStm->S8_TopS8_Region1, &pStm->base, nEntryPoint ) ){ return TRUE; }
+    if( S8_Region2_Reset( pContextImpl, &pStm->S8_TopS8_Region2, &pStm->base, nEntryPoint ) ){ return TRUE; }
+    if( SharedStm_Reset( pContextImpl, &pStm->S9SharedStm, &pStm->base, nEntryPoint ) ){ return TRUE; }
+    if( !IS_IN( nEntryPoint, MainStm_MainTop ) ){ return FALSE; }
         if( MainStm_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = nEntryPoint;
             return FALSE;
