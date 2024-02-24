@@ -4,8 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 
 public class MainEntry extends JFrame {
@@ -26,16 +28,16 @@ public class MainEntry extends JFrame {
         JLabel sampleNameLabel = new JLabel("Sample Name");
         selectSampleBox = new JComboBox<>();
         populateSampleBox();
-        
+
         JLabel selectDiagramEditorLabel = new JLabel("Select Digram Editor");
         JComboBox<String> selectDiagramEditorBox = new JComboBox<>(new String[]{"edu", "com"});
 
         JButton launchDiagramEditorButton = new JButton("Launch Diagram Editor");
         launchDiagramEditorButton.addActionListener(new ActionListener() {
-        	private final JButton button = launchDiagramEditorButton;
+            private final JButton button = launchDiagramEditorButton;
             @Override
             public void actionPerformed(ActionEvent e) {
-            	button.setEnabled(false); // Disable the button
+                button.setEnabled(false); // Disable the button
 
                 // Launch the target application
                 try {
@@ -45,18 +47,18 @@ public class MainEntry extends JFrame {
                     String scriptPath = "./astah-" + selectDiagramEditorBox.getSelectedItem() + "/astah-run.sh";
                     String filePath = "./samples/" + selectSampleBox.getSelectedItem() + "/Design.asta";
                     if (osName.contains("windows")) {
-                    	process = new ProcessBuilder("D:/cygwin64/bin/bash", "-c", scriptPath + " " + filePath).start();
+                        process = new ProcessBuilder("D:/cygwin64/bin/bash", "-c", scriptPath + " " + filePath).start();
                     } else {
-                    	process = new ProcessBuilder(scriptPath, filePath).start();
+                        process = new ProcessBuilder(scriptPath, filePath).start();
                     }
-                    
+
                     // Monitor the status of the launched application
                     new Thread(() -> {
                         try {
                             int exitCode = process.waitFor(); // Wait for the process to exit
                             if (exitCode == 0) {
                                 // The application exited successfully
-                            	button.setEnabled(true); // Enable the button
+                                button.setEnabled(true); // Enable the button
                             }
                         } catch (InterruptedException e0) {
                             e0.printStackTrace();
@@ -74,31 +76,49 @@ public class MainEntry extends JFrame {
         JComboBox<String> selectLanguageBox = new JComboBox<>(new String[]{"C", "Cpp", "CSharp", "Java"});
         JButton generateCodeButton = new JButton("Generate Code");
         generateCodeButton.addActionListener(new ActionListener() {
-        	private final JButton button = generateCodeButton;
+            private final JButton button = generateCodeButton;
             @Override
             public void actionPerformed(ActionEvent e) {
-            	button.setEnabled(false); // Disable the button
+                button.setEnabled(false); // Disable the button
 
                 // Launch the target application
                 try {
-                    // Determine the OS and set the appropriate command
                     String osName = System.getProperty("os.name").toLowerCase();
                     Process process;
-                    String scriptPath = "./samples/" + selectSampleBox.getSelectedItem() + "/run_" + selectLanguageBox.getSelectedItem() + ".sh";
-                    String filePath = "";
+                    String scriptPath = "./samples/" + selectSampleBox.getSelectedItem() + "/run_" + selectLanguageBox.getSelectedItem() + ".sh " + selectSampleBox.getSelectedItem();
                     if (osName.contains("windows")) {
-                    	process = new ProcessBuilder("D:/cygwin64/bin/bash", "-c", scriptPath + " " + filePath).start();
+                        process = new ProcessBuilder("D:/cygwin64/bin/bash", "-c", scriptPath).start();
                     } else {
-                    	process = new ProcessBuilder(scriptPath, filePath).start();
+                        process = new ProcessBuilder(scriptPath).start();
                     }
                     
+                    BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                    
+					// Read and display the error output in a separate thread
+					new Thread(() -> {
+					    try {
+					        String errorLine;
+					        while ((errorLine = errorReader.readLine()) != null) {
+					            System.out.println("Error: " + errorLine + "\n");
+					        }
+					    } catch (IOException e0) {
+					        e0.printStackTrace();
+					    }
+					}).start();                    
+
+                    // Read and display the output of the process
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        System.out.println(line);
+                    }
+
                     // Monitor the status of the launched application
                     new Thread(() -> {
                         try {
                             int exitCode = process.waitFor(); // Wait for the process to exit
                             if (exitCode == 0) {
-                                // The application exited successfully
-                            	button.setEnabled(true); // Enable the button
+                                button.setEnabled(true); // Enable the button
                             }
                         } catch (InterruptedException e0) {
                             e0.printStackTrace();
