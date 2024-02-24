@@ -4,7 +4,7 @@ WORKING_DIR=.
 
 ASTAH_HOME=$WORKING_DIR/astah-edu
 TOOL_DIR=$WORKING_DIR/release
-export PROJECT=$WORKING_DIR/samples/AllNotations/Design.asta
+export PROJECT=$WORKING_DIR/samples/$1/Design.asta
 export EXT_CODE_OPT=y
 export ENCODING=UTF-8
 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
@@ -57,14 +57,14 @@ export SYNTAX_INTERFACE=$TOOL_DIR/Syntax_CNew.csv
 export SYNTAX_BASECLASS=$TOOL_DIR/Syntax_CNew.csv
 
 export PACKAGE=Model
-echo "Running command: java $JAVA_OPTS stm.TMain %1 %2"
-java $JAVA_OPTS stm.TMain %1 %2
+#echo "Running command: java $JAVA_OPTS stm.TMain"
+java $JAVA_OPTS stm.TMain
 
 PACKAGE=Abstracts
-java $JAVA_OPTS stm.TMain %1 %2
+java $JAVA_OPTS stm.TMain
 
 PACKAGE=NonOOP
-java $JAVA_OPTS stm.TMain %1 %2
+java $JAVA_OPTS stm.TMain
 
 LANGUAGE=h
 SYNTAX=$TOOL_DIR/Syntax_HNew.csv
@@ -73,13 +73,13 @@ SYNTAX_INTERFACE=$TOOL_DIR/Syntax_HNew.csv
 SYNTAX_BASECLASS=$TOOL_DIR/Syntax_HNew.csv
 
 PACKAGE=Model
-java $JAVA_OPTS stm.TMain %1 %2
+java $JAVA_OPTS stm.TMain
 
 PACKAGE=Interfaces
-java $JAVA_OPTS stm.TMain %1 %2
+java $JAVA_OPTS stm.TMain
 
 PACKAGE=Abstracts
-java $JAVA_OPTS stm.TMain %1 %2
+java $JAVA_OPTS stm.TMain
 
 PACKAGE=NonOOP
-java $JAVA_OPTS stm.TMain %1 %2
+java $JAVA_OPTS stm.TMain
