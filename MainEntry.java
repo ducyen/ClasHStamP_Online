@@ -87,8 +87,8 @@ public class MainEntry extends JFrame {
                 try {
                     String osName = System.getProperty("os.name").toLowerCase();
                     Process process;
-                    String scriptPath = "./samples/AllNotations/run_C.sh";
-                    String argument = "AllNotations";
+                    String scriptPath = "./run_C.sh";
+                    String argument = (String)selectSampleBox.getSelectedItem();
                     if (osName.contains("windows")) {
                         process = new ProcessBuilder("D:/cygwin64/bin/bash", "-c", scriptPath + " " + argument).start();
                     } else {
@@ -153,6 +153,9 @@ public class MainEntry extends JFrame {
         startSimulatorButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String directoryPath = "./samples/" + selectSampleBox.getSelectedItem() +"/TransImg";
+                imageLoader = new ImageLoader(directoryPath);
+                
                 bottomPanel.removeAll();
                 bottomPanel.add(imageLoader.getContentPane());
                 bottomPanel.revalidate();
@@ -189,9 +192,6 @@ public class MainEntry extends JFrame {
         scrollPane = new JScrollPane(outputTextArea);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-
-        String directoryPath = "./samples/AllNotations/TransImg"; // Replace with your image directory path
-        imageLoader = new ImageLoader(directoryPath);
 
         bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.add(scrollPane, BorderLayout.CENTER);
