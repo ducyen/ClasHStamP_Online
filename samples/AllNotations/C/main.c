@@ -1,4 +1,5 @@
 #define __Main_INTERNAL__
+#include <sys/stat.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
