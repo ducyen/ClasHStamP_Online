@@ -94,7 +94,7 @@ public class MainEntry extends JFrame {
                     } else {
                         process = new ProcessBuilder(scriptPath, argument).start();
                     }                    
-                    /*
+                    
                     // Read and display the error output in a separate thread
                     BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
                     new Thread(() -> {
@@ -111,7 +111,6 @@ public class MainEntry extends JFrame {
                             e0.printStackTrace();
                         }
                     }).start();
-					*/
                     
                     // Read and display the output of the process
                     BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));

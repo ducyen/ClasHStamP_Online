@@ -88,4 +88,10 @@ java $JAVA_OPTS stm.TMain
 PACKAGE=NonOOP
 java $JAVA_OPTS stm.TMain
 
+echo "Building Code"
+
+cd $SAMPLE_HOME/C
+make
+cd $WORKING_DIR
+
 echo "Code Generation Finished"
