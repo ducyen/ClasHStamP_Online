@@ -2,8 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +11,7 @@ import java.util.Arrays;
 public class MainEntry extends JFrame {
 
     private static final long serialVersionUID = 1L;
-    private JLabel imageLabel;
+    private JTextArea outputTextArea; // Added
     private JPanel topPanel;
     private JComboBox<String> selectSampleBox;
 
@@ -29,7 +27,7 @@ public class MainEntry extends JFrame {
         selectSampleBox = new JComboBox<>();
         populateSampleBox();
 
-        JLabel selectDiagramEditorLabel = new JLabel("Select Digram Editor");
+        JLabel selectDiagramEditorLabel = new JLabel("Select Diagram Editor");
         JComboBox<String> selectDiagramEditorBox = new JComboBox<>(new String[]{"edu", "com"});
 
         JButton launchDiagramEditorButton = new JButton("Launch Diagram Editor");
@@ -80,6 +78,7 @@ public class MainEntry extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 button.setEnabled(false); // Disable the button
+                outputTextArea.setText(""); // Clear the text area
 
                 // Launch the target application
                 try {
@@ -91,27 +90,42 @@ public class MainEntry extends JFrame {
                     } else {
                         process = new ProcessBuilder(scriptPath).start();
                     }
-                    
-                    BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-                    
-					// Read and display the error output in a separate thread
-					new Thread(() -> {
-					    try {
-					        String errorLine;
-					        while ((errorLine = errorReader.readLine()) != null) {
-					            System.out.println("Error: " + errorLine + "\n");
-					        }
-					    } catch (IOException e0) {
-					        e0.printStackTrace();
-					    }
-					}).start();                    
 
+                    /*
+                    // Read and display the error output in a separate thread
+                    BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                    new Thread(() -> {
+                        try {
+                            String errorLine;
+                            while ((errorLine = errorReader.readLine()) != null) {
+                                final String finalErrorLine = errorLine;
+                                SwingUtilities.invokeLater(() -> {
+                                    outputTextArea.append("Error: " + finalErrorLine + "\n");
+                                    outputTextArea.setCaretPosition(outputTextArea.getDocument().getLength());
+                                });
+                            }
+                        } catch (IOException e0) {
+                            e0.printStackTrace();
+                        }
+                    }).start();
+					*/
+                    
                     // Read and display the output of the process
                     BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        System.out.println(line);
-                    }
+                    new Thread(() -> {
+                        try {
+		                    String line;
+		                    while ((line = reader.readLine()) != null) {
+		                        final String finalLine = line;
+		                        SwingUtilities.invokeLater(() -> {
+		                            outputTextArea.append(finalLine + "\n"); // Append to the text area
+		                            outputTextArea.setCaretPosition(outputTextArea.getDocument().getLength()); // Auto-scroll to the bottom
+		                        });
+		                    }
+                        } catch (IOException e0) {
+                            e0.printStackTrace();
+                        }
+                    }).start();
 
                     // Monitor the status of the launched application
                     new Thread(() -> {
@@ -155,20 +169,14 @@ public class MainEntry extends JFrame {
         topPanel.add(leftPanel, BorderLayout.WEST);
         topPanel.add(rightPanel, BorderLayout.EAST);
 
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        imageLabel = new JLabel();
-
-        bottomPanel.add(imageLabel, BorderLayout.CENTER);
+        outputTextArea = new JTextArea();
+        outputTextArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(outputTextArea);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         add(topPanel, BorderLayout.NORTH);
-        add(bottomPanel, BorderLayout.CENTER);
-
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                updateImage();
-            }
-        });
+        add(scrollPane, BorderLayout.CENTER); // Changed
     }
 
     private void populateSampleBox() {
@@ -180,12 +188,6 @@ public class MainEntry extends JFrame {
                 selectSampleBox.addItem(dir.getName());
             }
         }
-    }
-
-    private void updateImage() {
-        ImageIcon imageIcon = new ImageIcon("D:/Workspace/EmuSense/ClasHStamP_online/samples/AllNotations/TransImg/Design/Model/ContextImpl/MainStm.png");
-        Image image = imageIcon.getImage().getScaledInstance(getWidth(), getHeight() - topPanel.getHeight(), Image.SCALE_SMOOTH);
-        imageLabel.setIcon(new ImageIcon(image));
     }
 
     public static void main(String[] args) {
