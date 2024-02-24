@@ -14,12 +14,12 @@
 #ASTAH_HOME=/usr/lib/astah_professional
 ASTAH_HOME=`dirname $0`
 
+USER_LANGUAGE=vi
 INITIAL_HEAP_SIZE=64m
 MAXIMUM_HEAP_SIZE=1024m
 
-USER_LANGUAGE=vi
-
-JAVA_OPTS="-Xms$INITIAL_HEAP_SIZE -Xmx$MAXIMUM_HEAP_SIZE -Duser.language=$USER_LANGUAGE" 
-#JAVA_OPTS="\$JAVA_OPTS -DrootLevel=DEBUG"
+JAVA_OPTS="-Xms$INITIAL_HEAP_SIZE -Xmx$MAXIMUM_HEAP_SIZE"
+#JAVA_OPTS="$JAVA_OPTS -DrootLevel=DEBUG"
+JAVA_OPTS="$JAVA_OPTS -Duser.language=$USER_LANGUAGE"
 
 java $JAVA_OPTS -cp "$ASTAH_HOME/astah-community.jar" JP.co.esm.caddies.jomt.Jude "$@"
