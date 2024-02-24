@@ -87,13 +87,13 @@ public class MainEntry extends JFrame {
                 try {
                     String osName = System.getProperty("os.name").toLowerCase();
                     Process process;
-                    String scriptPath = "./samples/" + selectSampleBox.getSelectedItem() + "/run_" + selectLanguageBox.getSelectedItem() + ".sh " + selectSampleBox.getSelectedItem();
+                    String scriptPath = "./samples/AllNotations/run_C.sh";
+                    String argument = "AllNotations";
                     if (osName.contains("windows")) {
-                        process = new ProcessBuilder("D:/cygwin64/bin/bash", "-c", scriptPath).start();
+                        process = new ProcessBuilder("D:/cygwin64/bin/bash", "-c", scriptPath + " " + argument).start();
                     } else {
-                        process = new ProcessBuilder(scriptPath).start();
-                    }
-
+                        process = new ProcessBuilder(scriptPath, argument).start();
+                    }                    
                     /*
                     // Read and display the error output in a separate thread
                     BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
