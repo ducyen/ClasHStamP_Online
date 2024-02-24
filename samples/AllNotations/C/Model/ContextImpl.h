@@ -84,7 +84,6 @@ typedef struct tagMainStm {
     S8_Region2 S8_TopS8_Region2;                                
     SharedStm S9SharedStm;                                      
     uint64_t nS4History;
-    uint64_t nS8History;
     uint64_t nS7History;
 #define MainStm_MainTop_Dmy                     ( 1ULL << 14 )
 #define MainStm_MainTop                         ( MainStm_MainTop_Dmy | MainStm_MainStmInit | MainStm_S1 | MainStm_S2 | MainStm_S3 | MainStm_S4 | MainStm_Junction | MainStm_S6 | MainStm_S8 | MainStm_S7 | MainStm_S10 | MainStm_S5 | MainStm_S9 )
