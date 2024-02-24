@@ -48,6 +48,10 @@ JAVA_OPTS="-Xms$INITIAL_HEAP_SIZE -Xmx$MAXIMUM_HEAP_SIZE"
 JAVA_OPTS="$JAVA_OPTS -classpath $CLASSPATH"
 
 SAMPLE_HOME=$WORKING_DIR/samples/$1
+
+echo "Running command: ./astah-edu/astah-command.sh -f $SAMPLE_HOME/Design.asta -image -o $SAMPLE_HOME/Image -t png"
+./astah-edu/astah-command.sh -f $SAMPLE_HOME/Design.asta -image -o $SAMPLE_HOME/Image -t png
+
 export OUTPUT=$SAMPLE_HOME/C
 
 export LANGUAGE=c
@@ -83,3 +87,5 @@ java $JAVA_OPTS stm.TMain
 
 PACKAGE=NonOOP
 java $JAVA_OPTS stm.TMain
+
+echo "Code Generation Finished"

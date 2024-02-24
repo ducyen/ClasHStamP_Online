@@ -30,4 +30,4 @@ MAXIMUM_HEAP_SIZE=1024m
 JAVA_OPTS="-Xms$INITIAL_HEAP_SIZE -Xmx$MAXIMUM_HEAP_SIZE"
 #JAVA_OPTS="$JAVA_OPTS -DrootLevel=DEBUG"
 
-java $JAVA_OPTS -cp "$ASTAH_HOME/jre/lib/rt.jar:$ASTAH_HOME/astah-community.jar" com.change_vision.jude.cmdline.JudeCommandRunner "$@"
+java $JAVA_OPTS -cp "$ASTAH_HOME/astah-community.jar" com.change_vision.jude.cmdline.JudeCommandRunner "$@"
