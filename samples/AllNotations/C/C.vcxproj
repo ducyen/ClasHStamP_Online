@@ -127,7 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Abstracts\BaseClass.c" />
-    <ClCompile Include="main.c" />
+    <ClCompile Include="main_win.c" />
     <ClCompile Include="Model\Context.c" />
     <ClCompile Include="Model\ContextImpl.c">
       <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreprocessToFile>

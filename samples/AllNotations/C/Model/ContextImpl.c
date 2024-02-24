@@ -109,7 +109,6 @@ static BOOL S8_Region1_StateDefaultTrans( ContextImpl* pContextImpl, S8_Region1*
     pStm->base.nLCAState = STATE_UNDEF;
     do{   if( pStm->base.nPseudostate == S8_Region1_S82Init ){
         S8_Region1_BgnTrans( pContextImpl, pStm, S8_Region1_S822, STATE_UNDEF );
-        dfg
         S8_Region1_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
     }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, S8_Region1_S8_Top) ){
