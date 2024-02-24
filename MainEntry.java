@@ -11,8 +11,11 @@ import java.util.Arrays;
 public class MainEntry extends JFrame {
 
     private static final long serialVersionUID = 1L;
-    private JTextArea outputTextArea; // Added
+    private JTextArea outputTextArea;
     private JPanel topPanel;
+    private JPanel bottomPanel;
+    private JScrollPane scrollPane;
+    private ImageLoader imageLoader;
     private JComboBox<String> selectSampleBox;
 
     public MainEntry() {
@@ -146,6 +149,17 @@ public class MainEntry extends JFrame {
             }
         });
 
+        JButton startSimulatorButton = new JButton("Start Simulator");
+        startSimulatorButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                bottomPanel.removeAll();
+                bottomPanel.add(imageLoader.getContentPane());
+                bottomPanel.revalidate();
+                bottomPanel.repaint();
+            }
+        });
+
         leftPanel.add(sampleNameLabel);
         leftPanel.add(selectSampleBox);
         leftPanel.add(selectDiagramEditorLabel);
@@ -154,6 +168,7 @@ public class MainEntry extends JFrame {
         leftPanel.add(selectLanguageLabel);
         leftPanel.add(selectLanguageBox);
         leftPanel.add(generateCodeButton);
+        leftPanel.add(startSimulatorButton);
 
         JButton quitButton = new JButton("Quit");
         quitButton.addActionListener(new ActionListener() {
@@ -171,19 +186,25 @@ public class MainEntry extends JFrame {
 
         outputTextArea = new JTextArea();
         outputTextArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(outputTextArea);
+        scrollPane = new JScrollPane(outputTextArea);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
+        String directoryPath = "./samples/AllNotations/TransImg"; // Replace with your image directory path
+        imageLoader = new ImageLoader(directoryPath);
+
+        bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(scrollPane, BorderLayout.CENTER);
+
         add(topPanel, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER); // Changed
+        add(bottomPanel, BorderLayout.CENTER);
     }
 
     private void populateSampleBox() {
         File samplesDir = new File("samples");
         File[] directories = samplesDir.listFiles(File::isDirectory);
         if (directories != null) {
-            Arrays.sort(directories); // Sort directories alphabetically
+            Arrays.sort(directories);
             for (File dir : directories) {
                 selectSampleBox.addItem(dir.getName());
             }
