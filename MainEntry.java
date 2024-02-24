@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class MainEntry extends JFrame {
@@ -15,7 +16,7 @@ public class MainEntry extends JFrame {
     private JComboBox<String> selectSampleBox;
 
     public MainEntry() {
-        setTitle("Fullscreen Swing Application");
+        setTitle("Model Driven Development Tool");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setUndecorated(true);
@@ -25,13 +26,96 @@ public class MainEntry extends JFrame {
         JLabel sampleNameLabel = new JLabel("Sample Name");
         selectSampleBox = new JComboBox<>();
         populateSampleBox();
+        
+        JLabel selectDiagramEditorLabel = new JLabel("Select Digram Editor");
+        JComboBox<String> selectDiagramEditorBox = new JComboBox<>(new String[]{"edu", "com"});
+
         JButton launchDiagramEditorButton = new JButton("Launch Diagram Editor");
+        launchDiagramEditorButton.addActionListener(new ActionListener() {
+        	private final JButton button = launchDiagramEditorButton;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	button.setEnabled(false); // Disable the button
+
+                // Launch the target application
+                try {
+                    // Determine the OS and set the appropriate command
+                    String osName = System.getProperty("os.name").toLowerCase();
+                    Process process;
+                    String scriptPath = "./astah-" + selectDiagramEditorBox.getSelectedItem() + "/astah-run.sh";
+                    String filePath = "./samples/" + selectSampleBox.getSelectedItem() + "/Design.asta";
+                    if (osName.contains("windows")) {
+                    	process = new ProcessBuilder("D:/cygwin64/bin/bash", "-c", scriptPath + " " + filePath).start();
+                    } else {
+                    	process = new ProcessBuilder(scriptPath, filePath).start();
+                    }
+                    
+                    // Monitor the status of the launched application
+                    new Thread(() -> {
+                        try {
+                            int exitCode = process.waitFor(); // Wait for the process to exit
+                            if (exitCode == 0) {
+                                // The application exited successfully
+                            	button.setEnabled(true); // Enable the button
+                            }
+                        } catch (InterruptedException e0) {
+                            e0.printStackTrace();
+                        }
+                    }).start();
+
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                    button.setEnabled(true); // Enable the button in case of an error
+                }
+            }
+        });
+
         JLabel selectLanguageLabel = new JLabel("Select Language");
-        JComboBox<String> selectLanguageBox = new JComboBox<>(new String[]{"C", "C++", "C#", "Java"});
+        JComboBox<String> selectLanguageBox = new JComboBox<>(new String[]{"C", "Cpp", "CSharp", "Java"});
         JButton generateCodeButton = new JButton("Generate Code");
+        generateCodeButton.addActionListener(new ActionListener() {
+        	private final JButton button = generateCodeButton;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	button.setEnabled(false); // Disable the button
+
+                // Launch the target application
+                try {
+                    // Determine the OS and set the appropriate command
+                    String osName = System.getProperty("os.name").toLowerCase();
+                    Process process;
+                    String scriptPath = "./samples/" + selectSampleBox.getSelectedItem() + "/run_" + selectLanguageBox.getSelectedItem() + ".sh";
+                    String filePath = "";
+                    if (osName.contains("windows")) {
+                    	process = new ProcessBuilder("D:/cygwin64/bin/bash", "-c", scriptPath + " " + filePath).start();
+                    } else {
+                    	process = new ProcessBuilder(scriptPath, filePath).start();
+                    }
+                    
+                    // Monitor the status of the launched application
+                    new Thread(() -> {
+                        try {
+                            int exitCode = process.waitFor(); // Wait for the process to exit
+                            if (exitCode == 0) {
+                                // The application exited successfully
+                            	button.setEnabled(true); // Enable the button
+                            }
+                        } catch (InterruptedException e0) {
+                            e0.printStackTrace();
+                        }
+                    }).start();
+
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                    button.setEnabled(true); // Enable the button in case of an error
+                }
+            }
+        });
 
         leftPanel.add(sampleNameLabel);
         leftPanel.add(selectSampleBox);
+        leftPanel.add(selectDiagramEditorLabel);
+        leftPanel.add(selectDiagramEditorBox);
         leftPanel.add(launchDiagramEditorButton);
         leftPanel.add(selectLanguageLabel);
         leftPanel.add(selectLanguageBox);
