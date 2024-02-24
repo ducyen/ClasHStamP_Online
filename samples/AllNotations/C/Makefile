@@ -3,7 +3,7 @@ SRC_DIR=.
 # Compiler
 CC = gcc
 # Compiler flags
-CFLAGS = -Wall $(addprefix -I,$(shell find $(SRC_DIR) -type d)) -I./include
+CFLAGS = -Wall $(addprefix -I,$(shell find $(SRC_DIR) -type d)) -I./include -lpthread
 
 # Source files
 SRC_FILES = $(shell find $(SRC_DIR) -name "*.c")
@@ -17,7 +17,7 @@ TARGET = my_program
 all: $(TARGET)
 
 $(TARGET): $(OBJ_FILES)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^ -lpng
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<

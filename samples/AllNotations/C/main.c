@@ -1,12 +1,50 @@
-#if defined( _MSC_VER )
-#pragma warning(disable : 4996)
 #define __Main_INTERNAL__
 #include <stdio.h>
-#include <conio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include <windows.h>
-#include <wincodec.h>
+#include <stdarg.h>
+#include <unistd.h> 
+#include <pthread.h> 
+#include <termios.h> 
+#include <fcntl.h>
+#include <png.h>
+typedef unsigned long   COLORREF;
+typedef unsigned char   BYTE;
+typedef unsigned int    UINT;
+typedef unsigned short      WORD;
+typedef unsigned long       DWORD;
+
+typedef unsigned long  ULONG_PTR;
+typedef ULONG_PTR DWORD_PTR, *PDWORD_PTR;
+#define LOBYTE(w)           ((BYTE)(((DWORD_PTR)(w)) & 0xff))
+
+#define RGB(r,g,b)          ((COLORREF)(((BYTE)(r)|((WORD)((BYTE)(g))<<8))|(((DWORD)(BYTE)(b))<<16)))
+#define GetRValue(rgb)      (LOBYTE(rgb))
+#define GetGValue(rgb)      (LOBYTE(((WORD)(rgb)) >> 8))
+#define GetBValue(rgb)      (LOBYTE((rgb)>>16))
+
+typedef struct IWICBitmap{
+    int width, height;
+    png_bytep *row_pointers;
+}IWICBitmap;
+
+static char* itoa(
+    int   _Value,
+    char* _Buffer,
+    int   _Radix
+) {
+    return _Buffer;
+}
+
+static void abort_( const char *s, ... ){
+    va_list args;
+    va_start( args, s );
+    vfprintf( stderr, s, args );
+    fprintf( stderr, "\n" );
+    va_end( args );
+    exit( 1 );
+}
 #include <assert.h>
 
 int InputValue(char* pMsg);
@@ -29,6 +67,37 @@ int InputValue(char* pMsg) {
 void DisplayMsg(char* pMsg) {
     printf( "%s\n", pMsg );
 }
+
+/**
+ * Directions
+ */
+enum{
+    EAST,
+    WEST,
+    NORTH,
+    SOUTH
+};
+/**
+ * Light types
+ */
+enum{
+    RED,
+    YELLOW,
+    GREEN,
+    LIGHT_TYPE_NUM
+};
+/**
+ * Light positions
+ */
+static const struct tagLightPositions{
+    int x, y;
+} LIGHT_POSITIONS[][ LIGHT_TYPE_NUM ] = {
+    /*  red         yellow      green */
+    { { 42, 37 }, { 47, 37 }, { 52, 37 } },   /* east  */
+    { { 22, 26 }, { 17, 26 }, { 12, 26 } },   /* west  */
+    { { 36, 21 }, { 36, 16 }, { 36, 11 } },   /* north */
+    { { 28, 42 }, { 28, 48 }, { 28, 53 } },   /* south */
+};
 
 #define FONT_CHAR_HEIGHT    ( 7 )
 #define FONT_CHAR_WIDTH     ( 5 )
@@ -298,8 +367,9 @@ static const unsigned char font_data[][5] = {
 	{ 0x00, 0x3C, 0x3C, 0x3C, 0x3C },   //  FD
 	{ 0x00, 0x00, 0x00, 0x00, 0x00 }    //  FE
 };
+
 // Function to place a character from the font into an RGBA bitmap
-void placeCharacterInBitmap(BYTE *pv, unsigned char ch, int scale, int x, int y, int cbStride, uint8_t byRed, uint8_t byGreen, uint8_t byBlue ) {
+void placeCharacterInBitmap(BYTE *pv, unsigned char ch, int scale, int x, int y, int cbStride, COLORREF color ) {
     int fontIndex, i, j;
     fontIndex = ch;
 
@@ -309,32 +379,59 @@ void placeCharacterInBitmap(BYTE *pv, unsigned char ch, int scale, int x, int y,
             if ((font_data[fontIndex][i] >> j) & 1) {
                 for( int u = 0; u < scale; u++ ){
                     for( int v = 0; v < scale; v++ ){
-                // Set the pixel to white (RGBA: 255, 255, 255, 255)
+                        // Set the pixel to white (RGBA: 255, 255, 255, 255)
                         UINT destIndex = ( y + j*scale + v ) * cbStride + ( x + i*scale + u ) * 4;
 
-                // For simplicity, we'll just set the pixel to red (assuming 32bpp BGRA format)
-                pv[ destIndex ] = byBlue;       // Blue
-                pv[ destIndex + 1 ] = byGreen;   // Green
-                pv[ destIndex + 2 ] = byRed; // Red
-                pv[ destIndex + 3 ] = 255; // Alpha
+                        // For simplicity, we'll just set the pixel to red (assuming 32bpp BGRA format)
+                        pv[ destIndex ] = GetRValue( color );       // Blue
+                        pv[ destIndex + 1 ] = GetGValue( color );   // Green
+                        pv[ destIndex + 2 ] = GetBValue( color );   // Red
+                        pv[ destIndex + 3 ] = 255; // Alpha
+                    }
+                }
             }
         }
     }
 }
+
+// Function to set pixel
+static void setPixel( png_bytep *pv, int x, int y, int cbStride, COLORREF color ){
+    UINT destIndex = x * 4;
+    pv[ y ][ destIndex ] = GetRValue( color );       // Blue
+    pv[ y ][ destIndex + 1 ] = GetGValue( color );   // Green
+    pv[ y ][ destIndex + 2 ] = GetBValue( color );   // Red
+    pv[ y ][ destIndex + 3 ] = 255; // Alpha
+}
+
+// Function to set pixel
+static COLORREF getPixel( png_bytep *pv, int x, int y, int cbStride ){
+    UINT destIndex = x * 4;
+    return RGB( pv[ y ][ destIndex + 2 ], pv[ y ][ destIndex + 1 ], pv[ y ][ destIndex ] );
+}
+
+// Function to fill color
+void fillColor( png_bytep *pv, int x, int y, int cbStride, int cHeight, COLORREF oldColor, COLORREF color ){
+    if( 0 <= x && x * 4 < cbStride && 0 <= y && y < cHeight ){
+        COLORREF curColor = getPixel( pv, x, y, cbStride );
+        if( curColor == oldColor ){
+            setPixel( pv, x, y, cbStride, color );
+            fillColor( pv, x+1, y, cbStride, cHeight, oldColor, color );
+            fillColor( pv, x-1, y, cbStride, cHeight, oldColor, color );
+            fillColor( pv, x, y+1, cbStride, cHeight, oldColor, color );
+            fillColor( pv, x, y-1, cbStride, cHeight, oldColor, color );
+        }
     }
 }
 
-#if defined( _MSC_VER )
-#define CALL(ptr, method, ...) ((ptr)->lpVtbl->method((ptr), __VA_ARGS__))
-
-void SavePngImage( char* sPath );
+void SavePngImage( char*, IWICBitmap* );
+IWICBitmap* FindBitmapFromPath( char* );
 
 int directory_exists(const char *path) {
-    DWORD attribs = GetFileAttributes(path);
-    if (attribs == INVALID_FILE_ATTRIBUTES) {
-        return 0; // Path does not exist
+    struct stat statbuf;
+    if( stat( path, &statbuf ) != 0 ){
+        return 0;
     }
-    return (attribs & FILE_ATTRIBUTE_DIRECTORY);
+    return S_ISDIR( statbuf.st_mode );
 }
 
 int make_dir(const char *path) {
@@ -350,83 +447,68 @@ int make_dir(const char *path) {
         if(*p == '/') {
             *p = 0;
             if (!directory_exists(tmp)) {
-                if (!CreateDirectory(tmp, NULL)) {
+                mode_t mode = 0755;
+                if (mkdir(tmp, mode) == -1) {
                     return -1; // Failed to create directory
                 }
             }
             *p = '/';
         }
     }
-    //if (!directory_exists(tmp)) {
-    //    return CreateDirectory(tmp, NULL) ? 0 : -1;
-    //}
     return 0; // Directory already exists
 }
 
 /**
- * Convert char to wide char
- */
-WCHAR* ConvertCharToWChar(const char* charString, UINT codePage) {
-    int requiredSize = MultiByteToWideChar(codePage, 0, charString, -1, NULL, 0);
-    if (requiredSize == 0) {
-        fprintf(stderr, "MultiByteToWideChar failed.\n");
-        return NULL;
-    }
-
-    WCHAR* wideString = (WCHAR*)malloc(requiredSize * sizeof(WCHAR));
-    if (wideString == NULL) {
-        fprintf(stderr, "Memory allocation failed.\n");
-        return NULL;
-    }
-
-    if (MultiByteToWideChar(codePage, 0, charString, -1, wideString, requiredSize) == 0) {
-        free(wideString);
-        fprintf(stderr, "MultiByteToWideChar failed.\n");
-        return NULL;
-    }
-
-    return wideString;
-}
-
-IWICImagingFactory* m_pIWICFactory = NULL;
-/**
  * Load image from png file
  */
 IWICBitmap* LoadPngImage( char* sPath ){
-    WCHAR* wideString = ConvertCharToWChar(sPath, CP_UTF8);  // Using UTF-8 code page
-    WCHAR strInputFile[ 256 ];
-    swprintf( strInputFile, sizeof( strInputFile ) / sizeof( strInputFile[ 0 ] ), L"../Image/Design/%s.png", wideString );
-    HRESULT hr = S_OK;
+    IWICBitmap* pNewBitmap = malloc( sizeof( IWICBitmap ) );
 
-    IWICBitmapDecoder *pIDecoder = NULL;
-    IWICBitmapFrameDecode *pIDecoderFrame = NULL;
+    char* file_name = sPath;
+    png_byte header[ 8 ];
+    FILE *fp = fopen( file_name, "rb" );
+    printf( "[read_png_file] Loading %s\n", file_name );
+    if( !fp )
+        abort_( "[read_png_file] File %s could not be opened for reading", file_name );
+    fread( header, 1, 8, fp );
+    if( png_sig_cmp( header, 0, 8 ) )
+        abort_( "[read_png_file] File %s is not recognized as a PNG file", file_name );
 
-    hr = CALL( m_pIWICFactory, CreateDecoderFromFilename,
-        strInputFile,                   // Image to be decoded
-        NULL,                           // Do not prefer a particular vendor
-        GENERIC_READ,                   // Desired read access to the file
-        WICDecodeMetadataCacheOnDemand, // Cache metadata when needed
-        &pIDecoder                      // Pointer to the decoder
-    );
+    png_structp png_ptr = png_create_read_struct( PNG_LIBPNG_VER_STRING, NULL, NULL, NULL );
+    if( !png_ptr )
+        abort_( "[read_png_file] png_create_read_struct failed" );
 
-    // Retrieve the first bitmap frame.
-    if( SUCCEEDED( hr ) ){
-        hr = CALL( pIDecoder, GetFrame, 0, &pIDecoderFrame );
+    png_infop info_ptr = png_create_info_struct( png_ptr );
+    if( !info_ptr )
+        abort_( "[read_png_file] png_create_info_struct failed" );
+
+    if( setjmp( png_jmpbuf( png_ptr ) ) )
+        abort_( "[read_png_file] Error during init_io" );
+
+    png_init_io( png_ptr, fp );
+    png_set_sig_bytes( png_ptr, 8 );
+    png_read_info( png_ptr, info_ptr );
+
+    int width = png_get_image_width( png_ptr, info_ptr );
+    int height = png_get_image_height( png_ptr, info_ptr );
+
+    if( png_get_color_type( png_ptr, info_ptr ) != PNG_COLOR_TYPE_RGBA ){
+        abort_( "Unsupported color type" );
     }
 
-    IWICBitmap *pIBitmap = NULL;
-
-    // Create the bitmap from the image frame.
-    if( SUCCEEDED( hr ) ){
-        hr = CALL( m_pIWICFactory, CreateBitmapFromSource,
-            pIDecoderFrame,          // Create a bitmap from the image frame
-            WICBitmapCacheOnDemand,  // Cache bitmap pixels on first access
-            &pIBitmap );              // Pointer to the bitmap
+    png_bytep *row_pointers = calloc( height, sizeof( png_bytep ) );
+    for( int y = 0; y < height; y++ ){
+        row_pointers[ y ] = ( png_bytep )malloc( 4 * width );
+        png_read_row( png_ptr, row_pointers[ y ], NULL );
     }
-    if( pIDecoder ) CALL( pIDecoder, Release );
-    if( pIDecoderFrame ) CALL( pIDecoderFrame, Release );
+    pNewBitmap->width = width;
+    pNewBitmap->height = height;
+    pNewBitmap->row_pointers = row_pointers;
 
-    return pIBitmap;
+    fclose( fp );
+    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+
+    return pNewBitmap;
 }
 
 /**
@@ -437,6 +519,7 @@ static int g_nActionCounter = 0;
  * find bitmap from path
  */
 static int g_nPathToBitmapCnt = 0;
+
 static struct{
     char m_sPath[ 256 ];
     IWICBitmap* m_pIBitmap;
@@ -444,14 +527,24 @@ static struct{
 
 void ReleaseAllImages( void ){
     for( int i = 0; i < g_nPathToBitmapCnt; i++ ){
-        if( g_arrPathToBitmap[ i ].m_pIBitmap ) CALL( g_arrPathToBitmap[ i ].m_pIBitmap, Release );
+        if( g_arrPathToBitmap[ i ].m_pIBitmap ){
+            for( int y = 0; y < sizeof( g_arrPathToBitmap[ i ].m_pIBitmap->row_pointers ) / sizeof( g_arrPathToBitmap[ i ].m_pIBitmap->row_pointers[ 0 ] ); y++ ){
+                free( g_arrPathToBitmap[ i ].m_pIBitmap->row_pointers[ y ] );
+            }
+            free( g_arrPathToBitmap[ i ].m_pIBitmap->row_pointers );
+            free( g_arrPathToBitmap[ i ].m_pIBitmap );
+        }
     }
     g_nPathToBitmapCnt = 0;
 }
 
 void SaveAllImages( void ){
     for( int i = 0; i < g_nPathToBitmapCnt; i++ ){
-        SavePngImage( g_arrPathToBitmap[ i ].m_sPath );
+        IWICBitmap *pIBitmap = FindBitmapFromPath( g_arrPathToBitmap[ i ].m_sPath );
+        char sRelPath[ 256 ];
+        sprintf( sRelPath, "../TransImg/Design/%s.png", g_arrPathToBitmap[ i ].m_sPath );
+        make_dir( sRelPath );
+        SavePngImage( sRelPath, pIBitmap );
     }
 }
 
@@ -464,13 +557,38 @@ IWICBitmap* FindBitmapFromPath( char* sPath ){
     }
     // If not exsited, add new
     strcpy( g_arrPathToBitmap[ g_nPathToBitmapCnt ].m_sPath, sPath );
-    IWICBitmap* pIBitmap = LoadPngImage( sPath );
+    char sFullPath[ 255 ];
+    sprintf( sFullPath, "../Image/Design/%s.png", sPath );
+    IWICBitmap* pIBitmap = LoadPngImage( sFullPath );
     g_arrPathToBitmap[ g_nPathToBitmapCnt ].m_pIBitmap = pIBitmap;
     g_nPathToBitmapCnt++;
     assert( g_nPathToBitmapCnt < sizeof( g_arrPathToBitmap ) / sizeof( g_arrPathToBitmap[ 0 ] ) );
     return pIBitmap;
 }
 
+/**
+ * Flood fill on a png file
+ */
+int MyFloodFill( IWICBitmap *pIBitmap, int x, int y, COLORREF color ){
+
+    int width = pIBitmap->width;
+    int height = pIBitmap->height;
+
+    UINT uiWidth = width;
+    UINT uiHeight = height;
+
+    // Pixel manipulation using the image data pointer pv.
+    UINT cbStride = 4 * width;
+
+    png_bytep *pv = pIBitmap->row_pointers;
+    COLORREF oldColor = getPixel( pv, x, y, cbStride );
+    if( oldColor != color ){
+        fillColor( pv, x, y, cbStride, uiHeight, oldColor, color );
+    }
+
+    return 0;
+
+}
 
 /**
  * Draw rectangle on a png file
@@ -478,197 +596,88 @@ IWICBitmap* FindBitmapFromPath( char* sPath ){
 int DrawRectangle( char* sPath, 
     int nLeft, int nTop, int nWidth, int nHeight, 
     int nDgrLeft, int nDgrTop, int nDgrWidth, int nDgrHeight,
-    uint8_t byRed, uint8_t byGreen, uint8_t byBlue,
+    COLORREF color,
     unsigned char* sText,
     int nMargin, int nAlign
 ){
-    HRESULT hr = S_OK;
     IWICBitmap *pIBitmap = FindBitmapFromPath( sPath );
-    IWICBitmapLock *pILock = NULL;
 
-    if( SUCCEEDED( hr ) ){
-        UINT uiWidth = 10;
-        UINT uiHeight = 10;
+    int width = pIBitmap->width;
+    int height = pIBitmap->height;
 
-        hr = CALL( pIBitmap, GetSize, &uiWidth, &uiHeight );
-        if( FAILED( hr ) ) return hr;
+    UINT uiWidth = width;
+    UINT uiHeight = height;
 
-        WICRect rcLock = { 0, 0, uiWidth, uiHeight };
+    // Pixel manipulation using the image data pointer pv.
+    UINT cbStride = 4 * width;
+    uiHeight -= ( 40 - 14 );
+    //uiWidth  -= ( nLeftMgn + nRightMgn );
+    nTop = ( float )( nTop - nDgrTop ) * uiHeight / nDgrHeight;
+    nLeft = ( float )( nLeft - nDgrLeft ) * uiWidth / nDgrWidth;
+    nHeight = ( float )nHeight * uiHeight / nDgrHeight;
+    nWidth = ( float )nWidth * uiWidth / nDgrWidth;
+    UINT nDotSize = 3;
+    // Draw the rectangle on the destination bitmap
+    for( UINT y = nTop; y < nTop + nHeight; y++ ){
+        png_bytep pv = pIBitmap->row_pointers[ y ];
 
-        // Obtain a bitmap lock for exclusive write.
-        // The lock is for a 10x10 rectangle starting at the top left of the
-        // bitmap.
-        hr = CALL( pIBitmap, Lock, &rcLock, WICBitmapLockWrite, &pILock );
+        for( UINT x = nLeft; x < nLeft + nWidth; x++ ){
+            if( y >= nTop + nDotSize && y < nTop + nHeight - nDotSize && x >= nLeft + nDotSize && x < nLeft + nWidth - nDotSize ){
+                ; // Do nothing
+            } else{
+                UINT destIndex = x * 4;
 
-        if( SUCCEEDED( hr ) ){
-            UINT cbBufferSize = 0;
-            BYTE *pv = NULL;
-
-            // Retrieve a pointer to the pixel data.
-            if( SUCCEEDED( hr ) ){
-                hr = CALL( pILock, GetDataPointer, &cbBufferSize, &pv );
+                // For simplicity, we'll just set the pixel to red (assuming 32bpp BGRA format)
+                pv[ destIndex ] = GetRValue( color );      // Blue
+                pv[ destIndex + 1 ] = GetGValue( color ); // Green
+                pv[ destIndex + 2 ] = GetBValue( color );   // Red
+                pv[ destIndex + 3 ] = 255; // Alpha
             }
-
-            // Pixel manipulation using the image data pointer pv.
-            UINT cbStride;
-            hr = CALL( pILock, GetStride, &cbStride );
-            uiHeight -= ( 40 - 14 );
-            //uiWidth  -= ( nLeftMgn + nRightMgn );
-            nTop = ( float )( nTop - nDgrTop ) * uiHeight / nDgrHeight;
-            nLeft = ( float )( nLeft - nDgrLeft ) * uiWidth / nDgrWidth;
-            nHeight = ( float )nHeight * uiHeight / nDgrHeight;
-            nWidth = ( float )nWidth * uiWidth / nDgrWidth;
-            UINT nDotSize = 3;
-            // Draw the rectangle on the destination bitmap
-            for( UINT y = nTop; y < nTop + nHeight; y++ ){
-                for( UINT x = nLeft; x < nLeft + nWidth; x++ ){
-                    if( y >= nTop + nDotSize && y < nTop + nHeight - nDotSize && x >= nLeft + nDotSize && x < nLeft + nWidth - nDotSize ){
-                        ; // Do nothing
-                    } else{
-                        UINT destIndex = y * cbStride + x * 4;
-
-                        // For simplicity, we'll just set the pixel to red (assuming 32bpp BGRA format)
-                        pv[ destIndex ] = byBlue;       // Blue
-                        pv[ destIndex + 1 ] = byGreen;   // Green
-                        pv[ destIndex + 2 ] = byRed; // Red
-                        pv[ destIndex + 3 ] = 255; // Alpha
-                    }
-                }
-            }
-            // Draw some text
-            //for( int i = 0; i < ARRAYSIZE( font_data ) / 2; i++ ){
-            //    int scale = 2;
-            //    placeCharacterInBitmap( pv, 
-            //        i, 
-            //        scale, 
-            //        10 + i * ( FONT_CHAR_WIDTH + 1 )*scale, 
-            //        50, 
-            //        cbStride, 
-            //        0, 0, 255 
-            //    );
-            //}
-            //
-            //for( int i = 0; i < ARRAYSIZE( font_data ) / 2; i++ ){
-            //    int scale = 2;
-            //    placeCharacterInBitmap( pv, 
-            //        i + ARRAYSIZE( font_data ) / 2, 
-            //        scale, 
-            //        10 + i * ( FONT_CHAR_WIDTH + 1 )*scale, 
-            //        50 + ( FONT_CHAR_HEIGHT+1 )* scale, 
-            //        cbStride, 
-            //        0, 0, 255 
-            //    );
-            //}
-            // Draw action counter
-            for( int i = 0; i < strlen( sText ); i++ ){
-                int scale = 2;
-                int nCharLeftPos = nLeft + nMargin + i * ( FONT_CHAR_WIDTH + 1 )*scale;
-                int nCharTopPos = nTop + nMargin;
-
-                if( ( nAlign & TEXT_ALIGN_RIGHT ) != 0 ){
-                    nCharLeftPos = nLeft + nWidth - nMargin + ( i - strlen( sText ) ) * ( FONT_CHAR_WIDTH + 1 )*scale;
-                }
-                if( ( nAlign & TEXT_ALIGN_BTM ) != 0 ){
-                    nCharTopPos = nTop + nHeight - nMargin - FONT_CHAR_HEIGHT *scale;
-                }
-                placeCharacterInBitmap( pv, sText[ i ], scale, nCharLeftPos, nCharTopPos, cbStride, byRed, byGreen, byBlue );
-            }
-        }
-        // Release the lock
-        if (pILock) {
-            CALL( pILock, Release );
-            pILock = NULL; // Clear the pointer after releasing
         }
     }
+    return 0;
 }
 
 /**
  * Save png image to file
  */
-void SavePngImage( char* sPath ){
-    char sRelPath[ 256 ];
-    sprintf( sRelPath, "../TransImg/Design/%s", sPath );
-    make_dir( sRelPath );
+void SavePngImage( char* sPath, IWICBitmap *pIBitmap ){
+    char* output_file_name = sPath;
+    FILE *output_file = fopen( output_file_name, "wb" );
+    if( !output_file )
+        abort_( "Cannot open output file for writing" );
 
-    WCHAR* wideString = ConvertCharToWChar(sPath, CP_UTF8);  // Using UTF-8 code page
-    WCHAR strOutputFile[ 256 ];
-    swprintf( strOutputFile, sizeof( strOutputFile ) / sizeof( strOutputFile[ 0 ] ), L"../TransImg/Design/%s.png", wideString );
-    HRESULT hr = S_OK;
-    IWICBitmap *pIBitmap = FindBitmapFromPath( sPath );
+    png_structp output_png_ptr =
+        png_create_write_struct( PNG_LIBPNG_VER_STRING, NULL, NULL, NULL );
+    if( !output_png_ptr )
+        abort_( "png_create_write_struct failed" );
 
-    if( SUCCEEDED( hr ) ){
-        IWICStream* pStream = NULL;
-        IWICBitmapEncoder* pEncoder = NULL;
-        IWICBitmapFrameEncode* pFrameEncode = NULL;
+    png_infop output_info_ptr = png_create_info_struct( output_png_ptr );
+    if( !output_info_ptr )
+        abort_( "png_create_info_struct failed" );
 
-        hr = CALL( m_pIWICFactory, CreateStream, &pStream );
+    int width = pIBitmap->width;
+    int height = pIBitmap->height;
 
-        if( SUCCEEDED( hr ) ){
-            hr = CALL( pStream, InitializeFromFilename, strOutputFile, GENERIC_WRITE );
-        }
+    if( setjmp( png_jmpbuf( output_png_ptr ) ) )
+        abort_( "Error during init_io" );
 
-        if( SUCCEEDED( hr ) ){
-            hr = CALL( m_pIWICFactory, CreateEncoder, &GUID_ContainerFormatPng, NULL, &pEncoder );
-        }
+    png_init_io( output_png_ptr, output_file );
 
-        if( SUCCEEDED( hr ) ){
-            hr = CALL( pEncoder, Initialize, pStream, WICBitmapEncoderNoCache );
-        }
+    png_set_IHDR( output_png_ptr, output_info_ptr, width, height, 8,
+        PNG_COLOR_TYPE_RGBA, PNG_INTERLACE_NONE,
+        PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT );
+    png_write_info( output_png_ptr, output_info_ptr );
 
-        if( SUCCEEDED( hr ) ){
-            hr = CALL( pEncoder, CreateNewFrame, &pFrameEncode, NULL );
-        }
-
-        if( SUCCEEDED( hr ) ){
-            hr = CALL( pFrameEncode, Initialize, NULL );
-        }
-
-        if( SUCCEEDED( hr ) ){
-            hr = CALL( pFrameEncode, WriteSource, pIBitmap, NULL );
-        }
-
-        if( SUCCEEDED( hr ) ){
-            hr = CALL( pFrameEncode, Commit );
-        }
-
-        if( SUCCEEDED( hr ) ){
-            hr = CALL( pEncoder, Commit );
-        }
-        if( pFrameEncode ) CALL( pFrameEncode, Release );
-        if( pEncoder ) CALL( pEncoder, Release );
-        if( pStream ) CALL( pStream, Release );
+    for( int y = 0; y < height; y++ ){
+        png_bytep row = pIBitmap->row_pointers[y];
+        png_write_row( output_png_ptr, row );
     }
 
-    free(wideString);
+    png_write_end( output_png_ptr, NULL );
+    fclose( output_file );
+    png_destroy_write_struct( &output_png_ptr, &output_info_ptr );
 }
-
-void InitializeResources( void ){
-    HRESULT hr = CoInitialize( NULL );
-    if( FAILED( hr ) ){
-        printf( "Failed to initialize COM: %08X\n", hr );
-        return 1;
-    }
-
-    // Create WIC factory
-    hr = CoCreateInstance(
-        &CLSID_WICImagingFactory,
-        NULL,
-        CLSCTX_INPROC_SERVER,
-        &IID_IWICImagingFactory,
-        &m_pIWICFactory
-    );
-}
-
-void ReleaseResources( void ){
-    ReleaseAllImages();
-    if( m_pIWICFactory ) CALL( m_pIWICFactory, Release );
-    CoUninitialize();
-}
-
-// Linker pragmas
-#pragma comment(lib, "windowscodecs.lib")
-
-#endif
 
 void ShowEntry( char* pMsg ){
 
@@ -677,7 +686,7 @@ void ShowEntry( char* pMsg ){
     sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", s, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
     
     char sCounter[ 10 ];
-    DrawRectangle( s, l, t, w, h, dgrX, dgrY, dgrW, dgrH, 0, 255, 0, itoa( g_nActionCounter++, sCounter, 10 ), 5, TEXT_ALIGN_LEFT );
+    DrawRectangle( s, l, t, w, h, dgrX, dgrY, dgrW, dgrH, RGB( 0, 255, 0 ), itoa( g_nActionCounter++, sCounter, 10 ), 5, TEXT_ALIGN_LEFT );
 }
 
 void ShowDoing( char* pMsg ){
@@ -686,7 +695,7 @@ void ShowDoing( char* pMsg ){
     int l, t, w, h, dgrX, dgrY, dgrW, dgrH;
     sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", s, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
     
-    DrawRectangle( s, l, t, w, h, dgrX, dgrY, dgrW, dgrH, 0, 0, 255, "", 5, TEXT_ALIGN_BTM );
+    DrawRectangle( s, l, t, w, h, dgrX, dgrY, dgrW, dgrH, RGB( 0, 0, 255 ), "", 5, TEXT_ALIGN_BTM );
 }
 
 void ShowExit( char* pMsg ){
@@ -695,12 +704,139 @@ void ShowExit( char* pMsg ){
     sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", s, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
     
     char sCounter[ 10 ];
-    DrawRectangle( s, l, t, w, h, dgrX, dgrY, dgrW, dgrH, 255, 0, 0, itoa( g_nActionCounter++, sCounter, 10 ), 5, TEXT_ALIGN_RIGHT );
+    DrawRectangle( s, l, t, w, h, dgrX, dgrY, dgrW, dgrH, RGB( 255, 0, 0 ), itoa( g_nActionCounter++, sCounter, 10 ), 5, TEXT_ALIGN_RIGHT );
 }
 
-int main( void ){
-    InitializeResources();
 
+
+#define INTERVAL_SEC 2
+
+// Node for the message queue 
+typedef struct node { 
+    char data; 
+    struct node* next; 
+} Node;
+
+// Queue structure 
+typedef struct { 
+    Node* front; 
+    Node* rear;
+    pthread_mutex_t lock; 
+    pthread_cond_t cond;
+} Queue;
+
+// Initialize the queue 
+void initQueue(Queue* q) { 
+    q->front = q->rear = NULL;
+    pthread_mutex_init(&q->lock, NULL); 
+    pthread_cond_init(&q->cond, NULL);
+}
+
+// Enqueue a message 
+void enqueue( Queue* q, char data ){
+    Node* temp = ( Node* )malloc( sizeof( Node ) );
+    temp->data = data;
+    temp->next = NULL;
+
+    pthread_mutex_lock( &q->lock );
+    if( q->rear == NULL ){
+        q->front = q->rear = temp;
+    } else{
+        q->rear->next = temp;
+        q->rear = temp;
+    }
+    pthread_cond_signal(&q->cond);
+    pthread_mutex_unlock(&q->lock);
+}
+
+// Dequeue a message 
+char dequeue( Queue* q ){
+    pthread_mutex_lock( &q->lock );
+    if( q->front == NULL ){
+        pthread_cond_wait(&q->cond, &q->lock);
+    }
+
+    Node* temp = q->front;
+    char data = temp->data;
+    q->front = q->front->next;
+
+    if( q->front == NULL ){
+        q->rear = NULL;
+    }
+
+    free( temp );
+    pthread_mutex_unlock( &q->lock );
+    return data;
+}
+
+// Check for keyboard hit 
+int kbhit(void) {
+    struct termios oldt, newt;
+    int ch, oldf;
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+
+    ch = getchar();
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    fcntl(STDIN_FILENO, F_SETFL, oldf);
+    if( ch != EOF ){
+        ungetc(ch, stdin);
+        return 1;
+    }
+    return 0;
+}
+
+// Keyboard Thread 
+void* keyboard_thread( void* arg ){
+    Queue* q = ( Queue* )arg;
+    printf( "Keyboard thread started. Press 'q' to exit.\n" );
+
+    while( 1 ){
+        if( kbhit() ){
+            char c = getchar();
+            enqueue( q, c );
+            if( c == 'q' ){
+                break;
+            }
+        }
+        usleep( 100000 ); // Sleep for 100 milliseconds
+    }
+    return NULL;
+}
+
+static struct timer_data{
+    Queue* q;
+    int value;
+};
+static pthread_t thread1, thread2;
+static Queue q;
+
+// Timer Thread 
+void* timer_thread( void* arg ){
+    struct timer_data* pmsg = arg;
+    Queue* q = pmsg->q;
+
+    sleep( pmsg->value );
+    enqueue( q, -64 );
+
+    return NULL;
+}
+
+void startTimer( int tmout ){
+    struct timer_data* pmsg = malloc( sizeof( struct timer_data ) );
+    pmsg->q = &q;
+    pmsg->value = tmout;
+    if( pthread_create( &thread2, NULL, timer_thread, ( void* )pmsg ) != 0 ){
+        perror( "pthread_create for timer thread" );
+    }
+}
+
+int main(){
     ContextImpl context = ContextImpl_Ctor( ContextImpl_Init( 
         4, "", 1, 2, 3, { 0 },
         Composition_Ctor( Composition_Init( 3 ), )
@@ -726,9 +862,8 @@ int main( void ){
             ReleaseAllImages();
         } while (n+'0' != 'q' && n+'0' != 'r');
     }while (n+'0' != 'q');
-       
-    ReleaseResources();
 
-    return 0;
+    ReleaseAllImages();
+
+    return EXIT_SUCCESS;
 }
-#endif
