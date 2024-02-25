@@ -163,15 +163,15 @@ public class MainEntry extends JFrame {
                 // Start the external console application
                 try {
                     String osName = System.getProperty("os.name").toLowerCase();
-                    ProcessBuilder processBuilder;
-                    String applicationPath = "./samples/AllNotations/C/my_program";
-                    String[] arguments = { "samples/AllNotations/Image/Design", "samples/AllNotations/TransImg/Design" };
+                    ProcessBuilder process;
+                    String scriptPath = "./start_xterm.sh";
+                    String arguments = (String)selectSampleBox.getSelectedItem();
                     if (osName.contains("windows")) {
-                        processBuilder = new ProcessBuilder("cmd", "/c", "start", applicationPath, arguments[0], arguments[1]);
+                        process = new ProcessBuilder("D:/cygwin64/bin/bash", "-c", scriptPath + " " + arguments);
                     } else {
-                        processBuilder = new ProcessBuilder("xterm", "-e", applicationPath, arguments[0], arguments[1]);
+                        process = new ProcessBuilder(scriptPath, arguments);
                     }
-                    processBuilder.start();
+                    process.start();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
