@@ -21,8 +21,18 @@ public class MainEntry extends JFrame {
     public MainEntry() {
         setTitle("Model Driven Development Tool");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        //setExtendedState(JFrame.MAXIMIZED_BOTH);
         setUndecorated(true);
+        
+        // Get the screen size
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int width = (int) (screenSize.width * 0.66); // 1/3 of screen width
+        int height = screenSize.height; // Full screen height
+
+        // Set the size and position of the main frame
+        setSize(width, height);
+        setLocation(0, 0); // Top-left corner
+        
 
         topPanel = new JPanel(new BorderLayout());
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -160,21 +170,44 @@ public class MainEntry extends JFrame {
                 bottomPanel.revalidate();
                 bottomPanel.repaint();
 
+                // Calculate the size and position for the xterm console
+                int consoleWidth = 80; // 80 characters
+                int consoleHeight = 25; // 25 characters
+                int xOff = (int)(screenSize.width * 0.66); // Horizontal offset
+                int yOff = 0; // Vertical offset (top-right corner)
+
                 // Start the external console application
                 try {
                     String osName = System.getProperty("os.name").toLowerCase();
                     ProcessBuilder process;
                     String scriptPath = "./start_xterm.sh";
+                    String geometry = consoleWidth + "x" + consoleHeight + "+" + xOff + "+" + yOff;
                     String arguments = (String)selectSampleBox.getSelectedItem();
                     if (osName.contains("windows")) {
-                        process = new ProcessBuilder("D:/cygwin64/bin/bash", "-c", scriptPath + " " + arguments);
+                        process = new ProcessBuilder("D:/cygwin64/bin/bash", "-c", scriptPath + " " + arguments + " " + geometry);
                     } else {
-                        process = new ProcessBuilder(scriptPath, arguments);
+                        process = new ProcessBuilder(scriptPath, arguments, geometry);
                     }
                     process.start();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
+                
+                // Position and size for the console and additional JPanel
+                int panelWidth = screenSize.width / 3; // 1/3 of screen width
+                int panelHeight = screenSize.height / 2; // 1/2 of screen height
+
+                // For the console application, you may need to set its position
+                // using command-line options or configuration settings specific
+                // to the terminal emulator you're using.
+
+                // For the additional JPanel, create a new JFrame to contain it
+                JFrame additionalPanelFrame = new JFrame("Additional Panel");
+                additionalPanelFrame.setSize(panelWidth, panelHeight);
+                additionalPanelFrame.setLocation(screenSize.width - panelWidth, screenSize.height - panelHeight);
+                additionalPanelFrame.add(new JPanel()); // Add your JPanel here
+                additionalPanelFrame.setVisible(true);
+                
             }
         });
 

@@ -16,4 +16,4 @@ WORKING_DIR=$(dirname "$0")
 export DISPLAY=:0.0
 
 # Start xterm
-xterm -e "$WORKING_DIR/samples/$1/C/my_program" "$WORKING_DIR/samples/$1/Image/Design" "$WORKING_DIR/samples/$1/TransImg/Design"
+xterm -geometry $2 -e "$WORKING_DIR/samples/$1/C/my_program" "$WORKING_DIR/samples/$1/Image/Design" "$WORKING_DIR/samples/$1/TransImg/Design"
