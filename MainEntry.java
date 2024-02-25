@@ -6,6 +6,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 public class MainEntry extends JFrame {
@@ -19,6 +22,9 @@ public class MainEntry extends JFrame {
     private JFrame bottomPanelFrame;
     private JPanel bottomPanel;
     private Rectangle screenSize;
+    private Process xtermProcess;
+    private long xtermPid = -1; // Initialize with an invalid PID
+
 
     public MainEntry() {
         setTitle("Model Driven Development Tool");
@@ -95,6 +101,20 @@ public class MainEntry extends JFrame {
         bottomPanel = new JPanel(new BorderLayout());
         
         adjustLayout();
+        
+        setAlwaysOnTop(true);
+        
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if (xtermPid != -1) {
+                Path pidFile = Paths.get("./xterm.pid");
+                try {
+                    Runtime.getRuntime().exec("pkill -P " + xtermPid);
+                    Files.deleteIfExists(pidFile);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }));        
     }
 
 
@@ -250,20 +270,39 @@ public class MainEntry extends JFrame {
             } else {
             	processBuilder = new ProcessBuilder(scriptPath, arguments, geometry);
             }
-            Process process = processBuilder.start();
+            xtermProcess = processBuilder.start();
+
+            // Wait for the PID file to be updated
+            Path pidFile = Paths.get("./xterm.pid");
+            String pidString = "";
+            while (pidString.isEmpty()) {
+                try {
+                    Thread.sleep(100); // Wait for 100 milliseconds
+                    if (Files.exists(pidFile)) {
+                        pidString = Files.readAllLines(pidFile).get(0);
+                    }
+                } catch (InterruptedException e0) {
+                    Thread.currentThread().interrupt(); // Restore the interrupted status
+                    break;
+                }
+            }
+            if (!pidString.isEmpty()) {
+                xtermPid = Long.parseLong(pidString);
+            }
             
             // Monitor the status of the launched application
             new Thread(() -> {
                 try {
-                    int exitCode = process.waitFor(); // Wait for the process to exit
+                    int exitCode = xtermProcess.waitFor(); // Wait for the process to exit
                     if (exitCode == 0) {
                         SwingUtilities.invokeLater(() -> button.setEnabled(true)); // Enable the button
+                        Files.deleteIfExists(pidFile);
                     }
-                } catch (InterruptedException e0) {
+                } catch (InterruptedException | IOException e0) {
                     e0.printStackTrace();
                 }
             }).start();
-        } catch (IOException ex) {
+        } catch (IOException | NumberFormatException ex) {
             ex.printStackTrace();
             button.setEnabled(true); // Enable the button in case of an error
        }
