@@ -10,6 +10,7 @@
 #include <termios.h> 
 #include <fcntl.h>
 #include <png.h>
+
 typedef unsigned long   COLORREF;
 typedef unsigned char   BYTE;
 typedef unsigned int    UINT;
@@ -47,6 +48,9 @@ static void abort_( const char *s, ... ){
     exit( 1 );
 }
 #include <assert.h>
+
+static char* g_sInputDir = "../Image/Design";
+static char* g_sOutputDir = "../TransImg/Design";
 
 int InputValue(char* pMsg);
 void DisplayMsg(char* pMsg);
@@ -543,7 +547,7 @@ void SaveAllImages( void ){
     for( int i = 0; i < g_nPathToBitmapCnt; i++ ){
         IWICBitmap *pIBitmap = FindBitmapFromPath( g_arrPathToBitmap[ i ].m_sPath );
         char sRelPath[ 256 ];
-        sprintf( sRelPath, "../TransImg/Design/%s.png", g_arrPathToBitmap[ i ].m_sPath );
+        sprintf( sRelPath, "%s/%s.png", g_sOutputDir, g_arrPathToBitmap[ i ].m_sPath );
         make_dir( sRelPath );
         SavePngImage( sRelPath, pIBitmap );
     }
@@ -559,7 +563,7 @@ IWICBitmap* FindBitmapFromPath( char* sPath ){
     // If not exsited, add new
     strcpy( g_arrPathToBitmap[ g_nPathToBitmapCnt ].m_sPath, sPath );
     char sFullPath[ 255 ];
-    sprintf( sFullPath, "../Image/Design/%s.png", sPath );
+    sprintf( sFullPath, "%s/%s.png", g_sInputDir, sPath );
     IWICBitmap* pIBitmap = LoadPngImage( sFullPath );
     g_arrPathToBitmap[ g_nPathToBitmapCnt ].m_pIBitmap = pIBitmap;
     g_nPathToBitmapCnt++;
@@ -837,7 +841,12 @@ void startTimer( int tmout ){
     }
 }
 
-int main(){
+int main(int argc, char **argv){
+    if (argc >= 3) {
+        g_sInputDir  = argv[ 1 ];
+        g_sOutputDir = argv[ 2 ];
+    }
+
     ContextImpl context = ContextImpl_Ctor( ContextImpl_Init( 
         4, "", 1, 2, 3, { 0 },
         Composition_Ctor( Composition_Init( 3 ), )
