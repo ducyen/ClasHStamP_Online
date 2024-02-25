@@ -159,6 +159,22 @@ public class MainEntry extends JFrame {
                 bottomPanel.add(imageLoader.getContentPane());
                 bottomPanel.revalidate();
                 bottomPanel.repaint();
+
+                // Start the external console application
+                try {
+                    String osName = System.getProperty("os.name").toLowerCase();
+                    ProcessBuilder processBuilder;
+                    String applicationPath = "./samples/AllNotations/C/my_program";
+                    String[] arguments = { "samples/AllNotations/Image/Design", "samples/AllNotations/TransImg/Design" };
+                    if (osName.contains("windows")) {
+                        processBuilder = new ProcessBuilder("cmd", "/c", "start", applicationPath, arguments[0], arguments[1]);
+                    } else {
+                        processBuilder = new ProcessBuilder("xterm", "-e", applicationPath, arguments[0], arguments[1]);
+                    }
+                    processBuilder.start();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
 
