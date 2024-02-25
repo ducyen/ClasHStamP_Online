@@ -18,15 +18,32 @@ public class MainEntry extends JFrame {
     private JButton generateCodeButton;
     private JFrame bottomPanelFrame;
     private JPanel bottomPanel;
-    private Dimension screenSize;
+    private Rectangle screenSize;
 
     public MainEntry() {
         setTitle("Model Driven Development Tool");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(4, 2, 5, 5)); // 6 rows, 2 columns, 5px gaps
 
-        // Get the screen size
-        screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        // Get the maximum available screen bounds excluding taskbar and insets
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        
+        // Get the screen size        
+        screenSize = ge.getMaximumWindowBounds();
+        
+        Timer timer = new Timer(1000, new ActionListener() {
+            private Rectangle lastSize = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	screenSize = ge.getMaximumWindowBounds();
+                if (!screenSize.equals(lastSize)) {
+                    adjustLayout();
+                    lastSize = screenSize;
+                }
+            }
+        });
+        timer.start();        
         
         JLabel sampleNameLabel = new JLabel("Sample Name");
         selectSampleBox = new JComboBox<>();
@@ -41,10 +58,10 @@ public class MainEntry extends JFrame {
         selectLanguageBox = new JComboBox<>(new String[]{"C", "Cpp", "CSharp", "Java"});
 
         generateCodeButton = new JButton("Generate Code");
-        generateCodeButton.addActionListener(e -> generateCode(selectLanguageBox));
+        generateCodeButton.addActionListener(this::generateCode);
 
         JButton startSimulatorButton = new JButton("Start Simulator");
-        startSimulatorButton.addActionListener(e -> startSimulator());
+        startSimulatorButton.addActionListener(this::startSimulator);
 
         add(sampleNameLabel);
         add(selectSampleBox);
@@ -77,6 +94,7 @@ public class MainEntry extends JFrame {
         // Initialize the bottom panel
         bottomPanel = new JPanel(new BorderLayout());
         
+        adjustLayout();
     }
 
 
@@ -127,8 +145,8 @@ public class MainEntry extends JFrame {
         }
     }
 
-    private void generateCode(JComboBox<String> selectLanguageBox) {
-        JButton button = generateCodeButton;
+    private void generateCode(ActionEvent e) {
+        JButton button = (JButton)e.getSource();
         button.setEnabled(false); // Disable the button
         outputTextArea.setText(""); // Clear the text area
 
@@ -196,7 +214,10 @@ public class MainEntry extends JFrame {
         }
     }
     
-    private void startSimulator() {
+    private void startSimulator(ActionEvent e) {
+        JButton button = (JButton)e.getSource();
+        button.setEnabled(false); // Disable the button
+        
         // Switch to the ImageLoader view in the bottom panel
         String directoryPath = "./samples/" + selectSampleBox.getSelectedItem() + "/TransImg";
         ImageLoader imageLoader = new ImageLoader(directoryPath);
@@ -214,25 +235,48 @@ public class MainEntry extends JFrame {
         // Calculate the size and position for the xterm console
         int consoleWidth = 80; // 80 characters
         int consoleHeight = 25; // 25 characters
-        int xOff = (int)(screenSize.width * 0.66); // Horizontal offset
-        int yOff = 0; // Vertical offset (top-right corner)
+        int xOff = Math.min(screenSize.width - getWidth(), screenSize.width - 80 * 6 - 24); // Horizontal offset
+        int yOff = getHeight() + 24; // Vertical offset (top-right corner)
         
         // Start the external console application
         try {
             String osName = System.getProperty("os.name").toLowerCase();
-            ProcessBuilder process;
+            ProcessBuilder processBuilder;
             String scriptPath = "./start_xterm.sh";
             String geometry = consoleWidth + "x" + consoleHeight + "+" + xOff + "+" + yOff;
             String arguments = (String)selectSampleBox.getSelectedItem();
             if (osName.contains("windows")) {
-                process = new ProcessBuilder("D:/cygwin64/bin/bash", "-c", scriptPath + " " + arguments + " " + geometry);
+                processBuilder = new ProcessBuilder("D:/cygwin64/bin/bash", "-c", scriptPath + " " + arguments + " " + geometry);
             } else {
-                process = new ProcessBuilder(scriptPath, arguments, geometry);
+            	processBuilder = new ProcessBuilder(scriptPath, arguments, geometry);
             }
-            process.start();
+            Process process = processBuilder.start();
+            
+            // Monitor the status of the launched application
+            new Thread(() -> {
+                try {
+                    int exitCode = process.waitFor(); // Wait for the process to exit
+                    if (exitCode == 0) {
+                        SwingUtilities.invokeLater(() -> button.setEnabled(true)); // Enable the button
+                    }
+                } catch (InterruptedException e0) {
+                    e0.printStackTrace();
+                }
+            }).start();
         } catch (IOException ex) {
             ex.printStackTrace();
-        }
+            button.setEnabled(true); // Enable the button in case of an error
+       }
+    }
+    
+    private void adjustLayout() {
+        int width = (int) (screenSize.width - getWidth());
+        int height = screenSize.height;
+
+        bottomPanelFrame.setSize(width, height);
+        bottomPanelFrame.setLocation(0, 0);
+        
+        setLocation(width, 0);
     }
     
     public static void main(String[] args) {
