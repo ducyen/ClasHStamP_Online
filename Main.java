@@ -2,61 +2,284 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 public class Main extends JFrame {
 
-    private JButton button;
+    private static final long serialVersionUID = 1L;
+    private JTextArea outputTextArea;
+    private JPanel topPanel;
+    private JPanel bottomPanel;
+    private JScrollPane scrollPane;
+    private ImageLoader imageLoader;
+    private JComboBox<String> selectSampleBox;
 
     public Main() {
-        setTitle("Launch Application");
-        setSize(300, 150);
+        setTitle("Model Driven Development Tool");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new FlowLayout());
+        //setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setUndecorated(true);
+        
+        // Get the screen size
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int width = (int) (screenSize.width * 0.66); // 1/3 of screen width
+        int height = screenSize.height; // Full screen height
 
-        button = new JButton("Launch Application");
-        button.addActionListener(new ActionListener() {
+        // Set the size and position of the main frame
+        setSize(width, height);
+        setLocation(0, 0); // Top-left corner
+        // Add a ComponentListener to handle frame resize events
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                int width = (int) (screenSize.width * 0.66); // 2/3 of screen width
+                int height = screenSize.height; // Full screen height
+            
+                // Set the size of the main frame
+                setSize(width, height);
+            
+                // Adjust the size and position of the additional panel and console
+                // (You will need to implement logic to adjust these components based on the new size)
+            }
+        });
+            
+
+        topPanel = new JPanel(new BorderLayout());
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel sampleNameLabel = new JLabel("Sample Name");
+        selectSampleBox = new JComboBox<>();
+        populateSampleBox();
+
+        JLabel selectDiagramEditorLabel = new JLabel("Select Diagram Editor");
+        JComboBox<String> selectDiagramEditorBox = new JComboBox<>(new String[]{"edu", "com"});
+
+        JButton launchDiagramEditorButton = new JButton("Launch Diagram Editor");
+        launchDiagramEditorButton.addActionListener(new ActionListener() {
+            private final JButton button = launchDiagramEditorButton;
             @Override
             public void actionPerformed(ActionEvent e) {
-                launchApplication();
+                button.setEnabled(false); // Disable the button
+
+                // Launch the target application
+                try {
+                    // Determine the OS and set the appropriate command
+                    String osName = System.getProperty("os.name").toLowerCase();
+                    Process process;
+                    String scriptPath = "./astah-" + selectDiagramEditorBox.getSelectedItem() + "/astah-run.sh";
+                    String filePath = "./samples/" + selectSampleBox.getSelectedItem() + "/Design.asta";
+                    if (osName.contains("windows")) {
+                        process = new ProcessBuilder("D:/cygwin64/bin/bash", "-c", scriptPath + " " + filePath).start();
+                    } else {
+                        process = new ProcessBuilder(scriptPath, filePath).start();
+                    }
+
+                    // Monitor the status of the launched application
+                    new Thread(() -> {
+                        try {
+                            int exitCode = process.waitFor(); // Wait for the process to exit
+                            if (exitCode == 0) {
+                                // The application exited successfully
+                                button.setEnabled(true); // Enable the button
+                            }
+                        } catch (InterruptedException e0) {
+                            e0.printStackTrace();
+                        }
+                    }).start();
+
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                    button.setEnabled(true); // Enable the button in case of an error
+                }
             }
         });
 
-        add(button);
+        JLabel selectLanguageLabel = new JLabel("Select Language");
+        JComboBox<String> selectLanguageBox = new JComboBox<>(new String[]{"C", "Cpp", "CSharp", "Java"});
+        JButton generateCodeButton = new JButton("Generate Code");
+        generateCodeButton.addActionListener(new ActionListener() {
+            private final JButton button = generateCodeButton;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                button.setEnabled(false); // Disable the button
+                outputTextArea.setText(""); // Clear the text area
+
+                // Launch the target application
+                try {
+                    String osName = System.getProperty("os.name").toLowerCase();
+                    Process process;
+                    String scriptPath = "./run_C.sh";
+                    String argument = (String)selectSampleBox.getSelectedItem();
+                    if (osName.contains("windows")) {
+                        process = new ProcessBuilder("D:/cygwin64/bin/bash", "-c", scriptPath + " " + argument).start();
+                    } else {
+                        process = new ProcessBuilder(scriptPath, argument).start();
+                    }                    
+                    
+                    // Read and display the error output in a separate thread
+                    BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                    new Thread(() -> {
+                        try {
+                            String errorLine;
+                            while ((errorLine = errorReader.readLine()) != null) {
+                                final String finalErrorLine = errorLine;
+                                SwingUtilities.invokeLater(() -> {
+                                    outputTextArea.append("Error: " + finalErrorLine + "\n");
+                                    outputTextArea.setCaretPosition(outputTextArea.getDocument().getLength());
+                                });
+                            }
+                        } catch (IOException e0) {
+                            e0.printStackTrace();
+                        }
+                    }).start();
+                    
+                    // Read and display the output of the process
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                    new Thread(() -> {
+                        try {
+		                    String line;
+		                    while ((line = reader.readLine()) != null) {
+		                        final String finalLine = line;
+		                        SwingUtilities.invokeLater(() -> {
+		                            outputTextArea.append(finalLine + "\n"); // Append to the text area
+		                            outputTextArea.setCaretPosition(outputTextArea.getDocument().getLength()); // Auto-scroll to the bottom
+		                        });
+		                    }
+                        } catch (IOException e0) {
+                            e0.printStackTrace();
+                        }
+                    }).start();
+
+                    // Monitor the status of the launched application
+                    new Thread(() -> {
+                        try {
+                            int exitCode = process.waitFor(); // Wait for the process to exit
+                            if (exitCode == 0) {
+                                button.setEnabled(true); // Enable the button
+                            }
+                        } catch (InterruptedException e0) {
+                            e0.printStackTrace();
+                        }
+                    }).start();
+
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                    button.setEnabled(true); // Enable the button in case of an error
+                }
+            }
+        });
+
+        JButton startSimulatorButton = new JButton("Start Simulator");
+        startSimulatorButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String directoryPath = "./samples/" + selectSampleBox.getSelectedItem() +"/TransImg";
+                imageLoader = new ImageLoader(directoryPath);
+                
+                bottomPanel.removeAll();
+                bottomPanel.add(imageLoader.getContentPane());
+                bottomPanel.revalidate();
+                bottomPanel.repaint();
+
+                // Calculate the size and position for the xterm console
+                int consoleWidth = 80; // 80 characters
+                int consoleHeight = 25; // 25 characters
+                int xOff = (int)(screenSize.width * 0.66); // Horizontal offset
+                int yOff = 0; // Vertical offset (top-right corner)
+
+                // Start the external console application
+                try {
+                    String osName = System.getProperty("os.name").toLowerCase();
+                    ProcessBuilder process;
+                    String scriptPath = "./start_xterm.sh";
+                    String geometry = consoleWidth + "x" + consoleHeight + "+" + xOff + "+" + yOff;
+                    String arguments = (String)selectSampleBox.getSelectedItem();
+                    if (osName.contains("windows")) {
+                        process = new ProcessBuilder("D:/cygwin64/bin/bash", "-c", scriptPath + " " + arguments + " " + geometry);
+                    } else {
+                        process = new ProcessBuilder(scriptPath, arguments, geometry);
+                    }
+                    process.start();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                
+                // Position and size for the console and additional JPanel
+                int panelWidth = screenSize.width / 3; // 1/3 of screen width
+                int panelHeight = screenSize.height / 2; // 1/2 of screen height
+
+                // For the console application, you may need to set its position
+                // using command-line options or configuration settings specific
+                // to the terminal emulator you're using.
+
+                // For the additional JPanel, create a new JFrame to contain it
+                JFrame additionalPanelFrame = new JFrame("Additional Panel");
+                additionalPanelFrame.setSize(panelWidth, panelHeight);
+                additionalPanelFrame.setLocation(screenSize.width - panelWidth, screenSize.height - panelHeight);
+                additionalPanelFrame.add(new JPanel()); // Add your JPanel here
+                additionalPanelFrame.setVisible(true);
+                
+            }
+        });
+
+        leftPanel.add(sampleNameLabel);
+        leftPanel.add(selectSampleBox);
+        leftPanel.add(selectDiagramEditorLabel);
+        leftPanel.add(selectDiagramEditorBox);
+        leftPanel.add(launchDiagramEditorButton);
+        leftPanel.add(selectLanguageLabel);
+        leftPanel.add(selectLanguageBox);
+        leftPanel.add(generateCodeButton);
+        leftPanel.add(startSimulatorButton);
+
+        JButton quitButton = new JButton("Quit");
+        quitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        rightPanel.add(quitButton);
+
+        topPanel.add(leftPanel, BorderLayout.WEST);
+        topPanel.add(rightPanel, BorderLayout.EAST);
+
+        outputTextArea = new JTextArea();
+        outputTextArea.setEditable(false);
+        scrollPane = new JScrollPane(outputTextArea);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(scrollPane, BorderLayout.CENTER);
+
+        add(topPanel, BorderLayout.NORTH);
+        add(bottomPanel, BorderLayout.CENTER);
     }
 
-    private void launchApplication() {
-        button.setEnabled(false); // Disable the button
-
-        // Launch the target application
-        try {
-            Process process = new ProcessBuilder("./astah-edu/astah-run.sh", "").start();
-
-            // Monitor the status of the launched application
-            new Thread(() -> {
-                try {
-                    int exitCode = process.waitFor(); // Wait for the process to exit
-                    if (exitCode == 0) {
-                        // The application exited successfully
-                        button.setEnabled(true); // Enable the button
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }).start();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            button.setEnabled(true); // Enable the button in case of an error
+    private void populateSampleBox() {
+        File samplesDir = new File("samples");
+        File[] directories = samplesDir.listFiles(File::isDirectory);
+        if (directories != null) {
+            Arrays.sort(directories);
+            for (File dir : directories) {
+                selectSampleBox.addItem(dir.getName());
+            }
         }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new Main().setVisible(true);
-            }
+        EventQueue.invokeLater(() -> {
+            Main app = new Main();
+            app.setVisible(true);
         });
     }
 }
