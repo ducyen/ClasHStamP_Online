@@ -1,6 +1,10 @@
 #ifndef __COMMON_INCLUDE_H__
 #define __COMMON_INCLUDE_H__                                        /* 複数インクルード防止 */
 
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL2_rotozoom.h> // Include the SDL2_gfx library header
+
 #include <stddef.h>
 #include <stdint.h>
 #if defined( _MSC_VER )
@@ -46,5 +50,9 @@ typedef struct tagString{ char buf[255]; }* String;
 typedef struct tagEventParams{
     int cbSize;
 }EventParams;
+
+typedef struct tagRelativeRect{
+    double x, y, w, h;
+}RelativeRect;
 
 #endif//__COMMON_INCLUDE_H__

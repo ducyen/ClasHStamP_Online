@@ -21,7 +21,7 @@ typedef enum tagContextImplEvent {
 }ContextImpl_EVENT;
 const TCHAR* ContextImplEvent_toString( ContextImpl_EVENT value );
 #endif//__ContextImpl_H__
-#if !defined( ContextImpl_Init ) && ( defined( __ContextImpl_INTERNAL__ )  || defined( __AFriend_INTERNAL__ )  || defined( __Main_INTERNAL__ )  )
+#if !defined( ContextImpl_Init ) && ( defined( __ContextImpl_INTERNAL__ )  || defined( __Main_INTERNAL__ )  )
 #define __Context_INTERNAL__
 #include "Context.h"
 #define __HdStateMachine_INTERNAL__
@@ -94,8 +94,8 @@ BOOL ContextImpl_Start( ContextImpl* pContextImpl );
 /** @memberof ContextImpl
  * @brief ContextImpl auto-generated constructor
  */
-#define ContextImpl_Init(_derivableAttribute, _publicAttribute, _privateAttribute, _internalAttribute, _readOnlyAttribute, _anAggregation, _aProtectedComposition)\
-    Context_Init( P( _derivableAttribute ), P( _publicAttribute ), P( _privateAttribute ), P( _internalAttribute ), P( _readOnlyAttribute ), P( _anAggregation ), P( _aProtectedComposition ) )\
+#define ContextImpl_Init(_derivableAttribute, _publicAttribute, _privateAttribute, _internalAttribute, _readOnlyAttribute)\
+    Context_Init( P( _derivableAttribute ), P( _publicAttribute ), P( _privateAttribute ), P( _internalAttribute ), P( _readOnlyAttribute ) )\
     .vTbl = &gContextImplVtbl,\
     .mainStm = MainStm_Init(),\
 

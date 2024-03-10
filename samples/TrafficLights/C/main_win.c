@@ -899,7 +899,7 @@ void TurnOffSecondaryGreen( void ){
     MyFloodFill( g_pIBmpSim, LIGHT_POSITIONS[ SOUTH ][ GREEN ].x, LIGHT_POSITIONS[ SOUTH ][ GREEN ].y, RGB( 0, 64, 0 ) );
 }
 
-
+#if 0
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 
     InitializeResources();
@@ -945,4 +945,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     return 0;
 }
+#else
+#include "ObjsBuilder.h";
+
+int main(int argc, char *args[]) {
+    return ObjsBuilder_startSim();
+}
+#endif
 #endif

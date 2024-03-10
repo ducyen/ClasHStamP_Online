@@ -3,14 +3,11 @@
 #include "BaseClass.h"
 #include "Interface2.h"
 #include "Interface1.h"
-#include "Composition.h"
-#include "Aggregration.h"
-#include "UsedDependency.h"
 typedef struct tagContext Context;
 void Context_classOrStaticMethod(  );
  Context_Context( Context* pContext );
 void Context_methodWithParams( Context* pContext, String parm1, float parm2 );
-UsedDependency* Context_methodReturnsSomething( Context* pContext );
+int* Context_methodReturnsSomething( Context* pContext );
 void Context_methodThrowsException( Context* pContext );
 void Context_finalMethod( Context* pContext );
 #endif//__Context_H__
@@ -21,13 +18,10 @@ void Context_finalMethod( Context* pContext );
 #include "Interface2.h"
 #define __Interface1_INTERNAL__
 #include "Interface1.h"
-#include "Aggregration.h"
-#define __Composition_INTERNAL__
-#include "Composition.h"
 /** @memberof Context
  * @brief Context auto-generated constructor
  */
-#define Context_Init(_derivableAttribute, _publicAttribute, _privateAttribute, _internalAttribute, _readOnlyAttribute, _anAggregation, _aProtectedComposition)\
+#define Context_Init(_derivableAttribute, _publicAttribute, _privateAttribute, _internalAttribute, _readOnlyAttribute)\
     BaseClass_Init( P( _derivableAttribute ) )\
     .vTbl = &gContextVtbl,\
     .publicAttribute = _publicAttribute,\
@@ -35,8 +29,6 @@ void Context_finalMethod( Context* pContext );
     .internalAttribute = _internalAttribute,\
     .isInitializedAttribute = true,\
     .readOnlyAttribute = _readOnlyAttribute,\
-    .anAggregation = P( _anAggregation ),\
-    .aProtectedComposition = P( _aProtectedComposition ),\
 
 #define Context_Ctor( InitFunc, optionParams )    ( Context ){\
     InitFunc\
@@ -54,8 +46,6 @@ BaseClass* Context_Copy( Context* pContext, const Context* pSource );
     int internalAttribute;                                                                                             \
     boolean isInitializedAttribute;                                                                           \
     const int readOnlyAttribute;                                \
-    Aggregration* anAggregation[ 3 ];                           \
-    Composition aProtectedComposition[ 10 ];                    \
 
 typedef struct tagContext{
     Context_CLASS    

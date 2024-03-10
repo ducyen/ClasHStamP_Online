@@ -15,28 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Model\AFriend.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Model\Context.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Model\ContextImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Aggregration.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\CalledDependency.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Composition.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Model\UsedDependency.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\CommonInclude.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NonOOP\HdStateMachine.h">
@@ -51,6 +36,36 @@
     <ClInclude Include="Abstracts\BaseClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Model\Barrier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ClampConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\RotationConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Sprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\TrackToConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\TransformConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\TranslationConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Constraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjsBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\RedLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Model\Context.c">
@@ -62,13 +77,40 @@
     <ClCompile Include="Model\ContextImpl.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model\UsedDependency.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Abstracts\BaseClass.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main_win.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Barrier.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ClampConstraint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\RotationConstraint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Sprite.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\TrackToConstraint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\TransformConstraint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\TranslationConstraint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Constraint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjsBuilder.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\RedLight.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

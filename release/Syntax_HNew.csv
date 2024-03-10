@@ -224,3 +224,8 @@ friend,"#define __[nAME]_INTERNAL__
 "," )
 "
 visibility,,,,,
+object,"enum {
+[vALUE]
+};
+",,,    [nAME],",
+    [nAME]"

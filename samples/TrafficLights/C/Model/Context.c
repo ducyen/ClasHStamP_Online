@@ -2,7 +2,6 @@
 #define __Context_INTERNAL__
 #include "CommonInclude.h"
 #include "Context.h"
-#include "CalledDependency.h"                                   
 /** @private @static @memberof Context */
 static int classOrStaticAttribute;                              
 /** @private @static @memberof Context */
@@ -41,7 +40,7 @@ void Context_methodWithParams(
 } /* Context_methodWithParams */
 
 /** @public @memberof Context */
-UsedDependency* Context_methodReturnsSomething(
+int* Context_methodReturnsSomething(
     Context* pContext
 ){
 } /* Context_methodReturnsSomething */
@@ -76,8 +75,6 @@ BaseClass* Context_Copy( Context* pContext, const Context* pSource ){
     pContext->privateAttribute = pSource->privateAttribute;
     pContext->internalAttribute = pSource->internalAttribute;
     pContext->isInitializedAttribute = pSource->isInitializedAttribute;
-    memcpy( pContext->anAggregation, pSource->anAggregation, sizeof( pContext->anAggregation ) );
-    memcpy( pContext->aProtectedComposition, pSource->aProtectedComposition, sizeof( pContext->aProtectedComposition ) );
     return ( BaseClass* )pContext;
 }
 const BaseClassVtbl gContextVtbl = {

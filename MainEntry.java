@@ -1,15 +1,26 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.FileSystems;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
+import java.util.Map;
 
 public class MainEntry extends JFrame {
 
@@ -24,13 +35,16 @@ public class MainEntry extends JFrame {
     private Rectangle screenSize;
     private Process xtermProcess;
     private long xtermPid = -1; // Initialize with an invalid PID
-
-
+    private String directoryPath;
+    private Map<WatchKey, Path> keyPathMap;
+	private JPanel imagePanel;
+	private JScrollPane imageScrollPane;
+	
     public MainEntry() {
         setTitle("Model Driven Development Tool");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(4, 2, 5, 5)); // 6 rows, 2 columns, 5px gaps
-
+        
         // Get the maximum available screen bounds excluding taskbar and insets
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         
@@ -117,6 +131,135 @@ public class MainEntry extends JFrame {
         }));        
     }
 
+	private void loadImagesFromDirectoryRecursively(File directory) {
+		File[] files = directory.listFiles();
+		if (files != null) {
+			for (File file : files) {
+				if (file.isDirectory()) {
+					loadImagesFromDirectoryRecursively(file);
+				} else if (file.getName().toLowerCase().endsWith(".png")) {
+					try {
+						//System.out.println("Loading image: " + file.getAbsolutePath()); // Debugging
+						BufferedImage image = ImageIO.read(file);
+						if (image != null) {
+							JLabel oldLabel = null;
+							for (Component component: imagePanel.getComponents()) {
+								System.out.println("Checking " + component.getName() + " in " + Thread.currentThread().getId());
+								if (component instanceof JLabel) {
+									JLabel label = (JLabel)component;
+									if (label.getName().compareToIgnoreCase(file.getAbsolutePath()) == 0) {
+										oldLabel = label;
+										break;
+									}
+								}
+							}
+							int newWidth = image.getWidth() * 90 / 100;
+							int newHeight = image.getHeight() * 90 / 100;
+							if (file.getAbsolutePath().contains("Visualized_")) {
+								newWidth = 400;
+								newHeight = 400;
+							}
+							BufferedImage scaledImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+							Graphics2D graphics = scaledImage.createGraphics();
+							graphics.drawImage(image, 0, 0, newWidth, newHeight, null);
+							graphics.dispose();									
+							if (oldLabel == null) {
+								System.out.println("Add label: " + file.getAbsolutePath()); // Debugging
+								JLabel newLabel = new JLabel(new ImageIcon(scaledImage));
+								newLabel.setName(file.getAbsolutePath());
+								imagePanel.add(newLabel);
+							} else {
+								oldLabel.setIcon(new ImageIcon(scaledImage));
+							}
+						}
+					} catch (IOException e) {
+						System.err.println("Failed to load image: " + file.getAbsolutePath()); // Debugging
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+	
+	private void updatePanelImages() {
+		if (directoryPath != null) {
+			loadImagesFromDirectoryRecursively(new File(directoryPath));
+	
+			// Refresh the layout
+			imagePanel.revalidate();
+			imagePanel.repaint();
+		}
+	}
+
+	private Thread watchThread;
+    private void startDirectoryWatchService() {
+    	if (watchThread == null) {
+	        watchThread = new Thread(() -> {
+	            try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
+	            	if (directoryPath != null) {
+		                Path path = Paths.get(directoryPath);
+		                registerAll(path, watchService);
+		                
+		                while (true) {
+		                    WatchKey key;
+		                    try {
+		                        key = watchService.take();
+		                    } catch (InterruptedException x) {
+		                        return;
+		                    }
+		
+		                    Path dir = keyPathMap.get(key);
+		                    for (WatchEvent<?> event : key.pollEvents()) {
+		                        WatchEvent.Kind<?> kind = event.kind();
+		
+		                        if (kind == StandardWatchEventKinds.OVERFLOW) {
+		                            continue;
+		                        }
+		
+		                        // Context for directory entry event is the file name of entry
+								@SuppressWarnings("unchecked")
+								WatchEvent<Path> ev = (WatchEvent<Path>) event;
+		                        Path name = ev.context();
+		                        Path child = dir.resolve(name);
+		
+		                        if (child.toString().endsWith(".png")) {
+		                        	System.out.println("SwingUtilities.invokeLater(this::updatePanelImages) in thread " + Thread.currentThread().getId() );
+		                            SwingUtilities.invokeLater(this::updatePanelImages);
+		                        }
+		
+		                        if (Files.isDirectory(child)) {
+		                            registerAll(child, watchService);
+		                        }
+		                    }
+		
+		                    boolean valid = key.reset();
+		                    if (!valid) {
+		                        keyPathMap.remove(key);
+		                        if (keyPathMap.isEmpty()) {
+		                            break;
+		                        }
+		                    }
+		                }
+		            } 
+	            } catch (IOException ex) {
+	                ex.printStackTrace();
+	            }
+	        });
+    	}
+        watchThread.start();
+    }
+
+    private void registerAll(final Path start, final WatchService watcher) throws IOException {
+        Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                WatchKey key = dir.register(watcher, StandardWatchEventKinds.ENTRY_CREATE,
+                        StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
+                keyPathMap.put(key, dir);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
 
     private void populateSampleBox() {
         File samplesDir = new File("samples");
@@ -239,12 +382,19 @@ public class MainEntry extends JFrame {
         button.setEnabled(false); // Disable the button
         
         // Switch to the ImageLoader view in the bottom panel
-        String directoryPath = "./samples/" + selectSampleBox.getSelectedItem() + "/TransImg";
-        ImageLoader imageLoader = new ImageLoader(directoryPath);
+        directoryPath = "./samples/" + selectSampleBox.getSelectedItem() + "/TransImg";
 
+		imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+		imageScrollPane = new JScrollPane(imagePanel);
+		imageScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		imageScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        updatePanelImages();
+        startDirectoryWatchService();
+        
         // Add the ImageLoader content to the bottom panel
         bottomPanel.removeAll();
-        bottomPanel.add(imageLoader.getContentPane());
+        bottomPanel.add(imageScrollPane);
         bottomPanel.revalidate();
         bottomPanel.repaint();
 
@@ -297,6 +447,7 @@ public class MainEntry extends JFrame {
                     if (exitCode == 0) {
                         SwingUtilities.invokeLater(() -> button.setEnabled(true)); // Enable the button
                         Files.deleteIfExists(pidFile);
+                        directoryPath = null;
                     }
                 } catch (InterruptedException | IOException e0) {
                     e0.printStackTrace();
@@ -305,6 +456,7 @@ public class MainEntry extends JFrame {
         } catch (IOException | NumberFormatException ex) {
             ex.printStackTrace();
             button.setEnabled(true); // Enable the button in case of an error
+            directoryPath = null;
        }
     }
     
