@@ -75,7 +75,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__syntax__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Abstracts;Interfaces;NonOOP;Model;$(SolutionDir)..\Windows\libsdl2\include;$(SolutionDir)..\Windows\libsdl2-image\include;$(SolutionDir)..\Windows\libsdl2-mixer\include;$(SolutionDir)..\Windows\libsdl2-gfx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Abstracts;$(ProjectDir)Interfaces;$(ProjectDir)NonOOP;$(ProjectDir)Model;$(SolutionDir)..\Windows\libsdl2\include;$(SolutionDir)..\Windows\libsdl2-image\include;$(SolutionDir)..\Windows\libsdl2-mixer\include;$(SolutionDir)..\Windows\libsdl2-gfx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

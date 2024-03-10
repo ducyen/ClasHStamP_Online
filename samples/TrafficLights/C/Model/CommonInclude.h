@@ -7,6 +7,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <assert.h>
 #if defined( _MSC_VER )
 #include <windows.h>
 #endif

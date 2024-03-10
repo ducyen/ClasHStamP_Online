@@ -227,5 +227,6 @@ visibility,,,,,
 object,"enum {
 [vALUE]
 };
+Sprite* getobj( int id );
 ",,,    [nAME],",
     [nAME]"

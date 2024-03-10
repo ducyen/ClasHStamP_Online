@@ -486,6 +486,9 @@ visibility,,,,,
 object,"static Sprite g_objects[] = {
 [vALUE]
 };
+Sprite* getobj( int id ){
+    return &g_objects[ id ];
+}
 ","
 [->]    P( { [vALUE] } )",",
 [->]    P( [vALUE] )","[->]{ [tYPE]_Init([vALUE]) 

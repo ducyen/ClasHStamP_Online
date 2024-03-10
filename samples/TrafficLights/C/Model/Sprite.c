@@ -7,46 +7,65 @@ void Sprite_addConstraint(
     Sprite* pSprite,
     Constraint* constraint
 ){
-
+    if( pSprite->m_constraintCount < sizeof( pSprite->m_constraints ) / sizeof( pSprite->m_constraints[ 0 ] ) ){
+        pSprite->m_constraints[ pSprite->m_constraintCount ] = constraint;
+        pSprite->m_constraintCount++;
+    }else{
+        assert( 0 );
+    }
 } /* Sprite_addConstraint */
 
 /** @public @memberof Sprite */
-void Sprite_translate(
+void Sprite_setLocation(
     Sprite* pSprite,
-    int dx,
-    int dy
+    int x,
+    int y
 ){
-} /* Sprite_translate */
+    pSprite->m_rect.x = x;
+    pSprite->m_rect.y = y;
+} /* Sprite_setLocation */
 
 /** @public @memberof Sprite */
-void Sprite_rotate(
+void Sprite_setAngle(
     Sprite* pSprite,
-    double dAngle
+    double value
 ){
-} /* Sprite_rotate */
+    pSprite->m_angle = value;
+} /* Sprite_setAngle */
+
+/** @public @memberof Sprite */
+void Sprite_setBrightness(
+    Sprite* pSprite,
+    double value
+){
+    pSprite->m_brightness = value;
+} /* Sprite_setBrightness */
 
 /** @public @memberof Sprite */
 void Sprite_draw(
     Sprite* pSprite,
     SDL_Surface* screenSurface
 ){
-    //SDL_Rect destRect = { pSprite->m_x, pSprite->m_y, pSprite->m_image->w, pSprite->m_image->h };
-    SDL_Rect destRect = { 
-        pSprite->m_iniRect.x * screenSurface->w, 
-        pSprite->m_iniRect.y * screenSurface->h, 
-        pSprite->m_iniRect.w  * screenSurface->w, 
-        pSprite->m_iniRect.h  * screenSurface->h 
-    };
+    if( pSprite->m_rect.x == 0 && pSprite->m_rect.y == 0 && pSprite->m_rect.w == 0 && pSprite->m_rect.h == 0 ){
+        pSprite->m_rect = ( SDL_Rect ){ 
+            pSprite->m_iniRect.x * screenSurface->w, 
+            pSprite->m_iniRect.y * screenSurface->h, 
+            pSprite->m_iniRect.w  * screenSurface->w, 
+            pSprite->m_iniRect.h  * screenSurface->h 
+        };
+    }
     // Rotate and scale the image
     SDL_Surface* transformedSurface = rotozoomSurfaceXY(
         pSprite->m_image, 
-        0., 
-        ( double )destRect.w / pSprite->m_image->w,
-        ( double )destRect.h / pSprite->m_image->h,
+        pSprite->m_angle, 
+        ( double )pSprite->m_rect.w / pSprite->m_image->w,
+        ( double )pSprite->m_rect.h / pSprite->m_image->h,
         0
     );
 
-    SDL_BlitSurface(transformedSurface, NULL, screenSurface, &destRect);
+    SDL_SetSurfaceColorMod( transformedSurface, 128, 128, 128);
+
+    SDL_BlitSurface(transformedSurface, NULL, screenSurface, &pSprite->m_rect);
 
     SDL_FreeSurface(transformedSurface);
 } /* Sprite_draw */
@@ -76,9 +95,9 @@ Sprite* Sprite_Copy( Sprite* pSprite, const Sprite* pSource ){
     pSprite->m_iniRect = pSource->m_iniRect;
     pSprite->m_imgPath = pSource->m_imgPath;
     pSprite->m_image = pSource->m_image;
-    pSprite->m_x = pSource->m_x;
-    pSprite->m_y = pSource->m_y;
+    pSprite->m_rect = pSource->m_rect;
     pSprite->m_angle = pSource->m_angle;
+    pSprite->m_brightness = pSource->m_brightness;
     memcpy( pSprite->m_constraints, pSource->m_constraints, sizeof( pSprite->m_constraints ) );
     pSprite->m_constraintCount = pSource->m_constraintCount;
     return ( Sprite* )pSprite;

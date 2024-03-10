@@ -1,10 +1,12 @@
-﻿#ifndef __ObjsBuilder_H__
+#ifndef __ObjsBuilder_H__
 #define __ObjsBuilder_H__
+#include "Sprite.h"
 typedef struct tagObjsBuilder ObjsBuilder;
 enum {
     westRedLight,
     eastRedLight
 };
+Sprite* getobj( int id );
 int ObjsBuilder_startSim( void   );
 #endif//__ObjsBuilder_H__
 #if !defined( ObjsBuilder_Init ) && ( defined( __ObjsBuilder_INTERNAL__ )  )

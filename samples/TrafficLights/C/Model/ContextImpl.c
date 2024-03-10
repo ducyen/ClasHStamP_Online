@@ -2,6 +2,7 @@
 #define __ContextImpl_INTERNAL__
 #include "CommonInclude.h"
 #include "ContextImpl.h"
+#include "ObjsBuilder.h"                                        
 /* AnEnum列挙型の値から文字列に変換する関数（デバッグ用） */
 const TCHAR* AnEnum_toString( AnEnum value ){
     switch( value ){

@@ -3,8 +3,9 @@
 #include "Constraint.h"
 typedef struct tagSprite Sprite;
 void Sprite_addConstraint( Sprite* pSprite, Constraint* constraint );
-void Sprite_translate( Sprite* pSprite, int dx, int dy );
-void Sprite_rotate( Sprite* pSprite, double dAngle );
+void Sprite_setLocation( Sprite* pSprite, int x, int y );
+void Sprite_setAngle( Sprite* pSprite, double value );
+void Sprite_setBrightness( Sprite* pSprite, double value );
 void Sprite_draw( Sprite* pSprite, SDL_Surface* screenSurface );
 bool Sprite_load( Sprite* pSprite );
 void Sprite_free( Sprite* pSprite );
@@ -15,13 +16,13 @@ void Sprite_free( Sprite* pSprite );
 /** @memberof Sprite
  * @brief Sprite auto-generated constructor
  */
-#define Sprite_Init(_m_iniRect, _m_imgPath, _m_x, _m_y, _m_angle)\
+#define Sprite_Init(_m_iniRect, _m_imgPath)\
     .m_iniRect = _m_iniRect,\
     .m_imgPath = _m_imgPath,\
     .m_image = null,\
-    .m_x = _m_x,\
-    .m_y = _m_y,\
-    .m_angle = _m_angle,\
+    .m_rect = { 0 },\
+    .m_angle = 0,\
+    .m_brightness = 1.,\
     .m_constraints = P( { 0 } ),\
     .m_constraintCount = 0,\
 
@@ -38,10 +39,10 @@ Sprite* Sprite_Copy( Sprite* pSprite, const Sprite* pSource );
     RelativeRect m_iniRect;                                                                                           \
     char* m_imgPath;                                                                                                         \
     SDL_Surface* m_image;                                                                                               \
-    int m_x;                                                                                                                         \
-    int m_y;                                                                                                                         \
+    SDL_Rect m_rect;                                                                                                         \
     double m_angle;                                                                                                           \
-    Constraint m_constraints[ 32 ];                             \
+    double m_brightness;                                                                                                 \
+    Constraint* m_constraints[ 32 ];                            \
     int m_constraintCount;                                                                                             \
 
 typedef struct tagSprite{
