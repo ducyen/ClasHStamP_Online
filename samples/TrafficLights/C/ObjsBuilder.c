@@ -3,6 +3,7 @@
 #include "CommonInclude.h"
 #include "ObjsBuilder.h"
 #include "RedLight.h"                                           
+#include "ContextImpl.h"                                        
 static Sprite g_objects[] = {
     { RedLight_Init(
         P( { 0.16136363636363638, 0.31696134868421055, 0.07954545454545454, 0.10350877192982456 } ),
@@ -70,6 +71,16 @@ int ObjsBuilder_startSim(
         }
     }
 
+    static int g_nPathToBitmapCnt = 0;
+    static struct{
+        char m_sPath[ 256 ];
+        SDL_Surface* m_pIBitmap;
+    } g_arrPathToBitmap[ 10 ];
+
+
+    ContextImpl context = ContextImpl_Ctor( ContextImpl_Init( ), );
+    ContextImpl_Start( &context );
+
     if( nResult == S_OK ){
         bool quit = false;
         SDL_Event e;
@@ -78,6 +89,11 @@ int ObjsBuilder_startSim(
             while (SDL_PollEvent(&e) != 0) {
                 if (e.type == SDL_QUIT) {
                     quit = true;
+                }else if (e.type == SDL_KEYDOWN) {
+                    if( e.key.keysym.sym == SDLK_x ){
+                        ContextImpl_EventProc( &context, ContextImpl_TMOUT, NULL);
+
+                    }
                 }
             }
 

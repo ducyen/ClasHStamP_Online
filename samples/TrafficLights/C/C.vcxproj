@@ -116,13 +116,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Abstracts\BaseClass.h" />
-    <ClInclude Include="Interfaces\Interface1.h" />
-    <ClInclude Include="Interfaces\Interface2.h" />
     <ClInclude Include="Model\Barrier.h" />
     <ClInclude Include="Model\ClampConstraint.h" />
     <ClInclude Include="Model\Constraint.h" />
-    <ClInclude Include="Model\Context.h" />
     <ClInclude Include="Model\ContextImpl.h" />
     <ClInclude Include="Model\RedLight.h" />
     <ClInclude Include="Model\RotationConstraint.h" />
@@ -135,12 +131,10 @@
     <ClInclude Include="ObjsBuilder.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Abstracts\BaseClass.c" />
     <ClCompile Include="main_win.c" />
     <ClCompile Include="Model\Barrier.c" />
     <ClCompile Include="Model\ClampConstraint.c" />
     <ClCompile Include="Model\Constraint.c" />
-    <ClCompile Include="Model\Context.c" />
     <ClCompile Include="Model\ContextImpl.c">
       <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreprocessToFile>
       <PreprocessSuppressLineNumbers Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreprocessSuppressLineNumbers>

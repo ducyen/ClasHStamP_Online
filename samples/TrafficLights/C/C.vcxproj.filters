@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Model\Context.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Model\ContextImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -25,15 +22,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NonOOP\HdStateMachine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Interfaces\Interface1.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Interfaces\Interface2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Abstracts\BaseClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Model\Barrier.h">
@@ -68,16 +56,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Model\Context.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="NonOOP\HdStateMachine.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Model\ContextImpl.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Abstracts\BaseClass.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main_win.c">

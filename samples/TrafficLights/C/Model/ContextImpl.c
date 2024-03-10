@@ -3,15 +3,6 @@
 #include "CommonInclude.h"
 #include "ContextImpl.h"
 #include "ObjsBuilder.h"                                        
-/* AnEnum列挙型の値から文字列に変換する関数（デバッグ用） */
-const TCHAR* AnEnum_toString( AnEnum value ){
-    switch( value ){
-    case One: return _T( "One" );
-    case Two: return _T( "Two" );
-    case Three: return _T( "Three" );
-    default: return _T( "AnEnum_UNKNOWN" );
-    }
-}
 const TCHAR* ContextImplEvent_toString( ContextImpl_EVENT value ){
     switch( value ){
     case ContextImpl_TMOUT: return _T( "TMOUT" );
@@ -20,17 +11,6 @@ const TCHAR* ContextImplEvent_toString( ContextImpl_EVENT value ){
     default: return _T( "ContextImpl_UNKNOWN" );
     }
 }
-/** @protected @memberof ContextImpl */
-static void ContextImpl_protectedMethod(
-    ContextImpl* pContextImpl
-){
-} /* ContextImpl_protectedMethod */
-
-boolean ContextImpl_checkE1Params(
-    EventParams* e
-){
-} /* ContextImpl_checkE1Params */
-
 static void ManagingThroughTraffic_Region1_BgnTrans( ContextImpl *pManagingThroughTraffic_Top, ManagingThroughTraffic_Region1* pStm, uint64_t targetState, uint64_t initState );
 static void ManagingThroughTraffic_Region1_EndTrans( ContextImpl *pManagingThroughTraffic_Top, ManagingThroughTraffic_Region1* pStm );
 static BOOL ManagingThroughTraffic_Region1_Reset( ContextImpl* pManagingThroughTraffic_Top, ManagingThroughTraffic_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
@@ -743,10 +723,6 @@ BOOL ContextImpl_Reset( ContextImpl* pContextImpl, uint64_t nEntryPoint ){
 BOOL ContextImpl_IsIn( ContextImpl* pContextImpl, uint64_t nState ){
     return MainStm_IsIn( &pContextImpl->mainStm, nState );
 }
-Context* ContextImpl_Copy( ContextImpl* pContextImpl, const ContextImpl* pSource ){
-    Context_Copy( ( Context* )pContextImpl, ( Context* )pSource );
-    return ( BaseClass* )pContextImpl;
+ContextImpl* ContextImpl_Copy( ContextImpl* pContextImpl, const ContextImpl* pSource ){
+    return ( ContextImpl* )pContextImpl;
 }
-const BaseClassVtbl gContextImplVtbl = {
-    .pprotectedMethod            = ContextImpl_protectedMethod,
-};
