@@ -49,9 +49,9 @@ void Sprite_draw(
     if( pSprite->m_rect.x == 0 && pSprite->m_rect.y == 0 && pSprite->m_rect.w == 0 && pSprite->m_rect.h == 0 ){
         pSprite->m_rect = ( SDL_Rect ){ 
             pSprite->m_iniRect.x * screenSurface->w, 
-            pSprite->m_iniRect.y * screenSurface->h, 
+            pSprite->m_iniRect.y * ( screenSurface->h - ( 40-14 ) ), 
             pSprite->m_iniRect.w  * screenSurface->w, 
-            pSprite->m_iniRect.h  * screenSurface->h 
+            pSprite->m_iniRect.h  * ( screenSurface->h - ( 40-14 ) ) 
         };
     }
     // Rotate and scale the image
@@ -74,7 +74,9 @@ void Sprite_draw(
 bool Sprite_load(
     Sprite* pSprite
 ){
-    pSprite->m_image = IMG_Load(pSprite->m_imgPath);
+    char sRelPath[ 256 ];
+    sprintf( sRelPath, "%s/../%s", getInputDir(), pSprite->m_imgPath );
+    pSprite->m_image = IMG_Load(sRelPath);
     if (!pSprite->m_image) {
         printf("Failed to load image: %s\n", IMG_GetError());
         return false;

@@ -3,7 +3,10 @@ SRC_DIR=.
 # Compiler
 CC = gcc
 # Compiler flags
-CFLAGS = -Wall $(addprefix -I,$(shell find $(SRC_DIR) -type d)) -I./include -lpthread
+CFLAGS = -Wall $(addprefix -I,$(shell find $(SRC_DIR) -type d)) -I./include -I/usr/local/include/SDL2 -D_REENTRANT -lpthread $(shell sdl2-config --cflags)
+
+# Linker flags
+LDFLAGS = $(shell sdl2-config --libs) -L/usr/local/lib -lSDL2_gfx -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lpng
 
 # Source files
 SRC_FILES = $(shell find $(SRC_DIR) -name "*.c")
@@ -17,7 +20,7 @@ TARGET = my_program
 all: $(TARGET)
 
 $(TARGET): $(OBJ_FILES)
-	$(CC) $(CFLAGS) -o $@ $^ -lpng
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<

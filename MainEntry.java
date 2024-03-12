@@ -20,7 +20,8 @@ public class MainEntry extends JFrame {
     private JComboBox<String> selectLanguageBox;
     private JButton generateCodeButton;
     private JFrame bottomPanelFrame;
-    private JPanel bottomPanel;
+    private JScrollPane outputTextScrollPane;
+    private ImageLoader imageLoader;
     private Rectangle screenSize;
     private Process xtermProcess;
     private long xtermPid = -1; // Initialize with an invalid PID
@@ -89,16 +90,13 @@ public class MainEntry extends JFrame {
         bottomPanelFrame = new JFrame("Output");
         outputTextArea = new JTextArea();
         outputTextArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(outputTextArea);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        bottomPanelFrame.add(scrollPane);
+        outputTextScrollPane = new JScrollPane(outputTextArea);
+        outputTextScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        outputTextScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        bottomPanelFrame.add(outputTextScrollPane);
         bottomPanelFrame.setSize(800, 600); // Set the size of the bottom panel frame
         bottomPanelFrame.setLocationRelativeTo(null); // Center the bottom panel frame
         bottomPanelFrame.setVisible(true);
-        
-        // Initialize the bottom panel
-        bottomPanel = new JPanel(new BorderLayout());
         
         adjustLayout();
         
@@ -169,6 +167,11 @@ public class MainEntry extends JFrame {
         JButton button = (JButton)e.getSource();
         button.setEnabled(false); // Disable the button
         outputTextArea.setText(""); // Clear the text area
+        
+        bottomPanelFrame.add(outputTextScrollPane);
+        if (imageLoader != null) {
+        	bottomPanelFrame.remove(imageLoader.getContentPane());
+        }
 
         // Launch the target application
         try {
@@ -240,16 +243,13 @@ public class MainEntry extends JFrame {
         
         // Switch to the ImageLoader view in the bottom panel
         String directoryPath = "./samples/" + selectSampleBox.getSelectedItem() + "/TransImg";
-        ImageLoader imageLoader = new ImageLoader(directoryPath);
+        imageLoader = new ImageLoader(directoryPath);
 
         // Add the ImageLoader content to the bottom panel
-        bottomPanel.removeAll();
-        bottomPanel.add(imageLoader.getContentPane());
-        bottomPanel.revalidate();
-        bottomPanel.repaint();
 
         // Add the bottom panel to the new frame and make it visible
-        bottomPanelFrame.add(bottomPanel);
+        bottomPanelFrame.remove(outputTextScrollPane);
+        bottomPanelFrame.add(imageLoader.getContentPane());
         bottomPanelFrame.setVisible(true);
 
         // Calculate the size and position for the xterm console

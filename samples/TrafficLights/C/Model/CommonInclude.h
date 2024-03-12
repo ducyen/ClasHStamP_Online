@@ -29,8 +29,19 @@ typedef char            TCHAR;
 
 #define _T(x)           x
 
+#ifndef FALSE
 #define FALSE   ( 0 )
+#endif
+#ifndef TRUE
 #define TRUE    ( 1 )
+#endif
+
+#ifndef S_OK
+#define S_OK    ( 0 )
+#endif
+#ifndef S_FALSE
+#define S_FALSE ( 1 )
+#endif
 
 #define STATE_UNDEF                 ( 0x0000000000000000ULL )
 #define IS_IN( leaf, composite )    ( composite >= leaf && ( composite & leaf ) > 0 )
@@ -55,5 +66,8 @@ typedef struct tagEventParams{
 typedef struct tagRelativeRect{
     double x, y, w, h;
 }RelativeRect;
+
+const char* getInputDir( void );
+const char* getOutputDir( void );
 
 #endif//__COMMON_INCLUDE_H__

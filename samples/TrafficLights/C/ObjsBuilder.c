@@ -6,16 +6,12 @@
 #include "ContextImpl.h"                                        
 static Sprite g_objects[] = {
     { RedLight_Init(
-        P( { 0.16136363636363638, 0.31696134868421055, 0.07954545454545454, 0.10350877192982456 } ),
-        P( "../Image/RedLight.png" ),
-        P( 10 ),
-        P( 0 )) 
+        P( { 0.19223826714801445, 0.5508169778963414, 0.09476534296028881, 0.1798780487804878 } ),
+        P( "RedLight.png" )) 
     },
     { RedLight_Init(
-        P( { 0.7212121212121212, 0.43450520833333334, 0.07954545454545454, 0.10350877192982456 } ),
-        P( "../Image/RedLight.png" ),
-        P( 10 ),
-        P( 0 )) 
+        P( { 0.8592057761732852, 0.7550852705792683, 0.09476534296028881, 0.20121951219512196 } ),
+        P( "RedLight.png" )) 
     }
 };
 Sprite* getobj( int id ){
@@ -38,16 +34,20 @@ int ObjsBuilder_startSim(
 
     if( nResult == S_OK ){
         // Load image
-        imageSurface = IMG_Load("../Image/Design/ObjsBuilder/Main.png");
+        char sRelPath[ 256 ];
+        sprintf( sRelPath, "%s/%s", getInputDir(), "ObjsBuilder/Main.png" );
+        imageSurface = IMG_Load(sRelPath);
         if (imageSurface == NULL) {
             printf("Unable to load image! SDL_image Error: %s\n", IMG_GetError());
             nResult = S_FALSE;
         }
     }
 
-    const int SCREEN_WIDTH = imageSurface->w;
-    const int SCREEN_HEIGHT = imageSurface->h;
+    int SCREEN_WIDTH  = 640;
+    int SCREEN_HEIGHT = 480;
     if( nResult == S_OK ){
+        SCREEN_WIDTH = imageSurface->w;
+        SCREEN_HEIGHT = imageSurface->h;
         window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED,
                                   SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
                                   SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
@@ -71,15 +71,10 @@ int ObjsBuilder_startSim(
         }
     }
 
-    static int g_nPathToBitmapCnt = 0;
-    static struct{
-        char m_sPath[ 256 ];
-        SDL_Surface* m_pIBitmap;
-    } g_arrPathToBitmap[ 10 ];
-
-
     ContextImpl context = ContextImpl_Ctor( ContextImpl_Init( ), );
     ContextImpl_Start( &context );
+    SaveAllImages();
+    ReleaseAllImages();
 
     if( nResult == S_OK ){
         bool quit = false;
@@ -91,8 +86,10 @@ int ObjsBuilder_startSim(
                     quit = true;
                 }else if (e.type == SDL_KEYDOWN) {
                     if( e.key.keysym.sym == SDLK_x ){
+                        ResetActionCounter();
                         ContextImpl_EventProc( &context, ContextImpl_TMOUT, NULL);
-
+                        SaveAllImages();
+                        ReleaseAllImages();
                     }
                 }
             }
@@ -124,6 +121,7 @@ int ObjsBuilder_startSim(
 
     // Free resources and close SDL
     SDL_FreeSurface(imageSurface);
+    ReleaseAllImages();
     SDL_DestroyWindow(window);
     IMG_Quit();
     SDL_Quit();
