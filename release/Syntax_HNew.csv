@@ -228,5 +228,7 @@ object,"enum {
 [vALUE]
 };
 Sprite* getobj( int id );
-",,,    [nAME],",
-    [nAME]"
+",,,"#define [nAME][->32]( getobj( _[nAME] ) )
+    _[nAME]",",
+#define [nAME][->32]( getobj( _[nAME] ) )
+    _[nAME]"

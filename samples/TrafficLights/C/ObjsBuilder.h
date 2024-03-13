@@ -3,8 +3,30 @@
 #include "Sprite.h"
 typedef struct tagObjsBuilder ObjsBuilder;
 enum {
-    westRedLight,
-    eastRedLight
+#define westRedLight            ( getobj( _westRedLight ) )
+    _westRedLight,
+#define eastRedLight            ( getobj( _eastRedLight ) )
+    _eastRedLight,
+#define westYellowLight         ( getobj( _westYellowLight ) )
+    _westYellowLight,
+#define westGreenLight          ( getobj( _westGreenLight ) )
+    _westGreenLight,
+#define eastYellowLight         ( getobj( _eastYellowLight ) )
+    _eastYellowLight,
+#define eastGreenLight          ( getobj( _eastGreenLight ) )
+    _eastGreenLight,
+#define northRedLight           ( getobj( _northRedLight ) )
+    _northRedLight,
+#define northYellowLight        ( getobj( _northYellowLight ) )
+    _northYellowLight,
+#define northGreenLight         ( getobj( _northGreenLight ) )
+    _northGreenLight,
+#define southRedLight           ( getobj( _southRedLight ) )
+    _southRedLight,
+#define southYellowLight        ( getobj( _southYellowLight ) )
+    _southYellowLight,
+#define southGreenLight         ( getobj( _southGreenLight ) )
+    _southGreenLight
 };
 Sprite* getobj( int id );
 int ObjsBuilder_startSim( void   );

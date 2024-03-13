@@ -70,6 +70,9 @@ java $JAVA_OPTS stm.TMain
 PACKAGE=NonOOP
 java $JAVA_OPTS stm.TMain
 
+PACKAGE=Design
+java $JAVA_OPTS stm.TMain
+
 LANGUAGE=h
 SYNTAX=$TOOL_DIR/Syntax_HNew.csv
 SYNTAX_ABSTRACT=$TOOL_DIR/Syntax_HNew.csv
@@ -86,6 +89,9 @@ PACKAGE=Abstracts
 java $JAVA_OPTS stm.TMain
 
 PACKAGE=NonOOP
+java $JAVA_OPTS stm.TMain
+
+PACKAGE=Design
 java $JAVA_OPTS stm.TMain
 
 echo "Building Code"
