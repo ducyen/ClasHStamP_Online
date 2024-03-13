@@ -63,7 +63,12 @@ void Sprite_draw(
         0
     );
 
-    SDL_SetSurfaceColorMod( transformedSurface, 128, 128, 128);
+    SDL_SetSurfaceColorMod( 
+        transformedSurface, 
+        pSprite->m_brightness * 255, 
+        pSprite->m_brightness * 255, 
+        pSprite->m_brightness * 255
+    );
 
     SDL_BlitSurface(transformedSurface, NULL, screenSurface, &pSprite->m_rect);
 
