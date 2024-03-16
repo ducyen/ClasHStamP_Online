@@ -46,23 +46,22 @@ void Sprite_draw(
     Sprite* pSprite,
     SDL_Surface* screenSurface
 ){
-    if( pSprite->m_rect.x == 0 && pSprite->m_rect.y == 0 && pSprite->m_rect.w == 0 && pSprite->m_rect.h == 0 ){
-        pSprite->m_rect = ( SDL_Rect ){ 
-            pSprite->m_iniRect.x * screenSurface->w, 
-            pSprite->m_iniRect.y * ( screenSurface->h - ( 40-14 ) ), 
-            pSprite->m_iniRect.w  * screenSurface->w, 
-            pSprite->m_iniRect.h  * ( screenSurface->h - ( 40-14 ) ) - 20
-        };
-    }
+    SDL_Rect rect = ( SDL_Rect ){ 
+        pSprite->m_iniRect.x * screenSurface->w, 
+        pSprite->m_iniRect.y * ( screenSurface->h ), 
+        pSprite->m_iniRect.w  * screenSurface->w, 
+        pSprite->m_iniRect.h  * ( screenSurface->h ) - 22
+    };
+
     // Rotate and scale the image
-    SDL_Surface* transformedSurface = rotozoomSurfaceXY(
+    SDL_Surface* transformedSurface = rotozoomSurface(
         pSprite->m_image, 
         pSprite->m_angle, 
-        ( double )pSprite->m_rect.w / pSprite->m_image->w,
-        ( double )pSprite->m_rect.h / pSprite->m_image->h,
+        1.0,
         0
     );
 
+    // Change brightness
     SDL_SetSurfaceColorMod( 
         transformedSurface, 
         pSprite->m_brightness * 255, 
@@ -70,8 +69,23 @@ void Sprite_draw(
         pSprite->m_brightness * 255
     );
 
-    SDL_BlitSurface(transformedSurface, NULL, screenSurface, &pSprite->m_rect);
+    // Calculate the size of the surface after rotation and zoom
+    int dstwidth, dstheight;
+    rotozoomSurfaceSize(pSprite->m_image->w, pSprite->m_image->h, pSprite->m_angle, 1.0, &dstwidth, &dstheight);
+    double zoom = ( double )dstwidth / pSprite->m_image->w;
 
+    // Adjust the destination rectangle
+    rect = ( SDL_Rect ){
+        rect.x + rect.w / 2 - rect.w * zoom / 2,
+        rect.y + rect.h / 2 - rect.h * zoom / 2,
+        rect.w * zoom,
+        rect.h * zoom
+    };
+
+    // Blit the surface on to screen
+    SDL_BlitScaled(transformedSurface, NULL, screenSurface, &rect);
+
+    // Free memory
     SDL_FreeSurface(transformedSurface);
 } /* Sprite_draw */
 

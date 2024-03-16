@@ -163,6 +163,7 @@ int ObjsBuilder_startSim(
 
     // Free resources and close SDL
     SDL_FreeSurface(imageSurface);
+    SDL_FreeSurface(screenSurface);
     ReleaseAllImages();
     SDL_DestroyWindow(window);
     IMG_Quit();
