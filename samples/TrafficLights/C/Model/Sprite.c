@@ -51,7 +51,7 @@ void Sprite_draw(
             pSprite->m_iniRect.x * screenSurface->w, 
             pSprite->m_iniRect.y * ( screenSurface->h - ( 40-14 ) ), 
             pSprite->m_iniRect.w  * screenSurface->w, 
-            pSprite->m_iniRect.h  * ( screenSurface->h - ( 40-14 ) ) * 3/4
+            pSprite->m_iniRect.h  * ( screenSurface->h - ( 40-14 ) ) - 20
         };
     }
     // Rotate and scale the image
