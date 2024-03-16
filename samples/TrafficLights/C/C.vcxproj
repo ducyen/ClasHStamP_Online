@@ -75,11 +75,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>__syntax__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Abstracts;$(ProjectDir)Interfaces;$(ProjectDir)NonOOP;$(ProjectDir)Model;$(SolutionDir)..\Windows\libsdl2\include;$(SolutionDir)..\Windows\libsdl2-image\include;$(SolutionDir)..\Windows\libsdl2-mixer\include;$(SolutionDir)..\Windows\libsdl2-gfx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Abstracts;$(ProjectDir)Interfaces;$(ProjectDir)NonOOP;$(ProjectDir)Model;$(SolutionDir)..\..\lib\Windows\libsdl2\include;$(SolutionDir)..\..\lib\Windows\libsdl2-image\include;$(SolutionDir)..\..\lib\Windows\libsdl2-mixer\include;$(SolutionDir)..\..\lib\Windows\libsdl2-gfx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>$(SolutionDir)..\Windows\libsdl2\lib\$(PlatformTarget)\SDL2.lib;$(SolutionDir)..\Windows\libsdl2\lib\$(PlatformTarget)\SDL2main.lib;$(SolutionDir)..\Windows\libsdl2-image\lib\$(PlatformTarget)\SDL2_image.lib;$(SolutionDir)..\Windows\libsdl2-mixer\lib\$(PlatformTarget)\SDL2_mixer.lib;$(SolutionDir)..\Windows\libsdl2-gfx\lib\$(PlatformTarget)\SDL2_gfx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)..\..\lib\Windows\libsdl2\lib\$(PlatformTarget)\SDL2.lib;$(SolutionDir)..\..\lib\Windows\libsdl2\lib\$(PlatformTarget)\SDL2main.lib;$(SolutionDir)..\..\lib\Windows\libsdl2-image\lib\$(PlatformTarget)\SDL2_image.lib;$(SolutionDir)..\..\lib\Windows\libsdl2-mixer\lib\$(PlatformTarget)\SDL2_mixer.lib;$(SolutionDir)..\..\lib\Windows\libsdl2-gfx\lib\$(PlatformTarget)\SDL2_gfx.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

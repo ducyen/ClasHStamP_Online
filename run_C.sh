@@ -97,7 +97,7 @@ java $JAVA_OPTS stm.TMain
 echo "Building Code"
 
 cd $SAMPLE_HOME/C
-make
+make clean
 cd $WORKING_DIR
 
 echo "Code Generation Finished"
