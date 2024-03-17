@@ -491,7 +491,7 @@ Sprite* getobj( int id ){
 }
 ","
 [->]    P( { [vALUE] } )",",
-[->]    P( [vALUE] )","[->]{ [tYPE]_Init([vALUE]) 
-[->]}",",
-[->]{ [tYPE]_Init([vALUE]) 
-[->]}"
+[->]    P( [vALUE] )","[->]{ [tYPE]_Init([vALUE]
+[->]) }",",
+[->]{ [tYPE]_Init([vALUE]
+[->]) }"
