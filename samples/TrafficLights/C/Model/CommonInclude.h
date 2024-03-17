@@ -60,6 +60,18 @@ typedef struct tagString{ char buf[255]; }* String;
 #define MakeString( charBuf )       ( ( String )&( struct tagString ){ charBuf } )
 #define GetCharBuf( pStr )          ( ( pStr )->buf )
 
+#ifndef LOBYTE
+#define LOBYTE(w)           ((BYTE)(((DWORD_PTR)(w)) & 0xff))
+#endif
+
+#ifndef RGB
+typedef unsigned long   COLORREF;
+#define RGB(r,g,b)          ((COLORREF)(((BYTE)(r)|((WORD)((BYTE)(g))<<8))|(((DWORD)(BYTE)(b))<<16)))
+#define GetRValue(rgb)      (LOBYTE(rgb))
+#define GetGValue(rgb)      (LOBYTE(((WORD)(rgb)) >> 8))
+#define GetBValue(rgb)      (LOBYTE((rgb)>>16))
+#endif
+
 typedef struct tagEventParams{
     int cbSize;
 }EventParams;

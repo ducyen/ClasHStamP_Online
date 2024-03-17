@@ -41,46 +41,39 @@ void Sprite_setBrightness(
     pSprite->m_brightness = value;
 } /* Sprite_setBrightness */
 
-/** @public @memberof Sprite */
-void Sprite_draw(
+/** @public @pure @memberof Sprite */
+void Sprite_draw0(
     Sprite* pSprite,
     SDL_Renderer* renderer
 ){
-    // Set texture color modulation (brightness)
-    SDL_SetTextureColorMod(
-        pSprite->m_image, 
-        pSprite->m_brightness * 255, 
-        pSprite->m_brightness * 255, 
-        pSprite->m_brightness * 255
-    );
+    if( pSprite->vTbl == NULL || pSprite->vTbl->pdraw0 == NULL ){ return; }
+    pSprite->vTbl->pdraw0( pSprite, renderer );
+} /* Sprite_draw0 */
 
-    // Render the texture
-    SDL_RenderCopyEx(renderer, pSprite->m_image, NULL, &pSprite->m_rect, pSprite->m_angle, NULL, SDL_FLIP_NONE);
+/** @public @pure @memberof Sprite */
+void Sprite_draw1(
+    Sprite* pSprite,
+    SDL_Renderer* renderer
+){
+    if( pSprite->vTbl == NULL || pSprite->vTbl->pdraw1 == NULL ){ return; }
+    pSprite->vTbl->pdraw1( pSprite, renderer );
+} /* Sprite_draw1 */
 
-} /* Sprite_draw */
-
-/** @public @memberof Sprite */
+/** @public @pure @memberof Sprite */
 bool Sprite_load(
     Sprite* pSprite,
     SDL_Renderer* renderer
 ){
-    char sRelPath[ 256 ];
-    sprintf( sRelPath, "%s/../%s", getInputDir(), pSprite->m_imgPath );
-    pSprite->m_image = IMG_LoadTexture(renderer, sRelPath);
-    if (!pSprite->m_image) {
-        printf("Failed to load image: %s\n", IMG_GetError());
-        return false;
-    }
-    return true;
+    if( pSprite->vTbl == NULL || pSprite->vTbl->pload == NULL ){ return ( bool )0; }
+    return pSprite->vTbl->pload( pSprite, renderer );
 } /* Sprite_load */
 
-/** @public @memberof Sprite */
+/** @public @pure @memberof Sprite */
 void Sprite_free(
     Sprite* pSprite
 ){
-    if (pSprite->m_image) {
-        SDL_DestroyTexture(pSprite->m_image);
-    }
+    if( pSprite->vTbl == NULL || pSprite->vTbl->pfree == NULL ){ return; }
+    pSprite->vTbl->pfree( pSprite );
 } /* Sprite_free */
 
 Sprite* Sprite_Copy( Sprite* pSprite, const Sprite* pSource ){

@@ -6,7 +6,8 @@ void Sprite_addConstraint( Sprite* pSprite, Constraint* constraint );
 void Sprite_setLocation( Sprite* pSprite, int x, int y );
 void Sprite_setAngle( Sprite* pSprite, double value );
 void Sprite_setBrightness( Sprite* pSprite, double value );
-void Sprite_draw( Sprite* pSprite, SDL_Renderer* renderer );
+void Sprite_draw0( Sprite* pSprite, SDL_Renderer* renderer );
+void Sprite_draw1( Sprite* pSprite, SDL_Renderer* renderer );
 bool Sprite_load( Sprite* pSprite, SDL_Renderer* renderer );
 void Sprite_free( Sprite* pSprite );
 #endif//__Sprite_H__
@@ -30,11 +31,18 @@ void Sprite_free( Sprite* pSprite );
     InitFunc\
 \
 }
+typedef struct tagSpriteVtbl{
+    void ( * const pdraw0 )( Sprite*, SDL_Renderer* );
+    void ( * const pdraw1 )( Sprite*, SDL_Renderer* );
+    bool ( * const pload )( Sprite*, SDL_Renderer* );
+    void ( * const pfree )( Sprite* );
+}SpriteVtbl;
 Sprite* Sprite_Copy( Sprite* pSprite, const Sprite* pSource );
 /** @class Sprite
  * @extends 
  */
 #define Sprite_CLASS                                                                            \
+    const SpriteVtbl* const vTbl;                                                               \
     size_t cbSize;                                                                              \
     RelativeRect m_iniRect;                                                                                           \
     char* m_imgPath;                                                                                                         \

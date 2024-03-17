@@ -120,6 +120,9 @@
     <ClInclude Include="Model\ClampConstraint.h" />
     <ClInclude Include="Model\Constraint.h" />
     <ClInclude Include="Model\ContextImpl.h" />
+    <ClInclude Include="Model\GreenLight.h" />
+    <ClInclude Include="Model\ImgSprite.h" />
+    <ClInclude Include="Model\Primitive.h" />
     <ClInclude Include="Model\RedLight.h" />
     <ClInclude Include="Model\RotationConstraint.h" />
     <ClInclude Include="Model\Sprite.h" />
@@ -127,6 +130,7 @@
     <ClInclude Include="Model\TransformConstraint.h" />
     <ClInclude Include="Model\TranslationConstraint.h" />
     <ClInclude Include="Model\UsedDependency.h" />
+    <ClInclude Include="Model\YellowLight.h" />
     <ClInclude Include="NonOOP\HdStateMachine.h" />
     <ClInclude Include="ObjsBuilder.h" />
   </ItemGroup>
@@ -139,12 +143,16 @@
       <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreprocessToFile>
       <PreprocessSuppressLineNumbers Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreprocessSuppressLineNumbers>
     </ClCompile>
+    <ClCompile Include="Model\GreenLight.c" />
+    <ClCompile Include="Model\ImgSprite.c" />
+    <ClCompile Include="Model\Primitive.c" />
     <ClCompile Include="Model\RedLight.c" />
     <ClCompile Include="Model\RotationConstraint.c" />
     <ClCompile Include="Model\Sprite.c" />
     <ClCompile Include="Model\TrackToConstraint.c" />
     <ClCompile Include="Model\TransformConstraint.c" />
     <ClCompile Include="Model\TranslationConstraint.c" />
+    <ClCompile Include="Model\YellowLight.c" />
     <ClCompile Include="NonOOP\HdStateMachine.c" />
     <ClCompile Include="ObjsBuilder.c" />
   </ItemGroup>

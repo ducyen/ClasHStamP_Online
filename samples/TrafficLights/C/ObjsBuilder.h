@@ -26,7 +26,13 @@ enum {
 #define southYellowLight        ( getobj( _southYellowLight ) )
     _southYellowLight,
 #define southGreenLight         ( getobj( _southGreenLight ) )
-    _southGreenLight
+    _southGreenLight,
+#define Rectangle_4bm           ( getobj( _Rectangle_4bm ) )
+    _Rectangle_4bm,
+#define Oval_4dj                ( getobj( _Oval_4dj ) )
+    _Oval_4dj,
+#define Rectangle_4fh           ( getobj( _Rectangle_4fh ) )
+    _Rectangle_4fh
 };
 Sprite* getobj( int id );
 int ObjsBuilder_startSim( void   );

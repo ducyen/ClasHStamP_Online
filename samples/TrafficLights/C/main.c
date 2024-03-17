@@ -9,7 +9,6 @@
 #include <termios.h> 
 #include <fcntl.h>
 #include <png.h>
-typedef unsigned long   COLORREF;
 typedef unsigned char   BYTE;
 typedef unsigned int    UINT;
 typedef unsigned short      WORD;
@@ -17,13 +16,6 @@ typedef unsigned long       DWORD;
 
 typedef unsigned long  ULONG_PTR;
 typedef ULONG_PTR DWORD_PTR, *PDWORD_PTR;
-#define LOBYTE(w)           ((BYTE)(((DWORD_PTR)(w)) & 0xff))
-
-#define RGB(r,g,b)          ((COLORREF)(((BYTE)(r)|((WORD)((BYTE)(g))<<8))|(((DWORD)(BYTE)(b))<<16)))
-#define GetRValue(rgb)      (LOBYTE(rgb))
-#define GetGValue(rgb)      (LOBYTE(((WORD)(rgb)) >> 8))
-#define GetBValue(rgb)      (LOBYTE((rgb)>>16))
-
 typedef struct IWICBitmap{
     int width, height;
     png_bytep *row_pointers;

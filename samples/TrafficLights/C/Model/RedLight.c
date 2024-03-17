@@ -2,7 +2,7 @@
 #define __RedLight_INTERNAL__
 #include "CommonInclude.h"
 #include "RedLight.h"
-Sprite* RedLight_Copy( RedLight* pRedLight, const RedLight* pSource ){
-    Sprite_Copy( ( Sprite* )pRedLight, ( Sprite* )pSource );
+ImgSprite* RedLight_Copy( RedLight* pRedLight, const RedLight* pSource ){
+    ImgSprite_Copy( ( ImgSprite* )pRedLight, ( ImgSprite* )pSource );
     return ( Sprite* )pRedLight;
 }
