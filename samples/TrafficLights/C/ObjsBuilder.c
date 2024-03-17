@@ -63,53 +63,73 @@ int ObjsBuilder_startSim(
     void  
 ){
     SDL_Window *window = NULL;
-    SDL_Surface *screenSurface = NULL;
+    SDL_Renderer *renderer = NULL;
     SDL_Surface *imageSurface = NULL;
-    SDL_Surface *transformedSurface = NULL;
+    SDL_Texture *imageTexture = NULL;
 
     int nResult = S_OK;
 
-    if( nResult == S_OK && SDL_Init(SDL_INIT_VIDEO) < 0 ){
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-        nResult == S_FALSE;
+        nResult = S_FALSE;
     }
 
-    if( nResult == S_OK ){
+    int SCREEN_WIDTH = 640;
+    int SCREEN_HEIGHT = 480;
+
+    if (nResult == S_OK) {
         // Load image
-        char sRelPath[ 256 ];
-        sprintf( sRelPath, "%s/%s", getInputDir(), "ObjsBuilder/Main.png" );
+        char sRelPath[256];
+        sprintf(sRelPath, "%s/%s", getInputDir(), "ObjsBuilder/Main.png");
         imageSurface = IMG_Load(sRelPath);
         if (imageSurface == NULL) {
             printf("Unable to load image! SDL_image Error: %s\n", IMG_GetError());
             nResult = S_FALSE;
+        } else {
+            SCREEN_WIDTH = imageSurface->w;
+            SCREEN_HEIGHT = imageSurface->h;
         }
     }
 
-    int SCREEN_WIDTH  = 640;
-    int SCREEN_HEIGHT = 480;
-    if( nResult == S_OK ){
-        SCREEN_WIDTH = imageSurface->w;
-        SCREEN_HEIGHT = imageSurface->h;
-        window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED,
-                                  SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-                                  SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    if (nResult == S_OK) {
+        window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
         if (window == NULL) {
             printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
             nResult = S_FALSE;
+        } else {
+            renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+            if (renderer == NULL) {
+                printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
+                nResult = S_FALSE;
+            }
         }
     }
-    if( nResult == S_OK ){
-        screenSurface = SDL_GetWindowSurface(window);
-        // Initialize SDL_image
-        if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
-            printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+
+    if (nResult == S_OK && imageSurface != NULL) {
+        // Create a texture from the loaded surface
+        imageTexture = SDL_CreateTextureFromSurface(renderer, imageSurface);
+        if (imageTexture == NULL) {
+            printf("Unable to create texture! SDL_Error: %s\n", SDL_GetError());
             nResult = S_FALSE;
-        } 
+        }
+    }
+
+    // Initialize SDL_image
+    if (nResult == S_OK && !(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+        printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+        nResult = S_FALSE;
     }
 
     for( int i = 0; i < sizeof( g_objects ) / sizeof( g_objects[ 0 ] ) && nResult == S_OK; i++ ){
-        if( nResult == S_OK && Sprite_load( &g_objects[ i ] ) == false ){
+        if( Sprite_load( &g_objects[ i ], renderer ) == false ){
             nResult = S_FALSE;
+        } else{
+            g_objects[ i ].m_rect = (SDL_Rect){
+                g_objects[ i ].m_iniRect.x * SCREEN_WIDTH, 
+                g_objects[ i ].m_iniRect.y * SCREEN_HEIGHT, 
+                g_objects[ i ].m_iniRect.w * SCREEN_WIDTH, 
+                g_objects[ i ].m_iniRect.h * SCREEN_HEIGHT - 22
+            };
         }
     }
 
@@ -118,7 +138,7 @@ int ObjsBuilder_startSim(
     SaveAllImages();
     ReleaseAllImages();
 
-    if( nResult == S_OK ){
+    if (nResult == S_OK) {
         bool quit = false;
         SDL_Event e;
 
@@ -126,10 +146,10 @@ int ObjsBuilder_startSim(
             while (SDL_PollEvent(&e) != 0) {
                 if (e.type == SDL_QUIT) {
                     quit = true;
-                }else if (e.type == SDL_KEYDOWN) {
-                    if( e.key.keysym.sym == SDLK_x ){
+                } else if (e.type == SDL_KEYDOWN) {
+                    if (e.key.keysym.sym == SDLK_x) {
                         ResetActionCounter();
-                        ContextImpl_EventProc( &context, ContextImpl_TMOUT, NULL);
+                        ContextImpl_EventProc(&context, ContextImpl_TMOUT, NULL);
                         SaveAllImages();
                         ReleaseAllImages();
                     }
@@ -137,40 +157,42 @@ int ObjsBuilder_startSim(
             }
 
             // Clear screen
-        #if 1
-            SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
-        #else
-            SDL_BlitSurface(imageSurface, NULL, screenSurface, NULL);
-        #endif
+            SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF); // White
+            SDL_RenderClear(renderer);
 
+            // Render the image texture
+            //if (imageTexture != NULL) {
+            //    SDL_RenderCopy(renderer, imageTexture, NULL, NULL);
+            //}
 
-            for( int i = 0; i < sizeof( g_objects ) / sizeof( g_objects[ 0 ] ) && nResult == S_OK; i++ ){
-                Sprite_draw( &g_objects[ i ], screenSurface );
+            eastRedLight->m_angle += 1.0;
+
+            for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
+                Sprite_draw(&g_objects[i], renderer);
             }
-            // Update the surface
-            SDL_UpdateWindowSurface(window);
 
-            // Update transformations
+            // Update the screen
+            SDL_RenderPresent(renderer);
 
             // Delay to control the animation speed
             SDL_Delay(50);
         }
     }
 
-    for( int i = 0; i < sizeof( g_objects ) / sizeof( g_objects[ 0 ] ) && nResult == S_OK; i++ ){
-        Sprite_free( &g_objects[ i ] );
+    for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
+        Sprite_free(&g_objects[i]);
     }
 
     // Free resources and close SDL
+    SDL_DestroyTexture(imageTexture);
     SDL_FreeSurface(imageSurface);
-    SDL_FreeSurface(screenSurface);
     ReleaseAllImages();
+    SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     IMG_Quit();
     SDL_Quit();
 
     return 0;
-
 } /* ObjsBuilder_startSim */
 
 ObjsBuilder* ObjsBuilder_Copy( ObjsBuilder* pObjsBuilder, const ObjsBuilder* pSource ){

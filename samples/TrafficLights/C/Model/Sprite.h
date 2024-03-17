@@ -6,8 +6,8 @@ void Sprite_addConstraint( Sprite* pSprite, Constraint* constraint );
 void Sprite_setLocation( Sprite* pSprite, int x, int y );
 void Sprite_setAngle( Sprite* pSprite, double value );
 void Sprite_setBrightness( Sprite* pSprite, double value );
-void Sprite_draw( Sprite* pSprite, SDL_Surface* screenSurface );
-bool Sprite_load( Sprite* pSprite );
+void Sprite_draw( Sprite* pSprite, SDL_Renderer* renderer );
+bool Sprite_load( Sprite* pSprite, SDL_Renderer* renderer );
 void Sprite_free( Sprite* pSprite );
 #endif//__Sprite_H__
 #if !defined( Sprite_Init ) && ( defined( __Sprite_INTERNAL__ )  )
@@ -38,7 +38,7 @@ Sprite* Sprite_Copy( Sprite* pSprite, const Sprite* pSource );
     size_t cbSize;                                                                              \
     RelativeRect m_iniRect;                                                                                           \
     char* m_imgPath;                                                                                                         \
-    SDL_Surface* m_image;                                                                                               \
+    SDL_Texture* m_image;                                                                                               \
     SDL_Rect m_rect;                                                                                                         \
     double m_angle;                                                                                                           \
     double m_brightness;                                                                                                 \

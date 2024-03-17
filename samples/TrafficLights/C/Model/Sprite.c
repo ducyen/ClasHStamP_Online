@@ -44,58 +44,29 @@ void Sprite_setBrightness(
 /** @public @memberof Sprite */
 void Sprite_draw(
     Sprite* pSprite,
-    SDL_Surface* screenSurface
+    SDL_Renderer* renderer
 ){
-    SDL_Rect rect = ( SDL_Rect ){ 
-        pSprite->m_iniRect.x * screenSurface->w, 
-        pSprite->m_iniRect.y * ( screenSurface->h ), 
-        pSprite->m_iniRect.w  * screenSurface->w, 
-        pSprite->m_iniRect.h  * ( screenSurface->h ) - 22
-    };
-
-    // Rotate and scale the image
-    SDL_Surface* transformedSurface = rotozoomSurface(
+    // Set texture color modulation (brightness)
+    SDL_SetTextureColorMod(
         pSprite->m_image, 
-        pSprite->m_angle, 
-        1.0,
-        0
-    );
-
-    // Change brightness
-    SDL_SetSurfaceColorMod( 
-        transformedSurface, 
         pSprite->m_brightness * 255, 
         pSprite->m_brightness * 255, 
         pSprite->m_brightness * 255
     );
 
-    // Calculate the size of the surface after rotation and zoom
-    int dstwidth, dstheight;
-    rotozoomSurfaceSize(pSprite->m_image->w, pSprite->m_image->h, pSprite->m_angle, 1.0, &dstwidth, &dstheight);
-    double zoom = ( double )dstwidth / pSprite->m_image->w;
+    // Render the texture
+    SDL_RenderCopyEx(renderer, pSprite->m_image, NULL, &pSprite->m_rect, pSprite->m_angle, NULL, SDL_FLIP_NONE);
 
-    // Adjust the destination rectangle
-    rect = ( SDL_Rect ){
-        rect.x + rect.w / 2 - rect.w * zoom / 2,
-        rect.y + rect.h / 2 - rect.h * zoom / 2,
-        rect.w * zoom,
-        rect.h * zoom
-    };
-
-    // Blit the surface on to screen
-    SDL_BlitScaled(transformedSurface, NULL, screenSurface, &rect);
-
-    // Free memory
-    SDL_FreeSurface(transformedSurface);
 } /* Sprite_draw */
 
 /** @public @memberof Sprite */
 bool Sprite_load(
-    Sprite* pSprite
+    Sprite* pSprite,
+    SDL_Renderer* renderer
 ){
     char sRelPath[ 256 ];
     sprintf( sRelPath, "%s/../%s", getInputDir(), pSprite->m_imgPath );
-    pSprite->m_image = IMG_Load(sRelPath);
+    pSprite->m_image = IMG_LoadTexture(renderer, sRelPath);
     if (!pSprite->m_image) {
         printf("Failed to load image: %s\n", IMG_GetError());
         return false;
@@ -108,7 +79,7 @@ void Sprite_free(
     Sprite* pSprite
 ){
     if (pSprite->m_image) {
-        SDL_FreeSurface(pSprite->m_image);
+        SDL_DestroyTexture(pSprite->m_image);
     }
 } /* Sprite_free */
 
