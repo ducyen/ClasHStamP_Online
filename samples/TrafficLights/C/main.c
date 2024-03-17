@@ -9,13 +9,7 @@
 #include <termios.h> 
 #include <fcntl.h>
 #include <png.h>
-typedef unsigned char   BYTE;
-typedef unsigned int    UINT;
-typedef unsigned short      WORD;
-typedef unsigned long       DWORD;
 
-typedef unsigned long  ULONG_PTR;
-typedef ULONG_PTR DWORD_PTR, *PDWORD_PTR;
 typedef struct IWICBitmap{
     int width, height;
     png_bytep *row_pointers;
