@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL2_rotozoom.h> // Include the SDL2_gfx library header
+#include <SDL2_gfxPrimitives.h>
 
 #include <stddef.h>
 #include <stdint.h>
