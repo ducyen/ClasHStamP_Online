@@ -1,6 +1,7 @@
 { pkgs }: {
 	deps = [
-   pkgs.xterm
+        pkgs.xdotool
+        pkgs.xterm
         pkgs.unzip
         pkgs.zulu8
         pkgs.imagemagick6
