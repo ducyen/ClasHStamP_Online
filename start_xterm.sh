@@ -6,7 +6,7 @@ WORKING_DIR=$(dirname "$0")
 export DISPLAY=:0.0
 
 # Start xterm in the background and get its PID
-xterm -geometry $2 -e "$WORKING_DIR/samples/$1/C/my_program" "$WORKING_DIR/samples/$1/Image/Design" "$WORKING_DIR/samples/$1/TransImg/Design" &
+xterm -geometry "$2" -e "$WORKING_DIR/start_c.sh" "$WORKING_DIR" "$1" "$2" &
 PID=$!
 
 # Store the PID in a file

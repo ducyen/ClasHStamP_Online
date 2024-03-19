@@ -65,7 +65,7 @@ public class ImageLoader extends JFrame {
 						if (image != null) {
 							JLabel oldLabel = null;
 							for (Component component: imagePanel.getComponents()) {
-								System.out.println("Checking " + component.getName() + " in " + Thread.currentThread().getId());
+								//System.out.println("Checking " + component.getName() + " in " + Thread.currentThread().getId());
 								if (component instanceof JLabel) {
 									JLabel label = (JLabel)component;
 									if (label.getName().compareToIgnoreCase(file.getAbsolutePath()) == 0) {
@@ -85,7 +85,7 @@ public class ImageLoader extends JFrame {
 							graphics.drawImage(image, 0, 0, newWidth, newHeight, null);
 							graphics.dispose();									
 							if (oldLabel == null) {
-								System.out.println("Add label: " + file.getAbsolutePath()); // Debugging
+								//System.out.println("Add label: " + file.getAbsolutePath()); // Debugging
 								JLabel newLabel = new JLabel(new ImageIcon(scaledImage));
 								newLabel.setName(file.getAbsolutePath());
 								imagePanel.add(newLabel);
@@ -141,7 +141,7 @@ public class ImageLoader extends JFrame {
 	                        Path child = dir.resolve(name);
 	
 	                        if (child.toString().endsWith(".png")) {
-	                        	System.out.println("SwingUtilities.invokeLater(this::updatePanelImages) in thread " + Thread.currentThread().getId() );
+	                        	//System.out.println("SwingUtilities.invokeLater(this::updatePanelImages) in thread " + Thread.currentThread().getId() );
 	                            SwingUtilities.invokeLater(this::updatePanelImages);
 	                        }
 	

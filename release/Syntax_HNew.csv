@@ -224,3 +224,11 @@ friend,"#define __[nAME]_INTERNAL__
 "," )
 "
 visibility,,,,,
+object,"enum {
+[vALUE]
+};
+Sprite* getobj( int id );
+",,,"#define [nAME][->32]( getobj( _[nAME] ) )
+    _[nAME]",",
+#define [nAME][->32]( getobj( _[nAME] ) )
+    _[nAME]"

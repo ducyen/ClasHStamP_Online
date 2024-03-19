@@ -22,6 +22,10 @@ SET PACKAGE=NonOOP
 java %JAVA_OPTS% stm.TMain %1 %2
 IF ERRORLEVEL 2 goto noJavaw
 
+SET PACKAGE=Design
+java %JAVA_OPTS% stm.TMain %1 %2
+IF ERRORLEVEL 2 goto noJavaw
+
 SET LANGUAGE=h
 SET SYNTAX=%TOOL_DIR%\Syntax_HNew.csv
 SET SYNTAX_ABSTRACT=%TOOL_DIR%\Syntax_HNew.csv
@@ -41,6 +45,10 @@ java %JAVA_OPTS% stm.TMain %1 %2
 IF ERRORLEVEL 2 goto noJavaw
 
 SET PACKAGE=NonOOP
+java %JAVA_OPTS% stm.TMain %1 %2
+IF ERRORLEVEL 2 goto noJavaw
+
+SET PACKAGE=Design
 java %JAVA_OPTS% stm.TMain %1 %2
 IF ERRORLEVEL 2 goto noJavaw
 

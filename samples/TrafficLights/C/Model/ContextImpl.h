@@ -1,17 +1,9 @@
 #ifndef __ContextImpl_H__
 #define __ContextImpl_H__
-#include "Context.h"
 typedef struct tagContextImpl ContextImpl;
-typedef enum tagAnEnum {
-    One,                                                        
-    Two,                                                        
-    Three,                                                      
-    AnEnum_NUM
-}AnEnum;
-const TCHAR* AnEnum_toString( AnEnum value );
 typedef struct tagE1Params {
     EventParams base;
-    AnEnum x;                                                   
+    int x;                                                      
 }E1Params;
 typedef enum tagContextImplEvent {
     ContextImpl_TMOUT,                                          
@@ -21,12 +13,9 @@ typedef enum tagContextImplEvent {
 }ContextImpl_EVENT;
 const TCHAR* ContextImplEvent_toString( ContextImpl_EVENT value );
 #endif//__ContextImpl_H__
-#if !defined( ContextImpl_Init ) && ( defined( __ContextImpl_INTERNAL__ )  || defined( __AFriend_INTERNAL__ )  || defined( __Main_INTERNAL__ )  )
-#define __Context_INTERNAL__
-#include "Context.h"
+#if !defined( ContextImpl_Init ) && ( defined( __ContextImpl_INTERNAL__ )  || defined( __ObjsBuilder_INTERNAL__ )  )
 #define __HdStateMachine_INTERNAL__
 #include "HdStateMachine.h"
-boolean ContextImpl_checkE1Params( EventParams* e );
 /** @class ManagingThroughTraffic_Region1
  * @extends HdStateMachine
  */
@@ -94,22 +83,19 @@ BOOL ContextImpl_Start( ContextImpl* pContextImpl );
 /** @memberof ContextImpl
  * @brief ContextImpl auto-generated constructor
  */
-#define ContextImpl_Init(_derivableAttribute, _publicAttribute, _privateAttribute, _internalAttribute, _readOnlyAttribute, _anAggregation, _aProtectedComposition)\
-    Context_Init( P( _derivableAttribute ), P( _publicAttribute ), P( _privateAttribute ), P( _internalAttribute ), P( _readOnlyAttribute ), P( _anAggregation ), P( _aProtectedComposition ) )\
-    .vTbl = &gContextImplVtbl,\
+#define ContextImpl_Init()\
     .mainStm = MainStm_Init(),\
 
 #define ContextImpl_Ctor( InitFunc, optionParams )    ( ContextImpl ){\
     InitFunc\
 \
 }
-extern const BaseClassVtbl gContextImplVtbl;
-Context* ContextImpl_Copy( ContextImpl* pContextImpl, const ContextImpl* pSource );
+ContextImpl* ContextImpl_Copy( ContextImpl* pContextImpl, const ContextImpl* pSource );
 /** @class ContextImpl
- * @extends Context
+ * @extends 
  */
 #define ContextImpl_CLASS                                                                       \
-    Context_CLASS                                                                               \
+    size_t cbSize;                                                                              \
     MainStm mainStm;                                            
 
 typedef struct tagContextImpl{

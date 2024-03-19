@@ -49,9 +49,6 @@ JAVA_OPTS="$JAVA_OPTS -classpath $CLASSPATH"
 
 SAMPLE_HOME=$WORKING_DIR/samples/$1
 
-echo "Running command: ./astah-edu/astah-command.sh -f $SAMPLE_HOME/Design.asta -image -o $SAMPLE_HOME/Image -t png"
-./astah-edu/astah-command.sh -f $SAMPLE_HOME/Design.asta -image -o $SAMPLE_HOME/Image -t png
-
 export OUTPUT=$SAMPLE_HOME/C
 
 export LANGUAGE=c
@@ -68,6 +65,9 @@ PACKAGE=Abstracts
 java $JAVA_OPTS stm.TMain
 
 PACKAGE=NonOOP
+java $JAVA_OPTS stm.TMain
+
+PACKAGE=Design
 java $JAVA_OPTS stm.TMain
 
 LANGUAGE=h
@@ -88,10 +88,13 @@ java $JAVA_OPTS stm.TMain
 PACKAGE=NonOOP
 java $JAVA_OPTS stm.TMain
 
+PACKAGE=Design
+java $JAVA_OPTS stm.TMain
+
 echo "Building Code"
 
 cd $SAMPLE_HOME/C
-make
+make clean
 cd $WORKING_DIR
 
 echo "Code Generation Finished"

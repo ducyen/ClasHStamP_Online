@@ -2,15 +2,7 @@
 #define __ContextImpl_INTERNAL__
 #include "CommonInclude.h"
 #include "ContextImpl.h"
-/* AnEnum列挙型の値から文字列に変換する関数（デバッグ用） */
-const TCHAR* AnEnum_toString( AnEnum value ){
-    switch( value ){
-    case One: return _T( "One" );
-    case Two: return _T( "Two" );
-    case Three: return _T( "Three" );
-    default: return _T( "AnEnum_UNKNOWN" );
-    }
-}
+#include "ObjsBuilder.h"                                        
 const TCHAR* ContextImplEvent_toString( ContextImpl_EVENT value ){
     switch( value ){
     case ContextImpl_TMOUT: return _T( "TMOUT" );
@@ -19,19 +11,6 @@ const TCHAR* ContextImplEvent_toString( ContextImpl_EVENT value ){
     default: return _T( "ContextImpl_UNKNOWN" );
     }
 }
-/** @protected @memberof ContextImpl */
-static void ContextImpl_protectedMethod(
-    ContextImpl* pContextImpl
-){
-} /* ContextImpl_protectedMethod */
-
-boolean ContextImpl_checkE1Params(
-    EventParams* e
-){
-    return ( ( E1Params* )e )->x == Two;
-    #define checkE1Params ContextImpl_checkE1Params             // Just for demonstration
-} /* ContextImpl_checkE1Params */
-
 static void ManagingThroughTraffic_Region1_BgnTrans( ContextImpl *pManagingThroughTraffic_Top, ManagingThroughTraffic_Region1* pStm, uint64_t targetState, uint64_t initState );
 static void ManagingThroughTraffic_Region1_EndTrans( ContextImpl *pManagingThroughTraffic_Top, ManagingThroughTraffic_Region1* pStm );
 static BOOL ManagingThroughTraffic_Region1_Reset( ContextImpl* pManagingThroughTraffic_Top, ManagingThroughTraffic_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
@@ -210,13 +189,13 @@ static BOOL ManagingThroughTraffic_Region1_RunToCompletion( ContextImpl* pContex
 }
 static BOOL ManagingThroughTraffic_Region1_Reset( ContextImpl* pContextImpl, ManagingThroughTraffic_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
     pStm->base.pParentStm = pParentStm;
-    if( nEntryPoint != STATE_UNDEF && !IS_IN( nEntryPoint, ManagingThroughTraffic_Region1_ManagingThroughTraffic_Top ) ){ return FALSE; }
     if( nEntryPoint == NULL ){
         if( ManagingThroughTraffic_Region1_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = ManagingThroughTraffic_Region1_ManagingThroughTrafficRegion1Init;
         }
         return FALSE;
     }else{
+    if( !IS_IN( nEntryPoint, ManagingThroughTraffic_Region1_ManagingThroughTraffic_Top ) ){ return FALSE; }
         if( ManagingThroughTraffic_Region1_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = nEntryPoint;
             return FALSE;
@@ -364,13 +343,13 @@ static BOOL ManagingThroughTraffic_Region2_RunToCompletion( ContextImpl* pContex
 }
 static BOOL ManagingThroughTraffic_Region2_Reset( ContextImpl* pContextImpl, ManagingThroughTraffic_Region2* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
     pStm->base.pParentStm = pParentStm;
-    if( nEntryPoint != STATE_UNDEF && !IS_IN( nEntryPoint, ManagingThroughTraffic_Region2_ManagingThroughTraffic_Top ) ){ return FALSE; }
     if( nEntryPoint == NULL ){
         if( ManagingThroughTraffic_Region2_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = ManagingThroughTraffic_Region2_ManagingThroughTrafficRegion2Init;
         }
         return FALSE;
     }else{
+    if( !IS_IN( nEntryPoint, ManagingThroughTraffic_Region2_ManagingThroughTraffic_Top ) ){ return FALSE; }
         if( ManagingThroughTraffic_Region2_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = nEntryPoint;
             return FALSE;
@@ -677,16 +656,16 @@ static BOOL MainStm_RunToCompletion( ContextImpl* pContextImpl, MainStm* pStm ){
     return bResult;
 }
 static BOOL MainStm_Reset( ContextImpl* pContextImpl, MainStm* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
-    if( ManagingThroughTraffic_Region1_Reset( pContextImpl, &pStm->ManagingThroughTraffic_TopManagingThroughTraffic_Region1, &pStm->base, nEntryPoint ) ){ return TRUE; }
-    if( ManagingThroughTraffic_Region2_Reset( pContextImpl, &pStm->ManagingThroughTraffic_TopManagingThroughTraffic_Region2, &pStm->base, nEntryPoint ) ){ return TRUE; }
     pStm->base.pParentStm = pParentStm;
-    if( nEntryPoint != STATE_UNDEF && !IS_IN( nEntryPoint, MainStm_MainTop ) ){ return FALSE; }
     if( nEntryPoint == NULL ){
         if( MainStm_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = MainStm_MainStmInit;
         }
         return FALSE;
     }else{
+    if( ManagingThroughTraffic_Region1_Reset( pContextImpl, &pStm->ManagingThroughTraffic_TopManagingThroughTraffic_Region1, &pStm->base, nEntryPoint ) ){ return TRUE; }
+    if( ManagingThroughTraffic_Region2_Reset( pContextImpl, &pStm->ManagingThroughTraffic_TopManagingThroughTraffic_Region2, &pStm->base, nEntryPoint ) ){ return TRUE; }
+    if( !IS_IN( nEntryPoint, MainStm_MainTop ) ){ return FALSE; }
         if( MainStm_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = nEntryPoint;
             return FALSE;
@@ -744,10 +723,6 @@ BOOL ContextImpl_Reset( ContextImpl* pContextImpl, uint64_t nEntryPoint ){
 BOOL ContextImpl_IsIn( ContextImpl* pContextImpl, uint64_t nState ){
     return MainStm_IsIn( &pContextImpl->mainStm, nState );
 }
-Context* ContextImpl_Copy( ContextImpl* pContextImpl, const ContextImpl* pSource ){
-    Context_Copy( ( Context* )pContextImpl, ( Context* )pSource );
-    return ( BaseClass* )pContextImpl;
+ContextImpl* ContextImpl_Copy( ContextImpl* pContextImpl, const ContextImpl* pSource ){
+    return ( ContextImpl* )pContextImpl;
 }
-const BaseClassVtbl gContextImplVtbl = {
-    .pprotectedMethod            = ContextImpl_protectedMethod,
-};
