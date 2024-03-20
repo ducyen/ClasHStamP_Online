@@ -8,9 +8,9 @@ echo "Working Directory: $WORKING_DIR"
 echo "Sample Directory: $SAMPLE_DIR"
 echo "Geometry: $GEOMETRY"
 
-SAMPLE_HOME=$WORKING_DIR/samples/$SAMPLE_DIR
-echo "Running command: $WORKING_DIR/astah-edu/astah-command.sh -f $SAMPLE_HOME/Design.asta -image -o $SAMPLE_HOME/Image -t png"
-$WORKING_DIR/astah-edu/astah-command.sh -f $SAMPLE_HOME/Design.asta -image -o $SAMPLE_HOME/Image -t png
+SAMPLE_HOME=samples/$SAMPLE_DIR
+echo "Running command: ./astah-edu/astah-command.sh -f $SAMPLE_HOME/Design.asta -image -o $SAMPLE_HOME/Image -t png"
+./astah-edu/astah-command.sh -f $SAMPLE_HOME/Design.asta -image -o $SAMPLE_HOME/Image -t png
 
 # Example command
 cd "$WORKING_DIR/samples/$SAMPLE_DIR/C" || exit
@@ -27,3 +27,5 @@ if [ -f "$PROGRAM_PATH" ]; then
 else
     echo "Error: Program not found at $PROGRAM_PATH"
 fi
+
+sleep 5
