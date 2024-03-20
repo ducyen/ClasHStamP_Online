@@ -1,14 +1,27 @@
-{ pkgs }: {
-	deps = [
-        pkgs.xdotool
-        pkgs.xterm
-        pkgs.unzip
-        # pkgs.zulu8                    # java 1.8.0_265 to run astah-com
-        pkgs.adoptopenjdk-hotspot-bin-8 # java 1.8.0_292 to run astah-uml
-        pkgs.imagemagick6
-        pkgs.clang_12
-		pkgs.ccls
-		pkgs.gdb
-		pkgs.gnumake
-	];
+{ pkgs }: with pkgs; let SDL = [
+    SDL2.dev
+    SDL2_image
+    SDL2_ttf
+    SDL2_net
+    SDL2_gfx
+    # SDL2_sound
+    SDL2_mixer
+]; in
+{
+    deps = [
+        clang_12
+        ccls
+        gdb
+        gnumake
+        rnix-lsp  
+        xdotool
+        xterm
+        unzip
+        # zulu8                    # java 1.8.0_265 to run astah-com
+        adoptopenjdk-hotspot-bin-8 # java 1.8.0_292 to run astah-uml
+        imagemagick6
+    ] ++ SDL;
+    env = {
+        CPLUS_INCLUDE_PATH = lib.makeSearchPath "include/SDL2" SDL;
+    };    
 }

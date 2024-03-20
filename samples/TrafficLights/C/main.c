@@ -9,6 +9,7 @@
 #include <termios.h> 
 #include <fcntl.h>
 #include <png.h>
+#include <sys/stat.h>
 
 typedef struct IWICBitmap{
     int width, height;
