@@ -8,8 +8,8 @@ echo "Working Directory: $WORKING_DIR"
 echo "Sample Directory: $SAMPLE_DIR"
 echo "Geometry: $GEOMETRY"
 
-SAMPLE_HOME=$WORKING_DIR/samples/$1
-echo "Running command: ./astah-edu/astah-command.sh -f $SAMPLE_HOME/Design.asta -image -o $SAMPLE_HOME/Image -t png"
+SAMPLE_HOME=$WORKING_DIR/samples/$SAMPLE_DIR
+echo "Running command: $WORKING_DIR/astah-edu/astah-command.sh -f $SAMPLE_HOME/Design.asta -image -o $SAMPLE_HOME/Image -t png"
 $WORKING_DIR/astah-edu/astah-command.sh -f $SAMPLE_HOME/Design.asta -image -o $SAMPLE_HOME/Image -t png
 
 # Example command

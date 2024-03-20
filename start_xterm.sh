@@ -6,7 +6,7 @@ WORKING_DIR=$(dirname "$0")
 export DISPLAY=:0.0
 
 # Start xterm in the background and get its PID
-xterm -geometry "$2" -e "$WORKING_DIR/start_c.sh" "$WORKING_DIR" "$1" "$2" &
+xterm -fa 'DejaVu Sans Mono' -fs 10 -geometry "80x25+10+10" -e "$WORKING_DIR/start_c.sh" "$WORKING_DIR" "$1" "$2" &
 PID=$!
 
 # Store the PID in a file

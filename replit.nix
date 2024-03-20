@@ -9,6 +9,7 @@
 ]; in
 {
     deps = [
+        dos2unix
         clang_12
         ccls
         gdb
@@ -17,7 +18,7 @@
         xdotool
         xterm
         unzip
-        # zulu8                    # java 1.8.0_265 to run astah-com
+        #zulu8                    # java 1.8.0_265 to run astah-com
         adoptopenjdk-hotspot-bin-8 # java 1.8.0_292 to run astah-uml
         imagemagick6
     ] ++ SDL;
