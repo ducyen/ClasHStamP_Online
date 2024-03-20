@@ -29,7 +29,7 @@ Constraint* TransformConstraint_Copy( TransformConstraint* pTransformConstraint,
     Constraint_CLASS                                                                            \
     Sprite* m_source;                                           \
     Sprite* m_target;                                           \
-    float influence;                                                                                                         \
+    float influence;                                                                                                          \
 
 typedef struct tagTransformConstraint{
     TransformConstraint_CLASS    
