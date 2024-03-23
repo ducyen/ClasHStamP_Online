@@ -56,7 +56,7 @@ public class MainEntry extends JFrame {
         selectSampleBox = new JComboBox<>();
         populateSampleBox();
 
-        selectDiagramEditorBox = new JComboBox<>(new String[]{"edu", "com"});
+        selectDiagramEditorBox = new JComboBox<>(new String[]{"uml", "edu", "com"});
 
         JButton launchDiagramEditorButton = new JButton("Launch Diagram Editor");
         launchDiagramEditorButton.addActionListener(this::launchDiagramEditor);

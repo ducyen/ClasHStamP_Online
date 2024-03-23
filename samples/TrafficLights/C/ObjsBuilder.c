@@ -7,70 +7,74 @@
 #include "YellowLight.h"                                        
 #include "RedLight.h"                                           
 #include "Primitive.h"                                          
-static Sprite g_objects[] = {
-    { RedLight_Init(
-        P( { 0.2069954128440367, 0.3883618551587302, 0.060206422018348624, 0.09365079365079365 } ),
+static Sprite* g_objects[] = {
+    &RedLight_Ctor( RedLight_Init(
+        P( { 0.2069954128440367, 0.4081608984169016, 0.060206422018348624, 0.07302389741003117 } ),
         P( "RedLight.png" )
-    ) },
-    { RedLight_Init(
-        P( { 0.6674311926605505, 0.5026475694444444, 0.060206422018348624, 0.09365079365079365 } ),
+    ), ),
+    &RedLight_Ctor( RedLight_Init(
+        P( { 0.6674311926605505, 0.5187599767579155, 0.060206422018348624, 0.07302389741003117 } ),
         P( "RedLight.png" )
-    ) },
-    { YellowLight_Init(
-        P( { 0.1559633027522936, 0.3883618551587302, 0.060206422018348624, 0.09365079365079365 } ),
+    ), ),
+    &YellowLight_Ctor( YellowLight_Init(
+        P( { 0.1559633027522936, 0.4081608984169016, 0.060206422018348624, 0.07302389741003117 } ),
         P( "YellowLight.png" )
-    ) },
-    { GreenLight_Init(
-        P( { 0.10550458715596331, 0.3883618551587302, 0.060206422018348624, 0.09365079365079365 } ),
+    ), ),
+    &GreenLight_Ctor( GreenLight_Init(
+        P( { 0.10550458715596331, 0.4081608984169016, 0.060206422018348624, 0.07302389741003117 } ),
         P( "GreenLight.png" )
-    ) },
-    { YellowLight_Init(
-        P( { 0.716743119266055, 0.5026475694444444, 0.060206422018348624, 0.09365079365079365 } ),
+    ), ),
+    &YellowLight_Ctor( YellowLight_Init(
+        P( { 0.716743119266055, 0.5187599767579155, 0.060206422018348624, 0.07302389741003117 } ),
         P( "YellowLight.png" )
-    ) },
-    { GreenLight_Init(
-        P( { 0.7672018348623854, 0.5026475694444444, 0.060206422018348624, 0.09365079365079365 } ),
+    ), ),
+    &GreenLight_Ctor( GreenLight_Init(
+        P( { 0.7672018348623854, 0.5187599767579155, 0.060206422018348624, 0.07302389741003117 } ),
         P( "GreenLight.png" )
-    ) },
-    { RedLight_Init(
-        P( { 0.5607798165137615, 0.21852058531746033, 0.060206422018348624, 0.09365079365079365 } ),
+    ), ),
+    &RedLight_Ctor( RedLight_Init(
+        P( { 0.5607798165137615, 0.25502966518215375, 0.060206422018348624, 0.07302389741003117 } ),
         P( "RedLight.png" )
-    ) },
-    { YellowLight_Init(
-        P( { 0.5607798165137615, 0.15979042658730158, 0.060206422018348624, 0.09365079365079365 } ),
+    ), ),
+    &YellowLight_Ctor( YellowLight_Init(
+        P( { 0.5607798165137615, 0.19269445184790335, 0.060206422018348624, 0.07302389741003117 } ),
         P( "YellowLight.png" )
-    ) },
-    { GreenLight_Init(
-        P( { 0.5607798165137615, 0.10423487103174603, 0.060206422018348624, 0.09365079365079365 } ),
+    ), ),
+    &GreenLight_Ctor( GreenLight_Init(
+        P( { 0.5607798165137615, 0.13090661682944726, 0.060206422018348624, 0.07302389741003117 } ),
         P( "GreenLight.png" )
-    ) },
-    { RedLight_Init(
-        P( { 0.3956422018348624, 0.5661396329365079, 0.060206422018348624, 0.09365079365079365 } ),
+    ), ),
+    &RedLight_Ctor( RedLight_Init(
+        P( { 0.3956422018348624, 0.5916673293956485, 0.060206422018348624, 0.07302389741003117 } ),
         P( "RedLight.png" )
-    ) },
-    { YellowLight_Init(
-        P( { 0.3956422018348624, 0.6216951884920635, 0.060206422018348624, 0.09365079365079365 } ),
+    ), ),
+    &YellowLight_Ctor( YellowLight_Init(
+        P( { 0.3956422018348624, 0.6546015064367104, 0.060206422018348624, 0.07302389741003117 } ),
         P( "YellowLight.png" )
-    ) },
-    { GreenLight_Init(
-        P( { 0.3956422018348624, 0.6772507440476191, 0.060206422018348624, 0.09365079365079365 } ),
+    ), ),
+    &GreenLight_Ctor( GreenLight_Init(
+        P( { 0.3956422018348624, 0.7163893414551665, 0.060206422018348624, 0.07302389741003117 } ),
         P( "GreenLight.png" )
-    ) },
-    { Primitive_Init(
-        P( { 0.3360091743119266, 0.09153645833333333, 0.1536697247706422, 0.15396825396825398 } ),
+    ), ),
+    &Primitive_Ctor( Primitive_Init(
+        P( { 0.3360091743119266, 0.12091051439232409, 0.1536697247706422, 0.1490015360983103 } ),
         P( "Rectangle 000000 line 1 true FF0000 round" )
-    ) },
-    { Primitive_Init(
-        P( { 0.7006880733944955, 0.16455233134920635, 0.11123853211009174, 0.11904761904761904 } ),
+    ), ),
+    &Primitive_Ctor( Primitive_Init(
+        P( { 0.7006880733944955, 0.1915710366657496, 0.11123853211009174, 0.1152073732718894 } ),
         P( "Oval 000000 line 1 null FFFFFF oval" )
-    ) },
-    { Primitive_Init(
-        P( { 0.10091743119266056, 0.12804439484126984, 0.12041284403669725, 0.10793650793650794 } ),
+    ), ),
+    &Primitive_Ctor( Primitive_Init(
+        P( { 0.8577981651376146, 0.1470241856672857, 0.8245412844036697, 0.3543974575566866 } ),
+        P( "Line 0000FF line 1 null 000000 null" )
+    ), ),
+    &Primitive_Ctor( Primitive_Init(
+        P( { 0.10091743119266056, 0.15624077552903684, 0.12041284403669725, 0.10445468509984639 } ),
         P( "Rectangle 000000 dash2 1 null FFFFFF null" )
-    ) }
+    ), )
 };
 Sprite* getobj( int id ){
-    return &g_objects[ id ];
+    return g_objects[ id ];
 }
 int ObjsBuilder_startSim(
     void  
@@ -120,10 +124,24 @@ int ObjsBuilder_startSim(
 
     if (nResult == S_OK && imageSurface != NULL) {
         // Create a texture from the loaded surface
-        imageTexture = SDL_CreateTextureFromSurface(renderer, imageSurface);
+        imageTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
         if (imageTexture == NULL) {
             printf("Unable to create texture! SDL_Error: %s\n", SDL_GetError());
             nResult = S_FALSE;
+        } else{
+            // Set the new texture as the render target
+            SDL_SetRenderTarget(renderer, imageTexture);
+
+            // Clear screen
+            SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF); // White
+            SDL_RenderClear(renderer);
+
+            for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
+                Sprite_draw0(g_objects[i], renderer);
+            }
+
+            // Reset the render target to the default
+            SDL_SetRenderTarget(renderer, NULL);
         }
     }
 
@@ -134,7 +152,7 @@ int ObjsBuilder_startSim(
     }
 
     for( int i = 0; i < sizeof( g_objects ) / sizeof( g_objects[ 0 ] ) && nResult == S_OK; i++ ){
-        if( Sprite_load( &g_objects[ i ], renderer ) == false ){
+        if( Sprite_load( g_objects[ i ], renderer ) == false ){
             nResult = S_FALSE;
         }
     }
@@ -162,22 +180,15 @@ int ObjsBuilder_startSim(
                 }
             }
 
-            // Clear screen
-            SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF); // White
-            SDL_RenderClear(renderer);
-
             // Render the image texture
-            //if (imageTexture != NULL) {
-            //    SDL_RenderCopy(renderer, imageTexture, NULL, NULL);
-            //}
+            if (imageTexture != NULL) {
+                SDL_RenderCopy(renderer, imageTexture, NULL, NULL);
+            }
 
             eastRedLight->m_angle += 1.0;
 
             for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
-                Sprite_draw0(&g_objects[i], renderer);
-            }
-            for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
-                Sprite_draw1(&g_objects[i], renderer);
+                Sprite_draw1(g_objects[i], renderer);
             }
 
             // Update the screen
@@ -189,7 +200,7 @@ int ObjsBuilder_startSim(
     }
 
     for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
-        Sprite_free(&g_objects[i]);
+        Sprite_free(g_objects[i]);
     }
 
     // Free resources and close SDL

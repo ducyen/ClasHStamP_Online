@@ -44,14 +44,14 @@ Sprite* Sprite_Copy( Sprite* pSprite, const Sprite* pSource );
 #define Sprite_CLASS                                                                            \
     const SpriteVtbl* const vTbl;                                                               \
     size_t cbSize;                                                                              \
-    RelativeRect m_iniRect;                                                                                            \
-    char* m_imgPath;                                                                                                          \
-    SDL_Texture* m_image;                                                                                                \
-    SDL_Rect m_rect;                                                                                                          \
-    double m_angle;                                                                                                            \
-    double m_brightness;                                                                                                  \
+    RelativeRect m_iniRect;                                                                                           \
+    char* m_imgPath;                                                                                                         \
+    SDL_Texture* m_image;                                                                                               \
+    SDL_Rect m_rect;                                                                                                         \
+    double m_angle;                                                                                                           \
+    double m_brightness;                                                                                                 \
     Constraint* m_constraints[ 32 ];                            \
-    int m_constraintCount;                                                                                              \
+    int m_constraintCount;                                                                                             \
 
 typedef struct tagSprite{
     Sprite_CLASS    

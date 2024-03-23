@@ -12,6 +12,7 @@ typedef struct tagImgSprite ImgSprite;
 #define ImgSprite_Init(_m_iniRect, _m_imgPath)\
     Sprite_Init( P( _m_iniRect ), P( _m_imgPath ) )\
     .vTbl = &gImgSpriteVtbl,\
+    .m_buffer = null,\
 
 #define ImgSprite_Ctor( InitFunc, optionParams )    ( ImgSprite ){\
     InitFunc\
@@ -24,6 +25,7 @@ Sprite* ImgSprite_Copy( ImgSprite* pImgSprite, const ImgSprite* pSource );
  */
 #define ImgSprite_CLASS                                                                         \
     Sprite_CLASS                                                                                \
+    SDL_Texture* m_buffer;                                                                                             \
 
 typedef struct tagImgSprite{
     ImgSprite_CLASS    

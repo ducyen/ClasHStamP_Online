@@ -14,8 +14,21 @@ static void ImgSprite_draw1(
     ImgSprite* pImgSprite,
     SDL_Renderer* renderer
 ){
-    // Get the size of the renderer
     int width, height;
+    // Set the new texture as the render target
+    SDL_SetRenderTarget(renderer, pImgSprite->m_buffer);
+
+    // Clear first
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0x00); // White
+    SDL_RenderClear( renderer );
+
+    // Copy the original texture to the new texture
+    SDL_RenderCopyEx(renderer, pImgSprite->m_image, NULL, NULL, pImgSprite->m_angle, NULL, SDL_FLIP_NONE);
+
+    // Reset the render target to the default
+    SDL_SetRenderTarget(renderer, NULL);
+
+    // Get the size of the renderer
     if (SDL_GetRendererOutputSize(renderer, &width, &height) != 0) {
         printf("Error getting renderer size: %s\n", SDL_GetError());
     }
@@ -23,19 +36,20 @@ static void ImgSprite_draw1(
         pImgSprite->m_iniRect.x * width, 
         pImgSprite->m_iniRect.y * height, 
         pImgSprite->m_iniRect.w * width, 
-        pImgSprite->m_iniRect.h * height - 24
+        pImgSprite->m_iniRect.h * height
     };
 
     // Set texture color modulation (brightness)
     SDL_SetTextureColorMod(
-        pImgSprite->m_image, 
+        pImgSprite->m_buffer, 
         pImgSprite->m_brightness * 255, 
         pImgSprite->m_brightness * 255, 
         pImgSprite->m_brightness * 255
     );
 
     // Render the texture
-    SDL_RenderCopyEx(renderer, pImgSprite->m_image, NULL, &pImgSprite->m_rect, pImgSprite->m_angle, NULL, SDL_FLIP_NONE);
+    SDL_RenderCopyEx(renderer, pImgSprite->m_buffer, NULL, &pImgSprite->m_rect, 0, NULL, SDL_FLIP_NONE);
+
 } /* ImgSprite_draw1 */
 
 /** @public @memberof ImgSprite */
@@ -50,6 +64,22 @@ static bool ImgSprite_load(
         printf("Failed to load image: %s\n", IMG_GetError());
         return false;
     }
+
+    // Query the original texture to get its width, height, and format
+    Uint32 format;
+    int width, height;
+    SDL_QueryTexture(pImgSprite->m_image, &format, NULL, &width, &height);
+
+    // Create a new texture with the same format and dimensions
+    pImgSprite->m_buffer = SDL_CreateTexture(renderer, format, SDL_TEXTUREACCESS_TARGET, width, height);
+    if (!pImgSprite->m_buffer) {
+        printf("Failed to create new texture: %s\n", SDL_GetError());
+        return NULL;
+    }
+
+    // Set the blend mode for the new texture to enable alpha blending
+    SDL_SetTextureBlendMode(pImgSprite->m_buffer, SDL_BLENDMODE_BLEND);
+
     return true;
 } /* ImgSprite_load */
 
@@ -59,6 +89,9 @@ static void ImgSprite_free(
 ){
     if (pImgSprite->m_image) {
         SDL_DestroyTexture(pImgSprite->m_image);
+    }
+    if (pImgSprite->m_buffer) {
+        SDL_DestroyTexture(pImgSprite->m_buffer);
     }
 } /* ImgSprite_free */
 

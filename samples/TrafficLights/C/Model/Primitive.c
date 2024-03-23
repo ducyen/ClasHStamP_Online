@@ -44,15 +44,15 @@ static void Primitive_draw0(
         int y2 = pPrimitive->m_rect.y + pPrimitive->m_rect.h;
         if( strcmp( isFilled, "true" ) == 0 ){
             if( strcmp( rectType, "round" ) == 0 ){
-                roundedBoxRGBA(renderer, x1, y1, x2, y2, 10, GetBValue(fillColor), GetGValue(fillColor), GetRValue(fillColor), 0xFF );
+                roundedBoxRGBA(renderer, x1, y1, x2, y2, 10, LOBYTE((fillColor)>>16), LOBYTE(((WORD)(fillColor)) >> 8), LOBYTE(fillColor), 0xFF );
             } else{
-                boxRGBA(renderer, x1, y1, x2, y2, GetBValue(fillColor), GetGValue(fillColor), GetRValue(fillColor), 0xFF );
+                boxRGBA(renderer, x1, y1, x2, y2, LOBYTE((fillColor)>>16), LOBYTE(((WORD)(fillColor)) >> 8), LOBYTE(fillColor), 0xFF );
             }
         } else{
             if( strcmp( rectType, "round" ) == 0 ){
-                roundedRectangleRGBA( renderer, x1, y1, x2, y2, 10, GetBValue(lineColor), GetGValue(lineColor), GetRValue(lineColor), 0xFF );
+                roundedRectangleRGBA( renderer, x1, y1, x2, y2, 10, LOBYTE((lineColor)>>16), LOBYTE(((WORD)(lineColor)) >> 8), LOBYTE(lineColor), 0xFF );
             } else{
-                rectangleRGBA( renderer, x1, y1, x2, y2, GetBValue(lineColor), GetGValue(lineColor), GetRValue(lineColor), 0xFF );
+                rectangleRGBA( renderer, x1, y1, x2, y2, LOBYTE((lineColor)>>16), LOBYTE(((WORD)(lineColor)) >> 8), LOBYTE(lineColor), 0xFF );
             }
         }
     }else if( strcmp( primitiveType, "Oval" ) == 0 ){
@@ -61,10 +61,16 @@ static void Primitive_draw0(
         int x = pPrimitive->m_rect.x + rx;
         int y = pPrimitive->m_rect.y + ry;
         if( strcmp( isFilled, "true" ) == 0 ){
-            filledEllipseRGBA( renderer, x, y, rx, ry, GetBValue(fillColor), GetGValue(fillColor), GetRValue(fillColor), 0xFF );
+            filledEllipseRGBA( renderer, x, y, rx, ry, LOBYTE((fillColor)>>16), LOBYTE(((WORD)(fillColor)) >> 8), LOBYTE(fillColor), 0xFF );
         } else{
-            ellipseRGBA( renderer, x, y, rx, ry, GetBValue(lineColor), GetGValue(lineColor), GetRValue(lineColor), 0xFF );
+            ellipseRGBA( renderer, x, y, rx, ry, LOBYTE((lineColor)>>16), LOBYTE(((WORD)(lineColor)) >> 8), LOBYTE(lineColor), 0xFF );
         }
+    }else if( strcmp( primitiveType, "Line" ) == 0 ){
+        int x1 = pPrimitive->m_rect.x;
+        int y1 = pPrimitive->m_rect.y;
+        int x2 = pPrimitive->m_rect.w;
+        int y2 = pPrimitive->m_rect.h;
+        lineRGBA( renderer, x1, y1, x2, y2, LOBYTE((lineColor)>>16), LOBYTE(((WORD)(lineColor)) >> 8), LOBYTE(lineColor), 0xFF );
     }
 } /* Primitive_draw0 */
 

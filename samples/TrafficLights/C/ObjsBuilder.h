@@ -31,6 +31,8 @@ enum {
     _Rectangle_4bm,
 #define Oval_4dj                ( getobj( _Oval_4dj ) )
     _Oval_4dj,
+#define Line_4ei                ( getobj( _Line_4ei ) )
+    _Line_4ei,
 #define Rectangle_4fh           ( getobj( _Rectangle_4fh ) )
     _Rectangle_4fh
 };

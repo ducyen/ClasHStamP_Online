@@ -28,12 +28,12 @@ HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdSt
 #define HdStateMachine_CLASS                                                                    \
     size_t cbSize;                                                                              \
     HdStateMachine* pParentStm;                                 \
-    uint64_t nCurrentState;                                                                                            \
-    uint64_t nLCAState;                                                                                                    \
-    uint64_t nTargetState;                                                                                              \
-    uint64_t nSourceState;                                                                                              \
-    uint64_t nPseudostate;                                                                                              \
-    bool bIsExternTrans;                                                                                                  \
+    uint64_t nCurrentState;                                                                                           \
+    uint64_t nLCAState;                                                                                                   \
+    uint64_t nTargetState;                                                                                             \
+    uint64_t nSourceState;                                                                                             \
+    uint64_t nPseudostate;                                                                                             \
+    bool bIsExternTrans;                                                                                                 \
 
 typedef struct tagHdStateMachine{
     HdStateMachine_CLASS    
