@@ -74,28 +74,18 @@ public class ImageLoader extends JFrame {
 									}
 								}
 							}
-							int newWidth = image.getWidth() * 90 / 100;
-							int newHeight = image.getHeight() * 90 / 100;
-							if (file.getAbsolutePath().contains("Visualized_")) {
-								newWidth = 400;
-								newHeight = 400;
-							}
-							BufferedImage scaledImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
-							Graphics2D graphics = scaledImage.createGraphics();
-							graphics.drawImage(image, 0, 0, newWidth, newHeight, null);
-							graphics.dispose();									
 							if (oldLabel == null) {
 								//System.out.println("Add label: " + file.getAbsolutePath()); // Debugging
-								JLabel newLabel = new JLabel(new ImageIcon(scaledImage));
+								JLabel newLabel = new JLabel(new ImageIcon(image));
 								newLabel.setName(file.getAbsolutePath());
 								imagePanel.add(newLabel);
 							} else {
-								oldLabel.setIcon(new ImageIcon(scaledImage));
+								oldLabel.setIcon(new ImageIcon(image));
 							}
 						}
 					} catch (IOException e) {
-						System.err.println("Failed to load image: " + file.getAbsolutePath()); // Debugging
-						e.printStackTrace();
+						//System.err.println("Failed to load image: " + file.getAbsolutePath()); // Debugging
+						//e.printStackTrace();
 					}
 				}
 			}
@@ -159,7 +149,7 @@ public class ImageLoader extends JFrame {
 	                    }
 	                }
 	            } catch (IOException ex) {
-	                ex.printStackTrace();
+	                //ex.printStackTrace();
 	            }
 	        });
     	}

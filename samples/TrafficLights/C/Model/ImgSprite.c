@@ -97,6 +97,7 @@ static void ImgSprite_free(
 
 Sprite* ImgSprite_Copy( ImgSprite* pImgSprite, const ImgSprite* pSource ){
     Sprite_Copy( ( Sprite* )pImgSprite, ( Sprite* )pSource );
+    pImgSprite->m_buffer = pSource->m_buffer;
     return ( Sprite* )pImgSprite;
 }
 const SpriteVtbl gImgSpriteVtbl = {

@@ -27,14 +27,46 @@ enum {
     _southYellowLight,
 #define southGreenLight         ( getobj( _southGreenLight ) )
     _southGreenLight,
-#define Rectangle_4bm           ( getobj( _Rectangle_4bm ) )
-    _Rectangle_4bm,
-#define Oval_4dj                ( getobj( _Oval_4dj ) )
-    _Oval_4dj,
-#define Line_4ei                ( getobj( _Line_4ei ) )
-    _Line_4ei,
 #define Rectangle_4fh           ( getobj( _Rectangle_4fh ) )
-    _Rectangle_4fh
+    _Rectangle_4fh,
+#define Rectangle_phs           ( getobj( _Rectangle_phs ) )
+    _Rectangle_phs,
+#define Rectangle_ps7           ( getobj( _Rectangle_ps7 ) )
+    _Rectangle_ps7,
+#define Rectangle_q2m           ( getobj( _Rectangle_q2m ) )
+    _Rectangle_q2m,
+#define Oval_rex                ( getobj( _Oval_rex ) )
+    _Oval_rex,
+#define Oval_rlz                ( getobj( _Oval_rlz ) )
+    _Oval_rlz,
+#define Oval_rwe                ( getobj( _Oval_rwe ) )
+    _Oval_rwe,
+#define Rectangle_sbx           ( getobj( _Rectangle_sbx ) )
+    _Rectangle_sbx,
+#define Oval_swa                ( getobj( _Oval_swa ) )
+    _Oval_swa,
+#define Oval_swb                ( getobj( _Oval_swb ) )
+    _Oval_swb,
+#define Oval_swc                ( getobj( _Oval_swc ) )
+    _Oval_swc,
+#define Rectangle_swd           ( getobj( _Rectangle_swd ) )
+    _Rectangle_swd,
+#define Oval_tjf                ( getobj( _Oval_tjf ) )
+    _Oval_tjf,
+#define Oval_tjg                ( getobj( _Oval_tjg ) )
+    _Oval_tjg,
+#define Oval_tjh                ( getobj( _Oval_tjh ) )
+    _Oval_tjh,
+#define Rectangle_tji           ( getobj( _Rectangle_tji ) )
+    _Rectangle_tji,
+#define Oval_u0q                ( getobj( _Oval_u0q ) )
+    _Oval_u0q,
+#define Oval_u0r                ( getobj( _Oval_u0r ) )
+    _Oval_u0r,
+#define Oval_u0s                ( getobj( _Oval_u0s ) )
+    _Oval_u0s,
+#define Rectangle_u0t           ( getobj( _Rectangle_u0t ) )
+    _Rectangle_u0t
 };
 Sprite* getobj( int id );
 int ObjsBuilder_startSim( void   );
