@@ -615,7 +615,7 @@ int DrawRectangle( char* sPath,
 
     // Pixel manipulation using the image data pointer pv.
     UINT cbStride = 4 * width;
-    uiHeight -= ( 40 - 14 );
+    uiHeight -= 20;
     //uiWidth  -= ( nLeftMgn + nRightMgn );
     nTop = ( float )( nTop - nDgrTop ) * uiHeight / nDgrHeight;
     nLeft = ( float )( nLeft - nDgrLeft ) * uiWidth / nDgrWidth;

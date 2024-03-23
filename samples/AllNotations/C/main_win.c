@@ -512,7 +512,7 @@ int DrawRectangle( char* sPath,
             // Pixel manipulation using the image data pointer pv.
             UINT cbStride;
             hr = CALL( pILock, GetStride, &cbStride );
-            uiHeight -= ( 40 - 14 );
+            uiHeight -= 20;
             //uiWidth  -= ( nLeftMgn + nRightMgn );
             nTop = ( float )( nTop - nDgrTop ) * uiHeight / nDgrHeight;
             nLeft = ( float )( nLeft - nDgrLeft ) * uiWidth / nDgrWidth;
