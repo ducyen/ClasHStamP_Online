@@ -20,7 +20,8 @@ public class Main extends JFrame {
     private JComboBox<String> selectLanguageBox;
     private JButton generateCodeButton;
     private JFrame bottomPanelFrame;
-    private JPanel bottomPanel;
+    private JScrollPane outputTextScrollPane;
+    private ImageLoader imageLoader;
     private Rectangle screenSize;
     private Process xtermProcess;
     private long xtermPid = -1; // Initialize with an invalid PID
@@ -55,7 +56,7 @@ public class Main extends JFrame {
         selectSampleBox = new JComboBox<>();
         populateSampleBox();
 
-        selectDiagramEditorBox = new JComboBox<>(new String[]{"edu", "com"});
+        selectDiagramEditorBox = new JComboBox<>(new String[]{"uml", "edu", "com"});
 
         JButton launchDiagramEditorButton = new JButton("Launch Diagram Editor");
         launchDiagramEditorButton.addActionListener(this::launchDiagramEditor);
@@ -89,16 +90,13 @@ public class Main extends JFrame {
         bottomPanelFrame = new JFrame("Output");
         outputTextArea = new JTextArea();
         outputTextArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(outputTextArea);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        bottomPanelFrame.add(scrollPane);
+        outputTextScrollPane = new JScrollPane(outputTextArea);
+        outputTextScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        outputTextScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        bottomPanelFrame.add(outputTextScrollPane);
         bottomPanelFrame.setSize(800, 600); // Set the size of the bottom panel frame
         bottomPanelFrame.setLocationRelativeTo(null); // Center the bottom panel frame
         bottomPanelFrame.setVisible(true);
-        
-        // Initialize the bottom panel
-        bottomPanel = new JPanel(new BorderLayout());
         
         adjustLayout();
         
@@ -169,6 +167,11 @@ public class Main extends JFrame {
         JButton button = (JButton)e.getSource();
         button.setEnabled(false); // Disable the button
         outputTextArea.setText(""); // Clear the text area
+        
+        bottomPanelFrame.add(outputTextScrollPane);
+        if (imageLoader != null) {
+        	bottomPanelFrame.remove(imageLoader.getContentPane());
+        }
 
         // Launch the target application
         try {
@@ -240,19 +243,18 @@ public class Main extends JFrame {
         
         // Switch to the ImageLoader view in the bottom panel
         String directoryPath = "./samples/" + selectSampleBox.getSelectedItem() + "/TransImg";
-        ImageLoader imageLoader = new ImageLoader(directoryPath);
+        imageLoader = new ImageLoader(directoryPath);
 
         // Add the ImageLoader content to the bottom panel
-        bottomPanel.removeAll();
-        bottomPanel.add(imageLoader.getContentPane());
-        bottomPanel.revalidate();
-        bottomPanel.repaint();
 
         // Add the bottom panel to the new frame and make it visible
-        bottomPanelFrame.add(bottomPanel);
+        bottomPanelFrame.remove(outputTextScrollPane);
+        bottomPanelFrame.add(imageLoader.getContentPane());
         bottomPanelFrame.setVisible(true);
 
         // Calculate the size and position for the xterm console
+        int consoleWidth = 80; // 80 characters
+        int consoleHeight = 25; // 25 characters
         int xOff = Math.min(screenSize.width - getWidth(), screenSize.width - 80 * 6 - 24); // Horizontal offset
         int yOff = getHeight() + 24; // Vertical offset (top-right corner)
         
@@ -261,11 +263,12 @@ public class Main extends JFrame {
             String osName = System.getProperty("os.name").toLowerCase();
             ProcessBuilder processBuilder;
             String scriptPath = "./start_xterm.sh";
+            String geometry = consoleWidth + "x" + consoleHeight + "+" + xOff + "+" + yOff;
             String arguments = (String)selectSampleBox.getSelectedItem();
             if (osName.contains("windows")) {
-                processBuilder = new ProcessBuilder("D:/cygwin64/bin/bash", "-c", scriptPath + " " + arguments + " " + xOff + " " + yOff);
+                processBuilder = new ProcessBuilder("bash", "-c", scriptPath + " " + arguments + " " + geometry);
             } else {
-            	processBuilder = new ProcessBuilder(scriptPath, arguments, "" + xOff, "" + yOff);
+            	processBuilder = new ProcessBuilder(scriptPath, arguments, geometry);
             }
             xtermProcess = processBuilder.start();
 
@@ -317,7 +320,7 @@ public class Main extends JFrame {
     
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
-            Main app = new Main();
+            MainEntry app = new MainEntry();
             app.setVisible(true);
         });
     }
