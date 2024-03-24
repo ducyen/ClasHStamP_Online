@@ -3,7 +3,7 @@
 #include "TransformConstraint.h"
 typedef struct tagTrackToConstraint TrackToConstraint;
 #endif//__TrackToConstraint_H__
-#if !defined( TrackToConstraint_Init ) && ( defined( __TrackToConstraint_INTERNAL__ )  )
+#if !defined( TrackToConstraint_Init ) && ( defined( __TrackToConstraint_INTERNAL__ )  || defined( __ObjsBuilder_INTERNAL__ )  )
 #define __TransformConstraint_INTERNAL__
 #include "TransformConstraint.h"
 /** @memberof TrackToConstraint

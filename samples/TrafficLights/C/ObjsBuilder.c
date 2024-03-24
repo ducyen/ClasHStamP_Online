@@ -8,8 +8,9 @@
 #include "RedLight.h"                                           
 #include "Primitive.h"                                          
 #include "TranslationConstraint.h"                              
-#include "AttachmentConstraint.h"
-#include "RotationConstraint.h"
+#include "AttachmentConstraint.h"                               
+#include "RotationConstraint.h"                                 
+#include "TrackToConstraint.h"                                  
 Sprite* g_objects[] = {
     &RedLight_Ctor( RedLight_Init(                              /* westRedLight */
         P( { 0.3042725173210162, 0.41036806363823086, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
@@ -21,7 +22,8 @@ Sprite* g_objects[] = {
         P( "RedLight.png" )                                     /* m_imgPath */,
         P( &AttachmentConstraint_Ctor( AttachmentConstraint_Init( &eastGreenLight, 1, 
            &TranslationConstraint_Ctor( TranslationConstraint_Init( &eastGreenLight, 1, 
-           null ) ) ) ) )/* m_constraints */
+           &RotationConstraint_Ctor( RotationConstraint_Init( &eastGreenLight, 1, 
+           null ) ) ) ) ) ) )/* m_constraints */
     ), ),
     &YellowLight_Ctor( YellowLight_Init(                        /* westYellowLight */
         P( { 0.2528868360277136, 0.41036806363823086, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,

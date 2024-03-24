@@ -3,7 +3,7 @@
 #include "TransformConstraint.h"
 typedef struct tagRotationConstraint RotationConstraint;
 #endif//__RotationConstraint_H__
-#if !defined( RotationConstraint_Init ) && ( defined( __RotationConstraint_INTERNAL__ )  )
+#if !defined( RotationConstraint_Init ) && ( defined( __RotationConstraint_INTERNAL__ )  || defined( __ObjsBuilder_INTERNAL__ )  )
 #define __TransformConstraint_INTERNAL__
 #include "TransformConstraint.h"
 /** @memberof RotationConstraint
