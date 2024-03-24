@@ -116,7 +116,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Model\AttachConstraint.h" />
+    <ClInclude Include="Model\AttachmentConstraint.h" />
     <ClInclude Include="Model\Barrier.h" />
     <ClInclude Include="Model\Constraint.h" />
     <ClInclude Include="Model\ContextImpl.h" />
@@ -136,7 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main_win.c" />
-    <ClCompile Include="Model\AttachConstraint.c" />
+    <ClCompile Include="Model\AttachmentConstraint.c" />
     <ClCompile Include="Model\Barrier.c" />
     <ClCompile Include="Model\Constraint.c" />
     <ClCompile Include="Model\ContextImpl.c">

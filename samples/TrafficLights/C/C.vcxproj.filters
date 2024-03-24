@@ -60,10 +60,10 @@
     <ClInclude Include="Model\YellowLight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Model\AttachConstraint.h">
+    <ClInclude Include="Model\TransformConstraint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Model\TransformConstraint.h">
+    <ClInclude Include="Model\AttachmentConstraint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -113,10 +113,10 @@
     <ClCompile Include="Model\YellowLight.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model\AttachConstraint.c">
+    <ClCompile Include="Model\TransformConstraint.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model\TransformConstraint.c">
+    <ClCompile Include="Model\AttachmentConstraint.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
