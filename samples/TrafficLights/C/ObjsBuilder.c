@@ -15,7 +15,10 @@ Sprite* g_objects[] = {
     &RedLight_Ctor( RedLight_Init(                              /* westRedLight */
         P( { 0.3042725173210162, 0.41036806363823086, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
         P( "RedLight.png" )                                     /* m_imgPath */,
-        P( null )/* m_constraints */
+        P( &AttachmentConstraint_Ctor( AttachmentConstraint_Init( &eastRedLight, 1, 
+           &TranslationConstraint_Ctor( TranslationConstraint_Init( &eastRedLight, 1, 
+           &RotationConstraint_Ctor( RotationConstraint_Init( &eastRedLight, 1, 
+           null ), ) ), ) ), ) )/* m_constraints */
     ), ),
     &RedLight_Ctor( RedLight_Init(                              /* eastRedLight */
         P( { 0.6385681293302541, 0.5204598067574969, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
@@ -23,7 +26,7 @@ Sprite* g_objects[] = {
         P( &AttachmentConstraint_Ctor( AttachmentConstraint_Init( &eastGreenLight, 1, 
            &TranslationConstraint_Ctor( TranslationConstraint_Init( &eastGreenLight, 1, 
            &RotationConstraint_Ctor( RotationConstraint_Init( &eastGreenLight, 0, 
-           null ) ) ) ) ) ) )/* m_constraints */
+           null ), ) ), ) ), ) )/* m_constraints */
     ), ),
     &YellowLight_Ctor( YellowLight_Init(                        /* westYellowLight */
         P( { 0.2528868360277136, 0.41036806363823086, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
@@ -39,7 +42,7 @@ Sprite* g_objects[] = {
         P( { 0.6882217090069284, 0.5204598067574969, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
         P( "YellowLight.png" )                                  /* m_imgPath */,
         P( &TrackToConstraint_Ctor( TrackToConstraint_Init( &eastGreenLight, 1, 
-           null ) ) )/* m_constraints */
+           null ), ) )/* m_constraints */
     ), ),
     &GreenLight_Ctor( GreenLight_Init(                          /* eastGreenLight */
         P( { 0.7390300230946882, 0.5204598067574969, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
@@ -192,13 +195,28 @@ int ObjsBuilder_startSim(
         }
     }
 
+
     if (nResult == S_OK) {
+        SDL_RendererInfo rendererInfo;
+        int numRenderDrivers = SDL_GetNumRenderDrivers();
+        SDL_RendererFlags hardwareAccelerationAvailable = SDL_RENDERER_SOFTWARE;
+
+        for (int i = 0; i < numRenderDrivers; ++i) {
+            if (SDL_GetRenderDriverInfo(i, &rendererInfo) == 0) {
+                if (rendererInfo.flags & SDL_RENDERER_ACCELERATED) {
+                    printf("Hardware acceleration is available for renderer: %s\n", rendererInfo.name);
+                    hardwareAccelerationAvailable = SDL_RENDERER_ACCELERATED;
+                    break;
+                }
+            }
+        }
+
         window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
         if (window == NULL) {
             printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
             nResult = S_FALSE;
         } else {
-            renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+            renderer = SDL_CreateRenderer(window, -1, hardwareAccelerationAvailable);
             if (renderer == NULL) {
                 printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
                 nResult = S_FALSE;
@@ -270,8 +288,12 @@ int ObjsBuilder_startSim(
             }
 
             static int s_pos_x = 0;
-            ImgSprite_setOffset( eastRedLight, s_pos_x--, 0 );
+            ImgSprite_setOffset( westRedLight, s_pos_x++, 0 );
+            if( s_pos_x > SCREEN_WIDTH ){
+                s_pos_x = 0;
+            }
             static double s_angle = 0;
+            ImgSprite_setRotation( westRedLight, s_angle );
             ImgSprite_setRotation( eastRedLight, s_angle += 1. );
 
             for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {

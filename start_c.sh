@@ -14,7 +14,11 @@ echo "Running command: ./astah-edu/astah-command.sh -f $SAMPLE_HOME/Design.asta 
 
 # Example command
 cd "$WORKING_DIR/samples/$SAMPLE_DIR/C" || exit
-make
+if ! make; then
+    echo "Make command failed. Press any key to continue..."
+    read -n 1 -s -r
+    exit 1
+fi
 cd "$WORKING_DIR" || exit
 
 # Execute my_program with arguments
