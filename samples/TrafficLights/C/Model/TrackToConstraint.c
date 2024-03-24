@@ -4,7 +4,8 @@
 #include "TrackToConstraint.h"
 /** @public @memberof TrackToConstraint */
 static void TrackToConstraint_apply(
-    TrackToConstraint* pTrackToConstraint
+    TrackToConstraint* pTrackToConstraint,
+    Sprite* target
 ){
 } /* TrackToConstraint_apply */
 

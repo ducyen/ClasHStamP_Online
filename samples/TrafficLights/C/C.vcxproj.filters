@@ -27,9 +27,6 @@
     <ClInclude Include="Model\Barrier.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Model\ClampConstraint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Model\RotationConstraint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -37,9 +34,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Model\TrackToConstraint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\TransformConstraint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Model\TranslationConstraint.h">
@@ -66,6 +60,12 @@
     <ClInclude Include="Model\YellowLight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Model\AttachConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\TransformConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NonOOP\HdStateMachine.c">
@@ -80,9 +80,6 @@
     <ClCompile Include="Model\Barrier.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model\ClampConstraint.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Model\RotationConstraint.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -90,9 +87,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Model\TrackToConstraint.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\TransformConstraint.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Model\TranslationConstraint.c">
@@ -117,6 +111,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Model\YellowLight.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\AttachConstraint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\TransformConstraint.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

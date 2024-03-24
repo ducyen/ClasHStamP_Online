@@ -4,12 +4,23 @@
 #include "Constraint.h"
 /** @public @pure @memberof Constraint */
 void Constraint_apply(
-    Constraint* pConstraint
+    Constraint* pConstraint,
+    Sprite* target
 ){
     if( pConstraint->vTbl == NULL || pConstraint->vTbl->papply == NULL ){ return; }
-    pConstraint->vTbl->papply( pConstraint );
+    pConstraint->vTbl->papply( pConstraint, target );
 } /* Constraint_apply */
 
+/** @public @memberof Constraint */
+Constraint* Constraint_getNext(
+    Constraint* pConstraint
+){
+    return pConstraint->m_next;
+} /* Constraint_getNext */
+
 Constraint* Constraint_Copy( Constraint* pConstraint, const Constraint* pSource ){
+    pConstraint->m_source = pSource->m_source;
+    pConstraint->m_influence = pSource->m_influence;
+    pConstraint->m_next = pSource->m_next;
     return ( Constraint* )pConstraint;
 }

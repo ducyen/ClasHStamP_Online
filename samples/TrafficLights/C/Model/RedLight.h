@@ -9,8 +9,8 @@ typedef struct tagRedLight RedLight;
 /** @memberof RedLight
  * @brief RedLight auto-generated constructor
  */
-#define RedLight_Init(_m_iniRect, _m_imgPath)\
-    ImgSprite_Init( P( _m_iniRect ), P( _m_imgPath ) )\
+#define RedLight_Init(_m_iniRect, _m_imgPath, _m_constraints)\
+    ImgSprite_Init( P( _m_iniRect ), P( _m_imgPath ), P( _m_constraints ) )\
 
 #define RedLight_Ctor( InitFunc, optionParams )    ( RedLight ){\
     InitFunc\

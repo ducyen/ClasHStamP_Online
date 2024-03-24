@@ -9,8 +9,8 @@ typedef struct tagRotationConstraint RotationConstraint;
 /** @memberof RotationConstraint
  * @brief RotationConstraint auto-generated constructor
  */
-#define RotationConstraint_Init(_m_source, _m_target, _influence)\
-    TransformConstraint_Init( P( _m_source ), P( _m_target ), P( _influence ) )\
+#define RotationConstraint_Init(_m_source, _m_influence, _m_next)\
+    TransformConstraint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) )\
     .vTbl = &gRotationConstraintVtbl,\
 
 #define RotationConstraint_Ctor( InitFunc, optionParams )    ( RotationConstraint ){\

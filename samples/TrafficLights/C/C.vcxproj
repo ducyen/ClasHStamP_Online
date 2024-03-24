@@ -116,8 +116,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Model\AttachConstraint.h" />
     <ClInclude Include="Model\Barrier.h" />
-    <ClInclude Include="Model\ClampConstraint.h" />
     <ClInclude Include="Model\Constraint.h" />
     <ClInclude Include="Model\ContextImpl.h" />
     <ClInclude Include="Model\GreenLight.h" />
@@ -136,8 +136,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main_win.c" />
+    <ClCompile Include="Model\AttachConstraint.c" />
     <ClCompile Include="Model\Barrier.c" />
-    <ClCompile Include="Model\ClampConstraint.c" />
     <ClCompile Include="Model\Constraint.c" />
     <ClCompile Include="Model\ContextImpl.c">
       <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreprocessToFile>

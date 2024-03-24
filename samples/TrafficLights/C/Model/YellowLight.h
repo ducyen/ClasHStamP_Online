@@ -9,8 +9,8 @@ typedef struct tagYellowLight YellowLight;
 /** @memberof YellowLight
  * @brief YellowLight auto-generated constructor
  */
-#define YellowLight_Init(_m_iniRect, _m_imgPath)\
-    ImgSprite_Init( P( _m_iniRect ), P( _m_imgPath ) )\
+#define YellowLight_Init(_m_iniRect, _m_imgPath, _m_constraints)\
+    ImgSprite_Init( P( _m_iniRect ), P( _m_imgPath ), P( _m_constraints ) )\
 
 #define YellowLight_Ctor( InitFunc, optionParams )    ( YellowLight ){\
     InitFunc\

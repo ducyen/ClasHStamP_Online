@@ -2,73 +2,73 @@
 #define __ObjsBuilder_H__
 #include "Sprite.h"
 typedef struct tagObjsBuilder ObjsBuilder;
+extern Sprite* g_objects[];
 enum {
-#define westRedLight            ( getobj( _westRedLight ) )
+#define westRedLight            ( g_objects[ _westRedLight ] )
     _westRedLight,
-#define eastRedLight            ( getobj( _eastRedLight ) )
+#define eastRedLight            ( g_objects[ _eastRedLight ] )
     _eastRedLight,
-#define westYellowLight         ( getobj( _westYellowLight ) )
+#define westYellowLight         ( g_objects[ _westYellowLight ] )
     _westYellowLight,
-#define westGreenLight          ( getobj( _westGreenLight ) )
+#define westGreenLight          ( g_objects[ _westGreenLight ] )
     _westGreenLight,
-#define eastYellowLight         ( getobj( _eastYellowLight ) )
+#define eastYellowLight         ( g_objects[ _eastYellowLight ] )
     _eastYellowLight,
-#define eastGreenLight          ( getobj( _eastGreenLight ) )
+#define eastGreenLight          ( g_objects[ _eastGreenLight ] )
     _eastGreenLight,
-#define northRedLight           ( getobj( _northRedLight ) )
+#define northRedLight           ( g_objects[ _northRedLight ] )
     _northRedLight,
-#define northYellowLight        ( getobj( _northYellowLight ) )
+#define northYellowLight        ( g_objects[ _northYellowLight ] )
     _northYellowLight,
-#define northGreenLight         ( getobj( _northGreenLight ) )
+#define northGreenLight         ( g_objects[ _northGreenLight ] )
     _northGreenLight,
-#define southRedLight           ( getobj( _southRedLight ) )
+#define southRedLight           ( g_objects[ _southRedLight ] )
     _southRedLight,
-#define southYellowLight        ( getobj( _southYellowLight ) )
+#define southYellowLight        ( g_objects[ _southYellowLight ] )
     _southYellowLight,
-#define southGreenLight         ( getobj( _southGreenLight ) )
+#define southGreenLight         ( g_objects[ _southGreenLight ] )
     _southGreenLight,
-#define Rectangle_4fh           ( getobj( _Rectangle_4fh ) )
+#define Rectangle_4fh           ( g_objects[ _Rectangle_4fh ] )
     _Rectangle_4fh,
-#define Rectangle_phs           ( getobj( _Rectangle_phs ) )
+#define Rectangle_phs           ( g_objects[ _Rectangle_phs ] )
     _Rectangle_phs,
-#define Rectangle_ps7           ( getobj( _Rectangle_ps7 ) )
+#define Rectangle_ps7           ( g_objects[ _Rectangle_ps7 ] )
     _Rectangle_ps7,
-#define Rectangle_q2m           ( getobj( _Rectangle_q2m ) )
+#define Rectangle_q2m           ( g_objects[ _Rectangle_q2m ] )
     _Rectangle_q2m,
-#define Oval_rex                ( getobj( _Oval_rex ) )
+#define Oval_rex                ( g_objects[ _Oval_rex ] )
     _Oval_rex,
-#define Oval_rlz                ( getobj( _Oval_rlz ) )
+#define Oval_rlz                ( g_objects[ _Oval_rlz ] )
     _Oval_rlz,
-#define Oval_rwe                ( getobj( _Oval_rwe ) )
+#define Oval_rwe                ( g_objects[ _Oval_rwe ] )
     _Oval_rwe,
-#define Rectangle_sbx           ( getobj( _Rectangle_sbx ) )
+#define Rectangle_sbx           ( g_objects[ _Rectangle_sbx ] )
     _Rectangle_sbx,
-#define Oval_swa                ( getobj( _Oval_swa ) )
+#define Oval_swa                ( g_objects[ _Oval_swa ] )
     _Oval_swa,
-#define Oval_swb                ( getobj( _Oval_swb ) )
+#define Oval_swb                ( g_objects[ _Oval_swb ] )
     _Oval_swb,
-#define Oval_swc                ( getobj( _Oval_swc ) )
+#define Oval_swc                ( g_objects[ _Oval_swc ] )
     _Oval_swc,
-#define Rectangle_swd           ( getobj( _Rectangle_swd ) )
+#define Rectangle_swd           ( g_objects[ _Rectangle_swd ] )
     _Rectangle_swd,
-#define Oval_tjf                ( getobj( _Oval_tjf ) )
+#define Oval_tjf                ( g_objects[ _Oval_tjf ] )
     _Oval_tjf,
-#define Oval_tjg                ( getobj( _Oval_tjg ) )
+#define Oval_tjg                ( g_objects[ _Oval_tjg ] )
     _Oval_tjg,
-#define Oval_tjh                ( getobj( _Oval_tjh ) )
+#define Oval_tjh                ( g_objects[ _Oval_tjh ] )
     _Oval_tjh,
-#define Rectangle_tji           ( getobj( _Rectangle_tji ) )
+#define Rectangle_tji           ( g_objects[ _Rectangle_tji ] )
     _Rectangle_tji,
-#define Oval_u0q                ( getobj( _Oval_u0q ) )
+#define Oval_u0q                ( g_objects[ _Oval_u0q ] )
     _Oval_u0q,
-#define Oval_u0r                ( getobj( _Oval_u0r ) )
+#define Oval_u0r                ( g_objects[ _Oval_u0r ] )
     _Oval_u0r,
-#define Oval_u0s                ( getobj( _Oval_u0s ) )
+#define Oval_u0s                ( g_objects[ _Oval_u0s ] )
     _Oval_u0s,
-#define Rectangle_u0t           ( getobj( _Rectangle_u0t ) )
+#define Rectangle_u0t           ( g_objects[ _Rectangle_u0t ] )
     _Rectangle_u0t
 };
-Sprite* getobj( int id );
 int ObjsBuilder_startSim( void   );
 #endif//__ObjsBuilder_H__
 #if !defined( ObjsBuilder_Init ) && ( defined( __ObjsBuilder_INTERNAL__ )  )

@@ -9,8 +9,8 @@ typedef struct tagBarrier Barrier;
 /** @memberof Barrier
  * @brief Barrier auto-generated constructor
  */
-#define Barrier_Init(_m_iniRect, _m_imgPath)\
-    ImgSprite_Init( P( _m_iniRect ), P( _m_imgPath ) )\
+#define Barrier_Init(_m_iniRect, _m_imgPath, _m_constraints)\
+    ImgSprite_Init( P( _m_iniRect ), P( _m_imgPath ), P( _m_constraints ) )\
 
 #define Barrier_Ctor( InitFunc, optionParams )    ( Barrier ){\
     InitFunc\

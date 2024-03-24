@@ -483,15 +483,15 @@ BOOL [tYPE]_IsIn( [tYPE]* p[tYPE], uint64_t nState ){
 ",_
 friend,,,,,
 visibility,,,,,
-object,"static Sprite* g_objects[] = {
+object,"Sprite* g_objects[] = {
 [vALUE]
 };
 Sprite* getobj( int id ){
     return g_objects[ id ];
 }
 ","
-[->]    P( { [vALUE] } )",",
-[->]    P( [vALUE] )","[->]&[tYPE]_Ctor( [tYPE]_Init([vALUE]
+[->]    P( { [vALUE] } )[->64]/* [nAME] */",",
+[->]    P( [vALUE] )[->64]/* [nAME] */","[->]&[tYPE]_Ctor( [tYPE]_Init([->64]/* [nAME] */[vALUE]
 [->]), )",",
-[->]&[tYPE]_Ctor( [tYPE]_Init([vALUE]
+[->]&[tYPE]_Ctor( [tYPE]_Init([->64]/* [nAME] */[vALUE]
 [->]), )"

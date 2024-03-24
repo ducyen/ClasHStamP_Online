@@ -215,52 +215,52 @@ void startTimer( int tmout ){
 }
 
 void TurnOnPrimaryRed( void ){
-    Sprite_setBrightness( westRedLight, 1 );
-    Sprite_setBrightness( eastRedLight, 1 );
+    ImgSprite_setBrightness( westRedLight, 1. );
+    ImgSprite_setBrightness( eastRedLight, 1. );
 }
 void TurnOffPrimaryRed( void ){
-    Sprite_setBrightness( westRedLight, 0.25 );
-    Sprite_setBrightness( eastRedLight, 0.25 );
+    ImgSprite_setBrightness( westRedLight, 0.25 );
+    ImgSprite_setBrightness( eastRedLight, 0.25 );
 }
 void TurnOnPrimaryYellow( void ){
-    Sprite_setBrightness( westYellowLight, 1 );
-    Sprite_setBrightness( eastYellowLight, 1 );
+    ImgSprite_setBrightness( westYellowLight, 1. );
+    ImgSprite_setBrightness( eastYellowLight, 1. );
 }
 void TurnOffPrimaryYellow( void ){
-    Sprite_setBrightness( westYellowLight, 0.25 );
-    Sprite_setBrightness( eastYellowLight, 0.25 );
+    ImgSprite_setBrightness( westYellowLight, 0.25 );
+    ImgSprite_setBrightness( eastYellowLight, 0.25 );
 }
 void TurnOnPrimaryGreen( void ){
-    Sprite_setBrightness( westGreenLight, 1 );
-    Sprite_setBrightness( eastGreenLight, 1 );
+    ImgSprite_setBrightness( westGreenLight, 1. );
+    ImgSprite_setBrightness( eastGreenLight, 1. );
 }
 void TurnOffPrimaryGreen( void ){
-    Sprite_setBrightness( westGreenLight, 0.25 );
-    Sprite_setBrightness( eastGreenLight, 0.25 );
+    ImgSprite_setBrightness( westGreenLight, 0.25 );
+    ImgSprite_setBrightness( eastGreenLight, 0.25 );
 }
 void TurnOnSecondaryRed( void ){
-    Sprite_setBrightness( northRedLight, 1 );
-    Sprite_setBrightness( southRedLight, 1 );
+    ImgSprite_setBrightness( northRedLight, 1. );
+    ImgSprite_setBrightness( southRedLight, 1. );
 }
 void TurnOffSecondaryRed( void ){
-    Sprite_setBrightness( northRedLight, 0.25 );
-    Sprite_setBrightness( southRedLight, 0.25 );
+    ImgSprite_setBrightness( northRedLight, 0.25 );
+    ImgSprite_setBrightness( southRedLight, 0.25 );
 }
 void TurnOnSecondaryYellow( void ){
-    Sprite_setBrightness( northYellowLight, 1 );
-    Sprite_setBrightness( southYellowLight, 1 );
+    ImgSprite_setBrightness( northYellowLight, 1. );
+    ImgSprite_setBrightness( southYellowLight, 1. );
 }
 void TurnOffSecondaryYellow( void ){
-    Sprite_setBrightness( northYellowLight, 0.25 );
-    Sprite_setBrightness( southYellowLight, 0.25 );
+    ImgSprite_setBrightness( northYellowLight, 0.25 );
+    ImgSprite_setBrightness( southYellowLight, 0.25 );
 }
 void TurnOnSecondaryGreen( void ){
-    Sprite_setBrightness( northGreenLight, 1 );
-    Sprite_setBrightness( southGreenLight, 1 );
+    ImgSprite_setBrightness( northGreenLight, 1. );
+    ImgSprite_setBrightness( southGreenLight, 1. );
 }
 void TurnOffSecondaryGreen( void ){
-    Sprite_setBrightness( northGreenLight, 0.25 );
-    Sprite_setBrightness( southGreenLight, 0.25 );
+    ImgSprite_setBrightness( northGreenLight, 0.25 );
+    ImgSprite_setBrightness( southGreenLight, 0.25 );
 }
 
 int main(int argc, char **argv){

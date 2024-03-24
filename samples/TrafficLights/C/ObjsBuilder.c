@@ -7,134 +7,147 @@
 #include "YellowLight.h"                                        
 #include "RedLight.h"                                           
 #include "Primitive.h"                                          
-static Sprite* g_objects[] = {
-    &RedLight_Ctor( RedLight_Init(
-        P( { 0.3042725173210162, 0.41036806363823086, 0.06062355658198614, 0.07268892540356313 } ),
-        P( "RedLight.png" )
+#include "TranslationConstraint.h"                              
+Sprite* g_objects[] = {
+    &RedLight_Ctor( RedLight_Init(                              /* westRedLight */
+        P( { 0.3042725173210162, 0.41036806363823086, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
+        P( "RedLight.png" )                                     /* m_imgPath */,
+        P( null )                                               /* m_constraints */
     ), ),
-    &RedLight_Ctor( RedLight_Init(
-        P( { 0.6385681293302541, 0.5204598067574969, 0.06062355658198614, 0.07268892540356313 } ),
-        P( "RedLight.png" )
+    &RedLight_Ctor( RedLight_Init(                              /* eastRedLight */
+        P( { 0.6385681293302541, 0.5204598067574969, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
+        P( "RedLight.png" )                                     /* m_imgPath */,
+        P( &TranslationConstraint_Ctor( TranslationConstraint_Init( &westRedLight, 1, null ) ) )/* m_constraints */
     ), ),
-    &YellowLight_Ctor( YellowLight_Init(
-        P( { 0.2528868360277136, 0.41036806363823086, 0.06062355658198614, 0.07268892540356313 } ),
-        P( "YellowLight.png" )
+    &YellowLight_Ctor( YellowLight_Init(                        /* westYellowLight */
+        P( { 0.2528868360277136, 0.41036806363823086, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
+        P( "YellowLight.png" )                                  /* m_imgPath */,
+        P( null )                                               /* m_constraints */
     ), ),
-    &GreenLight_Ctor( GreenLight_Init(
-        P( { 0.20207852193995382, 0.41036806363823086, 0.06062355658198614, 0.07268892540356313 } ),
-        P( "GreenLight.png" )
+    &GreenLight_Ctor( GreenLight_Init(                          /* westGreenLight */
+        P( { 0.20207852193995382, 0.41036806363823086, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
+        P( "GreenLight.png" )                                   /* m_imgPath */,
+        P( null )                                               /* m_constraints */
     ), ),
-    &YellowLight_Ctor( YellowLight_Init(
-        P( { 0.6882217090069284, 0.5204598067574969, 0.06062355658198614, 0.07268892540356313 } ),
-        P( "YellowLight.png" )
+    &YellowLight_Ctor( YellowLight_Init(                        /* eastYellowLight */
+        P( { 0.6882217090069284, 0.5204598067574969, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
+        P( "YellowLight.png" )                                  /* m_imgPath */,
+        P( null )                                               /* m_constraints */
     ), ),
-    &GreenLight_Ctor( GreenLight_Init(
-        P( { 0.7390300230946882, 0.5204598067574969, 0.06062355658198614, 0.07268892540356313 } ),
-        P( "GreenLight.png" )
+    &GreenLight_Ctor( GreenLight_Init(                          /* eastGreenLight */
+        P( { 0.7390300230946882, 0.5204598067574969, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
+        P( "GreenLight.png" )                                   /* m_imgPath */,
+        P( null )                                               /* m_constraints */
     ), ),
-    &RedLight_Ctor( RedLight_Init(
-        P( { 0.5646651270207852, 0.2579392672531836, 0.06062355658198614, 0.07268892540356313 } ),
-        P( "RedLight.png" )
+    &RedLight_Ctor( RedLight_Init(                              /* northRedLight */
+        P( { 0.5646651270207852, 0.2579392672531836, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
+        P( "RedLight.png" )                                     /* m_imgPath */,
+        P( null )                                               /* m_constraints */
     ), ),
-    &YellowLight_Ctor( YellowLight_Init(
-        P( { 0.5646651270207852, 0.19588999526450318, 0.06062355658198614, 0.07268892540356313 } ),
-        P( "YellowLight.png" )
+    &YellowLight_Ctor( YellowLight_Init(                        /* northYellowLight */
+        P( { 0.5646651270207852, 0.19588999526450318, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
+        P( "YellowLight.png" )                                  /* m_imgPath */,
+        P( null )                                               /* m_constraints */
     ), ),
-    &GreenLight_Ctor( GreenLight_Init(
-        P( { 0.5646651270207852, 0.13438559068191155, 0.06062355658198614, 0.07268892540356313 } ),
-        P( "GreenLight.png" )
+    &GreenLight_Ctor( GreenLight_Init(                          /* northGreenLight */
+        P( { 0.5646651270207852, 0.13438559068191155, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
+        P( "GreenLight.png" )                                   /* m_imgPath */,
+        P( null )                                               /* m_constraints */
     ), ),
-    &RedLight_Ctor( RedLight_Init(
-        P( { 0.39838337182448036, 0.5930327219978091, 0.06062355658198614, 0.07268892540356313 } ),
-        P( "RedLight.png" )
+    &RedLight_Ctor( RedLight_Init(                              /* southRedLight */
+        P( { 0.39838337182448036, 0.5930327219978091, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
+        P( "RedLight.png" )                                     /* m_imgPath */,
+        P( null )                                               /* m_constraints */
     ), ),
-    &YellowLight_Ctor( YellowLight_Init(
-        P( { 0.39838337182448036, 0.6556782101533617, 0.06062355658198614, 0.07268892540356313 } ),
-        P( "YellowLight.png" )
+    &YellowLight_Ctor( YellowLight_Init(                        /* southYellowLight */
+        P( { 0.39838337182448036, 0.6556782101533617, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
+        P( "YellowLight.png" )                                  /* m_imgPath */,
+        P( null )                                               /* m_constraints */
     ), ),
-    &GreenLight_Ctor( GreenLight_Init(
-        P( { 0.39838337182448036, 0.7171826147359532, 0.06062355658198614, 0.07268892540356313 } ),
-        P( "GreenLight.png" )
+    &GreenLight_Ctor( GreenLight_Init(                          /* southGreenLight */
+        P( { 0.39838337182448036, 0.7171826147359532, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
+        P( "GreenLight.png" )                                   /* m_imgPath */,
+        P( null )                                               /* m_constraints */
     ), ),
-    &Primitive_Ctor( Primitive_Init(
-        P( { 0.04503464203233257, 0.06982869839449543, 0.3371824480369515, 0.3241590214067278 } ),
-        P( "Rectangle 000000 line 1 null FFFFFF null" )
+    &Primitive_Ctor( Primitive_Init(                            /* Rectangle_4fh */
+        P( { 0.04503464203233257, 0.06982869839449543, 0.3371824480369515, 0.3241590214067278 } )/* 4fh-26d23a6dbabdf00606cec0dc8ca46101 */,
+        P( "Rectangle 000000 line 1 null FFFFFF null" )         /* Rectangle_4fh */
     ), ),
-    &Primitive_Ctor( Primitive_Init(
-        P( { 0.6339491916859122, 0.06982869839449542, 0.3371824480369515, 0.3241590214067278 } ),
-        P( "Rectangle 000000 line 1 null FFFFFF null" )
+    &Primitive_Ctor( Primitive_Init(                            /* Rectangle_phs */
+        P( { 0.6339491916859122, 0.06982869839449542, 0.3371824480369515, 0.3241590214067278 } )/* phs-6f7de2bd597eab2992ffddef9cceacc8 */,
+        P( "Rectangle 000000 line 1 null FFFFFF null" )         /* Rectangle_phs */
     ), ),
-    &Primitive_Ctor( Primitive_Init(
-        P( { 0.04503464203233257, 0.6371069858562691, 0.3371824480369515, 0.3241590214067278 } ),
-        P( "Rectangle 000000 line 1 null FFFFFF null" )
+    &Primitive_Ctor( Primitive_Init(                            /* Rectangle_ps7 */
+        P( { 0.04503464203233257, 0.6371069858562691, 0.3371824480369515, 0.3241590214067278 } )/* ps7-6f7de2bd597eab2992ffddef9cceacc8 */,
+        P( "Rectangle 000000 line 1 null FFFFFF null" )         /* Rectangle_ps7 */
     ), ),
-    &Primitive_Ctor( Primitive_Init(
-        P( { 0.6339491916859122, 0.6371069858562691, 0.3371824480369515, 0.3241590214067278 } ),
-        P( "Rectangle 000000 line 1 null FFFFFF null" )
+    &Primitive_Ctor( Primitive_Init(                            /* Rectangle_q2m */
+        P( { 0.6339491916859122, 0.6371069858562691, 0.3371824480369515, 0.3241590214067278 } )/* q2m-6f7de2bd597eab2992ffddef9cceacc8 */,
+        P( "Rectangle 000000 line 1 null FFFFFF null" )         /* Rectangle_q2m */
     ), ),
-    &Primitive_Ctor( Primitive_Init(
-        P( { 0.2921478060046189, 0.22359455351301585, 0.04041570438799076, 0.05198776758409788 } ),
-        P( "Oval 000000 line 1 true 66FF33 oval" )
+    &Primitive_Ctor( Primitive_Init(                            /* Oval_rex */
+        P( { 0.2921478060046189, 0.22359455351301585, 0.04041570438799076, 0.05198776758409788 } )/* rex-6f7de2bd597eab2992ffddef9cceacc8 */,
+        P( "Oval 000000 line 1 true 66FF33 oval" )              /* Oval_rex */
     ), ),
-    &Primitive_Ctor( Primitive_Init(
-        P( { 0.2840646651270208, 0.25417559326836753, 0.04041570438799076, 0.05198776758409788 } ),
-        P( "Oval 000000 line 1 true 66FF33 oval" )
+    &Primitive_Ctor( Primitive_Init(                            /* Oval_rlz */
+        P( { 0.2840646651270208, 0.25417559326836753, 0.04041570438799076, 0.05198776758409788 } )/* rlz-6f7de2bd597eab2992ffddef9cceacc8 */,
+        P( "Oval 000000 line 1 true 66FF33 oval" )              /* Oval_rlz */
     ), ),
-    &Primitive_Ctor( Primitive_Init(
-        P( { 0.2979214780600462, 0.25417559326836753, 0.04041570438799076, 0.05198776758409788 } ),
-        P( "Oval 000000 line 1 true 66FF33 oval" )
+    &Primitive_Ctor( Primitive_Init(                            /* Oval_rwe */
+        P( { 0.2979214780600462, 0.25417559326836753, 0.04041570438799076, 0.05198776758409788 } )/* rwe-6f7de2bd597eab2992ffddef9cceacc8 */,
+        P( "Oval 000000 line 1 true 66FF33 oval" )              /* Oval_rwe */
     ), ),
-    &Primitive_Ctor( Primitive_Init(
-        P( { 0.30600461893764436, 0.29851810091362746, 0.012702078521939953, 0.03211009174311927 } ),
-        P( "Rectangle 000000 line 1 true 996633 null" )
+    &Primitive_Ctor( Primitive_Init(                            /* Rectangle_sbx */
+        P( { 0.30600461893764436, 0.29851810091362746, 0.012702078521939953, 0.03211009174311927 } )/* sbx-6f7de2bd597eab2992ffddef9cceacc8 */,
+        P( "Rectangle 000000 line 1 true 996633 null" )         /* Rectangle_sbx */
     ), ),
-    &Primitive_Ctor( Primitive_Init(
-        P( { 0.7286374133949192, 0.24076691038309972, 0.04041570438799076, 0.05198776758409788 } ),
-        P( "Oval 000000 line 1 true 66FF33 oval" )
+    &Primitive_Ctor( Primitive_Init(                            /* Oval_swa */
+        P( { 0.7286374133949192, 0.24076691038309972, 0.04041570438799076, 0.05198776758409788 } )/* swa-6f7de2bd597eab2992ffddef9cceacc8 */,
+        P( "Oval 000000 line 1 true 66FF33 oval" )              /* Oval_swa */
     ), ),
-    &Primitive_Ctor( Primitive_Init(
-        P( { 0.7205542725173211, 0.2713479501384514, 0.04041570438799076, 0.05198776758409788 } ),
-        P( "Oval 000000 line 1 true 66FF33 oval" )
+    &Primitive_Ctor( Primitive_Init(                            /* Oval_swb */
+        P( { 0.7205542725173211, 0.2713479501384514, 0.04041570438799076, 0.05198776758409788 } )/* swb-6f7de2bd597eab2992ffddef9cceacc8 */,
+        P( "Oval 000000 line 1 true 66FF33 oval" )              /* Oval_swb */
     ), ),
-    &Primitive_Ctor( Primitive_Init(
-        P( { 0.7344110854503464, 0.2713479501384514, 0.04041570438799076, 0.05198776758409788 } ),
-        P( "Oval 000000 line 1 true 66FF33 oval" )
+    &Primitive_Ctor( Primitive_Init(                            /* Oval_swc */
+        P( { 0.7344110854503464, 0.2713479501384514, 0.04041570438799076, 0.05198776758409788 } )/* swc-6f7de2bd597eab2992ffddef9cceacc8 */,
+        P( "Oval 000000 line 1 true 66FF33 oval" )              /* Oval_swc */
     ), ),
-    &Primitive_Ctor( Primitive_Init(
-        P( { 0.7424942263279446, 0.31569045778371135, 0.012702078521939953, 0.03211009174311927 } ),
-        P( "Rectangle 000000 line 1 true 996633 null" )
+    &Primitive_Ctor( Primitive_Init(                            /* Rectangle_swd */
+        P( { 0.7424942263279446, 0.31569045778371135, 0.012702078521939953, 0.03211009174311927 } )/* swd-6f7de2bd597eab2992ffddef9cceacc8 */,
+        P( "Rectangle 000000 line 1 true 996633 null" )         /* Rectangle_swd */
     ), ),
-    &Primitive_Ctor( Primitive_Init(
-        P( { 0.7090069284064665, 0.7171826147359532, 0.04041570438799076, 0.05198776758409788 } ),
-        P( "Oval 000000 line 1 true 66FF33 oval" )
+    &Primitive_Ctor( Primitive_Init(                            /* Oval_tjf */
+        P( { 0.7090069284064665, 0.7171826147359532, 0.04041570438799076, 0.05198776758409788 } )/* tjf-6f7de2bd597eab2992ffddef9cceacc8 */,
+        P( "Oval 000000 line 1 true 66FF33 oval" )              /* Oval_tjf */
     ), ),
-    &Primitive_Ctor( Primitive_Init(
-        P( { 0.7009237875288684, 0.7477636544913049, 0.04041570438799076, 0.05198776758409788 } ),
-        P( "Oval 000000 line 1 true 66FF33 oval" )
+    &Primitive_Ctor( Primitive_Init(                            /* Oval_tjg */
+        P( { 0.7009237875288684, 0.7477636544913049, 0.04041570438799076, 0.05198776758409788 } )/* tjg-6f7de2bd597eab2992ffddef9cceacc8 */,
+        P( "Oval 000000 line 1 true 66FF33 oval" )              /* Oval_tjg */
     ), ),
-    &Primitive_Ctor( Primitive_Init(
-        P( { 0.7147806004618937, 0.7477636544913049, 0.04041570438799076, 0.05198776758409788 } ),
-        P( "Oval 000000 line 1 true 66FF33 oval" )
+    &Primitive_Ctor( Primitive_Init(                            /* Oval_tjh */
+        P( { 0.7147806004618937, 0.7477636544913049, 0.04041570438799076, 0.05198776758409788 } )/* tjh-6f7de2bd597eab2992ffddef9cceacc8 */,
+        P( "Oval 000000 line 1 true 66FF33 oval" )              /* Oval_tjh */
     ), ),
-    &Primitive_Ctor( Primitive_Init(
-        P( { 0.7228637413394919, 0.7921061621365649, 0.012702078521939953, 0.03211009174311927 } ),
-        P( "Rectangle 000000 line 1 true 996633 null" )
+    &Primitive_Ctor( Primitive_Init(                            /* Rectangle_tji */
+        P( { 0.7228637413394919, 0.7921061621365649, 0.012702078521939953, 0.03211009174311927 } )/* tji-6f7de2bd597eab2992ffddef9cceacc8 */,
+        P( "Rectangle 000000 line 1 true 996633 null" )         /* Rectangle_tji */
     ), ),
-    &Primitive_Ctor( Primitive_Init(
-        P( { 0.26096997690531176, 0.7334372610856269, 0.04041570438799076, 0.05198776758409788 } ),
-        P( "Oval 000000 line 1 true 66FF33 oval" )
+    &Primitive_Ctor( Primitive_Init(                            /* Oval_u0q */
+        P( { 0.26096997690531176, 0.7334372610856269, 0.04041570438799076, 0.05198776758409788 } )/* u0q-6f7de2bd597eab2992ffddef9cceacc8 */,
+        P( "Oval 000000 line 1 true 66FF33 oval" )              /* Oval_u0q */
     ), ),
-    &Primitive_Ctor( Primitive_Init(
-        P( { 0.2528868360277136, 0.7640183008409785, 0.04041570438799076, 0.05198776758409788 } ),
-        P( "Oval 000000 line 1 true 66FF33 oval" )
+    &Primitive_Ctor( Primitive_Init(                            /* Oval_u0r */
+        P( { 0.2528868360277136, 0.7640183008409785, 0.04041570438799076, 0.05198776758409788 } )/* u0r-6f7de2bd597eab2992ffddef9cceacc8 */,
+        P( "Oval 000000 line 1 true 66FF33 oval" )              /* Oval_u0r */
     ), ),
-    &Primitive_Ctor( Primitive_Init(
-        P( { 0.26674364896073904, 0.7640183008409785, 0.04041570438799076, 0.05198776758409788 } ),
-        P( "Oval 000000 line 1 true 66FF33 oval" )
+    &Primitive_Ctor( Primitive_Init(                            /* Oval_u0s */
+        P( { 0.26674364896073904, 0.7640183008409785, 0.04041570438799076, 0.05198776758409788 } )/* u0s-6f7de2bd597eab2992ffddef9cceacc8 */,
+        P( "Oval 000000 line 1 true 66FF33 oval" )              /* Oval_u0s */
     ), ),
-    &Primitive_Ctor( Primitive_Init(
-        P( { 0.2748267898383372, 0.8083608084862385, 0.012702078521939953, 0.03211009174311927 } ),
-        P( "Rectangle 000000 line 1 true 996633 null" )
+    &Primitive_Ctor( Primitive_Init(                            /* Rectangle_u0t */
+        P( { 0.2748267898383372, 0.8083608084862385, 0.012702078521939953, 0.03211009174311927 } )/* u0t-6f7de2bd597eab2992ffddef9cceacc8 */,
+        P( "Rectangle 000000 line 1 true 996633 null" )         /* Rectangle_u0t */
     ), )
 };
 Sprite* getobj( int id ){
@@ -249,7 +262,7 @@ int ObjsBuilder_startSim(
                 SDL_RenderCopy(renderer, imageTexture, NULL, NULL);
             }
 
-            eastRedLight->m_angle += 1.0;
+            ImgSprite_setOffset( eastRedLight, 10, 10 );
 
             for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
                 Sprite_draw1(g_objects[i], renderer);

@@ -4,8 +4,5 @@
 #include "TransformConstraint.h"
 Constraint* TransformConstraint_Copy( TransformConstraint* pTransformConstraint, const TransformConstraint* pSource ){
     Constraint_Copy( ( Constraint* )pTransformConstraint, ( Constraint* )pSource );
-    pTransformConstraint->m_source = pSource->m_source;
-    pTransformConstraint->m_target = pSource->m_target;
-    pTransformConstraint->influence = pSource->influence;
     return ( Constraint* )pTransformConstraint;
 }

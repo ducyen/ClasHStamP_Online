@@ -4,7 +4,8 @@
 #include "RotationConstraint.h"
 /** @public @memberof RotationConstraint */
 static void RotationConstraint_apply(
-    RotationConstraint* pRotationConstraint
+    RotationConstraint* pRotationConstraint,
+    Sprite* target
 ){
 } /* RotationConstraint_apply */
 

@@ -3,14 +3,14 @@
 #include "TransformConstraint.h"
 typedef struct tagTranslationConstraint TranslationConstraint;
 #endif//__TranslationConstraint_H__
-#if !defined( TranslationConstraint_Init ) && ( defined( __TranslationConstraint_INTERNAL__ )  )
+#if !defined( TranslationConstraint_Init ) && ( defined( __TranslationConstraint_INTERNAL__ )  || defined( __ObjsBuilder_INTERNAL__ )  )
 #define __TransformConstraint_INTERNAL__
 #include "TransformConstraint.h"
 /** @memberof TranslationConstraint
  * @brief TranslationConstraint auto-generated constructor
  */
-#define TranslationConstraint_Init(_m_source, _m_target, _influence)\
-    TransformConstraint_Init( P( _m_source ), P( _m_target ), P( _influence ) )\
+#define TranslationConstraint_Init(_m_source, _m_influence, _m_next)\
+    TransformConstraint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) )\
     .vTbl = &gTranslationConstraintVtbl,\
 
 #define TranslationConstraint_Ctor( InitFunc, optionParams )    ( TranslationConstraint ){\
