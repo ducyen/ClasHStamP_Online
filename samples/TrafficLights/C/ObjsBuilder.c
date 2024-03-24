@@ -8,6 +8,8 @@
 #include "RedLight.h"                                           
 #include "Primitive.h"                                          
 #include "TranslationConstraint.h"                              
+#include "AttachConstraint.h"
+#include "RotationConstraint.h"
 Sprite* g_objects[] = {
     &RedLight_Ctor( RedLight_Init(                              /* westRedLight */
         P( { 0.3042725173210162, 0.41036806363823086, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
@@ -17,7 +19,9 @@ Sprite* g_objects[] = {
     &RedLight_Ctor( RedLight_Init(                              /* eastRedLight */
         P( { 0.6385681293302541, 0.5204598067574969, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
         P( "RedLight.png" )                                     /* m_imgPath */,
-        P( &TranslationConstraint_Ctor( TranslationConstraint_Init( &westRedLight, 1, null ) ) )/* m_constraints */
+        P( &AttachConstraint_Ctor( AttachConstraint_Init( &eastGreenLight, 1, 
+           &TranslationConstraint_Ctor( TranslationConstraint_Init( &eastGreenLight, 1, 
+           null ) ) ) ) )/* m_constraints */
     ), ),
     &YellowLight_Ctor( YellowLight_Init(                        /* westYellowLight */
         P( { 0.2528868360277136, 0.41036806363823086, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
@@ -262,7 +266,14 @@ int ObjsBuilder_startSim(
                 SDL_RenderCopy(renderer, imageTexture, NULL, NULL);
             }
 
-            ImgSprite_setOffset( eastRedLight, 10, 10 );
+            static int s_pos_x = 0;
+            ImgSprite_setOffset( eastRedLight, s_pos_x--, 0 );
+            static double s_angle = 0;
+            ImgSprite_setRotation( eastRedLight, s_angle += 1. );
+
+            for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
+                ImgSprite_update(g_objects[i]);
+            }
 
             for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
                 Sprite_draw1(g_objects[i], renderer);

@@ -4,10 +4,12 @@
 #include "Constraint.h"
 typedef struct tagImgSprite ImgSprite;
 void ImgSprite_setOffset( ImgSprite* pImgSprite, int x, int y );
-SDL_Point* ImgSprite_getOffset( ImgSprite* pImgSprite );
+const SDL_Point* ImgSprite_getOffset( ImgSprite* pImgSprite );
+const SDL_Rect* ImgSprite_getBoundary( ImgSprite* pImgSprite );
 void ImgSprite_setRotation( ImgSprite* pImgSprite, double value );
 double ImgSprite_getRotation( ImgSprite* pImgSprite );
 void ImgSprite_setBrightness( ImgSprite* pImgSprite, double value );
+void ImgSprite_update( ImgSprite* pImgSprite );
 #endif//__ImgSprite_H__
 #if !defined( ImgSprite_Init ) && ( defined( __ImgSprite_INTERNAL__ )  )
 #define __Sprite_INTERNAL__

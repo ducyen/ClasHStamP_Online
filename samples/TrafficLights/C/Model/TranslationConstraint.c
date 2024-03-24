@@ -7,6 +7,10 @@ static void TranslationConstraint_apply(
     TranslationConstraint* pTranslationConstraint,
     Sprite* target
 ){
+    if( pTranslationConstraint->m_influence == 0 ){
+        return;
+    }
+
     ImgSprite* pSource = ( ImgSprite* )*pTranslationConstraint->m_source;
     ImgSprite* pTarget = ( ImgSprite* )target;
     SDL_Point* sourceOfs = ImgSprite_getOffset( pSource );

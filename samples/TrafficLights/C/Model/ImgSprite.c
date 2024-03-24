@@ -10,19 +10,21 @@ void ImgSprite_setOffset(
 ){
     pImgSprite->m_offset.x = x;
     pImgSprite->m_offset.y = y;
-    Constraint* pCurConstraint = pImgSprite->m_constraints;
-    while( pCurConstraint != null ){
-        Constraint_apply( pCurConstraint, pImgSprite );
-        pCurConstraint = Constraint_getNext( pCurConstraint );
-    }
 } /* ImgSprite_setOffset */
 
 /** @public @memberof ImgSprite */
-SDL_Point* ImgSprite_getOffset(
+const SDL_Point* ImgSprite_getOffset(
     ImgSprite* pImgSprite
 ){
     return &pImgSprite->m_offset;
 } /* ImgSprite_getOffset */
+
+/** @public @memberof ImgSprite */
+const SDL_Rect* ImgSprite_getBoundary(
+    ImgSprite* pImgSprite
+){
+    return &pImgSprite->m_rect;
+} /* ImgSprite_getBoundary */
 
 /** @public @memberof ImgSprite */
 void ImgSprite_setRotation(
@@ -46,6 +48,17 @@ void ImgSprite_setBrightness(
 ){
     pImgSprite->m_brightness = value;
 } /* ImgSprite_setBrightness */
+
+/** @public @memberof ImgSprite */
+void ImgSprite_update(
+    ImgSprite* pImgSprite
+){
+    Constraint* pCurConstraint = pImgSprite->m_constraints;
+    while( pCurConstraint != null ){
+        Constraint_apply( pCurConstraint, pImgSprite );
+        pCurConstraint = Constraint_getNext( pCurConstraint );
+    }
+} /* ImgSprite_update */
 
 /** @public @memberof ImgSprite */
 static void ImgSprite_draw0(

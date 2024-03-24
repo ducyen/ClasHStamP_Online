@@ -3,7 +3,7 @@
 #include "TransformConstraint.h"
 typedef struct tagAttachConstraint AttachConstraint;
 #endif//__AttachConstraint_H__
-#if !defined( AttachConstraint_Init ) && ( defined( __AttachConstraint_INTERNAL__ )  )
+#if !defined( AttachConstraint_Init ) && ( defined( __AttachConstraint_INTERNAL__ ) || defined( __ObjsBuilder_INTERNAL__ ) )
 #define __TransformConstraint_INTERNAL__
 #include "TransformConstraint.h"
 /** @memberof AttachConstraint
