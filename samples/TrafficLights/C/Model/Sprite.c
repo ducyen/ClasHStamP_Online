@@ -12,6 +12,14 @@ void Sprite_draw0(
 } /* Sprite_draw0 */
 
 /** @public @pure @memberof Sprite */
+void Sprite_update(
+    Sprite* pSprite
+){
+    if( pSprite->vTbl == NULL || pSprite->vTbl->pupdate == NULL ){ return; }
+    pSprite->vTbl->pupdate( pSprite );
+} /* Sprite_update */
+
+/** @public @pure @memberof Sprite */
 void Sprite_draw1(
     Sprite* pSprite,
     SDL_Renderer* renderer

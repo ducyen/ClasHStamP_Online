@@ -75,6 +75,12 @@ static void Primitive_draw0(
 } /* Primitive_draw0 */
 
 /** @public @memberof Primitive */
+static void Primitive_update(
+    Primitive* pPrimitive
+){
+} /* Primitive_update */
+
+/** @public @memberof Primitive */
 static void Primitive_draw1(
     Primitive* pPrimitive,
     SDL_Renderer* renderer
@@ -101,6 +107,7 @@ Sprite* Primitive_Copy( Primitive* pPrimitive, const Primitive* pSource ){
 }
 const SpriteVtbl gPrimitiveVtbl = {
     .pdraw0                      = Primitive_draw0,
+    .pupdate                     = Primitive_update,
     .pdraw1                      = Primitive_draw1,
     .pload                       = Primitive_load,
     .pfree                       = Primitive_free,

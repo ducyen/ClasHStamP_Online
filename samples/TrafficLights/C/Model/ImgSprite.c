@@ -10,6 +10,8 @@ void ImgSprite_setOffset(
 ){
     pImgSprite->m_offset.x = x;
     pImgSprite->m_offset.y = y;
+    pImgSprite->m_center.x = pImgSprite->m_rect.x + pImgSprite->m_rect.w / 2 + pImgSprite->m_offset.x;
+    pImgSprite->m_center.y = pImgSprite->m_rect.y + pImgSprite->m_rect.h / 2 + pImgSprite->m_offset.y;
 } /* ImgSprite_setOffset */
 
 /** @public @memberof ImgSprite */
@@ -25,6 +27,13 @@ const SDL_Rect* ImgSprite_getBoundary(
 ){
     return &pImgSprite->m_rect;
 } /* ImgSprite_getBoundary */
+
+/** @public @memberof ImgSprite */
+const SDL_Point* ImgSprite_getCenter(
+    ImgSprite* pImgSprite
+){
+    return &pImgSprite->m_center;
+} /* ImgSprite_getCenter */
 
 /** @public @memberof ImgSprite */
 void ImgSprite_setRotation(
@@ -50,7 +59,14 @@ void ImgSprite_setBrightness(
 } /* ImgSprite_setBrightness */
 
 /** @public @memberof ImgSprite */
-void ImgSprite_update(
+static void ImgSprite_draw0(
+    ImgSprite* pImgSprite,
+    SDL_Renderer* renderer
+){
+} /* ImgSprite_draw0 */
+
+/** @public @memberof ImgSprite */
+static void ImgSprite_update(
     ImgSprite* pImgSprite
 ){
     Constraint* pCurConstraint = pImgSprite->m_constraints;
@@ -59,13 +75,6 @@ void ImgSprite_update(
         pCurConstraint = Constraint_getNext( pCurConstraint );
     }
 } /* ImgSprite_update */
-
-/** @public @memberof ImgSprite */
-static void ImgSprite_draw0(
-    ImgSprite* pImgSprite,
-    SDL_Renderer* renderer
-){
-} /* ImgSprite_draw0 */
 
 /** @public @memberof ImgSprite */
 static void ImgSprite_draw1(
@@ -149,6 +158,8 @@ static bool ImgSprite_load(
         pImgSprite->m_iniRect.h * height
     };
 
+    ImgSprite_setOffset( pImgSprite, 0, 0 );
+
     return true;
 } /* ImgSprite_load */
 
@@ -167,11 +178,13 @@ static void ImgSprite_free(
 Sprite* ImgSprite_Copy( ImgSprite* pImgSprite, const ImgSprite* pSource ){
     Sprite_Copy( ( Sprite* )pImgSprite, ( Sprite* )pSource );
     pImgSprite->m_buffer = pSource->m_buffer;
+    pImgSprite->m_center = pSource->m_center;
     pImgSprite->m_constraints = pSource->m_constraints;
     return ( Sprite* )pImgSprite;
 }
 const SpriteVtbl gImgSpriteVtbl = {
     .pdraw0                      = ImgSprite_draw0,
+    .pupdate                     = ImgSprite_update,
     .pdraw1                      = ImgSprite_draw1,
     .pload                       = ImgSprite_load,
     .pfree                       = ImgSprite_free,

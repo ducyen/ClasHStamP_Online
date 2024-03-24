@@ -15,14 +15,14 @@ Sprite* g_objects[] = {
     &RedLight_Ctor( RedLight_Init(                              /* westRedLight */
         P( { 0.3042725173210162, 0.41036806363823086, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
         P( "RedLight.png" )                                     /* m_imgPath */,
-        P( null )                                               /* m_constraints */
+        P( null )/* m_constraints */
     ), ),
     &RedLight_Ctor( RedLight_Init(                              /* eastRedLight */
         P( { 0.6385681293302541, 0.5204598067574969, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
         P( "RedLight.png" )                                     /* m_imgPath */,
         P( &AttachmentConstraint_Ctor( AttachmentConstraint_Init( &eastGreenLight, 1, 
            &TranslationConstraint_Ctor( TranslationConstraint_Init( &eastGreenLight, 1, 
-           &RotationConstraint_Ctor( RotationConstraint_Init( &eastGreenLight, 1, 
+           &RotationConstraint_Ctor( RotationConstraint_Init( &eastGreenLight, 0, 
            null ) ) ) ) ) ) )/* m_constraints */
     ), ),
     &YellowLight_Ctor( YellowLight_Init(                        /* westYellowLight */
@@ -38,12 +38,13 @@ Sprite* g_objects[] = {
     &YellowLight_Ctor( YellowLight_Init(                        /* eastYellowLight */
         P( { 0.6882217090069284, 0.5204598067574969, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
         P( "YellowLight.png" )                                  /* m_imgPath */,
-        P( null )                                               /* m_constraints */
+        P( &TrackToConstraint_Ctor( TrackToConstraint_Init( &eastGreenLight, 1, 
+           null ) ) )/* m_constraints */
     ), ),
     &GreenLight_Ctor( GreenLight_Init(                          /* eastGreenLight */
         P( { 0.7390300230946882, 0.5204598067574969, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
         P( "GreenLight.png" )                                   /* m_imgPath */,
-        P( null )                                               /* m_constraints */
+        P( null )/* m_constraints */
     ), ),
     &RedLight_Ctor( RedLight_Init(                              /* northRedLight */
         P( { 0.5646651270207852, 0.2579392672531836, 0.06062355658198614, 0.07268892540356313 } )/* m_iniRect */,
@@ -274,7 +275,7 @@ int ObjsBuilder_startSim(
             ImgSprite_setRotation( eastRedLight, s_angle += 1. );
 
             for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
-                ImgSprite_update(g_objects[i]);
+                Sprite_update(g_objects[i]);
             }
 
             for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {

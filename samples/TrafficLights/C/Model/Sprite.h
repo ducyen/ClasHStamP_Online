@@ -2,6 +2,7 @@
 #define __Sprite_H__
 typedef struct tagSprite Sprite;
 void Sprite_draw0( Sprite* pSprite, SDL_Renderer* renderer );
+void Sprite_update( Sprite* pSprite );
 void Sprite_draw1( Sprite* pSprite, SDL_Renderer* renderer );
 bool Sprite_load( Sprite* pSprite, SDL_Renderer* renderer );
 void Sprite_free( Sprite* pSprite );
@@ -25,6 +26,7 @@ void Sprite_free( Sprite* pSprite );
 }
 typedef struct tagSpriteVtbl{
     void ( * const pdraw0 )( Sprite*, SDL_Renderer* );
+    void ( * const pupdate )( Sprite* );
     void ( * const pdraw1 )( Sprite*, SDL_Renderer* );
     bool ( * const pload )( Sprite*, SDL_Renderer* );
     void ( * const pfree )( Sprite* );
