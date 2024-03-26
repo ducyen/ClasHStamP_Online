@@ -13,9 +13,8 @@ typedef struct tagTransformConstraint TransformConstraint;
 #define TransformConstraint_Init(_m_source, _m_influence, _m_next)\
     Constraint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) )\
 
-#define TransformConstraint_Ctor( InitFunc, optionParams )    ( TransformConstraint ){\
-    InitFunc\
-\
+#define TransformConstraint_Ctor( _m_source, _m_influence, _m_next )    ( TransformConstraint ){ \
+    TransformConstraint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) ) \
 }
 Constraint* TransformConstraint_Copy( TransformConstraint* pTransformConstraint, const TransformConstraint* pSource );
 /** @class TransformConstraint

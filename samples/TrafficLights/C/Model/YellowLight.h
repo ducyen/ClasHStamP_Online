@@ -12,9 +12,8 @@ typedef struct tagYellowLight YellowLight;
 #define YellowLight_Init(_m_iniRect, _m_imgPath, _m_constraints)\
     ImgSprite_Init( P( _m_iniRect ), P( _m_imgPath ), P( _m_constraints ) )\
 
-#define YellowLight_Ctor( InitFunc, optionParams )    ( YellowLight ){\
-    InitFunc\
-\
+#define YellowLight_Ctor( _m_iniRect, _m_imgPath, _m_constraints )    ( YellowLight ){ \
+    YellowLight_Init( P( _m_iniRect ), P( _m_imgPath ), P( _m_constraints ) ) \
 }
 ImgSprite* YellowLight_Copy( YellowLight* pYellowLight, const YellowLight* pSource );
 /** @class YellowLight

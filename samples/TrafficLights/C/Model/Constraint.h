@@ -15,9 +15,8 @@ Constraint* Constraint_getNext( Constraint* pConstraint );
     .m_influence = _m_influence,\
     .m_next = _m_next,\
 
-#define Constraint_Ctor( InitFunc, optionParams )    ( Constraint ){\
-    InitFunc\
-\
+#define Constraint_Ctor( _m_source, _m_influence, _m_next )    ( Constraint ){ \
+    Constraint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) ) \
 }
 typedef struct tagConstraintVtbl{
     void ( * const papply )( Constraint*, Sprite* );

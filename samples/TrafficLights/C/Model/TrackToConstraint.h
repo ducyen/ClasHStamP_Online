@@ -13,9 +13,8 @@ typedef struct tagTrackToConstraint TrackToConstraint;
     TransformConstraint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) )\
     .vTbl = &gTrackToConstraintVtbl,\
 
-#define TrackToConstraint_Ctor( InitFunc, optionParams )    ( TrackToConstraint ){\
-    InitFunc\
-\
+#define TrackToConstraint_Ctor( _m_source, _m_influence, _m_next )    ( TrackToConstraint ){ \
+    TrackToConstraint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) ) \
 }
 extern const ConstraintVtbl gTrackToConstraintVtbl;
 TransformConstraint* TrackToConstraint_Copy( TrackToConstraint* pTrackToConstraint, const TrackToConstraint* pSource );

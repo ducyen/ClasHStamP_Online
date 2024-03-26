@@ -42,9 +42,8 @@ constructor,"/** @memberof [nAME]
 #define [nAME]_Init(",,"    .vTbl = &g[nAME]Vtbl,\
 ",")\
 ","
-#define [nAME]_Ctor( InitFunc, optionParams )    ( [nAME] ){\
-    InitFunc\
-[vALUE]\
+#define [nAME]_Ctor( [vALUE] )    ( [nAME] ){ \
+    [nAME]_Init( [mODIFIER] ) \
 }
 "
 attr_group,"[cONTAINER]* [nAME]_Copy( [nAME]* p[nAME], const [nAME]* pSource );
@@ -201,7 +200,7 @@ typedef struct tag[nAME] {
     HdStateMachine base;
 ","}[nAME];
 #define [nAME]_Init() {\
-    .base = HdStateMachine_Ctor( HdStateMachine_Init([nAME]_[tYPE], [nAME]_[tYPE]), ),\
+    .base = HdStateMachine_Ctor( [nAME]_[tYPE], [nAME]_[tYPE] ),\
 [vALUE]}
 "
 default_trans,,,,,

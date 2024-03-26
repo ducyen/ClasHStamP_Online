@@ -77,9 +77,8 @@ int ObjsBuilder_startSim( void   );
  */
 #define ObjsBuilder_Init()\
 
-#define ObjsBuilder_Ctor( InitFunc, optionParams )    ( ObjsBuilder ){\
-    InitFunc\
-\
+#define ObjsBuilder_Ctor(  )    ( ObjsBuilder ){ \
+    ObjsBuilder_Init(  ) \
 }
 ObjsBuilder* ObjsBuilder_Copy( ObjsBuilder* pObjsBuilder, const ObjsBuilder* pSource );
 /** @class ObjsBuilder

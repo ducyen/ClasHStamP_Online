@@ -12,9 +12,8 @@ typedef struct tagRedLight RedLight;
 #define RedLight_Init(_m_iniRect, _m_imgPath, _m_constraints)\
     ImgSprite_Init( P( _m_iniRect ), P( _m_imgPath ), P( _m_constraints ) )\
 
-#define RedLight_Ctor( InitFunc, optionParams )    ( RedLight ){\
-    InitFunc\
-\
+#define RedLight_Ctor( _m_iniRect, _m_imgPath, _m_constraints )    ( RedLight ){ \
+    RedLight_Init( P( _m_iniRect ), P( _m_imgPath ), P( _m_constraints ) ) \
 }
 ImgSprite* RedLight_Copy( RedLight* pRedLight, const RedLight* pSource );
 /** @class RedLight

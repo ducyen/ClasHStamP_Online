@@ -17,9 +17,8 @@ int HdStateMachine_Exitable( HdStateMachine* pHdStateMachine, uint64_t nThisStat
     .nPseudostate = _nPseudostate,\
     .bIsExternTrans = false,\
 
-#define HdStateMachine_Ctor( InitFunc, optionParams )    ( HdStateMachine ){\
-    InitFunc\
-\
+#define HdStateMachine_Ctor( _nCurrentState, _nPseudostate )    ( HdStateMachine ){ \
+    HdStateMachine_Init( P( _nCurrentState ), P( _nPseudostate ) ) \
 }
 HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdStateMachine* pSource );
 /** @class HdStateMachine

@@ -20,9 +20,8 @@ void Sprite_free( Sprite* pSprite );
     .m_offset = { 0 },\
     .m_brightness = 1.,\
 
-#define Sprite_Ctor( InitFunc, optionParams )    ( Sprite ){\
-    InitFunc\
-\
+#define Sprite_Ctor( _m_iniRect, _m_imgPath )    ( Sprite ){ \
+    Sprite_Init( P( _m_iniRect ), P( _m_imgPath ) ) \
 }
 typedef struct tagSpriteVtbl{
     void ( * const pdraw0 )( Sprite*, SDL_Renderer* );

@@ -13,9 +13,8 @@ typedef struct tagRotationConstraint RotationConstraint;
     TransformConstraint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) )\
     .vTbl = &gRotationConstraintVtbl,\
 
-#define RotationConstraint_Ctor( InitFunc, optionParams )    ( RotationConstraint ){\
-    InitFunc\
-\
+#define RotationConstraint_Ctor( _m_source, _m_influence, _m_next )    ( RotationConstraint ){ \
+    RotationConstraint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) ) \
 }
 extern const ConstraintVtbl gRotationConstraintVtbl;
 TransformConstraint* RotationConstraint_Copy( RotationConstraint* pRotationConstraint, const RotationConstraint* pSource );
