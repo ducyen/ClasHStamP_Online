@@ -32,7 +32,7 @@ typedef struct tagManagingThroughTraffic_Region1 {
 #define ManagingThroughTraffic_Region1_SRedOn   ( ManagingThroughTraffic_Region1_SRedOn_Dmy | ManagingThroughTraffic_Region1_SRed | ManagingThroughTraffic_Region1_PRedWait )
 }ManagingThroughTraffic_Region1;
 #define ManagingThroughTraffic_Region1_Init() {\
-    .base = HdStateMachine_Ctor( ManagingThroughTraffic_Region1_ManagingThroughTraffic_Top, ManagingThroughTraffic_Region1_ManagingThroughTraffic_Top ),\
+    .base = { HdStateMachine_Init( ManagingThroughTraffic_Region1_ManagingThroughTraffic_Top, ManagingThroughTraffic_Region1_ManagingThroughTraffic_Top ) },\
 }
 /** @class ManagingThroughTraffic_Region2
  * @extends HdStateMachine
@@ -46,7 +46,7 @@ typedef struct tagManagingThroughTraffic_Region2 {
 #define ManagingThroughTraffic_Region2_TrainCrossing ( 1ULL << 10 )
 }ManagingThroughTraffic_Region2;
 #define ManagingThroughTraffic_Region2_Init() {\
-    .base = HdStateMachine_Ctor( ManagingThroughTraffic_Region2_ManagingThroughTraffic_Top, ManagingThroughTraffic_Region2_ManagingThroughTraffic_Top ),\
+    .base = { HdStateMachine_Init( ManagingThroughTraffic_Region2_ManagingThroughTraffic_Top, ManagingThroughTraffic_Region2_ManagingThroughTraffic_Top ) },\
 }
 /** @class MainStm
  * @extends HdStateMachine
@@ -74,7 +74,7 @@ typedef struct tagMainStm {
 #define MainStm_ManagingThroughTraffic          ( MainStm_ManagingThroughTraffic_Dmy | MainStm_PGreen | MainStm_PYellow | MainStm_PRedOn | MainStm_ManagingThroughTrafficInit )
 }MainStm;
 #define MainStm_Init() {\
-    .base = HdStateMachine_Ctor( MainStm_MainTop, MainStm_MainTop ),\
+    .base = { HdStateMachine_Init( MainStm_MainTop, MainStm_MainTop ) },\
     .ManagingThroughTraffic_TopManagingThroughTraffic_Region1 = ManagingThroughTraffic_Region1_Init(),\
     .ManagingThroughTraffic_TopManagingThroughTraffic_Region2 = ManagingThroughTraffic_Region2_Init(),\
 }

@@ -200,7 +200,7 @@ typedef struct tag[nAME] {
     HdStateMachine base;
 ","}[nAME];
 #define [nAME]_Init() {\
-    .base = HdStateMachine_Ctor( [nAME]_[tYPE], [nAME]_[tYPE] ),\
+    .base = { HdStateMachine_Init( [nAME]_[tYPE], [nAME]_[tYPE] ) },\
 [vALUE]}
 "
 default_trans,,,,,
