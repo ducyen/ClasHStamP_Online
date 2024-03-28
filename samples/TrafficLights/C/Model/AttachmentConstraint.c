@@ -24,11 +24,11 @@ static void AttachmentConstraint_apply(
     // Calculate the initial offset between child and parent
     const SDL_Rect* childRect  = ImgSprite_getBoundary( child  );
     const SDL_Rect* parentRect = ImgSprite_getBoundary( parent );
-    double offsetX = childRect->x - parentRect->x;
-    double offsetY = childRect->y - parentRect->y;
+    double offsetX = childRect->x+childRect->w/2 - parentRect->x-parentRect->w/2;
+    double offsetY = childRect->y+childRect->h/2 - parentRect->y-parentRect->h/2;
 
-    int deltaX = parentRect->x + offsetX * cosAngle - offsetY * sinAngle - childRect->x;
-    int deltaY = parentRect->y + offsetX * sinAngle + offsetY * cosAngle - childRect->y;
+    int deltaX = parentRect->x+parentRect->w/2 + offsetX * cosAngle - offsetY * sinAngle - childRect->x-childRect->w/2;
+    int deltaY = parentRect->y+parentRect->h/2 + offsetX * sinAngle + offsetY * cosAngle - childRect->y-childRect->h/2;
 
     ImgSprite_setOffset( child, childOfs->x + deltaX, childOfs->y + deltaY );
 } /* AttachmentConstraint_apply */
