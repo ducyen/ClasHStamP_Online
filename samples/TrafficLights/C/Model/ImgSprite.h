@@ -25,9 +25,8 @@ void ImgSprite_setBrightness( ImgSprite* pImgSprite, double value );
     .m_center = { 0 },\
     .m_constraints = _m_constraints,\
 
-#define ImgSprite_Ctor( InitFunc, optionParams )    ( ImgSprite ){\
-    InitFunc\
-\
+#define ImgSprite_Ctor( _m_iniRect, _m_imgPath, _m_constraints )    ( ImgSprite ){ \
+    ImgSprite_Init( P( _m_iniRect ), P( _m_imgPath ), P( _m_constraints ) ) \
 }
 extern const SpriteVtbl gImgSpriteVtbl;
 Sprite* ImgSprite_Copy( ImgSprite* pImgSprite, const ImgSprite* pSource );

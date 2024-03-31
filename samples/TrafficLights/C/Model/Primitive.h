@@ -13,9 +13,8 @@ typedef struct tagPrimitive Primitive;
     Sprite_Init( P( _m_iniRect ), P( _m_imgPath ) )\
     .vTbl = &gPrimitiveVtbl,\
 
-#define Primitive_Ctor( InitFunc, optionParams )    ( Primitive ){\
-    InitFunc\
-\
+#define Primitive_Ctor( _m_iniRect, _m_imgPath )    ( Primitive ){ \
+    Primitive_Init( P( _m_iniRect ), P( _m_imgPath ) ) \
 }
 extern const SpriteVtbl gPrimitiveVtbl;
 Sprite* Primitive_Copy( Primitive* pPrimitive, const Primitive* pSource );

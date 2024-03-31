@@ -13,9 +13,8 @@ typedef struct tagTranslationConstraint TranslationConstraint;
     TransformConstraint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) )\
     .vTbl = &gTranslationConstraintVtbl,\
 
-#define TranslationConstraint_Ctor( InitFunc, optionParams )    ( TranslationConstraint ){\
-    InitFunc\
-\
+#define TranslationConstraint_Ctor( _m_source, _m_influence, _m_next )    ( TranslationConstraint ){ \
+    TranslationConstraint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) ) \
 }
 extern const ConstraintVtbl gTranslationConstraintVtbl;
 TransformConstraint* TranslationConstraint_Copy( TranslationConstraint* pTranslationConstraint, const TranslationConstraint* pSource );

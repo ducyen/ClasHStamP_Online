@@ -12,9 +12,8 @@ typedef struct tagBarrier Barrier;
 #define Barrier_Init(_m_iniRect, _m_imgPath, _m_constraints)\
     ImgSprite_Init( P( _m_iniRect ), P( _m_imgPath ), P( _m_constraints ) )\
 
-#define Barrier_Ctor( InitFunc, optionParams )    ( Barrier ){\
-    InitFunc\
-\
+#define Barrier_Ctor( _m_iniRect, _m_imgPath, _m_constraints )    ( Barrier ){ \
+    Barrier_Init( P( _m_iniRect ), P( _m_imgPath ), P( _m_constraints ) ) \
 }
 ImgSprite* Barrier_Copy( Barrier* pBarrier, const Barrier* pSource );
 /** @class Barrier

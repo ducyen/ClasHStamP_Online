@@ -13,9 +13,8 @@ typedef struct tagAttachmentConstraint AttachmentConstraint;
     TransformConstraint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) )\
     .vTbl = &gAttachmentConstraintVtbl,\
 
-#define AttachmentConstraint_Ctor( InitFunc, optionParams )    ( AttachmentConstraint ){\
-    InitFunc\
-\
+#define AttachmentConstraint_Ctor( _m_source, _m_influence, _m_next )    ( AttachmentConstraint ){ \
+    AttachmentConstraint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) ) \
 }
 extern const ConstraintVtbl gAttachmentConstraintVtbl;
 TransformConstraint* AttachmentConstraint_Copy( AttachmentConstraint* pAttachmentConstraint, const AttachmentConstraint* pSource );

@@ -118,6 +118,8 @@
   <ItemGroup>
     <ClInclude Include="Model\AttachmentConstraint.h" />
     <ClInclude Include="Model\Barrier.h" />
+    <ClInclude Include="Model\CarBody.h" />
+    <ClInclude Include="Model\CarWheel.h" />
     <ClInclude Include="Model\Constraint.h" />
     <ClInclude Include="Model\ContextImpl.h" />
     <ClInclude Include="Model\GreenLight.h" />
@@ -138,6 +140,8 @@
     <ClCompile Include="main_win.c" />
     <ClCompile Include="Model\AttachmentConstraint.c" />
     <ClCompile Include="Model\Barrier.c" />
+    <ClCompile Include="Model\CarBody.c" />
+    <ClCompile Include="Model\CarWheel.c" />
     <ClCompile Include="Model\Constraint.c" />
     <ClCompile Include="Model\ContextImpl.c">
       <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreprocessToFile>
@@ -154,7 +158,9 @@
     <ClCompile Include="Model\TranslationConstraint.c" />
     <ClCompile Include="Model\YellowLight.c" />
     <ClCompile Include="NonOOP\HdStateMachine.c" />
-    <ClCompile Include="ObjsBuilder.c" />
+    <ClCompile Include="ObjsBuilder.c">
+      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreprocessToFile>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\GenCode_C.bat" />

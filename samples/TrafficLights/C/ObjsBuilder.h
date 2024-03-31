@@ -67,7 +67,13 @@ enum {
 #define Oval_u0s                ( g_objects[ _Oval_u0s ] )
     _Oval_u0s,
 #define Rectangle_u0t           ( g_objects[ _Rectangle_u0t ] )
-    _Rectangle_u0t
+    _Rectangle_u0t,
+#define carBody                 ( g_objects[ _carBody ] )
+    _carBody,
+#define rearWheels              ( g_objects[ _rearWheels ] )
+    _rearWheels,
+#define frontWheels             ( g_objects[ _frontWheels ] )
+    _frontWheels
 };
 int ObjsBuilder_startSim( void   );
 #endif//__ObjsBuilder_H__
@@ -77,9 +83,8 @@ int ObjsBuilder_startSim( void   );
  */
 #define ObjsBuilder_Init()\
 
-#define ObjsBuilder_Ctor( InitFunc, optionParams )    ( ObjsBuilder ){\
-    InitFunc\
-\
+#define ObjsBuilder_Ctor(  )    ( ObjsBuilder ){ \
+    ObjsBuilder_Init(  ) \
 }
 ObjsBuilder* ObjsBuilder_Copy( ObjsBuilder* pObjsBuilder, const ObjsBuilder* pSource );
 /** @class ObjsBuilder

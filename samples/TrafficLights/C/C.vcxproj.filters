@@ -66,6 +66,12 @@
     <ClInclude Include="Model\AttachmentConstraint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Model\CarBody.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\CarWheel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NonOOP\HdStateMachine.c">
@@ -117,6 +123,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Model\AttachmentConstraint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\CarBody.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\CarWheel.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
