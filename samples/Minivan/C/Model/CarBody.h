@@ -20,11 +20,11 @@ const TCHAR* CarBodyEvent_toString( CarBody_EVENT value );
  */
 typedef struct tagCarStm {
     HdStateMachine base;
-#define CarStm_CarTop_Dmy                       ( 1ULL <<  4 )
+#define CarStm_CarTop_Dmy                       ( 1ULL <<  0 )
 #define CarStm_CarTop                           ( CarStm_CarTop_Dmy | CarStm_InitialPseudostate0 | CarStm_PowerOff | CarStm_PowerOn )
-#define CarStm_InitialPseudostate0              ( 1ULL <<  5 )
-#define CarStm_PowerOff                         ( 1ULL <<  6 )
-#define CarStm_PowerOn                          ( 1ULL <<  7 )
+#define CarStm_InitialPseudostate0              ( 1ULL <<  1 )
+#define CarStm_PowerOff                         ( 1ULL <<  2 )
+#define CarStm_PowerOn                          ( 1ULL <<  3 )
 }CarStm;
 #define CarStm_Init() {\
     .base = { HdStateMachine_Init( CarStm_CarTop, CarStm_CarTop ) },\

@@ -7,7 +7,6 @@
 #include "AttachmentConstraint.h"                               
 #include "RotationConstraint.h"                                 
 #include "TrackToConstraint.h"                                  
-#include "ContextImpl.h"                                        
 #include "CarWheel.h"                                           
 #include "CarBody.h"                                            
 #include "MouseListener.h"                                      
@@ -159,9 +158,6 @@ int ObjsBuilder_startSim(
             nResult = S_FALSE;
         }
     }
-
-    ContextImpl context = ContextImpl_Ctor( );
-    ContextImpl_Start( &context );
 
     CarBody_Start( carBody );
 
