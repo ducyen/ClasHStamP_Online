@@ -81,6 +81,18 @@
     <ClInclude Include="Model\EventListener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Model\Button.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Lever.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\MotorRotor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\WindscreenWiper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NonOOP\HdStateMachine.c">
@@ -144,6 +156,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Model\EventListener.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Button.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Lever.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\MotorRotor.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\WindscreenWiper.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

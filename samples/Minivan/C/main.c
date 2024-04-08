@@ -239,55 +239,6 @@ void ShowExit( char* pMsg ){
 void startTimer( int tmout ){
 }
 
-void TurnOnPrimaryRed( void ){
-    ImgSprite_setBrightness( westRedLight, 1. );
-    ImgSprite_setBrightness( eastRedLight, 1. );
-}
-void TurnOffPrimaryRed( void ){
-    ImgSprite_setBrightness( westRedLight, 0.25 );
-    ImgSprite_setBrightness( eastRedLight, 0.25 );
-}
-void TurnOnPrimaryYellow( void ){
-    ImgSprite_setBrightness( westYellowLight, 1. );
-    ImgSprite_setBrightness( eastYellowLight, 1. );
-}
-void TurnOffPrimaryYellow( void ){
-    ImgSprite_setBrightness( westYellowLight, 0.25 );
-    ImgSprite_setBrightness( eastYellowLight, 0.25 );
-}
-void TurnOnPrimaryGreen( void ){
-    ImgSprite_setBrightness( westGreenLight, 1. );
-    ImgSprite_setBrightness( eastGreenLight, 1. );
-}
-void TurnOffPrimaryGreen( void ){
-    ImgSprite_setBrightness( westGreenLight, 0.25 );
-    ImgSprite_setBrightness( eastGreenLight, 0.25 );
-}
-void TurnOnSecondaryRed( void ){
-    ImgSprite_setBrightness( northRedLight, 1. );
-    ImgSprite_setBrightness( southRedLight, 1. );
-}
-void TurnOffSecondaryRed( void ){
-    ImgSprite_setBrightness( northRedLight, 0.25 );
-    ImgSprite_setBrightness( southRedLight, 0.25 );
-}
-void TurnOnSecondaryYellow( void ){
-    ImgSprite_setBrightness( northYellowLight, 1. );
-    ImgSprite_setBrightness( southYellowLight, 1. );
-}
-void TurnOffSecondaryYellow( void ){
-    ImgSprite_setBrightness( northYellowLight, 0.25 );
-    ImgSprite_setBrightness( southYellowLight, 0.25 );
-}
-void TurnOnSecondaryGreen( void ){
-    ImgSprite_setBrightness( northGreenLight, 1. );
-    ImgSprite_setBrightness( southGreenLight, 1. );
-}
-void TurnOffSecondaryGreen( void ){
-    ImgSprite_setBrightness( northGreenLight, 0.25 );
-    ImgSprite_setBrightness( southGreenLight, 0.25 );
-}
-
 int main(int argc, char **argv){
     if (argc >= 3) {
         g_sInputDir  = argv[ 1 ];

@@ -145,6 +145,7 @@ static void ImgSprite_draw1(
     SDL_Renderer* renderer
 ){
     int width, height;
+#if 0
     // Set the new texture as the render target
     SDL_SetRenderTarget(renderer, pImgSprite->m_buffer);
 
@@ -157,6 +158,7 @@ static void ImgSprite_draw1(
 
     // Reset the render target to the default
     SDL_SetRenderTarget(renderer, NULL);
+#endif
 
     // Set texture color modulation (brightness)
     SDL_SetTextureColorMod(
@@ -172,7 +174,11 @@ static void ImgSprite_draw1(
     rect.y = pImgSprite->m_rect.y + pImgSprite->m_offset.y;
 
     // Render the texture
+#if 0
     SDL_RenderCopyEx(renderer, pImgSprite->m_buffer, NULL, &rect, 0, NULL, SDL_FLIP_NONE);
+#else
+    SDL_RenderCopyEx(renderer, pImgSprite->m_image, NULL, &rect, pImgSprite->m_angle, NULL, SDL_FLIP_NONE);
+#endif
 
     // Reset transformation
     pImgSprite->m_angle = 0;

@@ -7,23 +7,12 @@
 void CarBody_moveRight(
     CarBody* pCarBody
 ){
-    pCarBody->x += 2;
-    pCarBody->m_offset.x = pCarBody->x;
-
-    CarWheel_rotateCW( frontWheels );
-    CarWheel_rotateCW( rearWheels );
 } /* CarBody_moveRight */
 
 /** @public @memberof CarBody */
 void CarBody_moveLeft(
     CarBody* pCarBody
 ){
-    pCarBody->x -= 2;
-    pCarBody->m_offset.x = pCarBody->x;
-    pCarBody->m_angle = 30.;
-
-    CarWheel_rotateCCW( frontWheels );
-    CarWheel_rotateCCW( rearWheels );
 } /* CarBody_moveLeft */
 
 const TCHAR* CarBodyEvent_toString( CarBody_EVENT value ){
@@ -42,13 +31,13 @@ static BOOL CarStm_EventProc( CarBody* pCarTop, CarStm* pStm, CarBody_EVENT nEve
 static BOOL CarStm_RunToCompletion( CarBody* pCarTop, CarStm* pStm );
 static void CarStm_GoingRight_Entry( CarBody* pCarBody, CarStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, CarStm_GoingRight ) ){
-        ShowEntry( "Model/CarBody/CarStm	143	148	224	52	0	0	660	500" );
+        ShowEntry( "Model/CarBody/CarStm	140	148	230	52	0	0	660	500" );
     }
 }
 static BOOL CarStm_GoingRight_EventProc( CarBody* pCarBody, CarStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = CarStm_GoingRight;
-    ShowDoing( "Model/CarBody/CarStm	143	148	224	52	0	0	660	500" );
+    ShowDoing( "Model/CarBody/CarStm	140	148	230	52	0	0	660	500" );
     switch( nEventId ){
     case CarBody_L_KEY_HIT:{
         CarStm_BgnTrans( pCarBody, pStm, CarStm_GoingLeft, STATE_UNDEF );
@@ -56,7 +45,7 @@ static BOOL CarStm_GoingRight_EventProc( CarBody* pCarBody, CarStm* pStm, CarBod
         bResult = TRUE;
     } break;
     case CarBody_TICK:{
-        CarBody_moveRight(carBody);
+        CarBody_moveRight(pCarBody);
         bResult = TRUE;
     } break;
     default: break;
@@ -65,18 +54,18 @@ static BOOL CarStm_GoingRight_EventProc( CarBody* pCarBody, CarStm* pStm, CarBod
 }
 static void CarStm_GoingRight_Exit( CarBody* pCarBody, CarStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, CarStm_GoingRight ) ){ 
-        ShowExit( "Model/CarBody/CarStm	143	148	224	52	0	0	660	500" );
+        ShowExit( "Model/CarBody/CarStm	140	148	230	52	0	0	660	500" );
     }
 }
 static void CarStm_GoingLeft_Entry( CarBody* pCarBody, CarStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, CarStm_GoingLeft ) ){
-        ShowEntry( "Model/CarBody/CarStm	146	274	218	52	0	0	660	500" );
+        ShowEntry( "Model/CarBody/CarStm	143	274	224	52	0	0	660	500" );
     }
 }
 static BOOL CarStm_GoingLeft_EventProc( CarBody* pCarBody, CarStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = CarStm_GoingLeft;
-    ShowDoing( "Model/CarBody/CarStm	146	274	218	52	0	0	660	500" );
+    ShowDoing( "Model/CarBody/CarStm	143	274	224	52	0	0	660	500" );
     switch( nEventId ){
     case CarBody_R_KEY_HIT:{
         CarStm_BgnTrans( pCarBody, pStm, CarStm_GoingRight, STATE_UNDEF );
@@ -84,7 +73,7 @@ static BOOL CarStm_GoingLeft_EventProc( CarBody* pCarBody, CarStm* pStm, CarBody
         bResult = TRUE;
     } break;
     case CarBody_TICK:{
-        CarBody_moveLeft(carBody);
+        CarBody_moveLeft(pCarBody);
         bResult = TRUE;
     } break;
     default: break;
@@ -93,7 +82,7 @@ static BOOL CarStm_GoingLeft_EventProc( CarBody* pCarBody, CarStm* pStm, CarBody
 }
 static void CarStm_GoingLeft_Exit( CarBody* pCarBody, CarStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, CarStm_GoingLeft ) ){ 
-        ShowExit( "Model/CarBody/CarStm	146	274	218	52	0	0	660	500" );
+        ShowExit( "Model/CarBody/CarStm	143	274	224	52	0	0	660	500" );
     }
 }
 static void CarStm_EndTrans( CarBody *pCarBody, CarStm* pStm ){

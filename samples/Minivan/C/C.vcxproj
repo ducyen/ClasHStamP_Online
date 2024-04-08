@@ -118,6 +118,7 @@
   <ItemGroup>
     <ClInclude Include="Model\AttachmentConstraint.h" />
     <ClInclude Include="Model\Barrier.h" />
+    <ClInclude Include="Model\Button.h" />
     <ClInclude Include="Model\CarBody.h" />
     <ClInclude Include="Model\CarWheel.h" />
     <ClInclude Include="Model\CommonInclude.h" />
@@ -126,6 +127,8 @@
     <ClInclude Include="Model\EventListener.h" />
     <ClInclude Include="Model\GreenLight.h" />
     <ClInclude Include="Model\ImgSprite.h" />
+    <ClInclude Include="Model\Lever.h" />
+    <ClInclude Include="Model\MotorRotor.h" />
     <ClInclude Include="Model\MouseListener.h" />
     <ClInclude Include="Model\Primitive.h" />
     <ClInclude Include="Model\RedLight.h" />
@@ -135,6 +138,7 @@
     <ClInclude Include="Model\TransformConstraint.h" />
     <ClInclude Include="Model\TranslationConstraint.h" />
     <ClInclude Include="Model\UsedDependency.h" />
+    <ClInclude Include="Model\WindscreenWiper.h" />
     <ClInclude Include="Model\YellowLight.h" />
     <ClInclude Include="NonOOP\HdStateMachine.h" />
     <ClInclude Include="ObjsBuilder.h" />
@@ -143,6 +147,7 @@
     <ClCompile Include="main_win.c" />
     <ClCompile Include="Model\AttachmentConstraint.c" />
     <ClCompile Include="Model\Barrier.c" />
+    <ClCompile Include="Model\Button.c" />
     <ClCompile Include="Model\CarBody.c" />
     <ClCompile Include="Model\CarWheel.c" />
     <ClCompile Include="Model\Constraint.c" />
@@ -153,6 +158,8 @@
     <ClCompile Include="Model\EventListener.c" />
     <ClCompile Include="Model\GreenLight.c" />
     <ClCompile Include="Model\ImgSprite.c" />
+    <ClCompile Include="Model\Lever.c" />
+    <ClCompile Include="Model\MotorRotor.c" />
     <ClCompile Include="Model\MouseListener.c" />
     <ClCompile Include="Model\Primitive.c" />
     <ClCompile Include="Model\RedLight.c" />
@@ -161,6 +168,7 @@
     <ClCompile Include="Model\TrackToConstraint.c" />
     <ClCompile Include="Model\TransformConstraint.c" />
     <ClCompile Include="Model\TranslationConstraint.c" />
+    <ClCompile Include="Model\WindscreenWiper.c" />
     <ClCompile Include="Model\YellowLight.c" />
     <ClCompile Include="NonOOP\HdStateMachine.c" />
     <ClCompile Include="ObjsBuilder.c">

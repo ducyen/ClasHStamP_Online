@@ -4,12 +4,18 @@
 typedef struct tagObjsBuilder ObjsBuilder;
 extern Sprite* g_objects[];
 enum {
-#define rearWheels              ( g_objects[ _rearWheels ] )
-    _rearWheels,
-#define frontWheels             ( g_objects[ _frontWheels ] )
-    _frontWheels,
-#define carBody                 ( g_objects[ _carBody ] )
-    _carBody
+#define rightWiperArm           ( g_objects[ _rightWiperArm ] )
+    _rightWiperArm,
+#define leftWiperArm            ( g_objects[ _leftWiperArm ] )
+    _leftWiperArm,
+#define rightWiperAxis          ( g_objects[ _rightWiperAxis ] )
+    _rightWiperAxis,
+#define leftWiperAxis           ( g_objects[ _leftWiperAxis ] )
+    _leftWiperAxis,
+#define wiperLever              ( g_objects[ _wiperLever ] )
+    _wiperLever,
+#define powerButton             ( g_objects[ _powerButton ] )
+    _powerButton
 };
 int ObjsBuilder_startSim( void   );
 #endif//__ObjsBuilder_H__

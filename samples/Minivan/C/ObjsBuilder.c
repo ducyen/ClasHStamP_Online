@@ -10,28 +10,47 @@
 #include "ContextImpl.h"                                        
 #include "CarWheel.h"                                           
 #include "CarBody.h"                                            
-#include "MouseListener.h"          
-static int sayHi( int x ){
-    printf( "Hi\n" );
-}
+#include "MouseListener.h"                                      
+#include "WindscreenWiper.h"                                    
+#include "MotorRotor.h"                                         
+#include "Button.h"                                             
+#include "Lever.h"                                              
 Sprite* g_objects[] = {
-    &CarWheel_Ctor(                                             /* rearWheels */
-        P( { 0.12675356921166978, 0.5632867583036018, 0.02867783985102426, 0.039245667686034685 } )/* m_iniRect */,
-        P( "CarWheel.png" )                                     /* m_imgPath */,
+    &WindscreenWiper_Ctor(                                      /* rightWiperArm */
+        P( { 0.45530726256983234, 0.42444034308103973, 0.31883172573324003, 0.07211928994648319 } )/* m_iniRect */,
+        P( "WindscreenWiper.png" )                              /* m_imgPath */,
         P( null )                                               /* m_constraints */,
         P( null )                                               /* m_mouseListeners */
     ),
-    &CarWheel_Ctor(                                             /* frontWheels */
-        P( { 0.20825574177529488, 0.5630309208290857, 0.02867783985102426, 0.039245667686034685 } )/* m_iniRect */,
-        P( "CarWheel.png" )                                     /* m_imgPath */,
+    &WindscreenWiper_Ctor(                                      /* leftWiperArm */
+        P( { 0.19776536312849158, 0.42507645259938837, 0.31883172573324003, 0.07211928994648319 } )/* m_iniRect */,
+        P( "WindscreenWiper.png" )                              /* m_imgPath */,
         P( null )                                               /* m_constraints */,
         P( null )                                               /* m_mouseListeners */
     ),
-    &CarBody_Ctor(                                              /* carBody */
-        P( { 0.1072625698324023, 0.46508764175586126, 0.1452513966480447, 0.19877675840978593 } )/* m_iniRect */,
-        P( "CarBody.png" )                                      /* m_imgPath */,
-        P( &AttachmentConstraint_Ctor( &rearWheels, 1, &TranslationConstraint_Ctor( &rearWheels, 1, &AttachmentConstraint_Ctor( &frontWheels, 1, &TranslationConstraint_Ctor( &frontWheels, 1, null ) ) ) ) )/* m_constraints */,
-        P( &MouseListener_Ctor( sayHi, null ) )                                               /* m_mouseListeners */
+    &MotorRotor_Ctor(                                           /* rightWiperAxis */
+        P( { 0.4480446927374302, 0.4768103736620795, 0.0223463687150838, 0.03058103975535168 } )/* m_iniRect */,
+        P( "MotorRotor.png" )                                   /* m_imgPath */,
+        P( null )                                               /* m_constraints */,
+        P( null )                                               /* m_mouseListeners */
+    ),
+    &MotorRotor_Ctor(                                           /* leftWiperAxis */
+        P( { 0.18994413407821228, 0.47706422018348627, 0.0223463687150838, 0.03058103975535168 } )/* m_iniRect */,
+        P( "MotorRotor.png" )                                   /* m_imgPath */,
+        P( null )                                               /* m_constraints */,
+        P( null )                                               /* m_mouseListeners */
+    ),
+    &Lever_Ctor(                                                /* wiperLever */
+        P( { 0.5770949720670391, 0.603721688646789, 0.1329608938547486, 0.04892966360856269 } )/* m_iniRect */,
+        P( "Lever.png" )                                        /* m_imgPath */,
+        P( null )                                               /* m_constraints */,
+        P( null )                                               /* m_mouseListeners */
+    ),
+    &Button_Ctor(                                               /* powerButton */
+        P( { 0.4949720670391061, 0.6511223002675841, 0.035754189944134075, 0.04892966360856269 } )/* m_iniRect */,
+        P( "Button.png" )                                       /* m_imgPath */,
+        P( null )                                               /* m_constraints */,
+        P( null )                                               /* m_mouseListeners */
     )
 };
 Sprite* getobj( int id ){
@@ -136,7 +155,7 @@ int ObjsBuilder_startSim(
     ContextImpl context = ContextImpl_Ctor( );
     ContextImpl_Start( &context );
 
-    CarBody_Start( carBody );
+    //CarBody_Start( carBody );
 
     SaveAllImages();
     ReleaseAllImages();
@@ -146,7 +165,7 @@ int ObjsBuilder_startSim(
         SDL_Event e;
 
         while (!quit) {
-            CarBody_EventProc(carBody, CarBody_TICK, NULL);
+            //CarBody_EventProc(carBody, CarBody_TICK, NULL);
             for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
                 Sprite_update(g_objects[i]);
             }
@@ -169,9 +188,9 @@ int ObjsBuilder_startSim(
                     if (e.key.keysym.sym == SDLK_x) {
                         //ContextImpl_EventProc(&context, ContextImpl_TMOUT, NULL);
                     }else if (e.key.keysym.sym == SDLK_r) {
-                        CarBody_EventProc(carBody, CarBody_R_KEY_HIT, NULL);
+                        //CarBody_EventProc(carBody, CarBody_R_KEY_HIT, NULL);
                     }else if (e.key.keysym.sym == SDLK_l) {
-                        CarBody_EventProc(carBody, CarBody_L_KEY_HIT, NULL);
+                        //CarBody_EventProc(carBody, CarBody_L_KEY_HIT, NULL);
                     }
                     SaveAllImages();
                     ReleaseAllImages();
