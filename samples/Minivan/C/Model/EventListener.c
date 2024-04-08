@@ -20,7 +20,8 @@ EventListener* EventListener_getNext(
 
 EventListener* EventListener_Copy( EventListener* pEventListener, const EventListener* pSource ){
     pEventListener->m_action = pSource->m_action;
-    pEventListener->m_mouseEvent = pSource->m_mouseEvent;
+    pEventListener->m_source = pSource->m_source;
+    pEventListener->m_event = pSource->m_event;
     pEventListener->m_next = pSource->m_next;
     return ( EventListener* )pEventListener;
 }

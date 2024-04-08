@@ -17,9 +17,7 @@ void CarBody_moveLeft(
 
 const TCHAR* CarBodyEvent_toString( CarBody_EVENT value ){
     switch( value ){
-    case CarBody_L_KEY_HIT: return _T( "L_KEY_HIT" );
-    case CarBody_R_KEY_HIT: return _T( "R_KEY_HIT" );
-    case CarBody_TICK: return _T( "TICK" );
+    case CarBody_E_PWR_BTN: return _T( "E_PWR_BTN" );
     default: return _T( "CarBody_UNKNOWN" );
     }
 }
@@ -29,68 +27,60 @@ static BOOL CarStm_Reset( CarBody* pCarTop, CarStm* pStm, HdStateMachine* pParen
 static BOOL CarStm_Abort( CarBody* pCarTop, CarStm* pStm );
 static BOOL CarStm_EventProc( CarBody* pCarTop, CarStm* pStm, CarBody_EVENT nEventId, void* pEventParams );
 static BOOL CarStm_RunToCompletion( CarBody* pCarTop, CarStm* pStm );
-static void CarStm_GoingRight_Entry( CarBody* pCarBody, CarStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, CarStm_GoingRight ) ){
-        ShowEntry( "Model/CarBody/CarStm	140	148	230	52	0	0	660	500" );
+static void CarStm_PowerOff_Entry( CarBody* pCarBody, CarStm* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, CarStm_PowerOff ) ){
+        ShowEntry( "Model/CarBody/CarStm	187	99	152	107	0	0	660	500" );
     }
 }
-static BOOL CarStm_GoingRight_EventProc( CarBody* pCarBody, CarStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+static BOOL CarStm_PowerOff_EventProc( CarBody* pCarBody, CarStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
-    pStm->base.nSourceState = CarStm_GoingRight;
-    ShowDoing( "Model/CarBody/CarStm	140	148	230	52	0	0	660	500" );
+    pStm->base.nSourceState = CarStm_PowerOff;
+    ShowDoing( "Model/CarBody/CarStm	187	99	152	107	0	0	660	500" );
     switch( nEventId ){
-    case CarBody_L_KEY_HIT:{
-        CarStm_BgnTrans( pCarBody, pStm, CarStm_GoingLeft, STATE_UNDEF );
+    case CarBody_E_PWR_BTN:{
+        CarStm_BgnTrans( pCarBody, pStm, CarStm_PowerOn, STATE_UNDEF );
         CarStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    case CarBody_TICK:{
-        CarBody_moveRight(pCarBody);
         bResult = TRUE;
     } break;
     default: break;
     }
     return bResult;
 }
-static void CarStm_GoingRight_Exit( CarBody* pCarBody, CarStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, CarStm_GoingRight ) ){ 
-        ShowExit( "Model/CarBody/CarStm	140	148	230	52	0	0	660	500" );
+static void CarStm_PowerOff_Exit( CarBody* pCarBody, CarStm* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, CarStm_PowerOff ) ){ 
+        ShowExit( "Model/CarBody/CarStm	187	99	152	107	0	0	660	500" );
     }
 }
-static void CarStm_GoingLeft_Entry( CarBody* pCarBody, CarStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, CarStm_GoingLeft ) ){
-        ShowEntry( "Model/CarBody/CarStm	143	274	224	52	0	0	660	500" );
+static void CarStm_PowerOn_Entry( CarBody* pCarBody, CarStm* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, CarStm_PowerOn ) ){
+        ShowEntry( "Model/CarBody/CarStm	187	320	152	107	0	0	660	500" );
     }
 }
-static BOOL CarStm_GoingLeft_EventProc( CarBody* pCarBody, CarStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+static BOOL CarStm_PowerOn_EventProc( CarBody* pCarBody, CarStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
-    pStm->base.nSourceState = CarStm_GoingLeft;
-    ShowDoing( "Model/CarBody/CarStm	143	274	224	52	0	0	660	500" );
+    pStm->base.nSourceState = CarStm_PowerOn;
+    ShowDoing( "Model/CarBody/CarStm	187	320	152	107	0	0	660	500" );
     switch( nEventId ){
-    case CarBody_R_KEY_HIT:{
-        CarStm_BgnTrans( pCarBody, pStm, CarStm_GoingRight, STATE_UNDEF );
+    case CarBody_E_PWR_BTN:{
+        CarStm_BgnTrans( pCarBody, pStm, CarStm_PowerOff, STATE_UNDEF );
         CarStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    case CarBody_TICK:{
-        CarBody_moveLeft(pCarBody);
         bResult = TRUE;
     } break;
     default: break;
     }
     return bResult;
 }
-static void CarStm_GoingLeft_Exit( CarBody* pCarBody, CarStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, CarStm_GoingLeft ) ){ 
-        ShowExit( "Model/CarBody/CarStm	143	274	224	52	0	0	660	500" );
+static void CarStm_PowerOn_Exit( CarBody* pCarBody, CarStm* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, CarStm_PowerOn ) ){ 
+        ShowExit( "Model/CarBody/CarStm	187	320	152	107	0	0	660	500" );
     }
 }
 static void CarStm_EndTrans( CarBody *pCarBody, CarStm* pStm ){
     pStm->base.nCurrentState = pStm->base.nTargetState;
     pStm->base.bIsExternTrans = FALSE;
     switch( pStm->base.nCurrentState ){
-    case CarStm_GoingRight:     CarStm_GoingRight_Entry( pCarBody, pStm ); break;
-    case CarStm_GoingLeft:      CarStm_GoingLeft_Entry( pCarBody, pStm ); break;
+    case CarStm_PowerOff:       CarStm_PowerOff_Entry( pCarBody, pStm ); break;
+    case CarStm_PowerOn:        CarStm_PowerOn_Entry( pCarBody, pStm ); break;
     default: break;
     }
 }
@@ -101,8 +91,8 @@ static void CarStm_BgnTrans( CarBody *pCarBody, CarStm* pStm, uint64_t targetSta
         pStm->base.nPseudostate = initState;
     }
     switch( pStm->base.nCurrentState ){
-    case CarStm_GoingRight:     CarStm_GoingRight_Exit( pCarBody, pStm ); break;
-    case CarStm_GoingLeft:      CarStm_GoingLeft_Exit( pCarBody, pStm ); break;
+    case CarStm_PowerOff:       CarStm_PowerOff_Exit( pCarBody, pStm ); break;
+    case CarStm_PowerOn:        CarStm_PowerOn_Exit( pCarBody, pStm ); break;
     default: break;
     }
 }
@@ -111,7 +101,7 @@ static BOOL CarStm_StateDefaultTrans( CarBody* pCarBody, CarStm* pStm ){
     pStm->base.nSourceState = pStm->base.nCurrentState;
     pStm->base.nLCAState = STATE_UNDEF;
     do{   if( pStm->base.nPseudostate == CarStm_InitialPseudostate0 ){
-        CarStm_BgnTrans( pCarBody, pStm, CarStm_GoingRight, STATE_UNDEF );
+        CarStm_BgnTrans( pCarBody, pStm, CarStm_PowerOff, STATE_UNDEF );
         CarStm_EndTrans( pCarBody, pStm );
         bResult = TRUE;
     }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, CarStm_CarTop) ){
@@ -151,8 +141,8 @@ static BOOL CarStm_EventProc( CarBody* pCarBody, CarStm* pStm, CarBody_EVENT nEv
     BOOL bResult = FALSE;
     pStm->base.nLCAState = STATE_UNDEF;
     switch( pStm->base.nCurrentState ){
-    case CarStm_GoingRight:                     bResult |= CarStm_GoingRight_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case CarStm_GoingLeft:                      bResult |= CarStm_GoingLeft_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case CarStm_PowerOff:                       bResult |= CarStm_PowerOff_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case CarStm_PowerOn:                        bResult |= CarStm_PowerOn_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
     default: break;
     }
     CarStm_RunToCompletion( pCarBody, pStm );

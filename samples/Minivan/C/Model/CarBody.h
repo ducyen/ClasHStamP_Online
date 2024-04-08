@@ -5,9 +5,7 @@ typedef struct tagCarBody CarBody;
 void CarBody_moveRight( CarBody* pCarBody );
 void CarBody_moveLeft( CarBody* pCarBody );
 typedef enum tagCarBodyEvent {
-    CarBody_L_KEY_HIT,                                          
-    CarBody_R_KEY_HIT,                                          
-    CarBody_TICK,                                               
+    CarBody_E_PWR_BTN,                                          
     CarBody_EVENT_NUM
 }CarBody_EVENT;
 const TCHAR* CarBodyEvent_toString( CarBody_EVENT value );
@@ -23,10 +21,10 @@ const TCHAR* CarBodyEvent_toString( CarBody_EVENT value );
 typedef struct tagCarStm {
     HdStateMachine base;
 #define CarStm_CarTop_Dmy                       ( 1ULL <<  4 )
-#define CarStm_CarTop                           ( CarStm_CarTop_Dmy | CarStm_InitialPseudostate0 | CarStm_GoingRight | CarStm_GoingLeft )
+#define CarStm_CarTop                           ( CarStm_CarTop_Dmy | CarStm_InitialPseudostate0 | CarStm_PowerOff | CarStm_PowerOn )
 #define CarStm_InitialPseudostate0              ( 1ULL <<  5 )
-#define CarStm_GoingRight                       ( 1ULL <<  6 )
-#define CarStm_GoingLeft                        ( 1ULL <<  7 )
+#define CarStm_PowerOff                         ( 1ULL <<  6 )
+#define CarStm_PowerOn                          ( 1ULL <<  7 )
 }CarStm;
 #define CarStm_Init() {\
     .base = { HdStateMachine_Init( CarStm_CarTop, CarStm_CarTop ) },\

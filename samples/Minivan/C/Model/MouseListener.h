@@ -9,12 +9,12 @@ typedef struct tagMouseListener MouseListener;
 /** @memberof MouseListener
  * @brief MouseListener auto-generated constructor
  */
-#define MouseListener_Init(_m_action, _m_next)\
-    EventListener_Init( P( _m_action ), P( _m_next ) )\
+#define MouseListener_Init(_m_action, _m_source, _m_event, _m_next)\
+    EventListener_Init( P( _m_action ), P( _m_source ), P( _m_event ), P( _m_next ) )\
     .vTbl = &gMouseListenerVtbl,\
 
-#define MouseListener_Ctor( _m_action, _m_next )    ( MouseListener ){ \
-    MouseListener_Init( P( _m_action ), P( _m_next ) ) \
+#define MouseListener_Ctor( _m_action, _m_source, _m_event, _m_next )    ( MouseListener ){ \
+    MouseListener_Init( P( _m_action ), P( _m_source ), P( _m_event ), P( _m_next ) ) \
 }
 extern const EventListenerVtbl gMouseListenerVtbl;
 EventListener* MouseListener_Copy( MouseListener* pMouseListener, const MouseListener* pSource );

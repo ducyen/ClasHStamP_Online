@@ -80,7 +80,7 @@ typedef ULONG_PTR DWORD_PTR, *PDWORD_PTR;
 
 #endif
 
-typedef int ( *MouseAction )( int );
+typedef int ( *MouseAction )( void*, int, void* );
 
 typedef struct tagEventParams{
     int cbSize;

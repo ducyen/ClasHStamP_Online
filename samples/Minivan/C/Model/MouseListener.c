@@ -8,7 +8,11 @@ static void MouseListener_actionPerformed(
     Sprite* target
 ){
     if( pMouseListener->m_action != null ){
-        pMouseListener->m_action( pMouseListener->m_mouseEvent );
+        if( pMouseListener->m_source != null ){
+            pMouseListener->m_action( *pMouseListener->m_source, pMouseListener->m_event, null );
+        } else{
+            pMouseListener->m_action( null, pMouseListener->m_event, null );
+        }
     }
 } /* MouseListener_actionPerformed */
 

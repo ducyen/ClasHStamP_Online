@@ -6,7 +6,8 @@ typedef struct tagE1Params {
     int x;                                                      
 }E1Params;
 typedef enum tagContextImplEvent {
-    ContextImpl_Trigger,                                        
+    ContextImpl_E_PWR_OFF,                                      
+    ContextImpl_E_PWR_ON,                                       
     ContextImpl_EVENT_NUM
 }ContextImpl_EVENT;
 const TCHAR* ContextImplEvent_toString( ContextImpl_EVENT value );
@@ -20,10 +21,10 @@ const TCHAR* ContextImplEvent_toString( ContextImpl_EVENT value );
 typedef struct tagMainStm {
     HdStateMachine base;
 #define MainStm_MainTop_Dmy                     ( 1ULL <<  0 )
-#define MainStm_MainTop                         ( MainStm_MainTop_Dmy | MainStm_InitialPseudostate0 | MainStm_State0 | MainStm_State1 )
+#define MainStm_MainTop                         ( MainStm_MainTop_Dmy | MainStm_InitialPseudostate0 | MainStm_PowerOff | MainStm_PowerOn )
 #define MainStm_InitialPseudostate0             ( 1ULL <<  1 )
-#define MainStm_State0                          ( 1ULL <<  2 )
-#define MainStm_State1                          ( 1ULL <<  3 )
+#define MainStm_PowerOff                        ( 1ULL <<  2 )
+#define MainStm_PowerOn                         ( 1ULL <<  3 )
 }MainStm;
 #define MainStm_Init() {\
     .base = { HdStateMachine_Init( MainStm_MainTop, MainStm_MainTop ) },\

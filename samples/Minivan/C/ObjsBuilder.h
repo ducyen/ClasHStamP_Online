@@ -15,9 +15,12 @@ enum {
 #define wiperLever              ( g_objects[ _wiperLever ] )
     _wiperLever,
 #define powerButton             ( g_objects[ _powerButton ] )
-    _powerButton
+    _powerButton,
+#define carBody                 ( g_objects[ _carBody ] )
+    _carBody
 };
 int ObjsBuilder_startSim( void   );
+int ObjsBuilder_updateTransImage( ObjsBuilder* pObjsBuilder, int y, void* z );
 #endif//__ObjsBuilder_H__
 #if !defined( ObjsBuilder_Init ) && ( defined( __ObjsBuilder_INTERNAL__ )  )
 /** @memberof ObjsBuilder

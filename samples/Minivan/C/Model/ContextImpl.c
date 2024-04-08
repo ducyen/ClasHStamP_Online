@@ -5,7 +5,8 @@
 #include "ObjsBuilder.h"                                        
 const TCHAR* ContextImplEvent_toString( ContextImpl_EVENT value ){
     switch( value ){
-    case ContextImpl_Trigger: return _T( "Trigger" );
+    case ContextImpl_E_PWR_OFF: return _T( "E_PWR_OFF" );
+    case ContextImpl_E_PWR_ON: return _T( "E_PWR_ON" );
     default: return _T( "ContextImpl_UNKNOWN" );
     }
 }
@@ -15,18 +16,18 @@ static BOOL MainStm_Reset( ContextImpl* pMainTop, MainStm* pStm, HdStateMachine*
 static BOOL MainStm_Abort( ContextImpl* pMainTop, MainStm* pStm );
 static BOOL MainStm_EventProc( ContextImpl* pMainTop, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams );
 static BOOL MainStm_RunToCompletion( ContextImpl* pMainTop, MainStm* pStm );
-static void MainStm_State0_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_State0 ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	473	133	56	37	225	28	1463	1214" );
+static void MainStm_PowerOff_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, MainStm_PowerOff ) ){
+        ShowEntry( "Model/ContextImpl/MainStm	467	133	152	107	225	28	1463	1214" );
     }
 }
-static BOOL MainStm_State0_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
+static BOOL MainStm_PowerOff_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_State0;
-    ShowDoing( "Model/ContextImpl/MainStm	473	133	56	37	225	28	1463	1214" );
+    pStm->base.nSourceState = MainStm_PowerOff;
+    ShowDoing( "Model/ContextImpl/MainStm	467	133	152	107	225	28	1463	1214" );
     switch( nEventId ){
-    case ContextImpl_Trigger:{
-        MainStm_BgnTrans( pContextImpl, pStm, MainStm_State1, STATE_UNDEF );
+    case ContextImpl_E_PWR_ON:{
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_PowerOn, STATE_UNDEF );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
     } break;
@@ -34,33 +35,41 @@ static BOOL MainStm_State0_EventProc( ContextImpl* pContextImpl, MainStm* pStm, 
     }
     return bResult;
 }
-static void MainStm_State0_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_State0 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	473	133	56	37	225	28	1463	1214" );
+static void MainStm_PowerOff_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, MainStm_PowerOff ) ){ 
+        ShowExit( "Model/ContextImpl/MainStm	467	133	152	107	225	28	1463	1214" );
     }
 }
-static void MainStm_State1_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_State1 ) ){
-        ShowEntry( "Model/ContextImpl/MainStm	473	225	56	37	225	28	1463	1214" );
+static void MainStm_PowerOn_Entry( ContextImpl* pContextImpl, MainStm* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, MainStm_PowerOn ) ){
+        ShowEntry( "Model/ContextImpl/MainStm	467	354	152	107	225	28	1463	1214" );
     }
 }
-static BOOL MainStm_State1_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
+static BOOL MainStm_PowerOn_EventProc( ContextImpl* pContextImpl, MainStm* pStm, ContextImpl_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_State1;
-    ShowDoing( "Model/ContextImpl/MainStm	473	225	56	37	225	28	1463	1214" );
+    pStm->base.nSourceState = MainStm_PowerOn;
+    ShowDoing( "Model/ContextImpl/MainStm	467	354	152	107	225	28	1463	1214" );
+    switch( nEventId ){
+    case ContextImpl_E_PWR_OFF:{
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_PowerOff, STATE_UNDEF );
+        MainStm_EndTrans( pContextImpl, pStm );
+        bResult = TRUE;
+    } break;
+    default: break;
+    }
     return bResult;
 }
-static void MainStm_State1_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_State1 ) ){ 
-        ShowExit( "Model/ContextImpl/MainStm	473	225	56	37	225	28	1463	1214" );
+static void MainStm_PowerOn_Exit( ContextImpl* pContextImpl, MainStm* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, MainStm_PowerOn ) ){ 
+        ShowExit( "Model/ContextImpl/MainStm	467	354	152	107	225	28	1463	1214" );
     }
 }
 static void MainStm_EndTrans( ContextImpl *pContextImpl, MainStm* pStm ){
     pStm->base.nCurrentState = pStm->base.nTargetState;
     pStm->base.bIsExternTrans = FALSE;
     switch( pStm->base.nCurrentState ){
-    case MainStm_State0:        MainStm_State0_Entry( pContextImpl, pStm ); break;
-    case MainStm_State1:        MainStm_State1_Entry( pContextImpl, pStm ); break;
+    case MainStm_PowerOff:      MainStm_PowerOff_Entry( pContextImpl, pStm ); break;
+    case MainStm_PowerOn:       MainStm_PowerOn_Entry( pContextImpl, pStm ); break;
     default: break;
     }
 }
@@ -71,8 +80,8 @@ static void MainStm_BgnTrans( ContextImpl *pContextImpl, MainStm* pStm, uint64_t
         pStm->base.nPseudostate = initState;
     }
     switch( pStm->base.nCurrentState ){
-    case MainStm_State0:        MainStm_State0_Exit( pContextImpl, pStm ); break;
-    case MainStm_State1:        MainStm_State1_Exit( pContextImpl, pStm ); break;
+    case MainStm_PowerOff:      MainStm_PowerOff_Exit( pContextImpl, pStm ); break;
+    case MainStm_PowerOn:       MainStm_PowerOn_Exit( pContextImpl, pStm ); break;
     default: break;
     }
 }
@@ -81,7 +90,7 @@ static BOOL MainStm_StateDefaultTrans( ContextImpl* pContextImpl, MainStm* pStm 
     pStm->base.nSourceState = pStm->base.nCurrentState;
     pStm->base.nLCAState = STATE_UNDEF;
     do{   if( pStm->base.nPseudostate == MainStm_InitialPseudostate0 ){
-        MainStm_BgnTrans( pContextImpl, pStm, MainStm_State0, STATE_UNDEF );
+        MainStm_BgnTrans( pContextImpl, pStm, MainStm_PowerOff, STATE_UNDEF );
         MainStm_EndTrans( pContextImpl, pStm );
         bResult = TRUE;
     }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, MainStm_MainTop) ){
@@ -121,8 +130,8 @@ static BOOL MainStm_EventProc( ContextImpl* pContextImpl, MainStm* pStm, Context
     BOOL bResult = FALSE;
     pStm->base.nLCAState = STATE_UNDEF;
     switch( pStm->base.nCurrentState ){
-    case MainStm_State0:                        bResult |= MainStm_State0_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
-    case MainStm_State1:                        bResult |= MainStm_State1_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
+    case MainStm_PowerOff:                      bResult |= MainStm_PowerOff_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
+    case MainStm_PowerOn:                       bResult |= MainStm_PowerOn_EventProc( pContextImpl, pStm, nEventId, pEventParams ); break;
     default: break;
     }
     MainStm_RunToCompletion( pContextImpl, pStm );
