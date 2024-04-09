@@ -8,10 +8,10 @@ enum {
     _rightWiperArm,
 #define leftWiperArm            ( g_objects[ _leftWiperArm ] )
     _leftWiperArm,
-#define rightWiperAxis          ( g_objects[ _rightWiperAxis ] )
-    _rightWiperAxis,
-#define leftWiperAxis           ( g_objects[ _leftWiperAxis ] )
-    _leftWiperAxis,
+#define rightWiperMotor         ( g_objects[ _rightWiperMotor ] )
+    _rightWiperMotor,
+#define leftWiperMotor          ( g_objects[ _leftWiperMotor ] )
+    _leftWiperMotor,
 #define wiperLever              ( g_objects[ _wiperLever ] )
     _wiperLever,
 #define powerButton             ( g_objects[ _powerButton ] )

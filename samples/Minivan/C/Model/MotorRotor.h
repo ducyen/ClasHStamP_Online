@@ -2,6 +2,10 @@
 #define __MotorRotor_H__
 #include "ImgSprite.h"
 typedef struct tagMotorRotor MotorRotor;
+void MotorRotor_rotateCW( MotorRotor* pMotorRotor );
+void MotorRotor_rotateCCW( MotorRotor* pMotorRotor );
+bool MotorRotor_isRotMax( MotorRotor* pMotorRotor );
+bool MotorRotor_isRotMin( MotorRotor* pMotorRotor );
 #endif//__MotorRotor_H__
 #if !defined( MotorRotor_Init ) && ( defined( __MotorRotor_INTERNAL__ )  || defined( __ObjsBuilder_INTERNAL__ )  )
 #define __ImgSprite_INTERNAL__
@@ -11,6 +15,7 @@ typedef struct tagMotorRotor MotorRotor;
  */
 #define MotorRotor_Init(_m_iniRect, _m_imgPath, _m_constraints, _m_mouseListeners)\
     ImgSprite_Init( P( _m_iniRect ), P( _m_imgPath ), P( _m_constraints ), P( _m_mouseListeners ) )\
+    .rotation = 0,\
 
 #define MotorRotor_Ctor( _m_iniRect, _m_imgPath, _m_constraints, _m_mouseListeners )    ( MotorRotor ){ \
     MotorRotor_Init( P( _m_iniRect ), P( _m_imgPath ), P( _m_constraints ), P( _m_mouseListeners ) ) \
@@ -21,6 +26,7 @@ ImgSprite* MotorRotor_Copy( MotorRotor* pMotorRotor, const MotorRotor* pSource )
  */
 #define MotorRotor_CLASS                                                                        \
     ImgSprite_CLASS                                                                             \
+    double rotation;                                                                                                         \
 
 typedef struct tagMotorRotor{
     MotorRotor_CLASS    

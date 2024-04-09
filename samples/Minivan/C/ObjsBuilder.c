@@ -27,37 +27,41 @@ Sprite* g_objects[] = {
         P( null )                                               /* m_constraints */,
         P( null )                                               /* m_mouseListeners */
     ),
-    &MotorRotor_Ctor(                                           /* rightWiperAxis */
+    &MotorRotor_Ctor(                                           /* rightWiperMotor */
         P( { 0.4480446927374302, 0.44803733387212646, 0.0223463687150838, 0.028735632183908046 } )/* m_iniRect */,
         P( "MotorRotor.png" )                                   /* m_imgPath */,
-        P( null )                                               /* m_constraints */,
+        P( &AttachmentConstraint_Ctor( &rightWiperArm, 1,
+           &RotationConstraint_Ctor( &rightWiperArm, 1,
+           null ) ) )                                           /* m_constraints */,
         P( null )                                               /* m_mouseListeners */
     ),
-    &MotorRotor_Ctor(                                           /* leftWiperAxis */
+    &MotorRotor_Ctor(                                           /* leftWiperMotor */
         P( { 0.18994413407821228, 0.4482758620689655, 0.0223463687150838, 0.028735632183908046 } )/* m_iniRect */,
         P( "MotorRotor.png" )                                   /* m_imgPath */,
-        P( null )                                               /* m_constraints */,
+        P( &AttachmentConstraint_Ctor( &leftWiperArm, 1,
+           &RotationConstraint_Ctor( &leftWiperArm, 1,
+           null ) ) )                                           /* m_constraints */,
         P( null )                                               /* m_mouseListeners */
     ),
     &Lever_Ctor(                                                /* wiperLever */
         P( { 0.5770949720670391, 0.5672902074353449, 0.1329608938547486, 0.04597701149425287 } )/* m_iniRect */,
         P( "Lever.png" )                                        /* m_imgPath */,
         P( null )                                               /* m_constraints */,
-        P( null )                                               /* m_mouseListeners */
+        P( &MouseListener_Ctor( CarBody_EventProc, &carBody, CarBody_E_WIPER_LEVER, null ) )/* m_mouseListeners */
     ),
     &Button_Ctor(                                               /* powerButton */
         P( { 0.4949720670391061, 0.6118304373204023, 0.035754189944134075, 0.04597701149425287 } )/* m_iniRect */,
         P( "Button.png" )                                       /* m_imgPath */,
         P( null )                                               /* m_constraints */,
-        P( &MouseListener_Ctor( CarBody_EventProc, &carBody, CarBody_E_PWR_BTN, 
-           &MouseListener_Ctor( ObjsBuilder_updateTransImage, NULL, 0, 
-           null ) ) )/* m_mouseListeners */
+        P( &MouseListener_Ctor( CarBody_EventProc, &carBody, CarBody_E_PWR_BTN, null ) )/* m_mouseListeners */
     ),
     &CarBody_Ctor(                                              /* carBody */
         P( { 0.16424581005586592, 0.7483246901939655, 0.07150837988826815, 0.09195402298850575 } )/* m_iniRect */,
         P( "CarBody.png" )                                      /* m_imgPath */,
         P( null )                                               /* m_constraints */,
-        P( null )                                               /* m_mouseListeners */
+        P( &MouseListener_Ctor( CarBody_EventProc, &carBody, CarBody_E_PWR_BTN,  
+           &MouseListener_Ctor( ObjsBuilder_updateTransImage, NULL, 0,  
+           null ) ) )/* m_mouseListeners */
     )
 };
 Sprite* getobj( int id ){
@@ -169,7 +173,7 @@ int ObjsBuilder_startSim(
         SDL_Event e;
 
         while (!quit) {
-            //CarBody_EventProc(carBody, CarBody_TICK, NULL);
+            CarBody_EventProc(carBody, CarBody_TICK, NULL);
             for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
                 Sprite_update(g_objects[i]);
             }
@@ -196,8 +200,6 @@ int ObjsBuilder_startSim(
                     }else if (e.key.keysym.sym == SDLK_l) {
                         //CarBody_EventProc(carBody, CarBody_L_KEY_HIT, NULL);
                     }
-                    SaveAllImages();
-                    ReleaseAllImages();
                 }
             }
 
@@ -214,6 +216,8 @@ int ObjsBuilder_startSim(
             SDL_RenderPresent(renderer);
 
             // Delay to control the animation speed
+            SaveAllImages();
+            ReleaseAllImages();
             SDL_Delay(50);
         }
     }
@@ -240,8 +244,8 @@ int ObjsBuilder_updateTransImage(
     int y,
     void* z
 ){
-    SaveAllImages();
-    ReleaseAllImages();
+    //SaveAllImages();
+    //ReleaseAllImages();
     return 0;
 } /* ObjsBuilder_updateTransImage */
 
