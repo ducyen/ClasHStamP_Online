@@ -36,10 +36,7 @@ Sprite* g_objects[] = {
     &MotorRotor_Ctor(                                           /* leftWiperMotor */
         P( { 0.18994413407821228, 0.4482758620689655, 0.0223463687150838, 0.028735632183908046 } )/* m_iniRect */,
         P( "MotorRotor.png" )                                   /* m_imgPath */,
-        P( &RotationConstraint_Ctor( &rightWiperMotor, 1, 
-           &AttachmentConstraint_Ctor( &leftWiperArm, 1, 
-           &RotationConstraint_Ctor( &leftWiperArm, 1, 
-           null ) ) ) )/* m_constraints */,
+        P( &RotationConstraint_Ctor( &rightWiperMotor, 1, &AttachmentConstraint_Ctor( &leftWiperArm, 1, &RotationConstraint_Ctor( &leftWiperArm, 1, null ) ) ) )/* m_constraints */,
         P( null )                                               /* m_mouseListeners */
     ),
     &Lever_Ctor(                                                /* wiperLever */
