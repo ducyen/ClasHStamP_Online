@@ -7,6 +7,7 @@ void Sprite_updateMouseState( Sprite* pSprite, int x, int y, int mouseEvent );
 void Sprite_draw1( Sprite* pSprite, SDL_Renderer* renderer );
 bool Sprite_load( Sprite* pSprite, SDL_Renderer* renderer );
 void Sprite_free( Sprite* pSprite );
+bool Sprite_isUpdated( Sprite* pSprite );
 #endif//__Sprite_H__
 #if !defined( Sprite_Init ) && ( defined( __Sprite_INTERNAL__ )  )
 /** @memberof Sprite
@@ -17,6 +18,7 @@ void Sprite_free( Sprite* pSprite );
     .m_imgPath = _m_imgPath,\
     .m_image = null,\
     .m_rect = { 0 },\
+    .m_updated = false,\
     .m_angle = 0,\
     .m_offset = { 0 },\
     .m_brightness = 1.,\
@@ -43,6 +45,7 @@ Sprite* Sprite_Copy( Sprite* pSprite, const Sprite* pSource );
     char* m_imgPath;                                                                                                         \
     SDL_Texture* m_image;                                                                                               \
     SDL_Rect m_rect;                                                                                                         \
+    bool m_updated;                                                                                                           \
     double m_angle;                                                                                                           \
     SDL_Point m_offset;                                                                                                   \
     double m_brightness;                                                                                                 \

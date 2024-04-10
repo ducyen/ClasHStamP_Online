@@ -90,7 +90,6 @@ static BOOL PowerOn_Region1_WipingCW_EventProc( CarBody* pCarBody, PowerOn_Regio
     switch( nEventId ){
     case CarBody_TICK:{
         MotorRotor_rotateCW(leftWiperMotor);
-        MotorRotor_rotateCW(rightWiperMotor);
         bResult = TRUE;
     } break;
     default: break;
@@ -116,7 +115,6 @@ static BOOL PowerOn_Region1_WipingCCW_EventProc( CarBody* pCarBody, PowerOn_Regi
     switch( nEventId ){
     case CarBody_TICK:{
         MotorRotor_rotateCCW(leftWiperMotor);
-        MotorRotor_rotateCCW(rightWiperMotor);
         bResult = TRUE;
     } break;
     default: break;

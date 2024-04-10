@@ -30,17 +30,16 @@ Sprite* g_objects[] = {
     &MotorRotor_Ctor(                                           /* rightWiperMotor */
         P( { 0.4480446927374302, 0.44803733387212646, 0.0223463687150838, 0.028735632183908046 } )/* m_iniRect */,
         P( "MotorRotor.png" )                                   /* m_imgPath */,
-        P( &AttachmentConstraint_Ctor( &rightWiperArm, 1,
-           &RotationConstraint_Ctor( &rightWiperArm, 1,
-           null ) ) )                                           /* m_constraints */,
+        P( &AttachmentConstraint_Ctor( &rightWiperArm, 1, &RotationConstraint_Ctor( &rightWiperArm, 1, null ) ) )/* m_constraints */,
         P( null )                                               /* m_mouseListeners */
     ),
     &MotorRotor_Ctor(                                           /* leftWiperMotor */
         P( { 0.18994413407821228, 0.4482758620689655, 0.0223463687150838, 0.028735632183908046 } )/* m_iniRect */,
         P( "MotorRotor.png" )                                   /* m_imgPath */,
-        P( &AttachmentConstraint_Ctor( &leftWiperArm, 1,
-           &RotationConstraint_Ctor( &leftWiperArm, 1,
-           null ) ) )                                           /* m_constraints */,
+        P( &RotationConstraint_Ctor( &rightWiperMotor, 1, 
+           &AttachmentConstraint_Ctor( &leftWiperArm, 1, 
+           &RotationConstraint_Ctor( &leftWiperArm, 1, 
+           null ) ) ) )/* m_constraints */,
         P( null )                                               /* m_mouseListeners */
     ),
     &Lever_Ctor(                                                /* wiperLever */
@@ -59,9 +58,7 @@ Sprite* g_objects[] = {
         P( { 0.16424581005586592, 0.7483246901939655, 0.07150837988826815, 0.09195402298850575 } )/* m_iniRect */,
         P( "CarBody.png" )                                      /* m_imgPath */,
         P( null )                                               /* m_constraints */,
-        P( &MouseListener_Ctor( CarBody_EventProc, &carBody, CarBody_E_PWR_BTN,  
-           &MouseListener_Ctor( ObjsBuilder_updateTransImage, NULL, 0,  
-           null ) ) )/* m_mouseListeners */
+        P( &MouseListener_Ctor( CarBody_EventProc, &carBody, CarBody_E_PWR_BTN,  &MouseListener_Ctor( ObjsBuilder_updateTransImage, NULL, 0,  null ) ) )/* m_mouseListeners */
     )
 };
 Sprite* getobj( int id ){
@@ -174,8 +171,19 @@ int ObjsBuilder_startSim(
 
         while (!quit) {
             CarBody_EventProc(carBody, CarBody_TICK, NULL);
-            for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
-                Sprite_update(g_objects[i]);
+            bool hasUpdated = true;
+            while( hasUpdated ){
+                for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
+                    if( Sprite_isUpdated(g_objects[i]) ){
+                        Sprite_update(g_objects[i]);
+                    }
+                }
+                hasUpdated = false;
+                for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
+                    if( Sprite_isUpdated(g_objects[i]) ){
+                        hasUpdated = true;
+                    }
+                }
             }
 
             while (SDL_PollEvent(&e) != 0) {

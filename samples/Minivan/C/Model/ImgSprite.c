@@ -12,6 +12,7 @@ void ImgSprite_setOffset(
     pImgSprite->m_offset.y = y;
     pImgSprite->m_center.x = pImgSprite->m_rect.x + pImgSprite->m_rect.w / 2 + pImgSprite->m_offset.x;
     pImgSprite->m_center.y = pImgSprite->m_rect.y + pImgSprite->m_rect.h / 2 + pImgSprite->m_offset.y;
+    pImgSprite->m_updated = true;
 } /* ImgSprite_setOffset */
 
 /** @public @memberof ImgSprite */
@@ -41,6 +42,7 @@ void ImgSprite_setRotation(
     double value
 ){
     pImgSprite->m_angle = value;
+    pImgSprite->m_updated = true;
 } /* ImgSprite_setRotation */
 
 /** @public @memberof ImgSprite */
@@ -74,6 +76,7 @@ static void ImgSprite_update(
         Constraint_apply( pCurConstraint, pImgSprite );
         pCurConstraint = Constraint_getNext( pCurConstraint );
     }
+    pImgSprite->m_updated = false;
 } /* ImgSprite_update */
 
 /** @public @memberof ImgSprite */

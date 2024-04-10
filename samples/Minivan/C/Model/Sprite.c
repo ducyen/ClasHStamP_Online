@@ -56,11 +56,19 @@ void Sprite_free(
     pSprite->vTbl->pfree( pSprite );
 } /* Sprite_free */
 
+/** @public @memberof Sprite */
+bool Sprite_isUpdated(
+    Sprite* pSprite
+){
+    return pSprite->m_updated;
+} /* Sprite_isUpdated */
+
 Sprite* Sprite_Copy( Sprite* pSprite, const Sprite* pSource ){
     pSprite->m_iniRect = pSource->m_iniRect;
     pSprite->m_imgPath = pSource->m_imgPath;
     pSprite->m_image = pSource->m_image;
     pSprite->m_rect = pSource->m_rect;
+    pSprite->m_updated = pSource->m_updated;
     pSprite->m_angle = pSource->m_angle;
     pSprite->m_offset = pSource->m_offset;
     pSprite->m_brightness = pSource->m_brightness;

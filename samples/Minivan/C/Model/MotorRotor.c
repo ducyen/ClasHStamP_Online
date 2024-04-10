@@ -8,7 +8,7 @@ void MotorRotor_rotateCW(
     MotorRotor* pMotorRotor
 ){
     pMotorRotor->rotation += 5.;
-    pMotorRotor->m_angle = -pMotorRotor->rotation;
+    ImgSprite_setRotation( pMotorRotor, -pMotorRotor->rotation );
 } /* MotorRotor_rotateCW */
 
 /** @public @memberof MotorRotor */
@@ -16,7 +16,7 @@ void MotorRotor_rotateCCW(
     MotorRotor* pMotorRotor
 ){
     pMotorRotor->rotation -= 5.;
-    pMotorRotor->m_angle = -pMotorRotor->rotation;
+    ImgSprite_setRotation( pMotorRotor, -pMotorRotor->rotation );
 } /* MotorRotor_rotateCCW */
 
 /** @public @memberof MotorRotor */
