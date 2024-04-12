@@ -29,15 +29,85 @@ static BOOL PowerOn_Region1_Reset( CarBody* pPowerOn_Top, PowerOn_Region1* pStm,
 static BOOL PowerOn_Region1_Abort( CarBody* pPowerOn_Top, PowerOn_Region1* pStm );
 static BOOL PowerOn_Region1_EventProc( CarBody* pPowerOn_Top, PowerOn_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams );
 static BOOL PowerOn_Region1_RunToCompletion( CarBody* pPowerOn_Top, PowerOn_Region1* pStm );
+static void PowerOn_Region1_Wiping_Entry( CarBody* pCarBody, PowerOn_Region1* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, PowerOn_Region1_Wiping ) ){
+        ShowEntry( "Model/CarBody/CarStm	518	315	207	525	-187	-89	1130	1057" );
+    }
+}
+static BOOL PowerOn_Region1_Wiping_EventProc( CarBody* pCarBody, PowerOn_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->base.nSourceState = PowerOn_Region1_Wiping;
+    ShowDoing( "Model/CarBody/CarStm	518	315	207	525	-187	-89	1130	1057" );
+    return bResult;
+}
+static void PowerOn_Region1_Wiping_Exit( CarBody* pCarBody, PowerOn_Region1* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, PowerOn_Region1_Wiping ) ){ 
+        ShowExit( "Model/CarBody/CarStm	518	315	207	525	-187	-89	1130	1057" );
+    }
+}
+static void PowerOn_Region1_WipingCW_Entry( CarBody* pCarBody, PowerOn_Region1* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, PowerOn_Region1_WipingCW ) ){
+        PowerOn_Region1_Wiping_Entry( pCarBody, pStm );
+        ShowEntry( "Model/CarBody/CarStm	546	544	152	115	-187	-89	1130	1057" );
+        pStm->nWipingHistory = PowerOn_Region1_WipingCW;
+    }
+}
+static BOOL PowerOn_Region1_WipingCW_EventProc( CarBody* pCarBody, PowerOn_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->base.nSourceState = PowerOn_Region1_WipingCW;
+    ShowDoing( "Model/CarBody/CarStm	546	544	152	115	-187	-89	1130	1057" );
+    switch( nEventId ){
+    case CarBody_TICK:{
+        MotorRotor_rotateCW(leftWiperMotor);
+        bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : PowerOn_Region1_Wiping_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void PowerOn_Region1_WipingCW_Exit( CarBody* pCarBody, PowerOn_Region1* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, PowerOn_Region1_WipingCW ) ){ 
+        ShowExit( "Model/CarBody/CarStm	546	544	152	115	-187	-89	1130	1057" );
+        PowerOn_Region1_Wiping_Exit( pCarBody, pStm );
+    }
+}
+static void PowerOn_Region1_WipingCCW_Entry( CarBody* pCarBody, PowerOn_Region1* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, PowerOn_Region1_WipingCCW ) ){
+        PowerOn_Region1_Wiping_Entry( pCarBody, pStm );
+        ShowEntry( "Model/CarBody/CarStm	546	714	152	115	-187	-89	1130	1057" );
+        pStm->nWipingHistory = PowerOn_Region1_WipingCCW;
+    }
+}
+static BOOL PowerOn_Region1_WipingCCW_EventProc( CarBody* pCarBody, PowerOn_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->base.nSourceState = PowerOn_Region1_WipingCCW;
+    ShowDoing( "Model/CarBody/CarStm	546	714	152	115	-187	-89	1130	1057" );
+    switch( nEventId ){
+    case CarBody_TICK:{
+        MotorRotor_rotateCCW(leftWiperMotor);
+        bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : PowerOn_Region1_Wiping_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void PowerOn_Region1_WipingCCW_Exit( CarBody* pCarBody, PowerOn_Region1* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, PowerOn_Region1_WipingCCW ) ){ 
+        ShowExit( "Model/CarBody/CarStm	546	714	152	115	-187	-89	1130	1057" );
+        PowerOn_Region1_Wiping_Exit( pCarBody, pStm );
+    }
+}
 static void PowerOn_Region1_WiperIdle_Entry( CarBody* pCarBody, PowerOn_Region1* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, PowerOn_Region1_WiperIdle ) ){
-        ShowEntry( "Model/CarBody/CarStm	508	341	152	107	-69	-89	930	1057" );
+        PowerOn_Region1_Wiping_Entry( pCarBody, pStm );
+        ShowEntry( "Model/CarBody/CarStm	546	384	152	107	-187	-89	1130	1057" );
+        pStm->nWipingHistory = PowerOn_Region1_WiperIdle;
     }
 }
 static BOOL PowerOn_Region1_WiperIdle_EventProc( CarBody* pCarBody, PowerOn_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = PowerOn_Region1_WiperIdle;
-    ShowDoing( "Model/CarBody/CarStm	508	341	152	107	-69	-89	930	1057" );
+    ShowDoing( "Model/CarBody/CarStm	546	384	152	107	-187	-89	1130	1057" );
     switch( nEventId ){
     case CarBody_E_WIPER_LEVER:{
         PowerOn_Region1_BgnTrans( pCarBody, pStm, PowerOn_Region1_WipingCW, STATE_UNDEF );
@@ -46,95 +116,22 @@ static BOOL PowerOn_Region1_WiperIdle_EventProc( CarBody* pCarBody, PowerOn_Regi
     } break;
     default: break;
     }
-    return bResult;
+    return bResult ? bResult : PowerOn_Region1_Wiping_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void PowerOn_Region1_WiperIdle_Exit( CarBody* pCarBody, PowerOn_Region1* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, PowerOn_Region1_WiperIdle ) ){ 
-        ShowExit( "Model/CarBody/CarStm	508	341	152	107	-69	-89	930	1057" );
-    }
-}
-static void PowerOn_Region1_State7_Entry( CarBody* pCarBody, PowerOn_Region1* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, PowerOn_Region1_State7 ) ){
-        ShowEntry( "Model/CarBody/CarStm	481	508	204	331	-69	-89	930	1057" );
-    }
-}
-static BOOL PowerOn_Region1_State7_EventProc( CarBody* pCarBody, PowerOn_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = PowerOn_Region1_State7;
-    ShowDoing( "Model/CarBody/CarStm	481	508	204	331	-69	-89	930	1057" );
-    switch( nEventId ){
-    case CarBody_E_WIPER_LEVER:{
-        PowerOn_Region1_BgnTrans( pCarBody, pStm, PowerOn_Region1_WiperIdle, STATE_UNDEF );
-        PowerOn_Region1_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult;
-}
-static void PowerOn_Region1_State7_Exit( CarBody* pCarBody, PowerOn_Region1* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, PowerOn_Region1_State7 ) ){ 
-        ShowExit( "Model/CarBody/CarStm	481	508	204	331	-69	-89	930	1057" );
-    }
-}
-static void PowerOn_Region1_WipingCW_Entry( CarBody* pCarBody, PowerOn_Region1* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, PowerOn_Region1_WipingCW ) ){
-        PowerOn_Region1_State7_Entry( pCarBody, pStm );
-        ShowEntry( "Model/CarBody/CarStm	507	544	152	115	-69	-89	930	1057" );
-    }
-}
-static BOOL PowerOn_Region1_WipingCW_EventProc( CarBody* pCarBody, PowerOn_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = PowerOn_Region1_WipingCW;
-    ShowDoing( "Model/CarBody/CarStm	507	544	152	115	-69	-89	930	1057" );
-    switch( nEventId ){
-    case CarBody_TICK:{
-        MotorRotor_rotateCW(leftWiperMotor);
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult ? bResult : PowerOn_Region1_State7_EventProc( pCarBody, pStm, nEventId, pEventParams );
-}
-static void PowerOn_Region1_WipingCW_Exit( CarBody* pCarBody, PowerOn_Region1* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, PowerOn_Region1_WipingCW ) ){ 
-        ShowExit( "Model/CarBody/CarStm	507	544	152	115	-69	-89	930	1057" );
-        PowerOn_Region1_State7_Exit( pCarBody, pStm );
-    }
-}
-static void PowerOn_Region1_WipingCCW_Entry( CarBody* pCarBody, PowerOn_Region1* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, PowerOn_Region1_WipingCCW ) ){
-        PowerOn_Region1_State7_Entry( pCarBody, pStm );
-        ShowEntry( "Model/CarBody/CarStm	507	714	152	115	-69	-89	930	1057" );
-    }
-}
-static BOOL PowerOn_Region1_WipingCCW_EventProc( CarBody* pCarBody, PowerOn_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = PowerOn_Region1_WipingCCW;
-    ShowDoing( "Model/CarBody/CarStm	507	714	152	115	-69	-89	930	1057" );
-    switch( nEventId ){
-    case CarBody_TICK:{
-        MotorRotor_rotateCCW(leftWiperMotor);
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult ? bResult : PowerOn_Region1_State7_EventProc( pCarBody, pStm, nEventId, pEventParams );
-}
-static void PowerOn_Region1_WipingCCW_Exit( CarBody* pCarBody, PowerOn_Region1* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, PowerOn_Region1_WipingCCW ) ){ 
-        ShowExit( "Model/CarBody/CarStm	507	714	152	115	-69	-89	930	1057" );
-        PowerOn_Region1_State7_Exit( pCarBody, pStm );
+        ShowExit( "Model/CarBody/CarStm	546	384	152	107	-187	-89	1130	1057" );
+        PowerOn_Region1_Wiping_Exit( pCarBody, pStm );
     }
 }
 static void PowerOn_Region1_EndTrans( CarBody *pCarBody, PowerOn_Region1* pStm ){
     pStm->base.nCurrentState = pStm->base.nTargetState;
     pStm->base.bIsExternTrans = FALSE;
     switch( pStm->base.nCurrentState ){
-    case PowerOn_Region1_WiperIdle:PowerOn_Region1_WiperIdle_Entry( pCarBody, pStm ); break;
-    case PowerOn_Region1_State7:PowerOn_Region1_State7_Entry( pCarBody, pStm ); break;
+    case PowerOn_Region1_Wiping:PowerOn_Region1_Wiping_Entry( pCarBody, pStm ); break;
     case PowerOn_Region1_WipingCW:PowerOn_Region1_WipingCW_Entry( pCarBody, pStm ); break;
     case PowerOn_Region1_WipingCCW:PowerOn_Region1_WipingCCW_Entry( pCarBody, pStm ); break;
+    case PowerOn_Region1_WiperIdle:PowerOn_Region1_WiperIdle_Entry( pCarBody, pStm ); break;
     default: break;
     }
 }
@@ -145,10 +142,10 @@ static void PowerOn_Region1_BgnTrans( CarBody *pCarBody, PowerOn_Region1* pStm, 
         pStm->base.nPseudostate = initState;
     }
     switch( pStm->base.nCurrentState ){
-    case PowerOn_Region1_WiperIdle:PowerOn_Region1_WiperIdle_Exit( pCarBody, pStm ); break;
-    case PowerOn_Region1_State7:PowerOn_Region1_State7_Exit( pCarBody, pStm ); break;
+    case PowerOn_Region1_Wiping:PowerOn_Region1_Wiping_Exit( pCarBody, pStm ); break;
     case PowerOn_Region1_WipingCW:PowerOn_Region1_WipingCW_Exit( pCarBody, pStm ); break;
     case PowerOn_Region1_WipingCCW:PowerOn_Region1_WipingCCW_Exit( pCarBody, pStm ); break;
+    case PowerOn_Region1_WiperIdle:PowerOn_Region1_WiperIdle_Exit( pCarBody, pStm ); break;
     default: break;
     }
 }
@@ -157,7 +154,7 @@ static BOOL PowerOn_Region1_StateDefaultTrans( CarBody* pCarBody, PowerOn_Region
     pStm->base.nSourceState = pStm->base.nCurrentState;
     pStm->base.nLCAState = STATE_UNDEF;
     do{   if( pStm->base.nPseudostate == PowerOn_Region1_InitialPseudostate0 ){
-        PowerOn_Region1_BgnTrans( pCarBody, pStm, PowerOn_Region1_WiperIdle, STATE_UNDEF );
+        PowerOn_Region1_BgnTrans( pCarBody, pStm, PowerOn_Region1_Wiping, PowerOn_Region1_InitialPseudostate1 );
         PowerOn_Region1_EndTrans( pCarBody, pStm );
         bResult = TRUE;
     }else if( pStm->base.nPseudostate == PowerOn_Region1_WipingCW ){
@@ -168,10 +165,27 @@ static BOOL PowerOn_Region1_StateDefaultTrans( CarBody* pCarBody, PowerOn_Region
         }
     }else if( pStm->base.nPseudostate == PowerOn_Region1_WipingCCW ){
         if (MotorRotor_isRotMin( leftWiperMotor )) {
-            PowerOn_Region1_BgnTrans( pCarBody, pStm, PowerOn_Region1_WipingCW, STATE_UNDEF );
+            if (CarBody_IsIn( pCarBody, CarStm_WiperOff )) {
+                PowerOn_Region1_BgnTrans( pCarBody, pStm, PowerOn_Region1_WiperIdle, STATE_UNDEF );
+                PowerOn_Region1_EndTrans( pCarBody, pStm );
+                bResult = TRUE;
+            }
+            if (CarBody_IsIn( pCarBody, CarStm_WiperOn )) {
+                PowerOn_Region1_BgnTrans( pCarBody, pStm, PowerOn_Region1_WipingCW, STATE_UNDEF );
+                PowerOn_Region1_EndTrans( pCarBody, pStm );
+                bResult = TRUE;
+            }
+        }
+    }else if( pStm->base.nPseudostate == PowerOn_Region1_InitialPseudostate1 ){
+        if( pStm->nWipingHistory && pStm->nWipingHistory != PowerOn_Region1_Wiping ){
+            PowerOn_Region1_BgnTrans( pCarBody, pStm, pStm->nWipingHistory, STATE_UNDEF );
             PowerOn_Region1_EndTrans( pCarBody, pStm );
             bResult = TRUE;
+            break;
         }
+        PowerOn_Region1_BgnTrans( pCarBody, pStm, PowerOn_Region1_WiperIdle, STATE_UNDEF );
+        PowerOn_Region1_EndTrans( pCarBody, pStm );
+        bResult = TRUE;
     }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, PowerOn_Region1_PowerOn_Top) ){
         PowerOn_Region1_BgnTrans( pCarBody, pStm, pStm->base.nPseudostate, STATE_UNDEF );
         PowerOn_Region1_EndTrans( pCarBody, pStm );
@@ -209,10 +223,10 @@ static BOOL PowerOn_Region1_EventProc( CarBody* pCarBody, PowerOn_Region1* pStm,
     BOOL bResult = FALSE;
     pStm->base.nLCAState = STATE_UNDEF;
     switch( pStm->base.nCurrentState ){
-    case PowerOn_Region1_WiperIdle:             bResult |= PowerOn_Region1_WiperIdle_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case PowerOn_Region1_State7:                bResult |= PowerOn_Region1_State7_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case PowerOn_Region1_Wiping:                bResult |= PowerOn_Region1_Wiping_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
     case PowerOn_Region1_WipingCW:              bResult |= PowerOn_Region1_WipingCW_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
     case PowerOn_Region1_WipingCCW:             bResult |= PowerOn_Region1_WipingCCW_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case PowerOn_Region1_WiperIdle:             bResult |= PowerOn_Region1_WiperIdle_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
     default: break;
     }
     PowerOn_Region1_RunToCompletion( pCarBody, pStm );
@@ -239,75 +253,136 @@ static BOOL CarStm_EventProc( CarBody* pCarTop, CarStm* pStm, CarBody_EVENT nEve
 static BOOL CarStm_RunToCompletion( CarBody* pCarTop, CarStm* pStm );
 static void CarStm_PowerOn_Entry( CarBody* pCarBody, CarStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, CarStm_PowerOn ) ){
-        ShowEntry( "Model/CarBody/CarStm	116	232	687	692	-69	-89	930	1057" );
+        ShowEntry( "Model/CarBody/CarStm	-156	232	1009	685	-187	-89	1130	1057" );
+        ImgSprite_setBrightness( powerButton, 1. );
         PowerOn_Region1_Reset( pCarBody, &pStm->PowerOn_TopPowerOn_Region1, &pStm->base, STATE_UNDEF );
     }
 }
 static BOOL CarStm_PowerOn_EventProc( CarBody* pCarBody, CarStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = CarStm_PowerOn;
-    ShowDoing( "Model/CarBody/CarStm	116	232	687	692	-69	-89	930	1057" );
-    return bResult;
-}
-static void CarStm_PowerOn_Exit( CarBody* pCarBody, CarStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, CarStm_PowerOn ) ){ 
-        PowerOn_Region1_Abort( pCarBody, &pStm->PowerOn_TopPowerOn_Region1 );
-        ShowExit( "Model/CarBody/CarStm	116	232	687	692	-69	-89	930	1057" );
-    }
-}
-static void CarStm_EngineOn_Entry( CarBody* pCarBody, CarStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, CarStm_EngineOn ) ){
-        CarStm_PowerOn_Entry( pCarBody, pStm );
-        ShowEntry( "Model/CarBody/CarStm	188	342	152	107	-69	-89	930	1057" );
-    }
-}
-static BOOL CarStm_EngineOn_EventProc( CarBody* pCarBody, CarStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = CarStm_EngineOn;
-    ShowDoing( "Model/CarBody/CarStm	188	342	152	107	-69	-89	930	1057" );
+    ShowDoing( "Model/CarBody/CarStm	-156	232	1009	685	-187	-89	1130	1057" );
     switch( nEventId ){
     case CarBody_E_PWR_BTN:{
-        CarStm_BgnTrans( pCarBody, pStm, CarStm_EngineOff, STATE_UNDEF );
+        CarStm_BgnTrans( pCarBody, pStm, CarStm_PowerOff, STATE_UNDEF );
         CarStm_EndTrans( pCarBody, pStm );
         bResult = TRUE;
     } break;
     default: break;
     }
+    return bResult;
+}
+static void CarStm_PowerOn_Exit( CarBody* pCarBody, CarStm* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, CarStm_PowerOn ) ){ 
+        PowerOn_Region1_Abort( pCarBody, &pStm->PowerOn_TopPowerOn_Region1 );
+        ShowExit( "Model/CarBody/CarStm	-156	232	1009	685	-187	-89	1130	1057" );
+    }
+}
+static void CarStm_State0_Entry( CarBody* pCarBody, CarStm* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, CarStm_State0 ) ){
+        CarStm_PowerOn_Entry( pCarBody, pStm );
+        ShowEntry( "Model/CarBody/CarStm	70	329	258	525	-187	-89	1130	1057" );
+    }
+}
+static BOOL CarStm_State0_EventProc( CarBody* pCarBody, CarStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->base.nSourceState = CarStm_State0;
+    ShowDoing( "Model/CarBody/CarStm	70	329	258	525	-187	-89	1130	1057" );
     return bResult ? bResult : CarStm_PowerOn_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
-static void CarStm_EngineOn_Exit( CarBody* pCarBody, CarStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, CarStm_EngineOn ) ){ 
-        ShowExit( "Model/CarBody/CarStm	188	342	152	107	-69	-89	930	1057" );
+static void CarStm_State0_Exit( CarBody* pCarBody, CarStm* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, CarStm_State0 ) ){ 
+        ShowExit( "Model/CarBody/CarStm	70	329	258	525	-187	-89	1130	1057" );
         CarStm_PowerOn_Exit( pCarBody, pStm );
     }
 }
-static void CarStm_EngineOff_Entry( CarBody* pCarBody, CarStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, CarStm_EngineOff ) ){
-        CarStm_PowerOn_Entry( pCarBody, pStm );
-        ShowEntry( "Model/CarBody/CarStm	188	564	152	107	-69	-89	930	1057" );
+static void CarStm_WiperOn_Entry( CarBody* pCarBody, CarStm* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, CarStm_WiperOn ) ){
+        CarStm_State0_Entry( pCarBody, pStm );
+        ShowEntry( "Model/CarBody/CarStm	124	679	152	107	-187	-89	1130	1057" );
+        pStm->nState0History = CarStm_WiperOn;
     }
 }
-static BOOL CarStm_EngineOff_EventProc( CarBody* pCarBody, CarStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+static BOOL CarStm_WiperOn_EventProc( CarBody* pCarBody, CarStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
-    pStm->base.nSourceState = CarStm_EngineOff;
-    ShowDoing( "Model/CarBody/CarStm	188	564	152	107	-69	-89	930	1057" );
+    pStm->base.nSourceState = CarStm_WiperOn;
+    ShowDoing( "Model/CarBody/CarStm	124	679	152	107	-187	-89	1130	1057" );
+    switch( nEventId ){
+    case CarBody_E_PWR_BTN:{
+        CarStm_BgnTrans( pCarBody, pStm, CarStm_WiperOffWait, STATE_UNDEF );
+        CarStm_EndTrans( pCarBody, pStm );
+        bResult = TRUE;
+    } break;
+    case CarBody_E_WIPER_LEVER:{
+        CarStm_BgnTrans( pCarBody, pStm, CarStm_WiperOff, STATE_UNDEF );
+        CarStm_EndTrans( pCarBody, pStm );
+        bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : CarStm_State0_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void CarStm_WiperOn_Exit( CarBody* pCarBody, CarStm* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, CarStm_WiperOn ) ){ 
+        ShowExit( "Model/CarBody/CarStm	124	679	152	107	-187	-89	1130	1057" );
+        CarStm_State0_Exit( pCarBody, pStm );
+    }
+}
+static void CarStm_WiperOff_Entry( CarBody* pCarBody, CarStm* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, CarStm_WiperOff ) ){
+        CarStm_State0_Entry( pCarBody, pStm );
+        ShowEntry( "Model/CarBody/CarStm	124	425	152	107	-187	-89	1130	1057" );
+        pStm->nState0History = CarStm_WiperOff;
+    }
+}
+static BOOL CarStm_WiperOff_EventProc( CarBody* pCarBody, CarStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->base.nSourceState = CarStm_WiperOff;
+    ShowDoing( "Model/CarBody/CarStm	124	425	152	107	-187	-89	1130	1057" );
+    switch( nEventId ){
+    case CarBody_E_WIPER_LEVER:{
+        CarStm_BgnTrans( pCarBody, pStm, CarStm_WiperOn, STATE_UNDEF );
+        CarStm_EndTrans( pCarBody, pStm );
+        bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : CarStm_State0_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void CarStm_WiperOff_Exit( CarBody* pCarBody, CarStm* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, CarStm_WiperOff ) ){ 
+        ShowExit( "Model/CarBody/CarStm	124	425	152	107	-187	-89	1130	1057" );
+        CarStm_State0_Exit( pCarBody, pStm );
+    }
+}
+static void CarStm_WiperOffWait_Entry( CarBody* pCarBody, CarStm* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, CarStm_WiperOffWait ) ){
+        CarStm_PowerOn_Entry( pCarBody, pStm );
+        ShowEntry( "Model/CarBody/CarStm	-121	552	152	107	-187	-89	1130	1057" );
+    }
+}
+static BOOL CarStm_WiperOffWait_EventProc( CarBody* pCarBody, CarStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->base.nSourceState = CarStm_WiperOffWait;
+    ShowDoing( "Model/CarBody/CarStm	-121	552	152	107	-187	-89	1130	1057" );
     return bResult ? bResult : CarStm_PowerOn_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
-static void CarStm_EngineOff_Exit( CarBody* pCarBody, CarStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, CarStm_EngineOff ) ){ 
-        ShowExit( "Model/CarBody/CarStm	188	564	152	107	-69	-89	930	1057" );
+static void CarStm_WiperOffWait_Exit( CarBody* pCarBody, CarStm* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, CarStm_WiperOffWait ) ){ 
+        ShowExit( "Model/CarBody/CarStm	-121	552	152	107	-187	-89	1130	1057" );
         CarStm_PowerOn_Exit( pCarBody, pStm );
     }
 }
 static void CarStm_PowerOff_Entry( CarBody* pCarBody, CarStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, CarStm_PowerOff ) ){
-        ShowEntry( "Model/CarBody/CarStm	141	30	152	107	-69	-89	930	1057" );
+        ShowEntry( "Model/CarBody/CarStm	141	30	152	107	-187	-89	1130	1057" );
+        ImgSprite_setBrightness( powerButton, 0.5 );
     }
 }
 static BOOL CarStm_PowerOff_EventProc( CarBody* pCarBody, CarStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = CarStm_PowerOff;
-    ShowDoing( "Model/CarBody/CarStm	141	30	152	107	-69	-89	930	1057" );
+    ShowDoing( "Model/CarBody/CarStm	141	30	152	107	-187	-89	1130	1057" );
     switch( nEventId ){
     case CarBody_E_PWR_BTN:{
         CarStm_BgnTrans( pCarBody, pStm, CarStm_PowerOn, CarStm_InitialPseudostate0 );
@@ -320,7 +395,7 @@ static BOOL CarStm_PowerOff_EventProc( CarBody* pCarBody, CarStm* pStm, CarBody_
 }
 static void CarStm_PowerOff_Exit( CarBody* pCarBody, CarStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, CarStm_PowerOff ) ){ 
-        ShowExit( "Model/CarBody/CarStm	141	30	152	107	-69	-89	930	1057" );
+        ShowExit( "Model/CarBody/CarStm	141	30	152	107	-187	-89	1130	1057" );
     }
 }
 static void CarStm_EndTrans( CarBody *pCarBody, CarStm* pStm ){
@@ -328,8 +403,10 @@ static void CarStm_EndTrans( CarBody *pCarBody, CarStm* pStm ){
     pStm->base.bIsExternTrans = FALSE;
     switch( pStm->base.nCurrentState ){
     case CarStm_PowerOn:        CarStm_PowerOn_Entry( pCarBody, pStm ); break;
-    case CarStm_EngineOn:       CarStm_EngineOn_Entry( pCarBody, pStm ); break;
-    case CarStm_EngineOff:      CarStm_EngineOff_Entry( pCarBody, pStm ); break;
+    case CarStm_State0:         CarStm_State0_Entry( pCarBody, pStm ); break;
+    case CarStm_WiperOn:        CarStm_WiperOn_Entry( pCarBody, pStm ); break;
+    case CarStm_WiperOff:       CarStm_WiperOff_Entry( pCarBody, pStm ); break;
+    case CarStm_WiperOffWait:   CarStm_WiperOffWait_Entry( pCarBody, pStm ); break;
     case CarStm_PowerOff:       CarStm_PowerOff_Entry( pCarBody, pStm ); break;
     default: break;
     }
@@ -342,8 +419,10 @@ static void CarStm_BgnTrans( CarBody *pCarBody, CarStm* pStm, uint64_t targetSta
     }
     switch( pStm->base.nCurrentState ){
     case CarStm_PowerOn:        CarStm_PowerOn_Exit( pCarBody, pStm ); break;
-    case CarStm_EngineOn:       CarStm_EngineOn_Exit( pCarBody, pStm ); break;
-    case CarStm_EngineOff:      CarStm_EngineOff_Exit( pCarBody, pStm ); break;
+    case CarStm_State0:         CarStm_State0_Exit( pCarBody, pStm ); break;
+    case CarStm_WiperOn:        CarStm_WiperOn_Exit( pCarBody, pStm ); break;
+    case CarStm_WiperOff:       CarStm_WiperOff_Exit( pCarBody, pStm ); break;
+    case CarStm_WiperOffWait:   CarStm_WiperOffWait_Exit( pCarBody, pStm ); break;
     case CarStm_PowerOff:       CarStm_PowerOff_Exit( pCarBody, pStm ); break;
     default: break;
     }
@@ -354,11 +433,21 @@ static BOOL CarStm_StateDefaultTrans( CarBody* pCarBody, CarStm* pStm ){
     pStm->base.nLCAState = STATE_UNDEF;
     bResult |= PowerOn_Region1_StateDefaultTrans( pCarBody, &pStm->PowerOn_TopPowerOn_Region1 );
     do{   if( pStm->base.nPseudostate == CarStm_InitialPseudostate0 ){
-        CarStm_BgnTrans( pCarBody, pStm, CarStm_EngineOn, STATE_UNDEF );
+        if( pStm->nState0History && pStm->nState0History != CarStm_State0 ){
+            CarStm_BgnTrans( pCarBody, pStm, pStm->nState0History, STATE_UNDEF );
+            CarStm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+            break;
+        }
+        CarStm_BgnTrans( pCarBody, pStm, CarStm_WiperOff, STATE_UNDEF );
         CarStm_EndTrans( pCarBody, pStm );
         bResult = TRUE;
-    }else if( pStm->base.nPseudostate == CarStm_EngineOff ){
-        if (CarBody_IsIn( pCarBody, PowerOn_Region1_WiperIdle )) {
+    }else if( pStm->base.nPseudostate == CarStm_InitialPseudostate0 ){
+        CarStm_BgnTrans( pCarBody, pStm, CarStm_State0, CarStm_InitialPseudostate0 );
+        CarStm_EndTrans( pCarBody, pStm );
+        bResult = TRUE;
+    }else if( pStm->base.nPseudostate == CarStm_WiperOffWait ){
+        if (MotorRotor_isRotMin( leftWiperMotor )) {
             CarStm_BgnTrans( pCarBody, pStm, CarStm_PowerOff, STATE_UNDEF );
             CarStm_EndTrans( pCarBody, pStm );
             bResult = TRUE;
@@ -407,8 +496,10 @@ static BOOL CarStm_EventProc( CarBody* pCarBody, CarStm* pStm, CarBody_EVENT nEv
     bResult |= PowerOn_Region1_EventProc( pCarBody, &pStm->PowerOn_TopPowerOn_Region1, nEventId, pEventParams );
     switch( pStm->base.nCurrentState ){
     case CarStm_PowerOn:                        bResult |= CarStm_PowerOn_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case CarStm_EngineOn:                       bResult |= CarStm_EngineOn_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case CarStm_EngineOff:                      bResult |= CarStm_EngineOff_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case CarStm_State0:                         bResult |= CarStm_State0_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case CarStm_WiperOn:                        bResult |= CarStm_WiperOn_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case CarStm_WiperOff:                       bResult |= CarStm_WiperOff_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case CarStm_WiperOffWait:                   bResult |= CarStm_WiperOffWait_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
     case CarStm_PowerOff:                       bResult |= CarStm_PowerOff_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
     default: break;
     }

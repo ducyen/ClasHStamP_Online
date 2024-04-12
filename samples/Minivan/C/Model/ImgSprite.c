@@ -58,6 +58,7 @@ void ImgSprite_setBrightness(
     double value
 ){
     pImgSprite->m_brightness = value;
+    pImgSprite->m_updated = true;
 } /* ImgSprite_setBrightness */
 
 /** @public @memberof ImgSprite */
@@ -165,7 +166,7 @@ static void ImgSprite_draw1(
 
     // Set texture color modulation (brightness)
     SDL_SetTextureColorMod(
-        pImgSprite->m_buffer, 
+        pImgSprite->m_image, 
         pImgSprite->m_brightness * 255, 
         pImgSprite->m_brightness * 255, 
         pImgSprite->m_brightness * 255

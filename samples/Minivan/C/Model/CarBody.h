@@ -22,14 +22,16 @@ const TCHAR* CarBodyEvent_toString( CarBody_EVENT value );
  */
 typedef struct tagPowerOn_Region1 {
     HdStateMachine base;
+    uint64_t nWipingHistory;
 #define PowerOn_Region1_PowerOn_Top_Dmy         ( 1ULL <<  0 )
-#define PowerOn_Region1_PowerOn_Top             ( PowerOn_Region1_PowerOn_Top_Dmy | PowerOn_Region1_WiperIdle | PowerOn_Region1_InitialPseudostate0 | PowerOn_Region1_State7 )
-#define PowerOn_Region1_WiperIdle               ( 1ULL <<  1 )
-#define PowerOn_Region1_InitialPseudostate0     ( 1ULL <<  2 )
-#define PowerOn_Region1_WipingCW                ( 1ULL <<  3 )
-#define PowerOn_Region1_WipingCCW               ( 1ULL <<  4 )
-#define PowerOn_Region1_State7_Dmy              ( 1ULL <<  5 )
-#define PowerOn_Region1_State7                  ( PowerOn_Region1_State7_Dmy | PowerOn_Region1_WipingCW | PowerOn_Region1_WipingCCW )
+#define PowerOn_Region1_PowerOn_Top             ( PowerOn_Region1_PowerOn_Top_Dmy | PowerOn_Region1_InitialPseudostate0 | PowerOn_Region1_Wiping )
+#define PowerOn_Region1_InitialPseudostate0     ( 1ULL <<  1 )
+#define PowerOn_Region1_WipingCW                ( 1ULL <<  2 )
+#define PowerOn_Region1_WipingCCW               ( 1ULL <<  3 )
+#define PowerOn_Region1_WiperIdle               ( 1ULL <<  4 )
+#define PowerOn_Region1_InitialPseudostate1     ( 1ULL <<  5 )
+#define PowerOn_Region1_Wiping_Dmy              ( 1ULL <<  6 )
+#define PowerOn_Region1_Wiping                  ( PowerOn_Region1_Wiping_Dmy | PowerOn_Region1_WipingCW | PowerOn_Region1_WipingCCW | PowerOn_Region1_WiperIdle | PowerOn_Region1_InitialPseudostate1 )
 }PowerOn_Region1;
 #define PowerOn_Region1_Init() {\
     .base = { HdStateMachine_Init( PowerOn_Region1_PowerOn_Top, PowerOn_Region1_PowerOn_Top ) },\
@@ -40,15 +42,19 @@ typedef struct tagPowerOn_Region1 {
 typedef struct tagCarStm {
     HdStateMachine base;
     PowerOn_Region1 PowerOn_TopPowerOn_Region1;                 
-#define CarStm_CarTop_Dmy                       ( 1ULL <<  6 )
+    uint64_t nState0History;
+#define CarStm_CarTop_Dmy                       ( 1ULL <<  7 )
 #define CarStm_CarTop                           ( CarStm_CarTop_Dmy | CarStm_PowerOn | CarStm_InitialPseudostate1 | CarStm_PowerOff )
-#define CarStm_InitialPseudostate0              ( 1ULL <<  7 )
-#define CarStm_EngineOn                         ( 1ULL <<  8 )
-#define CarStm_EngineOff                        ( 1ULL <<  9 )
-#define CarStm_InitialPseudostate1              ( 1ULL << 10 )
-#define CarStm_PowerOff                         ( 1ULL << 11 )
-#define CarStm_PowerOn_Dmy                      ( 1ULL << 12 )
-#define CarStm_PowerOn                          ( CarStm_PowerOn_Dmy | CarStm_InitialPseudostate0 | CarStm_EngineOn | CarStm_EngineOff )
+#define CarStm_WiperOn                          ( 1ULL <<  8 )
+#define CarStm_WiperOff                         ( 1ULL <<  9 )
+#define CarStm_InitialPseudostate0              ( 1ULL << 10 )
+#define CarStm_WiperOffWait                     ( 1ULL << 11 )
+#define CarStm_InitialPseudostate1              ( 1ULL << 12 )
+#define CarStm_PowerOff                         ( 1ULL << 13 )
+#define CarStm_State0_Dmy                       ( 1ULL << 14 )
+#define CarStm_State0                           ( CarStm_State0_Dmy | CarStm_WiperOn | CarStm_WiperOff | CarStm_InitialPseudostate0 )
+#define CarStm_PowerOn_Dmy                      ( 1ULL << 15 )
+#define CarStm_PowerOn                          ( CarStm_PowerOn_Dmy | CarStm_State0 | CarStm_InitialPseudostate0 | CarStm_WiperOffWait )
 }CarStm;
 #define CarStm_Init() {\
     .base = { HdStateMachine_Init( CarStm_CarTop, CarStm_CarTop ) },\
