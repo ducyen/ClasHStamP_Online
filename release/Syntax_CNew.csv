@@ -293,7 +293,10 @@ state_exit,"static void [Scope]_BgnTrans( [tYPE] *p[tYPE], [sCOPE]* pStm, uint64
     }
 ","}
 "
-state_impl,"static BOOL [Scope]_Reset( [tYPE]* p[tYPE], [sCOPE]* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
+state_impl,"static int [sCOPE]_IsFinished([sCOPE]* p[sCOPE]){
+    return p[sCOPE]->base.nCurrentState == [sCOPE]_[nAME] && p[sCOPE]->base.nCurrentState == p[sCOPE]->base.nPseudostate;
+}
+static BOOL [Scope]_Reset( [tYPE]* p[tYPE], [sCOPE]* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
     pStm->base.pParentStm = pParentStm;
     if( nEntryPoint == NULL ){
         if( [Scope]_IsFinished( &pStm->base ) ){
@@ -331,9 +334,6 @@ static BOOL [Scope]_Abort( [tYPE]* p[tYPE], [sCOPE]* pStm ) {
     [Scope]_BgnTrans( p[tYPE], pStm, [sCOPE]_[nAME], STATE_UNDEF );
     [Scope]_EndTrans( p[tYPE], pStm );
     return TRUE;
-}
-int [sCOPE]_IsFinished([sCOPE]* p[sCOPE]){
-    return p[sCOPE]->base.nCurrentState == [sCOPE]_[nAME] && p[sCOPE]->base.nCurrentState == p[sCOPE]->base.nPseudostate;
 }
 "
 transition,"static void [Scope]_[nAME]_Entry( [tYPE]* p[tYPE], [sCOPE]* pStm ){

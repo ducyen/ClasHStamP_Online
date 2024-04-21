@@ -215,6 +215,8 @@ junction,"#error junction@name;
 ",,,#error junction@begin,#error junction@end
 api_call,"BOOL [tYPE]_EventProc( [tYPE]* p[tYPE], [tYPE]_EVENT nEventId, void* pEventParams );
 BOOL [tYPE]_Start( [tYPE]* p[tYPE] );
+BOOL [tYPE]_Reset( [tYPE]* p[tYPE], uint64_t nEntryPoint );
+BOOL [tYPE]_IsIn( [tYPE]* p[tYPE], uint64_t nState );
 ",,#error XXXX,#error XXXX,#error XXXX
 friend,"#define __[nAME]_INTERNAL__
 #include ""[nAME].h""

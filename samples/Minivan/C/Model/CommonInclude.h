@@ -93,4 +93,11 @@ typedef struct tagRelativeRect{
 const char* getInputDir( void );
 const char* getOutputDir( void );
 
+void ReleaseAllImages( void );
+void SaveAllImages( void );
+void ResetActionCounter( void );
+void ShowEntry( char* pMsg );
+void ShowExit( char* pMsg );
+void ShowDoing( char* pMsg );
+
 #endif//__COMMON_INCLUDE_H__
