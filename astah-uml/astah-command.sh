@@ -22,7 +22,8 @@
 #export PATH=$PATH:$JAVA_HOME/bin
 
 #ASTAH_HOME=/usr/lib/astah_uml
-ASTAH_HOME=`pwd`
+#ASTAH_HOME=`pwd`
+ASTAH_HOME=$(cd `dirname $0` && pwd)
 
 INITIAL_HEAP_SIZE=64m
 MAXIMUM_HEAP_SIZE=1024m

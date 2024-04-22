@@ -10,8 +10,8 @@ echo "Sample Directory: $SAMPLE_DIR"
 echo "Geometry: $GEOMETRY"
 
 SAMPLE_HOME=samples/$SAMPLE_DIR
-echo "Running command: ./astah-edu/astah-command.sh -f $SAMPLE_HOME/Design.asta -image -o $SAMPLE_HOME/Image -t png -dpi 72"
-./astah-edu/astah-command.sh -f $SAMPLE_HOME/Design.asta -image -o $SAMPLE_HOME/Image -t png -dpi 72
+echo "Running command: ./astah-uml/astah-command.sh -f $SAMPLE_HOME/Design.asta -image -o $SAMPLE_HOME/Image -t png -dpi 72"
+./astah-uml/astah-command.sh -f $SAMPLE_HOME/Design.asta -image -o $SAMPLE_HOME/Image -t png -dpi 72
 
 # Example command
 cd "$WORKING_DIR/samples/$SAMPLE_DIR/C" || exit
