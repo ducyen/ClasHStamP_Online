@@ -1,6 +1,7 @@
 #!/bin/bash
 
-WORKING_DIR=$(realpath "$1")
+WORKING_DIR=$(cd "$(dirname "$1")"; pwd -P)/$(basename "$1")
+#WORKING_DIR=$(realpath "$1")
 SAMPLE_DIR=$2
 GEOMETRY=$3
 
