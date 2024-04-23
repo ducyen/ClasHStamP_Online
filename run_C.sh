@@ -2,7 +2,7 @@
 
 WORKING_DIR=`dirname $0`
 
-ASTAH_HOME=$WORKING_DIR/astah-edu
+ASTAH_HOME=$WORKING_DIR/astah-uml
 TOOL_DIR=$WORKING_DIR/release
 export PROJECT=$WORKING_DIR/samples/$1/Design.asta
 export EXT_CODE_OPT=y
