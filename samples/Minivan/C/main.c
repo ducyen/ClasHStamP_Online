@@ -186,7 +186,7 @@ int DrawRectangle( char* sPath,
     UINT uiWidth = pIBitmap->w;
     UINT uiHeight = pIBitmap->h;
 
-    uiHeight -= 20;
+    //uiHeight -= 20;
     //uiWidth  -= ( nLeftMgn + nRightMgn );
     nTop = ( float )( nTop - nDgrTop ) * uiHeight / nDgrHeight;
     nLeft = ( float )( nLeft - nDgrLeft ) * uiWidth / nDgrWidth;
