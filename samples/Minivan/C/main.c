@@ -43,7 +43,7 @@ int InputValue(char* pMsg);
 void DisplayMsg(char* pMsg);
 
 #include "CommonInclude.h"
-#include "ObjsBuilder.h";
+#include "ObjsBuilder.h"
 
 int InputValue(char* pMsg) {
     char n;
@@ -179,7 +179,7 @@ int DrawRectangle( char* sPath,
     int nLeft, int nTop, int nWidth, int nHeight, 
     int nDgrLeft, int nDgrTop, int nDgrWidth, int nDgrHeight,
     COLORREF color,
-    unsigned char* sText,
+    char* sText,
     int nMargin, int nAlign
 ){
     IWICBitmap *pIBitmap = FindBitmapFromPath( sPath );
@@ -199,6 +199,7 @@ int DrawRectangle( char* sPath,
     SDL_FillRect( pIBitmap, &( SDL_Rect ){ nLeft                , nTop+nHeight-nDotSize, nWidth  , nDotSize }, SDL_MapRGB(pIBitmap->format, GetRValue( color ), GetGValue( color ), GetBValue( color )) );
     SDL_FillRect( pIBitmap, &( SDL_Rect ){ nLeft                , nTop                 , nDotSize, nHeight }, SDL_MapRGB(pIBitmap->format, GetRValue( color ), GetGValue( color ), GetBValue( color )) );
 
+    return 0;
 }
 
 /**
