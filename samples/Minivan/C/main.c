@@ -112,7 +112,9 @@ int make_dir(const char *path) {
  */
 IWICBitmap* LoadPngImage( char* sPath ){
 
-    IWICBitmap *pIBitmap = IMG_Load( sPath );
+    IWICBitmap *pIBitmap = NULL;
+    
+    pIBitmap = IMG_Load( sPath );
 
     return pIBitmap;
 }
@@ -166,9 +168,11 @@ IWICBitmap* FindBitmapFromPath( char* sPath ){
     char sFullPath[ 255 ];
     sprintf( sFullPath, "%s/%s.png", g_sInputDir, sPath );
     IWICBitmap* pIBitmap = LoadPngImage( sFullPath );
-    g_arrPathToBitmap[ g_nPathToBitmapCnt ].m_pIBitmap = pIBitmap;
-    g_nPathToBitmapCnt++;
-    assert( g_nPathToBitmapCnt < sizeof( g_arrPathToBitmap ) / sizeof( g_arrPathToBitmap[ 0 ] ) );
+    if( pIBitmap != null ){
+        g_arrPathToBitmap[ g_nPathToBitmapCnt ].m_pIBitmap = pIBitmap;
+        g_nPathToBitmapCnt++;
+        assert( g_nPathToBitmapCnt < sizeof( g_arrPathToBitmap ) / sizeof( g_arrPathToBitmap[ 0 ] ) );
+    }
     return pIBitmap;
 }
 
@@ -183,6 +187,9 @@ int DrawRectangle( char* sPath,
     int nMargin, int nAlign
 ){
     IWICBitmap *pIBitmap = FindBitmapFromPath( sPath );
+    if( pIBitmap == NULL) {
+        return 0;
+    }
     UINT uiWidth = pIBitmap->w;
     UINT uiHeight = pIBitmap->h;
 
@@ -241,6 +248,10 @@ void startTimer( int tmout ){
 }
 
 int main(int argc, char **argv){
+    printf("Number of arguments (argc): %d\n", argc);
+    for (int i = 0; i < argc; i++) {
+        printf("Argument %d: %s\n", i, argv[i]);
+    }
     if (argc >= 3) {
         g_sInputDir  = argv[ 1 ];
         g_sOutputDir = argv[ 2 ];
