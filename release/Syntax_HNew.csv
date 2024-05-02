@@ -1,4 +1,4 @@
-﻿item,name,ext1st,extnxt,begin,end
+item,name,ext1st,extnxt,begin,end
 file,[cONTAINER]/[nAME].h,"#include ""[nAME].h""
 ",,"#ifndef __[nAME]_H__
 #define __[nAME]_H__
@@ -217,7 +217,7 @@ api_call,"BOOL [tYPE]_EventProc( [tYPE]* p[tYPE], [tYPE]_EVENT nEventId, void* p
 BOOL [tYPE]_Start( [tYPE]* p[tYPE] );
 BOOL [tYPE]_Reset( [tYPE]* p[tYPE], uint64_t nEntryPoint );
 BOOL [tYPE]_IsIn( [tYPE]* p[tYPE], uint64_t nState );
-",,#error XXXX,#error XXXX,#error XXXX
+",,#error XXXX,#error XXXX,
 friend,"#define __[nAME]_INTERNAL__
 #include ""[nAME].h""
 ","#endif//__[nAME]_H__
