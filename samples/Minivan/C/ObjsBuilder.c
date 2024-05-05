@@ -9,53 +9,113 @@
 #include "TrackToConstraint.h"                                  
 #include "CarWheel.h"                                           
 #include "CarBody.h"                                            
-#include "MouseListener.h"                                      
 #include "WindscreenWiper.h"                                    
 #include "MotorRotor.h"                                         
-#include "Button.h"                                             
 #include "Lever.h"                                              
+#include "FlexButton.h"                                         
+#include "Button.h"                                             
+#include "MouseListener.h"                                      
 Sprite* g_objects[] = {
     &WindscreenWiper_Ctor(                                      /* rightWiperArm */
         P( { 0.45530726256983234, 0.3988275637571839, 0.31883172573324003, 0.06776726382902298 } )/* m_iniRect */,
+        P( "rightWiperArm" )                                    /* m_name */,
         P( "WindscreenWiper.png" )                              /* m_imgPath */,
+        P( "" )                                                 /* m_stmPath */,
         P( null )                                               /* m_constraints */,
         P( null )                                               /* m_mouseListeners */
     ),
     &WindscreenWiper_Ctor(                                      /* leftWiperArm */
         P( { 0.19776536312849158, 0.3994252873563218, 0.31883172573324003, 0.06776726382902298 } )/* m_iniRect */,
+        P( "leftWiperArm" )                                     /* m_name */,
         P( "WindscreenWiper.png" )                              /* m_imgPath */,
+        P( "" )                                                 /* m_stmPath */,
         P( null )                                               /* m_constraints */,
         P( null )                                               /* m_mouseListeners */
     ),
     &MotorRotor_Ctor(                                           /* rightWiperMotor */
         P( { 0.4480446927374302, 0.44803733387212646, 0.0223463687150838, 0.028735632183908046 } )/* m_iniRect */,
+        P( "rightWiperMotor" )                                  /* m_name */,
         P( "MotorRotor.png" )                                   /* m_imgPath */,
+        P( "" )                                                 /* m_stmPath */,
         P( &AttachmentConstraint_Ctor( &rightWiperArm, 1, &RotationConstraint_Ctor( &rightWiperArm, 1, null ) ) )/* m_constraints */,
         P( null )                                               /* m_mouseListeners */
     ),
     &MotorRotor_Ctor(                                           /* leftWiperMotor */
         P( { 0.18994413407821228, 0.4482758620689655, 0.0223463687150838, 0.028735632183908046 } )/* m_iniRect */,
+        P( "leftWiperMotor" )                                   /* m_name */,
         P( "MotorRotor.png" )                                   /* m_imgPath */,
+        P( "" )                                                 /* m_stmPath */,
         P( &RotationConstraint_Ctor( &rightWiperMotor, 1, &AttachmentConstraint_Ctor( &leftWiperArm, 1, &RotationConstraint_Ctor( &leftWiperArm, 1, null ) ) ) )/* m_constraints */,
         P( null )                                               /* m_mouseListeners */
     ),
     &Lever_Ctor(                                                /* wiperLever */
         P( { 0.5770949720670391, 0.5672902074353449, 0.1329608938547486, 0.04597701149425287 } )/* m_iniRect */,
+        P( "wiperLever" )                                       /* m_name */,
         P( "Lever.png" )                                        /* m_imgPath */,
+        P( "" )                                                 /* m_stmPath */,
         P( null )                                               /* m_constraints */,
-        P( &MouseListener_Ctor( CarBody_EventProc, &carBody, CarBody_E_WIPER_LEVER, null ) )/* m_mouseListeners */
+        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, CarBody_EventProc, &carBody, CarBody_E_WIPER_LEVER, null ) )/* m_mouseListeners */
     ),
     &Button_Ctor(                                               /* powerButton */
         P( { 0.4949720670391061, 0.6118304373204023, 0.035754189944134075, 0.04597701149425287 } )/* m_iniRect */,
+        P( "powerButton" )                                      /* m_name */,
         P( "Button.png" )                                       /* m_imgPath */,
+        P( "" )                                                 /* m_stmPath */,
         P( null )                                               /* m_constraints */,
-        P( &MouseListener_Ctor( CarBody_EventProc, &carBody, CarBody_E_PWR_BTN, null ) )/* m_mouseListeners */
+        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, CarBody_EventProc, &carBody, CarBody_E_PWR_BTN, null ) )/* m_mouseListeners */
     ),
     &CarBody_Ctor(                                              /* carBody */
-        P( { 0.16424581005586592, 0.7483246901939655, 0.07150837988826815, 0.09195402298850575 } )/* m_iniRect */,
+        P( { 0.252813734841259, 0.6125313063980585, 0.07150837988826815, 0.09195402298850575 } )/* m_iniRect */,
+        P( "carBody" )                                          /* m_name */,
         P( "CarBody.png" )                                      /* m_imgPath */,
+        P( "Model/CarBody/CarStm" )                             /* m_stmPath */,
         P( null )                                               /* m_constraints */,
-        P( &MouseListener_Ctor( CarBody_EventProc, &carBody, CarBody_E_PWR_BTN,  &MouseListener_Ctor( ObjsBuilder_updateTransImage, NULL, 0,  null ) ) )/* m_mouseListeners */
+        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, ObjsBuilder_updateStmWindow, &carBody, null,  null ) )/* m_mouseListeners */
+    ),
+    &Primitive_Ctor(                                            /* Text_427 */
+        P( { 0.23569745111731844, 0.1331492456896552, 0.10614525139664804, 0.04974856321839081 } )/* 427-83c825c22d57330effb946e3b23d7b6d */,
+        P( "Text_427" )                                         /* Text_427 */,
+        P( "Text 000000 line 2 null 000000 null Monospaced 8 Text\nThe second line" )/* Text_427 */
+    ),
+    &FlexButton_Ctor(                                           /* pushButton */
+        P( { 0.09952024820309308, 0.6438644216680246, 0.022938418666529032, 0.02875963215872062 } )/* m_iniRect */,
+        P( "pushButton" )                                       /* m_name */,
+        P( "FlexButton.png" )                                   /* m_imgPath */,
+        P( "Model/FlexButton/FlexBtnStm" )                      /* m_stmPath */,
+        P( 1 )                                                  /* m_valueMax */,
+        P( FlexBtnStm_PushStyle )                               /* m_style */,
+        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
+        P( null )                                               /* m_buttonListeners */
+    ),
+    &FlexButton_Ctor(                                           /* selectButton */
+        P( { 0.09940749814134461, 0.7015349032800673, 0.0223463687150838, 0.08658602656563726 } )/* m_iniRect */,
+        P( "selectButton" )                                     /* m_name */,
+        P( "FlexButton.png" )                                   /* m_imgPath */,
+        P( "Model/FlexButton/FlexBtnStm" )                      /* m_stmPath */,
+        P( 3 )                                                  /* m_valueMax */,
+        P( FlexBtnStm_SelectStyle )                             /* m_style */,
+        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &selectButton, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &selectButton, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &selectButton, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
+        P( null )                                               /* m_buttonListeners */
+    ),
+    &FlexButton_Ctor(                                           /* toggleButton */
+        P( { 0.09940749814134447, 0.8171783010933571, 0.04417121233094814, 0.028735632183908046 } )/* m_iniRect */,
+        P( "toggleButton" )                                     /* m_name */,
+        P( "FlexButton.png" )                                   /* m_imgPath */,
+        P( "Model/FlexButton/FlexBtnStm" )                      /* m_stmPath */,
+        P( 2 )                                                  /* m_valueMax */,
+        P( FlexBtnStm_ToggleStyle )                             /* m_style */,
+        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleButton, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleButton, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleButton, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
+        P( null )                                               /* m_buttonListeners */
+    ),
+    &FlexButton_Ctor(                                           /* slideButton */
+        P( { 0.09940749814134453, 0.8742991309223448, 0.11230038524278896, 0.028735632183908046 } )/* m_iniRect */,
+        P( "slideButton" )                                      /* m_name */,
+        P( "FlexButton.png" )                                   /* m_imgPath */,
+        P( "Model/FlexButton/FlexBtnStm" )                      /* m_stmPath */,
+        P( 5 )                                                  /* m_valueMax */,
+        P( FlexBtnStm_SlideStyle )                              /* m_style */,
+        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &slideButton, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &slideButton, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &slideButton, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
+        P( null )                                               /* m_buttonListeners */
     )
 };
 Sprite* getobj( int id ){
@@ -75,13 +135,17 @@ int ObjsBuilder_startSim(
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         nResult = S_FALSE;
     }
-
+    // Initialize SDL_ttf
+    if (nResult == S_OK && TTF_Init() == -1) {
+        printf("TTF could not initialize! TTF_Error: %s\n", TTF_GetError());
+        nResult = S_FALSE;
+    }
     int SCREEN_WIDTH = 640;
     int SCREEN_HEIGHT = 480;
 
     if (nResult == S_OK) {
         // Load image
-        char sRelPath[256];
+        char sRelPath[1024];
         sprintf(sRelPath, "%s/%s", getInputDir(), "ObjsBuilder/Main.png");
         imageSurface = IMG_Load(sRelPath);
         if (imageSurface == NULL) {
@@ -109,7 +173,7 @@ int ObjsBuilder_startSim(
             }
         }
 
-        window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+        window = SDL_CreateWindow("Model Driven Development", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
         if (window == NULL) {
             printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
             nResult = S_FALSE;
@@ -128,20 +192,6 @@ int ObjsBuilder_startSim(
         if (imageTexture == NULL) {
             printf("Unable to create texture! SDL_Error: %s\n", SDL_GetError());
             nResult = S_FALSE;
-        } else{
-            // Set the new texture as the render target
-            SDL_SetRenderTarget(renderer, imageTexture);
-
-            // Clear screen
-            SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF); // White
-            SDL_RenderClear(renderer);
-
-            for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
-                Sprite_draw0(g_objects[i], renderer);
-            }
-
-            // Reset the render target to the default
-            SDL_SetRenderTarget(renderer, NULL);
         }
     }
 
@@ -157,6 +207,23 @@ int ObjsBuilder_startSim(
         }
     }
 
+    if( nResult == S_OK ){
+            // Set the new texture as the render target
+        SDL_SetRenderTarget(renderer, imageTexture);
+
+        // Clear screen
+        SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF); // White
+        SDL_RenderClear(renderer);
+
+        for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
+            Sprite_draw0(g_objects[i], renderer);
+        }
+
+        // Reset the render target to the default
+        SDL_SetRenderTarget(renderer, NULL);       
+    }
+    
+
     CarBody_Start( carBody );
 
     SaveAllImages();
@@ -167,6 +234,10 @@ int ObjsBuilder_startSim(
         SDL_Event e;
 
         while (!quit) {
+            for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
+                g_objects[i]->m_stmUpdated = false;
+            }
+
             CarBody_EventProc(carBody, CarBody_TICK, NULL);
             bool hasUpdated = true;
             while( hasUpdated ){
@@ -186,16 +257,27 @@ int ObjsBuilder_startSim(
             while (SDL_PollEvent(&e) != 0) {
                 if (e.type == SDL_QUIT) {
                     quit = true;
-                } else if (e.type ==  SDL_MOUSEBUTTONDOWN){
-                    if (e.button.button == SDL_BUTTON_LEFT) {
+                }else if (e.type == SDL_WINDOWEVENT) {
+                    if (e.window.event == SDL_WINDOWEVENT_CLOSE) {
                         for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
-                            int mouseX = e.button.x;
-                            int mouseY = e.button.y;
-                            Sprite_updateMouseState(g_objects[i], mouseX, mouseY, SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT);
+                            Sprite* pSprite = g_objects[i];
+                            if( SDL_GetWindowID( pSprite->m_stmWindow ) == e.window.windowID ){
+                                SDL_DestroyWindow(pSprite->m_stmWindow);
+                                pSprite->m_stmWindow = NULL;
+                            }
                         }
                     }
+                } else if (e.type == SDL_MOUSEWHEEL 
+                    || e.type == SDL_MOUSEBUTTONDOWN 
+                    || e.type == SDL_MOUSEBUTTONUP 
+                    || e.type == SDL_MOUSEMOTION 
+                ){
+                    for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
+                        int mouseX = e.button.x;
+                        int mouseY = e.button.y;
+                        Sprite_updateMouseState(g_objects[i], mouseX, mouseY, e.type | e.button.button);
+                    }
                     break;
-
                 } else if (e.type == SDL_KEYDOWN) {
                     ResetActionCounter();
                     if (e.key.keysym.sym == SDLK_x) {
@@ -219,15 +301,28 @@ int ObjsBuilder_startSim(
 
             // Update the screen
             SDL_RenderPresent(renderer);
+            for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
+                if( g_objects[i]->m_stmUpdated  ){
+                    SDL_RenderPresent(g_objects[i]->m_stmRenderer);
+                }
+            }
 
             // Delay to control the animation speed
             SaveAllImages();
             ReleaseAllImages();
-            SDL_Delay(50);
+            //SDL_Delay(50);
         }
     }
 
     for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
+        Sprite* pSprite = g_objects[i];
+        if( pSprite->m_stmPath[ 0 ] != '\0' ){
+            if( pSprite->m_stmWindow == null ){
+                SDL_DestroyTexture(pSprite->m_stmRenderer);
+                SDL_DestroyWindow( pSprite->m_stmWindow );
+                SDL_DestroyRenderer( pSprite->m_stmRenderer );
+            }
+        }
         Sprite_free(g_objects[i]);
     }
 
@@ -237,6 +332,7 @@ int ObjsBuilder_startSim(
     ReleaseAllImages();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    TTF_Quit();    
     IMG_Quit();
     SDL_Quit();
 
@@ -253,6 +349,112 @@ int ObjsBuilder_updateTransImage(
     //ReleaseAllImages();
     return 0;
 } /* ObjsBuilder_updateTransImage */
+
+int ObjsBuilder_updateStmWindow(
+    Sprite* pSprite,
+    int y,
+    void* z
+){
+    printf( "Update Stm Window\n" );
+    if( pSprite->m_stmPath[ 0 ] != '\0' ){
+        if( pSprite->m_stmWindow == null ){
+            // Load image
+            char sRelPath[256];
+            sprintf(sRelPath, "%s/%s.png", getInputDir(), pSprite->m_stmPath);
+            SDL_Surface *imageSurface = IMG_Load(sRelPath);
+            int SCREEN_WIDTH = imageSurface->w;
+            int SCREEN_HEIGHT = imageSurface->h;
+            pSprite->m_stmWindow = SDL_CreateWindow(pSprite->m_name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+            pSprite->m_stmRenderer = SDL_CreateRenderer(pSprite->m_stmWindow, -1, SDL_RENDERER_ACCELERATED);
+            pSprite->m_stmImage = SDL_CreateTextureFromSurface(pSprite->m_stmRenderer, imageSurface);
+            SDL_SetRenderDrawColor(pSprite->m_stmRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+            SDL_RenderClear(pSprite->m_stmRenderer);
+            SDL_RenderCopy(pSprite->m_stmRenderer, pSprite->m_stmImage, NULL, NULL);
+            SDL_FreeSurface(imageSurface);
+            pSprite->m_stmUpdated = true;
+        }
+    }
+    return 0;
+
+} /* ObjsBuilder_updateStmWindow */
+
+void ObjsBuilder_showEntry(
+    void* pObj,
+    char* pMsg
+){
+    Sprite* pSprite = ( Sprite* )pObj;
+    if( pSprite->m_stmImage == null ){
+        return;
+    }
+    if( !pSprite->m_stmUpdated ){
+        SDL_RenderCopy(pSprite->m_stmRenderer, pSprite->m_stmImage, NULL, NULL);
+    }
+    char s[ 256 ];
+    int l, t, w, h, dgrX, dgrY, dgrW, dgrH;
+    sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", s, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
+
+    int nTop = ( float )( t - dgrY );
+    int nLeft = ( float )( l - dgrX );
+    int nHeight = ( float )h;
+    int nWidth = ( float )w;
+    UINT nDotSize = 3;
+
+    rectangleRGBA( pSprite->m_stmRenderer, nLeft, nTop, nLeft + nWidth, nTop + nHeight, 0x00, 0xFF, 0x00, 0xFF );
+
+    pSprite->m_stmUpdated = true; 
+} /* ObjsBuilder_showEntry */
+
+void ObjsBuilder_showDoing(
+    void* pObj,
+    char* pMsg
+){
+    Sprite* pSprite = ( Sprite* )pObj;
+    if( pSprite->m_stmImage == null ){
+        return;
+    }
+    if( !pSprite->m_stmUpdated ){
+        SDL_RenderCopy(pSprite->m_stmRenderer, pSprite->m_stmImage, NULL, NULL);
+    }
+    char s[ 256 ];
+    int l, t, w, h, dgrX, dgrY, dgrW, dgrH;
+    sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", s, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
+
+    int nTop = ( float )( t - dgrY );
+    int nLeft = ( float )( l - dgrX );
+    int nHeight = ( float )h;
+    int nWidth = ( float )w;
+    UINT nDotSize = 3;
+
+    rectangleRGBA( pSprite->m_stmRenderer, nLeft, nTop, nLeft + nWidth, nTop + nHeight, 0x00, 0x00, 0xFF, 0xFF );
+
+    pSprite->m_stmUpdated = true; 
+} /* ObjsBuilder_showDoing */
+
+void ObjsBuilder_showExit(
+    void* pObj,
+    char* pMsg
+){
+    Sprite* pSprite = ( Sprite* )pObj;
+    if( pSprite->m_stmImage == null ){
+        return;
+    }
+    if( !pSprite->m_stmUpdated ){
+        SDL_RenderCopy(pSprite->m_stmRenderer, pSprite->m_stmImage, NULL, NULL);
+    }
+    char s[ 256 ];
+    int l, t, w, h, dgrX, dgrY, dgrW, dgrH;
+    sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", s, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
+
+    int nTop = ( float )( t - dgrY );
+    int nLeft = ( float )( l - dgrX );
+    int nHeight = ( float )h;
+    int nWidth = ( float )w;
+    UINT nDotSize = 3;
+
+    rectangleRGBA( pSprite->m_stmRenderer, nLeft, nTop, nLeft + nWidth, nTop + nHeight, 0xFF, 0x00, 0x00, 0xFF );
+
+    pSprite->m_stmUpdated = true; 
+} /* ObjsBuilder_showExit */
 
 ObjsBuilder* ObjsBuilder_Copy( ObjsBuilder* pObjsBuilder, const ObjsBuilder* pSource ){
     return ( ObjsBuilder* )pObjsBuilder;

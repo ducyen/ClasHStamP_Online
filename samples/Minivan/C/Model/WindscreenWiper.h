@@ -11,12 +11,12 @@ void WindscreenWiper_moveLeft( WindscreenWiper* pWindscreenWiper );
 /** @memberof WindscreenWiper
  * @brief WindscreenWiper auto-generated constructor
  */
-#define WindscreenWiper_Init(_m_iniRect, _m_imgPath, _m_constraints, _m_mouseListeners)\
-    ImgSprite_Init( P( _m_iniRect ), P( _m_imgPath ), P( _m_constraints ), P( _m_mouseListeners ) )\
+#define WindscreenWiper_Init(_m_iniRect, _m_name, _m_imgPath, _m_stmPath, _m_constraints, _m_mouseListeners)\
+    ImgSprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_stmPath ), P( _m_constraints ), P( _m_mouseListeners ) )\
     .x = 0,\
 
-#define WindscreenWiper_Ctor( _m_iniRect, _m_imgPath, _m_constraints, _m_mouseListeners )    ( WindscreenWiper ){ \
-    WindscreenWiper_Init( P( _m_iniRect ), P( _m_imgPath ), P( _m_constraints ), P( _m_mouseListeners ) ) \
+#define WindscreenWiper_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_stmPath, _m_constraints, _m_mouseListeners )    ( WindscreenWiper ){ \
+    WindscreenWiper_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_stmPath ), P( _m_constraints ), P( _m_mouseListeners ) ) \
 }
 ImgSprite* WindscreenWiper_Copy( WindscreenWiper* pWindscreenWiper, const WindscreenWiper* pSource );
 /** @class WindscreenWiper
@@ -24,7 +24,7 @@ ImgSprite* WindscreenWiper_Copy( WindscreenWiper* pWindscreenWiper, const Windsc
  */
 #define WindscreenWiper_CLASS                                                                   \
     ImgSprite_CLASS                                                                             \
-    int x;                                                                                                                             \
+    int x;                                                                                                                              \
 
 typedef struct tagWindscreenWiper{
     WindscreenWiper_CLASS    

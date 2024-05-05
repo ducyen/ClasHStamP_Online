@@ -5,12 +5,16 @@
 #include <SDL_image.h>
 #include <SDL2_rotozoom.h> // Include the SDL2_gfx library header
 #include <SDL2_gfxPrimitives.h>
+#include <SDL_ttf.h>
 
 #include <stddef.h>
 #include <stdint.h>
 #include <assert.h>
 #if defined( _MSC_VER )
 #include <windows.h>
+#else
+#include <unistd.h>
+#include <stdio.h>
 #endif
 
 #if !defined( _MSC_VER )
@@ -90,14 +94,20 @@ typedef struct tagRelativeRect{
     double x, y, w, h;
 }RelativeRect;
 
+typedef enum{
+    MDD_ON_CLICK = SDL_USEREVENT,
+    MDD_ON_VALUE_CHANGED,
+    MDD_EVENT_TYPE_MAX
+}MDD_EventType;
+
 const char* getInputDir( void );
 const char* getOutputDir( void );
 
 void ReleaseAllImages( void );
 void SaveAllImages( void );
 void ResetActionCounter( void );
-void ShowEntry( char* pMsg );
-void ShowExit( char* pMsg );
-void ShowDoing( char* pMsg );
+void ObjsBuilder_showEntry( void*, char* );
+void ObjsBuilder_showExit( void*, char* );
+void ObjsBuilder_showDoing( void*, char* );
 
 #endif//__COMMON_INCLUDE_H__

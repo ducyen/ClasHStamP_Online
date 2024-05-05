@@ -26,16 +26,22 @@ static void Primitive_draw0(
 	char isFilled[ 10 ];
 	COLORREF fillColor;
 	char rectType[ 10 ];
+    char fontFace[50];
+    int fontSize;
+    const char* textLabel;
 
-    sscanf( pPrimitive->m_imgPath, "%s%x%s%d%s%x%s", 
-	    primitiveType,
-	    &lineColor    ,
-	    lineType     ,
-	    &lineWidth    ,
-	    isFilled     ,
-	    &fillColor    ,
-	    rectType
-    );
+    int numRead = 0; // Number of characters read
+    const char *currentPos = pPrimitive->m_imgPath; // Pointer to track position in the input string
+    sscanf( currentPos, "%s %n", primitiveType, &numRead ); currentPos += numRead;
+	sscanf( currentPos, "%x %n", &lineColor   , &numRead ); currentPos += numRead;
+	sscanf( currentPos, "%s %n", lineType     , &numRead ); currentPos += numRead;
+	sscanf( currentPos, "%d %n", &lineWidth   , &numRead ); currentPos += numRead;
+	sscanf( currentPos, "%s %n", isFilled     , &numRead ); currentPos += numRead;
+	sscanf( currentPos, "%x %n", &fillColor   , &numRead ); currentPos += numRead;
+	sscanf( currentPos, "%s %n", rectType     , &numRead ); currentPos += numRead;
+    sscanf( currentPos, "%s %n", fontFace     , &numRead ); currentPos += numRead;
+    sscanf( currentPos, "%u %n", &fontSize    , &numRead ); currentPos += numRead;
+    textLabel = currentPos;
 
     if( strcmp( primitiveType, "Rectangle" ) == 0 ){
         int x1 = pPrimitive->m_rect.x;
@@ -71,7 +77,39 @@ static void Primitive_draw0(
         int x2 = pPrimitive->m_rect.w;
         int y2 = pPrimitive->m_rect.h;
         lineRGBA( renderer, x1, y1, x2, y2, LOBYTE((lineColor)>>16), LOBYTE(((WORD)(lineColor)) >> 8), LOBYTE(lineColor), 0xFF );
+    }else if( strcmp( primitiveType, "Text" ) == 0 ){
+        int x = pPrimitive->m_rect.x;
+        int y = pPrimitive->m_rect.y;
+        const char* text = textLabel;
+        SDL_Color textColor = { 0, 0, 0, 255 }; // White color
+        static char fontPath[1024];
+        sprintf( fontPath, "%s/../../../../resources/Arial.ttf", getInputDir());
+        TTF_Font* font = TTF_OpenFont(fontPath, fontSize);
+        if (!font) {
+            printf("Failed to load font: %s\n", TTF_GetError());
+        }
+        char* next_line;
+        char copy[1024]; // Ensure your buffer is large enough to hold the text
+        strncpy(copy, text, sizeof(copy));
+        copy[sizeof(copy) - 1] = '\0';
+        char* line = strtok_r(copy, "\n", &next_line);
+        while (line != NULL) {
+            SDL_Surface* surface = TTF_RenderText_Solid(font, line, textColor);
+            if (surface != NULL) {
+                SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+                if (texture != NULL) {
+                    SDL_Rect dstRect = { x, y, surface->w, surface->h };
+                    SDL_RenderCopy(renderer, texture, NULL, &dstRect);
+                    SDL_DestroyTexture(texture);
+                    y += surface->h; // Move y down for the next line
+                }
+                SDL_FreeSurface(surface);
+            }
+            line = strtok_r(NULL, "\n", &next_line);
+        }
+        TTF_CloseFont(font);        
     }
+
 } /* Primitive_draw0 */
 
 /** @public @memberof Primitive */

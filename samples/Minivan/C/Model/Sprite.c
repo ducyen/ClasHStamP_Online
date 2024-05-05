@@ -65,6 +65,7 @@ bool Sprite_isUpdated(
 
 Sprite* Sprite_Copy( Sprite* pSprite, const Sprite* pSource ){
     pSprite->m_iniRect = pSource->m_iniRect;
+    pSprite->m_name = pSource->m_name;
     pSprite->m_imgPath = pSource->m_imgPath;
     pSprite->m_image = pSource->m_image;
     pSprite->m_rect = pSource->m_rect;
@@ -72,5 +73,10 @@ Sprite* Sprite_Copy( Sprite* pSprite, const Sprite* pSource ){
     pSprite->m_angle = pSource->m_angle;
     pSprite->m_offset = pSource->m_offset;
     pSprite->m_brightness = pSource->m_brightness;
+    pSprite->m_stmPath = pSource->m_stmPath;
+    pSprite->m_stmImage = pSource->m_stmImage;
+    pSprite->m_stmRenderer = pSource->m_stmRenderer;
+    pSprite->m_stmWindow = pSource->m_stmWindow;
+    pSprite->m_stmUpdated = pSource->m_stmUpdated;
     return ( Sprite* )pSprite;
 }

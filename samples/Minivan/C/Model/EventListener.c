@@ -5,11 +5,19 @@
 /** @public @pure @memberof EventListener */
 void EventListener_actionPerformed(
     EventListener* pEventListener,
-    Sprite* target
+    Sprite* target,
+    void* pEventParams
 ){
     if( pEventListener->vTbl == NULL || pEventListener->vTbl->pactionPerformed == NULL ){ return; }
-    pEventListener->vTbl->pactionPerformed( pEventListener, target );
+    pEventListener->vTbl->pactionPerformed( pEventListener, target, pEventParams );
 } /* EventListener_actionPerformed */
+
+/** @public @memberof EventListener */
+int EventListener_getType(
+    EventListener* pEventListener
+){
+    return pEventListener->m_type;
+} /* EventListener_getType */
 
 /** @public @memberof EventListener */
 EventListener* EventListener_getNext(
@@ -19,6 +27,7 @@ EventListener* EventListener_getNext(
 } /* EventListener_getNext */
 
 EventListener* EventListener_Copy( EventListener* pEventListener, const EventListener* pSource ){
+    pEventListener->m_type = pSource->m_type;
     pEventListener->m_action = pSource->m_action;
     pEventListener->m_source = pSource->m_source;
     pEventListener->m_event = pSource->m_event;

@@ -3,18 +3,18 @@
 #include "Sprite.h"
 typedef struct tagPrimitive Primitive;
 #endif//__Primitive_H__
-#if !defined( Primitive_Init ) && ( defined( __Primitive_INTERNAL__ )  )
+#if !defined( Primitive_Init ) && ( defined( __Primitive_INTERNAL__ )  || defined( __ObjsBuilder_INTERNAL__ )  )
 #define __Sprite_INTERNAL__
 #include "Sprite.h"
 /** @memberof Primitive
  * @brief Primitive auto-generated constructor
  */
-#define Primitive_Init(_m_iniRect, _m_imgPath)\
-    Sprite_Init( P( _m_iniRect ), P( _m_imgPath ) )\
+#define Primitive_Init(_m_iniRect, _m_name, _m_imgPath)\
+    Sprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( "" ) )\
     .vTbl = &gPrimitiveVtbl,\
 
-#define Primitive_Ctor( _m_iniRect, _m_imgPath )    ( Primitive ){ \
-    Primitive_Init( P( _m_iniRect ), P( _m_imgPath ) ) \
+#define Primitive_Ctor( _m_iniRect, _m_name, _m_imgPath )    ( Primitive ){ \
+    Primitive_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ) ) \
 }
 extern const SpriteVtbl gPrimitiveVtbl;
 Sprite* Primitive_Copy( Primitive* pPrimitive, const Primitive* pSource );

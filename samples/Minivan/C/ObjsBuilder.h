@@ -17,10 +17,24 @@ enum {
 #define powerButton             ( g_objects[ _powerButton ] )
     _powerButton,
 #define carBody                 ( g_objects[ _carBody ] )
-    _carBody
+    _carBody,
+#define Text_427                ( g_objects[ _Text_427 ] )
+    _Text_427,
+#define pushButton              ( g_objects[ _pushButton ] )
+    _pushButton,
+#define selectButton            ( g_objects[ _selectButton ] )
+    _selectButton,
+#define toggleButton            ( g_objects[ _toggleButton ] )
+    _toggleButton,
+#define slideButton             ( g_objects[ _slideButton ] )
+    _slideButton
 };
 int ObjsBuilder_startSim( void   );
 int ObjsBuilder_updateTransImage( ObjsBuilder* pObjsBuilder, int y, void* z );
+int ObjsBuilder_updateStmWindow( Sprite* pSprite, int y, void* z );
+void ObjsBuilder_showEntry( void* pObj, char* pMsg );
+void ObjsBuilder_showDoing( void* pObj, char* pMsg );
+void ObjsBuilder_showExit( void* pObj, char* pMsg );
 #endif//__ObjsBuilder_H__
 #if !defined( ObjsBuilder_Init ) && ( defined( __ObjsBuilder_INTERNAL__ )  )
 /** @memberof ObjsBuilder

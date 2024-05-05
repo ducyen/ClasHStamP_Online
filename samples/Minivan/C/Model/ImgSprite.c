@@ -136,7 +136,9 @@ static void ImgSprite_updateMouseState(
     ) {
         EventListener* pCurListener = pImgSprite->m_mouseListeners;
         while( pCurListener != null ){
-            EventListener_actionPerformed( pCurListener, pImgSprite );
+            if( EventListener_getType( pCurListener ) == mouseEvent ){
+                EventListener_actionPerformed( pCurListener, pImgSprite, null );
+            }
             pCurListener = EventListener_getNext( pCurListener );
         }
     }

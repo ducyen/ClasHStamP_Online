@@ -29,7 +29,7 @@ Constraint* Constraint_Copy( Constraint* pConstraint, const Constraint* pSource 
     const ConstraintVtbl* const vTbl;                                                           \
     size_t cbSize;                                                                              \
     Sprite** m_source;                                          \
-    float m_influence;                                                                                                     \
+    float m_influence;                                                                                                      \
     Constraint* m_next;                                         \
 
 typedef struct tagConstraint{

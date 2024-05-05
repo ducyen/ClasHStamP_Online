@@ -20,16 +20,16 @@ void ImgSprite_setBrightness( ImgSprite* pImgSprite, double value );
 /** @memberof ImgSprite
  * @brief ImgSprite auto-generated constructor
  */
-#define ImgSprite_Init(_m_iniRect, _m_imgPath, _m_constraints, _m_mouseListeners)\
-    Sprite_Init( P( _m_iniRect ), P( _m_imgPath ) )\
+#define ImgSprite_Init(_m_iniRect, _m_name, _m_imgPath, _m_stmPath, _m_constraints, _m_mouseListeners)\
+    Sprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_stmPath ) )\
     .vTbl = &gImgSpriteVtbl,\
     .m_buffer = null,\
     .m_center = { 0 },\
     .m_constraints = _m_constraints,\
     .m_mouseListeners = _m_mouseListeners,\
 
-#define ImgSprite_Ctor( _m_iniRect, _m_imgPath, _m_constraints, _m_mouseListeners )    ( ImgSprite ){ \
-    ImgSprite_Init( P( _m_iniRect ), P( _m_imgPath ), P( _m_constraints ), P( _m_mouseListeners ) ) \
+#define ImgSprite_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_stmPath, _m_constraints, _m_mouseListeners )    ( ImgSprite ){ \
+    ImgSprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_stmPath ), P( _m_constraints ), P( _m_mouseListeners ) ) \
 }
 extern const SpriteVtbl gImgSpriteVtbl;
 Sprite* ImgSprite_Copy( ImgSprite* pImgSprite, const ImgSprite* pSource );
@@ -38,8 +38,8 @@ Sprite* ImgSprite_Copy( ImgSprite* pImgSprite, const ImgSprite* pSource );
  */
 #define ImgSprite_CLASS                                                                         \
     Sprite_CLASS                                                                                \
-    SDL_Texture* m_buffer;                                                                                             \
-    SDL_Point m_center;                                                                                                   \
+    SDL_Texture* m_buffer;                                                                                              \
+    SDL_Point m_center;                                                                                                    \
     Constraint* m_constraints;                                  \
     EventListener* m_mouseListeners;                            \
 
