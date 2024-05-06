@@ -30,11 +30,9 @@ enum {
     _slideButton
 };
 int ObjsBuilder_startSim( void   );
-int ObjsBuilder_updateTransImage( ObjsBuilder* pObjsBuilder, int y, void* z );
-int ObjsBuilder_updateStmWindow( Sprite* pSprite, int y, void* z );
-void ObjsBuilder_showEntry( void* pObj, char* pMsg );
-void ObjsBuilder_showDoing( void* pObj, char* pMsg );
-void ObjsBuilder_showExit( void* pObj, char* pMsg );
+void ObjsBuilder_showEntry( void* pObj, void* pStm_, char* pMsg );
+void ObjsBuilder_showDoing( void* pObj, void* pStm_, char* pMsg );
+void ObjsBuilder_showExit( void* pObj, void* pStm_, char* pMsg );
 #endif//__ObjsBuilder_H__
 #if !defined( ObjsBuilder_Init ) && ( defined( __ObjsBuilder_INTERNAL__ )  )
 /** @memberof ObjsBuilder

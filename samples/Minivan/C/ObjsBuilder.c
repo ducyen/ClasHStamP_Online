@@ -20,7 +20,6 @@ Sprite* g_objects[] = {
         P( { 0.45530726256983234, 0.3988275637571839, 0.31883172573324003, 0.06776726382902298 } )/* m_iniRect */,
         P( "rightWiperArm" )                                    /* m_name */,
         P( "WindscreenWiper.png" )                              /* m_imgPath */,
-        P( "" )                                                 /* m_stmPath */,
         P( null )                                               /* m_constraints */,
         P( null )                                               /* m_mouseListeners */
     ),
@@ -28,7 +27,6 @@ Sprite* g_objects[] = {
         P( { 0.19776536312849158, 0.3994252873563218, 0.31883172573324003, 0.06776726382902298 } )/* m_iniRect */,
         P( "leftWiperArm" )                                     /* m_name */,
         P( "WindscreenWiper.png" )                              /* m_imgPath */,
-        P( "" )                                                 /* m_stmPath */,
         P( null )                                               /* m_constraints */,
         P( null )                                               /* m_mouseListeners */
     ),
@@ -36,7 +34,6 @@ Sprite* g_objects[] = {
         P( { 0.4480446927374302, 0.44803733387212646, 0.0223463687150838, 0.028735632183908046 } )/* m_iniRect */,
         P( "rightWiperMotor" )                                  /* m_name */,
         P( "MotorRotor.png" )                                   /* m_imgPath */,
-        P( "" )                                                 /* m_stmPath */,
         P( &AttachmentConstraint_Ctor( &rightWiperArm, 1, &RotationConstraint_Ctor( &rightWiperArm, 1, null ) ) )/* m_constraints */,
         P( null )                                               /* m_mouseListeners */
     ),
@@ -44,7 +41,6 @@ Sprite* g_objects[] = {
         P( { 0.18994413407821228, 0.4482758620689655, 0.0223463687150838, 0.028735632183908046 } )/* m_iniRect */,
         P( "leftWiperMotor" )                                   /* m_name */,
         P( "MotorRotor.png" )                                   /* m_imgPath */,
-        P( "" )                                                 /* m_stmPath */,
         P( &RotationConstraint_Ctor( &rightWiperMotor, 1, &AttachmentConstraint_Ctor( &leftWiperArm, 1, &RotationConstraint_Ctor( &leftWiperArm, 1, null ) ) ) )/* m_constraints */,
         P( null )                                               /* m_mouseListeners */
     ),
@@ -52,7 +48,6 @@ Sprite* g_objects[] = {
         P( { 0.5770949720670391, 0.5672902074353449, 0.1329608938547486, 0.04597701149425287 } )/* m_iniRect */,
         P( "wiperLever" )                                       /* m_name */,
         P( "Lever.png" )                                        /* m_imgPath */,
-        P( "" )                                                 /* m_stmPath */,
         P( null )                                               /* m_constraints */,
         P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, CarBody_EventProc, &carBody, CarBody_E_WIPER_LEVER, null ) )/* m_mouseListeners */
     ),
@@ -60,7 +55,6 @@ Sprite* g_objects[] = {
         P( { 0.4949720670391061, 0.6118304373204023, 0.035754189944134075, 0.04597701149425287 } )/* m_iniRect */,
         P( "powerButton" )                                      /* m_name */,
         P( "Button.png" )                                       /* m_imgPath */,
-        P( "" )                                                 /* m_stmPath */,
         P( null )                                               /* m_constraints */,
         P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, CarBody_EventProc, &carBody, CarBody_E_PWR_BTN, null ) )/* m_mouseListeners */
     ),
@@ -68,9 +62,8 @@ Sprite* g_objects[] = {
         P( { 0.252813734841259, 0.6125313063980585, 0.07150837988826815, 0.09195402298850575 } )/* m_iniRect */,
         P( "carBody" )                                          /* m_name */,
         P( "CarBody.png" )                                      /* m_imgPath */,
-        P( "Model/CarBody/CarStm" )                             /* m_stmPath */,
         P( null )                                               /* m_constraints */,
-        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, ObjsBuilder_updateStmWindow, &carBody, null,  null ) )/* m_mouseListeners */
+        P( null )                                               /* m_mouseListeners */
     ),
     &Primitive_Ctor(                                            /* Text_427 */
         P( { 0.23569745111731844, 0.1331492456896552, 0.10614525139664804, 0.04974856321839081 } )/* 427-83c825c22d57330effb946e3b23d7b6d */,
@@ -81,7 +74,6 @@ Sprite* g_objects[] = {
         P( { 0.09952024820309308, 0.6438644216680246, 0.022938418666529032, 0.02875963215872062 } )/* m_iniRect */,
         P( "pushButton" )                                       /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
-        P( "Model/FlexButton/FlexBtnStm" )                      /* m_stmPath */,
         P( 1 )                                                  /* m_valueMax */,
         P( FlexBtnStm_PushStyle )                               /* m_style */,
         P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
@@ -91,7 +83,6 @@ Sprite* g_objects[] = {
         P( { 0.09940749814134461, 0.7015349032800673, 0.0223463687150838, 0.08658602656563726 } )/* m_iniRect */,
         P( "selectButton" )                                     /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
-        P( "Model/FlexButton/FlexBtnStm" )                      /* m_stmPath */,
         P( 3 )                                                  /* m_valueMax */,
         P( FlexBtnStm_SelectStyle )                             /* m_style */,
         P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &selectButton, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &selectButton, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &selectButton, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
@@ -101,7 +92,6 @@ Sprite* g_objects[] = {
         P( { 0.09940749814134447, 0.8171783010933571, 0.04417121233094814, 0.028735632183908046 } )/* m_iniRect */,
         P( "toggleButton" )                                     /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
-        P( "Model/FlexButton/FlexBtnStm" )                      /* m_stmPath */,
         P( 2 )                                                  /* m_valueMax */,
         P( FlexBtnStm_ToggleStyle )                             /* m_style */,
         P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleButton, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleButton, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleButton, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
@@ -111,7 +101,6 @@ Sprite* g_objects[] = {
         P( { 0.09940749814134453, 0.8742991309223448, 0.11230038524278896, 0.028735632183908046 } )/* m_iniRect */,
         P( "slideButton" )                                      /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
-        P( "Model/FlexButton/FlexBtnStm" )                      /* m_stmPath */,
         P( 5 )                                                  /* m_valueMax */,
         P( FlexBtnStm_SlideStyle )                              /* m_style */,
         P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &slideButton, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &slideButton, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &slideButton, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
@@ -223,21 +212,14 @@ int ObjsBuilder_startSim(
         SDL_SetRenderTarget(renderer, NULL);       
     }
     
-
+    carBody->m_stmShow = true;
     CarBody_Start( carBody );
-
-    SaveAllImages();
-    ReleaseAllImages();
 
     if (nResult == S_OK) {
         bool quit = false;
         SDL_Event e;
 
         while (!quit) {
-            for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
-                g_objects[i]->m_stmUpdated = false;
-            }
-
             CarBody_EventProc(carBody, CarBody_TICK, NULL);
             bool hasUpdated = true;
             while( hasUpdated ){
@@ -262,8 +244,22 @@ int ObjsBuilder_startSim(
                         for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
                             Sprite* pSprite = g_objects[i];
                             if( SDL_GetWindowID( pSprite->m_stmWindow ) == e.window.windowID ){
-                                SDL_DestroyWindow(pSprite->m_stmWindow);
-                                pSprite->m_stmWindow = NULL;
+                                if( pSprite->m_stmWindow != null ){
+                                    int textureCount = (int)(intptr_t)SDL_GetWindowData(g_objects[i]->m_stmWindow, "textureCount");
+                                    for (int j = 1; j <= textureCount; j++) {
+                                        char key[20];
+                                        snprintf(key, 20, "texture%d", j);
+                                        SDL_Texture* texture = (SDL_Texture*)SDL_GetWindowData(g_objects[i]->m_stmWindow, key);
+                                        SDL_DestroyTexture(texture);
+                                        SDL_SetWindowData(g_objects[i]->m_stmWindow, key, NULL);
+                                    }
+                                    SDL_SetWindowData(g_objects[i]->m_stmWindow, "textureCount", (void*)(intptr_t)0);
+
+                                    SDL_DestroyWindow( pSprite->m_stmWindow );
+                                    SDL_DestroyRenderer( pSprite->m_stmRenderer );
+                                    pSprite->m_stmWindow = null;
+                                    pSprite->m_stmShow = false;
+                                }
                             }
                         }
                     }
@@ -279,7 +275,6 @@ int ObjsBuilder_startSim(
                     }
                     break;
                 } else if (e.type == SDL_KEYDOWN) {
-                    ResetActionCounter();
                     if (e.key.keysym.sym == SDLK_x) {
                         //ContextImpl_EventProc(&context, ContextImpl_TMOUT, NULL);
                     }else if (e.key.keysym.sym == SDLK_r) {
@@ -302,26 +297,27 @@ int ObjsBuilder_startSim(
             // Update the screen
             SDL_RenderPresent(renderer);
             for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
-                if( g_objects[i]->m_stmUpdated  ){
+                if( g_objects[i]->m_stmShow && g_objects[i]->m_stmUpdated  ){
                     SDL_RenderPresent(g_objects[i]->m_stmRenderer);
+                    g_objects[i]->m_stmUpdated = false;
                 }
             }
-
             // Delay to control the animation speed
-            SaveAllImages();
-            ReleaseAllImages();
-            //SDL_Delay(50);
+            SDL_Delay(50);
         }
     }
 
     for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
-        Sprite* pSprite = g_objects[i];
-        if( pSprite->m_stmPath[ 0 ] != '\0' ){
-            if( pSprite->m_stmWindow == null ){
-                SDL_DestroyTexture(pSprite->m_stmRenderer);
-                SDL_DestroyWindow( pSprite->m_stmWindow );
-                SDL_DestroyRenderer( pSprite->m_stmRenderer );
+        if( g_objects[i]->m_stmWindow != null ){
+            int textureCount = (int)(intptr_t)SDL_GetWindowData(g_objects[i]->m_stmWindow, "textureCount");
+            for (int i = 1; i <= textureCount; i++) {
+                char key[20];
+                snprintf(key, 20, "texture%d", i);
+                SDL_Texture* texture = (SDL_Texture*)SDL_GetWindowData(g_objects[i]->m_stmWindow, key);
+                SDL_DestroyTexture(texture);
+                SDL_SetWindowData(g_objects[i]->m_stmWindow, key, NULL);
             }
+            SDL_SetWindowData(g_objects[i]->m_stmWindow, "textureCount", (void*)(intptr_t)0);
         }
         Sprite_free(g_objects[i]);
     }
@@ -329,7 +325,6 @@ int ObjsBuilder_startSim(
     // Free resources and close SDL
     SDL_DestroyTexture(imageTexture);
     SDL_FreeSurface(imageSurface);
-    ReleaseAllImages();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     TTF_Quit();    
@@ -339,59 +334,74 @@ int ObjsBuilder_startSim(
     return 0;
 } /* ObjsBuilder_startSim */
 
-/** @public @memberof ObjsBuilder */
-int ObjsBuilder_updateTransImage(
-    ObjsBuilder* pObjsBuilder,
-    int y,
-    void* z
-){
-    //SaveAllImages();
-    //ReleaseAllImages();
-    return 0;
-} /* ObjsBuilder_updateTransImage */
-
-int ObjsBuilder_updateStmWindow(
-    Sprite* pSprite,
-    int y,
-    void* z
-){
-    printf( "Update Stm Window\n" );
-    if( pSprite->m_stmPath[ 0 ] != '\0' ){
-        if( pSprite->m_stmWindow == null ){
-            // Load image
-            char sRelPath[256];
-            sprintf(sRelPath, "%s/%s.png", getInputDir(), pSprite->m_stmPath);
-            SDL_Surface *imageSurface = IMG_Load(sRelPath);
-            int SCREEN_WIDTH = imageSurface->w;
-            int SCREEN_HEIGHT = imageSurface->h;
-            pSprite->m_stmWindow = SDL_CreateWindow(pSprite->m_name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-            pSprite->m_stmRenderer = SDL_CreateRenderer(pSprite->m_stmWindow, -1, SDL_RENDERER_ACCELERATED);
-            pSprite->m_stmImage = SDL_CreateTextureFromSurface(pSprite->m_stmRenderer, imageSurface);
-            SDL_SetRenderDrawColor(pSprite->m_stmRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-            SDL_RenderClear(pSprite->m_stmRenderer);
-            SDL_RenderCopy(pSprite->m_stmRenderer, pSprite->m_stmImage, NULL, NULL);
-            SDL_FreeSurface(imageSurface);
-            pSprite->m_stmUpdated = true;
-        }
-    }
-    return 0;
-
-} /* ObjsBuilder_updateStmWindow */
-
 void ObjsBuilder_showEntry(
     void* pObj,
+    void* pStm_,
     char* pMsg
 ){
     Sprite* pSprite = ( Sprite* )pObj;
-    if( pSprite->m_stmImage == null ){
+    if( pSprite->m_stmShow == false ){
         return;
     }
-    if( !pSprite->m_stmUpdated ){
-        SDL_RenderCopy(pSprite->m_stmRenderer, pSprite->m_stmImage, NULL, NULL);
-    }
+    HdStateMachine* pStm = ( HdStateMachine* )pStm_;
     char s[ 256 ];
     int l, t, w, h, dgrX, dgrY, dgrW, dgrH;
     sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", s, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
+    if( pSprite->m_stmWindow == null ){
+        int SCREEN_WIDTH = 0;
+        int SCREEN_HEIGHT = 0;
+        char windowName[255];
+        sprintf(windowName, "%s - %s", s, pSprite->m_name);
+        pSprite->m_stmWindow = SDL_CreateWindow(windowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+        pSprite->m_stmRenderer = SDL_CreateRenderer(pSprite->m_stmWindow, -1, SDL_RENDERER_ACCELERATED);
+    }
+    SDL_Texture* stmImage = pStm->m_stmImage;
+    SDL_Rect* stmRect = &pStm->m_stmRect;
+    if( stmImage == null ){
+        stmImage = SDL_GetWindowData(pSprite->m_stmWindow, s);
+        if( stmImage != null){
+            char rectKey[255];
+            snprintf(rectKey, 255, "%s-rect", s);
+            stmRect = SDL_GetWindowData(pSprite->m_stmWindow, rectKey);
+        }
+    }
+    if( stmImage == null ){
+        char sRelPath[256];
+        sprintf(sRelPath, "%s/%s.png", getInputDir(), s);
+        SDL_Surface *imageSurface = IMG_Load(sRelPath);
+        pStm->m_stmRect.w = imageSurface->w;
+        pStm->m_stmRect.h = imageSurface->h;
+        pStm->m_stmImage = SDL_CreateTextureFromSurface(pSprite->m_stmRenderer, imageSurface);
+        int w, h;
+        SDL_GetWindowSize( pSprite->m_stmWindow, &w, &h );
+        pStm->m_stmRect.x = 0;
+        pStm->m_stmRect.y = h;
+        if( w < pStm->m_stmRect.w ){
+            w = pStm->m_stmRect.w;
+        }
+        h = h + pStm->m_stmRect.h;
+        SDL_SetWindowSize( pSprite->m_stmWindow, w, h );
+        SDL_FreeSurface(imageSurface);
+        // Get current texture count from window data
+        int textureCount = (int)(intptr_t)SDL_GetWindowData(pSprite->m_stmWindow, "textureCount");
+        textureCount++; // Increment texture count        
+        // Store texture using a key based on new count
+        char key[20];
+        snprintf(key, 20, "texture%d", textureCount);
+        SDL_SetWindowData(pSprite->m_stmWindow, key, pStm->m_stmImage);
+        SDL_SetWindowData(pSprite->m_stmWindow, "textureCount", (void*)(intptr_t)textureCount);
+        
+        SDL_SetWindowData(pSprite->m_stmWindow, s, pStm->m_stmImage);
+        char rectKey[255];
+        snprintf(rectKey, 255, "%s-rect", s);
+        SDL_SetWindowData(pSprite->m_stmWindow, rectKey, &pStm->m_stmRect);
+
+        stmImage = pStm->m_stmImage;
+    }
+    
+    if( !pSprite->m_stmUpdated ){
+        SDL_RenderCopy(pSprite->m_stmRenderer, stmImage, NULL, stmRect);
+    }
 
     int nTop = ( float )( t - dgrY );
     int nLeft = ( float )( l - dgrX );
@@ -401,59 +411,21 @@ void ObjsBuilder_showEntry(
 
     rectangleRGBA( pSprite->m_stmRenderer, nLeft, nTop, nLeft + nWidth, nTop + nHeight, 0x00, 0xFF, 0x00, 0xFF );
 
-    pSprite->m_stmUpdated = true; 
+    pSprite->m_stmUpdated = true;     
 } /* ObjsBuilder_showEntry */
 
 void ObjsBuilder_showDoing(
     void* pObj,
+    void* pStm_,
     char* pMsg
 ){
-    Sprite* pSprite = ( Sprite* )pObj;
-    if( pSprite->m_stmImage == null ){
-        return;
-    }
-    if( !pSprite->m_stmUpdated ){
-        SDL_RenderCopy(pSprite->m_stmRenderer, pSprite->m_stmImage, NULL, NULL);
-    }
-    char s[ 256 ];
-    int l, t, w, h, dgrX, dgrY, dgrW, dgrH;
-    sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", s, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
-
-    int nTop = ( float )( t - dgrY );
-    int nLeft = ( float )( l - dgrX );
-    int nHeight = ( float )h;
-    int nWidth = ( float )w;
-    UINT nDotSize = 3;
-
-    rectangleRGBA( pSprite->m_stmRenderer, nLeft, nTop, nLeft + nWidth, nTop + nHeight, 0x00, 0x00, 0xFF, 0xFF );
-
-    pSprite->m_stmUpdated = true; 
 } /* ObjsBuilder_showDoing */
 
 void ObjsBuilder_showExit(
     void* pObj,
+    void* pStm_,
     char* pMsg
 ){
-    Sprite* pSprite = ( Sprite* )pObj;
-    if( pSprite->m_stmImage == null ){
-        return;
-    }
-    if( !pSprite->m_stmUpdated ){
-        SDL_RenderCopy(pSprite->m_stmRenderer, pSprite->m_stmImage, NULL, NULL);
-    }
-    char s[ 256 ];
-    int l, t, w, h, dgrX, dgrY, dgrW, dgrH;
-    sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", s, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
-
-    int nTop = ( float )( t - dgrY );
-    int nLeft = ( float )( l - dgrX );
-    int nHeight = ( float )h;
-    int nWidth = ( float )w;
-    UINT nDotSize = 3;
-
-    rectangleRGBA( pSprite->m_stmRenderer, nLeft, nTop, nLeft + nWidth, nTop + nHeight, 0xFF, 0x00, 0x00, 0xFF );
-
-    pSprite->m_stmUpdated = true; 
 } /* ObjsBuilder_showExit */
 
 ObjsBuilder* ObjsBuilder_Copy( ObjsBuilder* pObjsBuilder, const ObjsBuilder* pSource ){

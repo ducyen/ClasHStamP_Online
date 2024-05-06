@@ -339,13 +339,13 @@ static BOOL [Scope]_Abort( [tYPE]* p[tYPE], [sCOPE]* pStm ) {
 transition,"static void [Scope]_[nAME]_Entry( [tYPE]* p[tYPE], [sCOPE]* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, [sCOPE]_[nAME] ) ){
         [Scope]_[cONTAINER]_Entry( p[tYPE], pStm );
-        ObjsBuilder_showEntry( p[tYPE], ""[dESC]"" );
+        ObjsBuilder_showEntry( p[tYPE], pStm, ""[dESC]"" );
 [vALUE]    }
 [mODIFIER]}
 static BOOL [Scope]_[nAME]_EventProc( [tYPE]* p[tYPE], [sCOPE]* pStm, [tYPE]_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = [sCOPE]_[nAME];
-    ObjsBuilder_showDoing( p[tYPE], ""[dESC]"" );
+    ObjsBuilder_showDoing( p[tYPE], pStm, ""[dESC]"" );
 ","    switch( nEventId ){
     case [tYPE]_[nAME]:{
 ","    } break;
@@ -357,20 +357,20 @@ static BOOL [Scope]_[nAME]_EventProc( [tYPE]* p[tYPE], [sCOPE]* pStm, [tYPE]_EVE
 }
 static void [Scope]_[nAME]_Exit( [tYPE]* p[tYPE], [sCOPE]* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, [sCOPE]_[nAME] ) ){ 
-[vALUE]        ObjsBuilder_showExit( p[tYPE], ""[dESC]"" );
+[vALUE]        ObjsBuilder_showExit( p[tYPE], pStm, ""[dESC]"" );
         [Scope]_[cONTAINER]_Exit( p[tYPE], pStm );
     }
 }
 "
 trans_top,"static void [Scope]_[nAME]_Entry( [tYPE]* p[tYPE], [sCOPE]* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, [sCOPE]_[nAME] ) ){
-        ObjsBuilder_showEntry( p[tYPE], ""[dESC]"" );
+        ObjsBuilder_showEntry( p[tYPE], pStm, ""[dESC]"" );
 [vALUE]    }
 [mODIFIER]}
 static BOOL [Scope]_[nAME]_EventProc( [tYPE]* p[tYPE], [sCOPE]* pStm, [tYPE]_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = [sCOPE]_[nAME];
-    ObjsBuilder_showDoing( p[tYPE], ""[dESC]"" );
+    ObjsBuilder_showDoing( p[tYPE], pStm, ""[dESC]"" );
 ","    switch( nEventId ){
     case [tYPE]_[nAME]:{
 ","    } break;
@@ -382,7 +382,7 @@ static BOOL [Scope]_[nAME]_EventProc( [tYPE]* p[tYPE], [sCOPE]* pStm, [tYPE]_EVE
 }
 static void [Scope]_[nAME]_Exit( [tYPE]* p[tYPE], [sCOPE]* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, [sCOPE]_[nAME] ) ){ 
-[vALUE]        ObjsBuilder_showExit( p[tYPE], ""[dESC]"" );
+[vALUE]        ObjsBuilder_showExit( p[tYPE], pStm, ""[dESC]"" );
     }
 }
 "
