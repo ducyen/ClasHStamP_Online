@@ -21,6 +21,7 @@ static bool FlexButton_load(
     };
 
     FlexButton_Start( pFlexButton );
+    return true;
 } /* FlexButton_load */
 
 /** @public @memberof FlexButton */
