@@ -37,5 +37,7 @@ HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdSt
     pHdStateMachine->nSourceState = pSource->nSourceState;
     pHdStateMachine->nPseudostate = pSource->nPseudostate;
     pHdStateMachine->bIsExternTrans = pSource->bIsExternTrans;
+    pHdStateMachine->m_stmImage = pSource->m_stmImage;
+    pHdStateMachine->m_stmRect = pSource->m_stmRect;
     return ( HdStateMachine* )pHdStateMachine;
 }

@@ -372,15 +372,15 @@ void ObjsBuilder_showEntry(
         pStm->m_stmRect.w = imageSurface->w;
         pStm->m_stmRect.h = imageSurface->h;
         pStm->m_stmImage = SDL_CreateTextureFromSurface(pSprite->m_stmRenderer, imageSurface);
-        int w, h;
-        SDL_GetWindowSize( pSprite->m_stmWindow, &w, &h );
+        int width, height;
+        SDL_GetWindowSize( pSprite->m_stmWindow, &width, &height );
         pStm->m_stmRect.x = 0;
-        pStm->m_stmRect.y = h;
-        if( w < pStm->m_stmRect.w ){
-            w = pStm->m_stmRect.w;
+        pStm->m_stmRect.y = height;
+        if( width < pStm->m_stmRect.w ){
+            width = pStm->m_stmRect.w;
         }
-        h = h + pStm->m_stmRect.h;
-        SDL_SetWindowSize( pSprite->m_stmWindow, w, h );
+        height = height + pStm->m_stmRect.h;
+        SDL_SetWindowSize( pSprite->m_stmWindow, width, height );
         SDL_FreeSurface(imageSurface);
         // Get current texture count from window data
         int textureCount = (int)(intptr_t)SDL_GetWindowData(pSprite->m_stmWindow, "textureCount");
@@ -397,13 +397,15 @@ void ObjsBuilder_showEntry(
         SDL_SetWindowData(pSprite->m_stmWindow, rectKey, &pStm->m_stmRect);
 
         stmImage = pStm->m_stmImage;
+        stmRect = &pStm->m_stmRect;
+        pSprite->m_stmUpdated = false;
     }
     
     if( !pSprite->m_stmUpdated ){
         SDL_RenderCopy(pSprite->m_stmRenderer, stmImage, NULL, stmRect);
     }
 
-    int nTop = ( float )( t - dgrY );
+    int nTop = ( float )( t - dgrY ) + stmRect->y;
     int nLeft = ( float )( l - dgrX );
     int nHeight = ( float )h;
     int nWidth = ( float )w;

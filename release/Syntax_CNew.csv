@@ -265,7 +265,8 @@ event_decl,"const TCHAR* [nAME]Event_toString( [nAME]_EVENT value ){
 ","    switch( value ){
     case [tYPE]_[nAME]: return _T( ""[nAME]"" );
 ","    case [tYPE]_[nAME]: return _T( ""[nAME]"" );
-",,"    default: return _T( ""[nAME]_UNKNOWN"" );
+","[->]pStm->base.pParentStm->nPseudostate = [sCOPE]_[vALUE];
+","    default: return _T( ""[nAME]_UNKNOWN"" );
     }
 }
 "
@@ -304,7 +305,7 @@ static BOOL [Scope]_Reset( [tYPE]* p[tYPE], [sCOPE]* pStm, HdStateMachine* pPare
         }
         return FALSE;
     }else{
-[vALUE]    if( !IS_IN( nEntryPoint, [sCOPE]_[nAME] ) ){ return FALSE; }
+[vALUE]    if( !IS_IN( nEntryPoint, [sCOPE]_[nAME] ) ){ pStm->base.nPseudostate = nEntryPoint; return FALSE; }
         if( [Scope]_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = nEntryPoint;
             return FALSE;
@@ -444,7 +445,7 @@ substm_impl,"[->]if( ![sCOPE]_IsIn( &pStm->[nAME][sCOPE], [mODIFIER]_[vALUE] ) )
 ","[->][tYPE]_Abort( p[cONTAINER], &pStm->[nAME][tYPE] );
 "
 substm_decl,,,"[->]bResult |= [tYPE]_StateDefaultTrans( p[cONTAINER], &pStm->[nAME][tYPE] );
-","[->]ContextImpl_Reset( pContextImpl, [sCOPE]_[vALUE] );
+","[->][tYPE]_Reset( p[tYPE], [sCOPE]_[vALUE] );
 ","[->][Scope]_Reset( p[tYPE], &pStm->[nAME][sCOPE], &pStm->base, [mODIFIER]_[vALUE] );
 "
 history,,,"[->]pStm->n[nAME]History = [sCOPE]_[vALUE];
