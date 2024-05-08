@@ -9,9 +9,8 @@ void Interface1_finalMethod( Interface1* pInterface1 );
  */
 #define Interface1_Init()\
 
-#define Interface1_Ctor( InitFunc, optionParams )    ( Interface1 ){\
-    InitFunc\
-\
+#define Interface1_Ctor(  )    ( Interface1 ){ \
+    Interface1_Init(  ) \
 }
 Interface1* Interface1_Copy( Interface1* pInterface1, const Interface1* pSource );
 /** @class Interface1

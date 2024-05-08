@@ -256,7 +256,9 @@ int ObjsBuilder_startSim(
                                     SDL_SetWindowData(g_objects[i]->m_stmWindow, "textureCount", (void*)(intptr_t)0);
 
                                     SDL_DestroyWindow( pSprite->m_stmWindow );
-                                    SDL_DestroyRenderer( pSprite->m_stmRenderer );
+                                    SDL_Renderer* stmRenderer = SDL_GetRenderer( pSprite->m_stmWindow );
+                                    SDL_DestroyRenderer( stmRenderer );
+                                    SDL_DestroyTexture( pSprite->m_stmTexture );
                                     pSprite->m_stmWindow = null;
                                     pSprite->m_stmShow = false;
                                 }
@@ -276,11 +278,8 @@ int ObjsBuilder_startSim(
                     break;
                 } else if (e.type == SDL_KEYDOWN) {
                     if (e.key.keysym.sym == SDLK_x) {
-                        //ContextImpl_EventProc(&context, ContextImpl_TMOUT, NULL);
                     }else if (e.key.keysym.sym == SDLK_r) {
-                        //CarBody_EventProc(carBody, CarBody_R_KEY_HIT, NULL);
                     }else if (e.key.keysym.sym == SDLK_l) {
-                        //CarBody_EventProc(carBody, CarBody_L_KEY_HIT, NULL);
                     }
                 }
             }
@@ -298,7 +297,10 @@ int ObjsBuilder_startSim(
             SDL_RenderPresent(renderer);
             for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
                 if( g_objects[i]->m_stmShow && g_objects[i]->m_stmUpdated  ){
-                    SDL_RenderPresent(g_objects[i]->m_stmRenderer);
+                    SDL_Renderer* stmRenderer = SDL_GetRenderer( g_objects[i]->m_stmWindow );
+                    SDL_SetRenderTarget(stmRenderer, NULL);
+                    SDL_RenderCopy(stmRenderer, g_objects[i]->m_stmTexture, NULL, NULL);
+                    SDL_RenderPresent(stmRenderer);
                     g_objects[i]->m_stmUpdated = false;
                 }
             }
@@ -339,6 +341,33 @@ void ObjsBuilder_showEntry(
     void* pStm_,
     char* pMsg
 ){
+    ObjsBuilder_showDiagram( pObj, pStm_, pMsg, 0x00, 0xFF, 0x00 );
+} /* ObjsBuilder_showEntry */
+
+void ObjsBuilder_showDoing(
+    void* pObj,
+    void* pStm_,
+    char* pMsg
+){
+    ObjsBuilder_showDiagram( pObj, pStm_, pMsg, 0x00, 0x00, 0xFF );
+} /* ObjsBuilder_showDoing */
+
+void ObjsBuilder_showExit(
+    void* pObj,
+    void* pStm_,
+    char* pMsg
+){
+    ObjsBuilder_showDiagram( pObj, pStm_, pMsg, 0xFF, 0x00, 0x00 );
+} /* ObjsBuilder_showExit */
+
+void ObjsBuilder_showDiagram(
+    void* pObj,
+    void* pStm_,
+    char* pMsg,
+    char r,
+    char g,
+    char b
+){
     Sprite* pSprite = ( Sprite* )pObj;
     if( pSprite->m_stmShow == false ){
         return;
@@ -353,7 +382,7 @@ void ObjsBuilder_showEntry(
         char windowName[255];
         sprintf(windowName, "%s - %s", s, pSprite->m_name);
         pSprite->m_stmWindow = SDL_CreateWindow(windowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-        pSprite->m_stmRenderer = SDL_CreateRenderer(pSprite->m_stmWindow, -1, SDL_RENDERER_ACCELERATED);
+        SDL_CreateRenderer(pSprite->m_stmWindow, -1, SDL_RENDERER_ACCELERATED);
     }
     SDL_Texture* stmImage = pStm->m_stmImage;
     SDL_Rect* stmRect = &pStm->m_stmRect;
@@ -371,7 +400,8 @@ void ObjsBuilder_showEntry(
         SDL_Surface *imageSurface = IMG_Load(sRelPath);
         pStm->m_stmRect.w = imageSurface->w;
         pStm->m_stmRect.h = imageSurface->h;
-        pStm->m_stmImage = SDL_CreateTextureFromSurface(pSprite->m_stmRenderer, imageSurface);
+        SDL_Renderer* stmRenderer = SDL_GetRenderer( pSprite->m_stmWindow );
+        pStm->m_stmImage = SDL_CreateTextureFromSurface(stmRenderer, imageSurface);
         int width, height;
         SDL_GetWindowSize( pSprite->m_stmWindow, &width, &height );
         pStm->m_stmRect.x = 0;
@@ -382,6 +412,17 @@ void ObjsBuilder_showEntry(
         height = height + pStm->m_stmRect.h;
         SDL_SetWindowSize( pSprite->m_stmWindow, width, height );
         SDL_FreeSurface(imageSurface);
+
+        Uint32 format;
+        int dmyW, dmyH;
+        SDL_QueryTexture(pStm->m_stmImage, &format, NULL, &dmyW, &dmyH);
+
+        // Create a new texture with the same format and dimensions
+        if( pSprite->m_stmTexture != null ){
+            SDL_DestroyTexture(pSprite->m_stmTexture);
+        }
+        pSprite->m_stmTexture = SDL_CreateTexture(stmRenderer, format, SDL_TEXTUREACCESS_TARGET, width, height);
+
         // Get current texture count from window data
         int textureCount = (int)(intptr_t)SDL_GetWindowData(pSprite->m_stmWindow, "textureCount");
         textureCount++; // Increment texture count        
@@ -401,8 +442,10 @@ void ObjsBuilder_showEntry(
         pSprite->m_stmUpdated = false;
     }
     
+    SDL_Renderer* stmRenderer = SDL_GetRenderer( pSprite->m_stmWindow );        
     if( !pSprite->m_stmUpdated ){
-        SDL_RenderCopy(pSprite->m_stmRenderer, stmImage, NULL, stmRect);
+        SDL_SetRenderTarget(stmRenderer, pSprite->m_stmTexture);
+        SDL_RenderCopy(stmRenderer, stmImage, NULL, stmRect);
     }
 
     int nTop = ( float )( t - dgrY ) + stmRect->y;
@@ -411,24 +454,10 @@ void ObjsBuilder_showEntry(
     int nWidth = ( float )w;
     UINT nDotSize = 3;
 
-    rectangleRGBA( pSprite->m_stmRenderer, nLeft, nTop, nLeft + nWidth, nTop + nHeight, 0x00, 0xFF, 0x00, 0xFF );
+    rectangleRGBA( stmRenderer, nLeft, nTop, nLeft + nWidth, nTop + nHeight, r, g, b, 0xFF );
 
     pSprite->m_stmUpdated = true;     
-} /* ObjsBuilder_showEntry */
-
-void ObjsBuilder_showDoing(
-    void* pObj,
-    void* pStm_,
-    char* pMsg
-){
-} /* ObjsBuilder_showDoing */
-
-void ObjsBuilder_showExit(
-    void* pObj,
-    void* pStm_,
-    char* pMsg
-){
-} /* ObjsBuilder_showExit */
+} /* ObjsBuilder_showDiagram */
 
 ObjsBuilder* ObjsBuilder_Copy( ObjsBuilder* pObjsBuilder, const ObjsBuilder* pSource ){
     return ( ObjsBuilder* )pObjsBuilder;

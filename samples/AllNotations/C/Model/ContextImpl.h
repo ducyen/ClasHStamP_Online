@@ -35,28 +35,28 @@ boolean ContextImpl_checkE1Params( EventParams* e );
  */
 typedef struct tagS8_Region1 {
     HdStateMachine base;
-#define S8_Region1_S8_Top_Dmy                   ( 1ULL <<  0 )
-#define S8_Region1_S8_Top                       ( S8_Region1_S8_Top_Dmy | S8_Region1_S82Init | S8_Region1_S821 | S8_Region1_S822 )
+#define S8_Region1_S8_Dmy                       ( 1ULL <<  0 )
+#define S8_Region1_S8                           ( S8_Region1_S8_Dmy | S8_Region1_S82Init | S8_Region1_S821 | S8_Region1_S822 )
 #define S8_Region1_S82Init                      ( 1ULL <<  1 )
 #define S8_Region1_S821                         ( 1ULL <<  2 )
 #define S8_Region1_S822                         ( 1ULL <<  3 )
 }S8_Region1;
 #define S8_Region1_Init() {\
-    .base = HdStateMachine_Ctor( HdStateMachine_Init(S8_Region1_S8_Top, S8_Region1_S8_Top), ),\
+    .base = { HdStateMachine_Init( S8_Region1_S8, S8_Region1_S8 ) },\
 }
 /** @class S8_Region2
  * @extends HdStateMachine
  */
 typedef struct tagS8_Region2 {
     HdStateMachine base;
-#define S8_Region2_S8_Top_Dmy                   ( 1ULL <<  4 )
-#define S8_Region2_S8_Top                       ( S8_Region2_S8_Top_Dmy | S8_Region2_S83Init | S8_Region2_S831 | S8_Region2_S832 )
+#define S8_Region2_S8_Dmy                       ( 1ULL <<  4 )
+#define S8_Region2_S8                           ( S8_Region2_S8_Dmy | S8_Region2_S83Init | S8_Region2_S831 | S8_Region2_S832 )
 #define S8_Region2_S83Init                      ( 1ULL <<  5 )
 #define S8_Region2_S831                         ( 1ULL <<  6 )
 #define S8_Region2_S832                         ( 1ULL <<  7 )
 }S8_Region2;
 #define S8_Region2_Init() {\
-    .base = HdStateMachine_Ctor( HdStateMachine_Init(S8_Region2_S8_Top, S8_Region2_S8_Top), ),\
+    .base = { HdStateMachine_Init( S8_Region2_S8, S8_Region2_S8 ) },\
 }
 /** @class SharedStm
  * @extends HdStateMachine
@@ -64,7 +64,7 @@ typedef struct tagS8_Region2 {
 typedef struct tagSharedStm {
     HdStateMachine base;
 #define SharedStm_SharedTop_Dmy                 ( 1ULL <<  8 )
-#define SharedStm_SharedTop                     ( SharedStm_SharedTop_Dmy | SharedStm_Entry1 | SharedStm_Exit1 | SharedStm_InitPt | SharedStm_Shared1 | SharedStm_Shared2 )
+#define SharedStm_SharedTop                     ( SharedStm_SharedTop_Dmy | SharedStm_Entry1 | SharedStm_InitPt | SharedStm_Shared1 | SharedStm_Shared2 )
 #define SharedStm_Entry1                        ( 1ULL <<  9 )
 #define SharedStm_Exit1                         ( 1ULL << 10 )
 #define SharedStm_InitPt                        ( 1ULL << 11 )
@@ -72,7 +72,7 @@ typedef struct tagSharedStm {
 #define SharedStm_Shared2                       ( 1ULL << 13 )
 }SharedStm;
 #define SharedStm_Init() {\
-    .base = HdStateMachine_Ctor( HdStateMachine_Init(SharedStm_SharedTop, SharedStm_SharedTop), ),\
+    .base = { HdStateMachine_Init( SharedStm_SharedTop, SharedStm_SharedTop ) },\
 }
 /** @class MainStm
  * @extends HdStateMachine
@@ -80,8 +80,8 @@ typedef struct tagSharedStm {
 typedef struct tagMainStm {
     HdStateMachine base;
     SharedStm S6SharedStm;                                      
-    S8_Region1 S8_TopS8_Region1;                                
-    S8_Region2 S8_TopS8_Region2;                                
+    S8_Region1 S8S8_Region1;                                    
+    S8_Region2 S8S8_Region2;                                    
     SharedStm S9SharedStm;                                      
     uint64_t nS4History;
     uint64_t nS7History;
@@ -122,14 +122,16 @@ typedef struct tagMainStm {
 #define MainStm_S7                              ( MainStm_S7_Dmy | MainStm_S72 | MainStm_S71 | MainStm_S7Init )
 }MainStm;
 #define MainStm_Init() {\
-    .base = HdStateMachine_Ctor( HdStateMachine_Init(MainStm_MainTop, MainStm_MainTop), ),\
+    .base = { HdStateMachine_Init( MainStm_MainTop, MainStm_MainTop ) },\
     .S6SharedStm = SharedStm_Init(),\
-    .S8_TopS8_Region1 = S8_Region1_Init(),\
-    .S8_TopS8_Region2 = S8_Region2_Init(),\
+    .S8S8_Region1 = S8_Region1_Init(),\
+    .S8S8_Region2 = S8_Region2_Init(),\
     .S9SharedStm = SharedStm_Init(),\
 }
 BOOL ContextImpl_EventProc( ContextImpl* pContextImpl, ContextImpl_EVENT nEventId, void* pEventParams );
 BOOL ContextImpl_Start( ContextImpl* pContextImpl );
+BOOL ContextImpl_Reset( ContextImpl* pContextImpl, uint64_t nEntryPoint );
+BOOL ContextImpl_IsIn( ContextImpl* pContextImpl, uint64_t nState );
 /** @memberof ContextImpl
  * @brief ContextImpl auto-generated constructor
  */
@@ -138,9 +140,8 @@ BOOL ContextImpl_Start( ContextImpl* pContextImpl );
     .vTbl = &gContextImplVtbl,\
     .mainStm = MainStm_Init(),\
 
-#define ContextImpl_Ctor( InitFunc, optionParams )    ( ContextImpl ){\
-    InitFunc\
-\
+#define ContextImpl_Ctor( _derivableAttribute, _publicAttribute, _privateAttribute, _internalAttribute, _readOnlyAttribute, _anAggregation, _aProtectedComposition )    ( ContextImpl ){ \
+    ContextImpl_Init( P( _derivableAttribute ), P( _publicAttribute ), P( _privateAttribute ), P( _internalAttribute ), P( _readOnlyAttribute ), P( _anAggregation ), P( _aProtectedComposition ) ) \
 }
 extern const BaseClassVtbl gContextImplVtbl;
 Context* ContextImpl_Copy( ContextImpl* pContextImpl, const ContextImpl* pSource );

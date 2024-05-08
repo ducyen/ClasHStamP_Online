@@ -33,6 +33,7 @@ int ObjsBuilder_startSim( void   );
 void ObjsBuilder_showEntry( void* pObj, void* pStm_, char* pMsg );
 void ObjsBuilder_showDoing( void* pObj, void* pStm_, char* pMsg );
 void ObjsBuilder_showExit( void* pObj, void* pStm_, char* pMsg );
+void ObjsBuilder_showDiagram( void* pObj, void* pStm_, char* pMsg, char r, char g, char b );
 #endif//__ObjsBuilder_H__
 #if !defined( ObjsBuilder_Init ) && ( defined( __ObjsBuilder_INTERNAL__ )  )
 /** @memberof ObjsBuilder

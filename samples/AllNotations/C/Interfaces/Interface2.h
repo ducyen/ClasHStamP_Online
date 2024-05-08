@@ -9,9 +9,8 @@ void Interface2_methodWithParams( Interface2* pInterface2, String parm1, float p
  */
 #define Interface2_Init()\
 
-#define Interface2_Ctor( InitFunc, optionParams )    ( Interface2 ){\
-    InitFunc\
-\
+#define Interface2_Ctor(  )    ( Interface2 ){ \
+    Interface2_Init(  ) \
 }
 Interface2* Interface2_Copy( Interface2* pInterface2, const Interface2* pSource );
 /** @class Interface2

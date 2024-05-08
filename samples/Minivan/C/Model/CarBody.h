@@ -33,27 +33,45 @@ typedef struct tagPowerOn_Region1 {
 #define PowerOn_Region1_Init() {\
     .base = { HdStateMachine_Init( PowerOn_Region1_PowerOn, PowerOn_Region1_PowerOn ) },\
 }
+/** @class WiperTestStm
+ * @extends HdStateMachine
+ */
+typedef struct tagWiperTestStm {
+    HdStateMachine base;
+#define WiperTestStm_WiperTestTop_Dmy           ( 1ULL <<  5 )
+#define WiperTestStm_WiperTestTop               ( WiperTestStm_WiperTestTop_Dmy | WiperTestStm_State0 | WiperTestStm_EntryPoint0 | WiperTestStm_InitialWiperTestStm )
+#define WiperTestStm_State0                     ( 1ULL <<  6 )
+#define WiperTestStm_EntryPoint0                ( 1ULL <<  7 )
+#define WiperTestStm_InitialWiperTestStm        ( 1ULL <<  8 )
+#define WiperTestStm_ExitPoint0                 ( 1ULL <<  9 )
+}WiperTestStm;
+#define WiperTestStm_Init() {\
+    .base = { HdStateMachine_Init( WiperTestStm_WiperTestTop, WiperTestStm_WiperTestTop ) },\
+}
 /** @class CarStm
  * @extends HdStateMachine
  */
 typedef struct tagCarStm {
     HdStateMachine base;
     PowerOn_Region1 PowerOnPowerOn_Region1;                     
+    WiperTestStm SubmachineState0WiperTestStm;                  
     uint64_t nPowerOnHistory;
-#define CarStm_CarTop_Dmy                       ( 1ULL <<  5 )
-#define CarStm_CarTop                           ( CarStm_CarTop_Dmy | CarStm_PowerOn | CarStm_InitialPseudostate0 | CarStm_PowerOff )
-#define CarStm_InitialPowerOn                   ( 1ULL <<  6 )
-#define CarStm_WiperOffWait                     ( 1ULL <<  7 )
-#define CarStm_WiperOn                          ( 1ULL <<  8 )
-#define CarStm_WiperOff                         ( 1ULL <<  9 )
-#define CarStm_InitialPseudostate0              ( 1ULL << 10 )
-#define CarStm_PowerOff                         ( 1ULL << 11 )
-#define CarStm_PowerOn_Dmy                      ( 1ULL << 12 )
+#define CarStm_CarTop_Dmy                       ( 1ULL << 10 )
+#define CarStm_CarTop                           ( CarStm_CarTop_Dmy | CarStm_PowerOn | CarStm_InitialPseudostate0 | CarStm_PowerOff | CarStm_SubmachineState0 )
+#define CarStm_InitialPowerOn                   ( 1ULL << 11 )
+#define CarStm_WiperOffWait                     ( 1ULL << 12 )
+#define CarStm_WiperOn                          ( 1ULL << 13 )
+#define CarStm_WiperOff                         ( 1ULL << 14 )
+#define CarStm_InitialPseudostate0              ( 1ULL << 15 )
+#define CarStm_PowerOff                         ( 1ULL << 16 )
+#define CarStm_SubmachineState0                 ( 1ULL << 17 )
+#define CarStm_PowerOn_Dmy                      ( 1ULL << 18 )
 #define CarStm_PowerOn                          ( CarStm_PowerOn_Dmy | CarStm_InitialPowerOn | CarStm_WiperOffWait | CarStm_WiperOn | CarStm_WiperOff )
 }CarStm;
 #define CarStm_Init() {\
     .base = { HdStateMachine_Init( CarStm_CarTop, CarStm_CarTop ) },\
     .PowerOnPowerOn_Region1 = PowerOn_Region1_Init(),\
+    .SubmachineState0WiperTestStm = WiperTestStm_Init(),\
 }
 BOOL CarBody_EventProc( CarBody* pCarBody, CarBody_EVENT nEventId, void* pEventParams );
 BOOL CarBody_Start( CarBody* pCarBody );
@@ -62,13 +80,13 @@ BOOL CarBody_IsIn( CarBody* pCarBody, uint64_t nState );
 /** @memberof CarBody
  * @brief CarBody auto-generated constructor
  */
-#define CarBody_Init(_m_iniRect, _m_name, _m_imgPath, _m_stmPath, _m_constraints, _m_mouseListeners)\
-    ImgSprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_stmPath ), P( _m_constraints ), P( _m_mouseListeners ) )\
+#define CarBody_Init(_m_iniRect, _m_name, _m_imgPath, _m_constraints, _m_mouseListeners)\
+    ImgSprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_constraints ), P( _m_mouseListeners ) )\
     .x = 0,\
     .mainStm = CarStm_Init(),\
 
-#define CarBody_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_stmPath, _m_constraints, _m_mouseListeners )    ( CarBody ){ \
-    CarBody_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_stmPath ), P( _m_constraints ), P( _m_mouseListeners ) ) \
+#define CarBody_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_constraints, _m_mouseListeners )    ( CarBody ){ \
+    CarBody_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_constraints ), P( _m_mouseListeners ) ) \
 }
 ImgSprite* CarBody_Copy( CarBody* pCarBody, const CarBody* pSource );
 /** @class CarBody

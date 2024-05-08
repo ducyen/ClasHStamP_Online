@@ -12,9 +12,8 @@ void BaseClass_packageVisibleMethod( BaseClass* pBaseClass );
 #define BaseClass_Init(_derivableAttribute)\
     .derivableAttribute = _derivableAttribute,\
 
-#define BaseClass_Ctor( InitFunc, optionParams )    ( BaseClass ){\
-    InitFunc\
-\
+#define BaseClass_Ctor( _derivableAttribute )    ( BaseClass ){ \
+    BaseClass_Init( P( _derivableAttribute ) ) \
 }
 typedef struct tagBaseClassVtbl{
     void ( * const ppublicMethod )( BaseClass* );
@@ -28,7 +27,7 @@ BaseClass* BaseClass_Copy( BaseClass* pBaseClass, const BaseClass* pSource );
 #define BaseClass_CLASS                                                                         \
     const BaseClassVtbl* const vTbl;                                                            \
     size_t cbSize;                                                                              \
-    int derivableAttribute;                                                                                           \
+    int derivableAttribute;                                                                                            \
 
 typedef struct tagBaseClass{
     BaseClass_CLASS    

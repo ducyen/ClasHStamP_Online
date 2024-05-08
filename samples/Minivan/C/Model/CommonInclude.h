@@ -106,8 +106,8 @@ const char* getOutputDir( void );
 void ReleaseAllImages( void );
 void SaveAllImages( void );
 void ResetActionCounter( void );
-void ObjsBuilder_showEntry( void*, char* );
-void ObjsBuilder_showExit( void*, char* );
-void ObjsBuilder_showDoing( void*, char* );
+void ObjsBuilder_showEntry( void*, void*, char* );
+void ObjsBuilder_showExit( void*, void*, char* );
+void ObjsBuilder_showDoing( void*, void*, char* );
 
 #endif//__COMMON_INCLUDE_H__

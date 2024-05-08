@@ -17,9 +17,8 @@ int HdStateMachine_Exitable( HdStateMachine* pHdStateMachine, uint64_t nThisStat
     .nPseudostate = _nPseudostate,\
     .bIsExternTrans = false,\
 
-#define HdStateMachine_Ctor( InitFunc, optionParams )    ( HdStateMachine ){\
-    InitFunc\
-\
+#define HdStateMachine_Ctor( _nCurrentState, _nPseudostate )    ( HdStateMachine ){ \
+    HdStateMachine_Init( P( _nCurrentState ), P( _nPseudostate ) ) \
 }
 HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdStateMachine* pSource );
 /** @class HdStateMachine
@@ -28,12 +27,12 @@ HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdSt
 #define HdStateMachine_CLASS                                                                    \
     size_t cbSize;                                                                              \
     HdStateMachine* pParentStm;                                 \
-    uint64_t nCurrentState;                                                                                           \
-    uint64_t nLCAState;                                                                                                   \
-    uint64_t nTargetState;                                                                                             \
-    uint64_t nSourceState;                                                                                             \
-    uint64_t nPseudostate;                                                                                             \
-    bool bIsExternTrans;                                                                                                 \
+    uint64_t nCurrentState;                                                                                            \
+    uint64_t nLCAState;                                                                                                    \
+    uint64_t nTargetState;                                                                                              \
+    uint64_t nSourceState;                                                                                              \
+    uint64_t nPseudostate;                                                                                              \
+    bool bIsExternTrans;                                                                                                  \
 
 typedef struct tagHdStateMachine{
     HdStateMachine_CLASS    

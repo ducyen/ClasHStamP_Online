@@ -11,9 +11,8 @@ typedef struct tagAFriend AFriend;
 #define AFriend_Init(_attribute3)\
     .attribute3 = _attribute3,\
 
-#define AFriend_Ctor( InitFunc, optionParams )    ( AFriend ){\
-    InitFunc\
-\
+#define AFriend_Ctor( _attribute3 )    ( AFriend ){ \
+    AFriend_Init( P( _attribute3 ) ) \
 }
 AFriend* AFriend_Copy( AFriend* pAFriend, const AFriend* pSource );
 /** @class AFriend
@@ -21,7 +20,7 @@ AFriend* AFriend_Copy( AFriend* pAFriend, const AFriend* pSource );
  */
 #define AFriend_CLASS                                                                           \
     size_t cbSize;                                                                              \
-    int attribute3;                                                                                                           \
+    int attribute3;                                                                                                            \
 
 typedef struct tagAFriend{
     AFriend_CLASS    

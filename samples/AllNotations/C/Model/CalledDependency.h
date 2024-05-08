@@ -9,9 +9,8 @@ typedef struct tagCalledDependency CalledDependency;
 #define CalledDependency_Init(_attribute0)\
     .attribute0 = _attribute0,\
 
-#define CalledDependency_Ctor( InitFunc, optionParams )    ( CalledDependency ){\
-    InitFunc\
-\
+#define CalledDependency_Ctor( _attribute0 )    ( CalledDependency ){ \
+    CalledDependency_Init( P( _attribute0 ) ) \
 }
 CalledDependency* CalledDependency_Copy( CalledDependency* pCalledDependency, const CalledDependency* pSource );
 /** @class CalledDependency
@@ -19,7 +18,7 @@ CalledDependency* CalledDependency_Copy( CalledDependency* pCalledDependency, co
  */
 #define CalledDependency_CLASS                                                                  \
     size_t cbSize;                                                                              \
-    int attribute0;                                                                                                           \
+    int attribute0;                                                                                                            \
 
 typedef struct tagCalledDependency{
     CalledDependency_CLASS    

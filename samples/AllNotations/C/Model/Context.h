@@ -38,9 +38,8 @@ void Context_finalMethod( Context* pContext );
     .anAggregation = P( _anAggregation ),\
     .aProtectedComposition = P( _aProtectedComposition ),\
 
-#define Context_Ctor( InitFunc, optionParams )    ( Context ){\
-    InitFunc\
-\
+#define Context_Ctor( _derivableAttribute, _publicAttribute, _privateAttribute, _internalAttribute, _readOnlyAttribute, _anAggregation, _aProtectedComposition )    ( Context ){ \
+    Context_Init( P( _derivableAttribute ), P( _publicAttribute ), P( _privateAttribute ), P( _internalAttribute ), P( _readOnlyAttribute ), P( _anAggregation ), P( _aProtectedComposition ) ) \
 }
 extern const BaseClassVtbl gContextVtbl;
 BaseClass* Context_Copy( Context* pContext, const Context* pSource );
@@ -49,10 +48,10 @@ BaseClass* Context_Copy( Context* pContext, const Context* pSource );
  */
 #define Context_CLASS                                                                           \
     BaseClass_CLASS                                                                             \
-    String publicAttribute;                                                                                           \
-    int privateAttribute;                                                                                               \
-    int internalAttribute;                                                                                             \
-    boolean isInitializedAttribute;                                                                           \
+    String publicAttribute;                                                                                            \
+    int privateAttribute;                                                                                                \
+    int internalAttribute;                                                                                              \
+    boolean isInitializedAttribute;                                                                            \
     const int readOnlyAttribute;                                \
     Aggregration* anAggregation[ 3 ];                           \
     Composition aProtectedComposition[ 10 ];                    \

@@ -73,10 +73,9 @@ Sprite* Sprite_Copy( Sprite* pSprite, const Sprite* pSource ){
     pSprite->m_angle = pSource->m_angle;
     pSprite->m_offset = pSource->m_offset;
     pSprite->m_brightness = pSource->m_brightness;
-    pSprite->m_stmPath = pSource->m_stmPath;
-    pSprite->m_stmImage = pSource->m_stmImage;
-    pSprite->m_stmRenderer = pSource->m_stmRenderer;
-    pSprite->m_stmWindow = pSource->m_stmWindow;
     pSprite->m_stmUpdated = pSource->m_stmUpdated;
+    pSprite->m_stmTexture = pSource->m_stmTexture;
+    pSprite->m_stmWindow = pSource->m_stmWindow;
+    pSprite->m_stmShow = pSource->m_stmShow;
     return ( Sprite* )pSprite;
 }

@@ -10,7 +10,7 @@ typedef struct tagPrimitive Primitive;
  * @brief Primitive auto-generated constructor
  */
 #define Primitive_Init(_m_iniRect, _m_name, _m_imgPath)\
-    Sprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( "" ) )\
+    Sprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ) )\
     .vTbl = &gPrimitiveVtbl,\
 
 #define Primitive_Ctor( _m_iniRect, _m_name, _m_imgPath )    ( Primitive ){ \

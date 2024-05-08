@@ -9,9 +9,8 @@ typedef struct tagComposition Composition;
 #define Composition_Init(_attribute4)\
     .attribute4 = _attribute4,\
 
-#define Composition_Ctor( InitFunc, optionParams )    ( Composition ){\
-    InitFunc\
-\
+#define Composition_Ctor( _attribute4 )    ( Composition ){ \
+    Composition_Init( P( _attribute4 ) ) \
 }
 Composition* Composition_Copy( Composition* pComposition, const Composition* pSource );
 /** @class Composition
@@ -19,7 +18,7 @@ Composition* Composition_Copy( Composition* pComposition, const Composition* pSo
  */
 #define Composition_CLASS                                                                       \
     size_t cbSize;                                                                              \
-    int attribute4;                                                                                                           \
+    int attribute4;                                                                                                            \
 
 typedef struct tagComposition{
     Composition_CLASS    

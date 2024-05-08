@@ -21,11 +21,9 @@ public class Main extends JFrame {
     private JButton generateCodeButton;
     private JFrame bottomPanelFrame;
     private JScrollPane outputTextScrollPane;
-    private ImageLoader imageLoader;
     private Rectangle screenSize;
     private Process xtermProcess;
     private long xtermPid = -1; // Initialize with an invalid PID
-
 
     public Main() {
         setTitle("Model Driven Development Tool");
@@ -167,11 +165,6 @@ public class Main extends JFrame {
         JButton button = (JButton)e.getSource();
         button.setEnabled(false); // Disable the button
         outputTextArea.setText(""); // Clear the text area
-        
-        bottomPanelFrame.add(outputTextScrollPane);
-        if (imageLoader != null) {
-        	bottomPanelFrame.remove(imageLoader.getContentPane());
-        }
 
         // Launch the target application
         try {
@@ -240,17 +233,6 @@ public class Main extends JFrame {
     private void startSimulator(ActionEvent e) {
         JButton button = (JButton)e.getSource();
         button.setEnabled(false); // Disable the button
-        
-        // Switch to the ImageLoader view in the bottom panel
-        String directoryPath = "./samples/" + selectSampleBox.getSelectedItem() + "/TransImg";
-        imageLoader = new ImageLoader(directoryPath);
-
-        // Add the ImageLoader content to the bottom panel
-
-        // Add the bottom panel to the new frame and make it visible
-        bottomPanelFrame.remove(outputTextScrollPane);
-        bottomPanelFrame.add(imageLoader.getContentPane());
-        bottomPanelFrame.setVisible(true);
 
         // Calculate the size and position for the xterm console
         int consoleWidth = 80; // 80 characters
@@ -320,7 +302,7 @@ public class Main extends JFrame {
     
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
-            MainEntry app = new MainEntry();
+            Main app = new Main();
             app.setVisible(true);
         });
     }

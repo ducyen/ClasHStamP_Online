@@ -9,9 +9,8 @@ typedef struct tagUsedDependency UsedDependency;
 #define UsedDependency_Init(_attribute6)\
     .attribute6 = _attribute6,\
 
-#define UsedDependency_Ctor( InitFunc, optionParams )    ( UsedDependency ){\
-    InitFunc\
-\
+#define UsedDependency_Ctor( _attribute6 )    ( UsedDependency ){ \
+    UsedDependency_Init( P( _attribute6 ) ) \
 }
 UsedDependency* UsedDependency_Copy( UsedDependency* pUsedDependency, const UsedDependency* pSource );
 /** @class UsedDependency
@@ -19,7 +18,7 @@ UsedDependency* UsedDependency_Copy( UsedDependency* pUsedDependency, const Used
  */
 #define UsedDependency_CLASS                                                                    \
     size_t cbSize;                                                                              \
-    int attribute6;                                                                                                           \
+    int attribute6;                                                                                                            \
 
 typedef struct tagUsedDependency{
     UsedDependency_CLASS    

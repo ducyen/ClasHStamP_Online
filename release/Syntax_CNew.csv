@@ -305,7 +305,7 @@ static BOOL [Scope]_Reset( [tYPE]* p[tYPE], [sCOPE]* pStm, HdStateMachine* pPare
         }
         return FALSE;
     }else{
-[vALUE]    if( !IS_IN( nEntryPoint, [sCOPE]_[nAME] ) ){ pStm->base.nPseudostate = nEntryPoint; return FALSE; }
+[vALUE]    if( !IS_IN( nEntryPoint, [sCOPE]_[nAME] ) ){ return FALSE; }
         if( [Scope]_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = nEntryPoint;
             return FALSE;
