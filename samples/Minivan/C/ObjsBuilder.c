@@ -21,49 +21,56 @@ Sprite* g_objects[] = {
         P( "rightWiperArm" )                                    /* m_name */,
         P( "WindscreenWiper.png" )                              /* m_imgPath */,
         P( null )                                               /* m_constraints */,
-        P( null )                                               /* m_mouseListeners */
+        P( null )                                               /* m_mouseListeners */,
+        P( null )                                               /* m_onDrawListeners */
     ),
     &WindscreenWiper_Ctor(                                      /* leftWiperArm */
         P( { 0.19776536312849158, 0.3994252873563218, 0.31883172573324003, 0.06776726382902298 } )/* m_iniRect */,
         P( "leftWiperArm" )                                     /* m_name */,
         P( "WindscreenWiper.png" )                              /* m_imgPath */,
         P( null )                                               /* m_constraints */,
-        P( null )                                               /* m_mouseListeners */
+        P( null )                                               /* m_mouseListeners */,
+        P( null )                                               /* m_onDrawListeners */
     ),
     &MotorRotor_Ctor(                                           /* rightWiperMotor */
         P( { 0.4480446927374302, 0.44803733387212646, 0.0223463687150838, 0.028735632183908046 } )/* m_iniRect */,
         P( "rightWiperMotor" )                                  /* m_name */,
         P( "MotorRotor.png" )                                   /* m_imgPath */,
         P( &AttachmentConstraint_Ctor( &rightWiperArm, 1, &RotationConstraint_Ctor( &rightWiperArm, 1, null ) ) )/* m_constraints */,
-        P( null )                                               /* m_mouseListeners */
+        P( null )                                               /* m_mouseListeners */,
+        P( null )                                               /* m_onDrawListeners */
     ),
     &MotorRotor_Ctor(                                           /* leftWiperMotor */
         P( { 0.18994413407821228, 0.4482758620689655, 0.0223463687150838, 0.028735632183908046 } )/* m_iniRect */,
         P( "leftWiperMotor" )                                   /* m_name */,
         P( "MotorRotor.png" )                                   /* m_imgPath */,
         P( &RotationConstraint_Ctor( &rightWiperMotor, 1, &AttachmentConstraint_Ctor( &leftWiperArm, 1, &RotationConstraint_Ctor( &leftWiperArm, 1, null ) ) ) )/* m_constraints */,
-        P( null )                                               /* m_mouseListeners */
+        P( null )                                               /* m_mouseListeners */,
+        P( null )                                               /* m_onDrawListeners */
     ),
     &Lever_Ctor(                                                /* wiperLever */
         P( { 0.5770949720670391, 0.5672902074353449, 0.1329608938547486, 0.04597701149425287 } )/* m_iniRect */,
         P( "wiperLever" )                                       /* m_name */,
         P( "Lever.png" )                                        /* m_imgPath */,
         P( null )                                               /* m_constraints */,
-        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, CarBody_EventProc, &carBody, CarBody_E_WIPER_LEVER, null ) )/* m_mouseListeners */
+        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, CarBody_EventProc, &carBody, CarBody_E_WIPER_LEVER, null ) )/* m_mouseListeners */,
+        P( null )                                               /* m_onDrawListeners */
     ),
     &Button_Ctor(                                               /* powerButton */
         P( { 0.4949720670391061, 0.6118304373204023, 0.035754189944134075, 0.04597701149425287 } )/* m_iniRect */,
         P( "powerButton" )                                      /* m_name */,
         P( "Button.png" )                                       /* m_imgPath */,
         P( null )                                               /* m_constraints */,
-        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, CarBody_EventProc, &carBody, CarBody_E_PWR_BTN, null ) )/* m_mouseListeners */
+        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, CarBody_EventProc, &carBody, CarBody_E_PWR_BTN, null ) )/* m_mouseListeners */,
+        P( null )                                               /* m_onDrawListeners */
     ),
     &CarBody_Ctor(                                              /* carBody */
         P( { 0.252813734841259, 0.6125313063980585, 0.07150837988826815, 0.09195402298850575 } )/* m_iniRect */,
         P( "carBody" )                                          /* m_name */,
         P( "CarBody.png" )                                      /* m_imgPath */,
         P( null )                                               /* m_constraints */,
-        P( null )                                               /* m_mouseListeners */
+        P( null )                                               /* m_mouseListeners */,
+        P( &MouseListener_Ctor( 0, CarBody_Start, &carBody, 0, &MouseListener_Ctor( 1, CarBody_EventProc, &carBody, CarBody_TICK, null ) ) )/* m_onDrawListeners */
     ),
     &Primitive_Ctor(                                            /* Text_427 */
         P( { 0.23569745111731844, 0.1331492456896552, 0.10614525139664804, 0.04974856321839081 } )/* 427-83c825c22d57330effb946e3b23d7b6d */,
@@ -213,14 +220,12 @@ int ObjsBuilder_startSim(
     }
     
     carBody->m_stmShow = true;
-    CarBody_Start( carBody );
 
     if (nResult == S_OK) {
         bool quit = false;
         SDL_Event e;
 
         while (!quit) {
-            CarBody_EventProc(carBody, CarBody_TICK, NULL);
             bool hasUpdated = true;
             while( hasUpdated ){
                 for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
@@ -305,7 +310,7 @@ int ObjsBuilder_startSim(
                 }
             }
             // Delay to control the animation speed
-            SDL_Delay(50);
+            //SDL_Delay(50);
         }
     }
 
