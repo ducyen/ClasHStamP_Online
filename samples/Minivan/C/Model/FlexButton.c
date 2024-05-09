@@ -279,6 +279,7 @@ static BOOL Ready_Region1_Hold_EventProc( FlexButton* pFlexButton, Ready_Region1
         if (FlexButton_IsIn( pFlexButton, FlexBtnStm_SlideStyle )) {
             pStm->base.bIsExternTrans = TRUE;
             Ready_Region1_BgnTrans( pFlexButton, pStm, Ready_Region1_Pressed, STATE_UNDEF );
+            pFlexButton->m_value = pFlexButton->m_valueTmp;
             Ready_Region1_EndTrans( pFlexButton, pStm );
             bResult = TRUE;
         } else if (FlexButton_IsInRect( pFlexButton, pEventParams )) {

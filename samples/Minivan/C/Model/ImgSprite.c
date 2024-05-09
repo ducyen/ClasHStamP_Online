@@ -66,6 +66,14 @@ static void ImgSprite_draw0(
     ImgSprite* pImgSprite,
     SDL_Renderer* renderer
 ){
+    ImgSprite* sprite = pImgSprite;
+    EventListener* pCurListener = sprite->m_onDrawListeners;
+    while( pCurListener != null ){
+        if( EventListener_getType( pCurListener ) == 0 ){
+            EventListener_actionPerformed( pCurListener, sprite, null );
+        }
+        pCurListener = EventListener_getNext( pCurListener );
+    }
 } /* ImgSprite_draw0 */
 
 /** @public @memberof ImgSprite */
@@ -191,6 +199,15 @@ static void ImgSprite_draw1(
     pImgSprite->m_offset.x = 0;
     pImgSprite->m_offset.y = 0;
 
+    // Event dispatch
+    ImgSprite* sprite = pImgSprite;
+    EventListener* pCurListener = sprite->m_onDrawListeners;
+    while( pCurListener != null ){
+        if( EventListener_getType( pCurListener ) == 1 ){
+            EventListener_actionPerformed( pCurListener, sprite, null );
+        }
+        pCurListener = EventListener_getNext( pCurListener );
+    }
 } /* ImgSprite_draw1 */
 
 /** @public @memberof ImgSprite */
@@ -256,6 +273,7 @@ Sprite* ImgSprite_Copy( ImgSprite* pImgSprite, const ImgSprite* pSource ){
     pImgSprite->m_center = pSource->m_center;
     pImgSprite->m_constraints = pSource->m_constraints;
     pImgSprite->m_mouseListeners = pSource->m_mouseListeners;
+    pImgSprite->m_onDrawListeners = pSource->m_onDrawListeners;
     return ( Sprite* )pImgSprite;
 }
 const SpriteVtbl gImgSpriteVtbl = {

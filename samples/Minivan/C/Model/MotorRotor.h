@@ -13,12 +13,12 @@ bool MotorRotor_isRotMin( MotorRotor* pMotorRotor );
 /** @memberof MotorRotor
  * @brief MotorRotor auto-generated constructor
  */
-#define MotorRotor_Init(_m_iniRect, _m_name, _m_imgPath, _m_constraints, _m_mouseListeners)\
-    ImgSprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_constraints ), P( _m_mouseListeners ) )\
+#define MotorRotor_Init(_m_iniRect, _m_name, _m_imgPath, _m_constraints, _m_mouseListeners, _m_onDrawListeners)\
+    ImgSprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_constraints ), P( _m_mouseListeners ), P( _m_onDrawListeners ) )\
     .rotation = 0,\
 
-#define MotorRotor_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_constraints, _m_mouseListeners )    ( MotorRotor ){ \
-    MotorRotor_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_constraints ), P( _m_mouseListeners ) ) \
+#define MotorRotor_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_constraints, _m_mouseListeners, _m_onDrawListeners )    ( MotorRotor ){ \
+    MotorRotor_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_constraints ), P( _m_mouseListeners ), P( _m_onDrawListeners ) ) \
 }
 ImgSprite* MotorRotor_Copy( MotorRotor* pMotorRotor, const MotorRotor* pSource );
 /** @class MotorRotor

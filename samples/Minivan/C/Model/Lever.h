@@ -9,11 +9,11 @@ typedef struct tagLever Lever;
 /** @memberof Lever
  * @brief Lever auto-generated constructor
  */
-#define Lever_Init(_m_iniRect, _m_name, _m_imgPath, _m_constraints, _m_mouseListeners)\
-    ImgSprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_constraints ), P( _m_mouseListeners ) )\
+#define Lever_Init(_m_iniRect, _m_name, _m_imgPath, _m_constraints, _m_mouseListeners, _m_onDrawListeners)\
+    ImgSprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_constraints ), P( _m_mouseListeners ), P( _m_onDrawListeners ) )\
 
-#define Lever_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_constraints, _m_mouseListeners )    ( Lever ){ \
-    Lever_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_constraints ), P( _m_mouseListeners ) ) \
+#define Lever_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_constraints, _m_mouseListeners, _m_onDrawListeners )    ( Lever ){ \
+    Lever_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_constraints ), P( _m_mouseListeners ), P( _m_onDrawListeners ) ) \
 }
 ImgSprite* Lever_Copy( Lever* pLever, const Lever* pSource );
 /** @class Lever
