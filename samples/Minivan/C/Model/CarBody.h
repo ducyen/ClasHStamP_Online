@@ -59,16 +59,16 @@ typedef struct tagCarStm {
 #define CarStm_CarTop                           ( CarStm_CarTop_Dmy | CarStm_PowerOn | CarStm_InitialMain | CarStm_PowerOff | CarStm_SubmachineState0 )
 #define CarStm_WiperOff                         ( 1ULL << 11 )
 #define CarStm_WiperOn                          ( 1ULL << 12 )
-#define CarStm_InitialPowerOn                   ( 1ULL << 13 )
+#define CarStm_InitialEngineOn                  ( 1ULL << 13 )
 #define CarStm_PowerOffWait                     ( 1ULL << 14 )
-#define CarStm_InitialPseudostate0              ( 1ULL << 15 )
+#define CarStm_InitialPowerOnRegion0            ( 1ULL << 15 )
 #define CarStm_InitialMain                      ( 1ULL << 16 )
 #define CarStm_PowerOff                         ( 1ULL << 17 )
 #define CarStm_SubmachineState0                 ( 1ULL << 18 )
 #define CarStm_EngineOn_Dmy                     ( 1ULL << 19 )
-#define CarStm_EngineOn                         ( CarStm_EngineOn_Dmy | CarStm_WiperOff | CarStm_WiperOn | CarStm_InitialPowerOn )
+#define CarStm_EngineOn                         ( CarStm_EngineOn_Dmy | CarStm_WiperOff | CarStm_WiperOn | CarStm_InitialEngineOn )
 #define CarStm_PowerOn_Dmy                      ( 1ULL << 20 )
-#define CarStm_PowerOn                          ( CarStm_PowerOn_Dmy | CarStm_EngineOn | CarStm_PowerOffWait | CarStm_InitialPseudostate0 )
+#define CarStm_PowerOn                          ( CarStm_PowerOn_Dmy | CarStm_EngineOn | CarStm_PowerOffWait | CarStm_InitialPowerOnRegion0 )
 }CarStm;
 #define CarStm_Init() {\
     .base = { HdStateMachine_Init( CarStm_CarTop, CarStm_CarTop ) },\

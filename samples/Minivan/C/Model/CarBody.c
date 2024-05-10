@@ -522,7 +522,7 @@ static BOOL CarStm_StateDefaultTrans( CarBody* pCarBody, CarStm* pStm ){
     pStm->base.nLCAState = STATE_UNDEF;
     bResult |= PowerOn_Region1_StateDefaultTrans( pCarBody, &pStm->PowerOnPowerOn_Region1 );
     bResult |= WiperTestStm_StateDefaultTrans( pCarBody, &pStm->SubmachineState0WiperTestStm );
-    do{   if( pStm->base.nPseudostate == CarStm_InitialPowerOn ){
+    do{   if( pStm->base.nPseudostate == CarStm_InitialEngineOn ){
         if( pStm->nEngineOnHistory && pStm->nEngineOnHistory != CarStm_EngineOn ){
             CarStm_BgnTrans( pCarBody, pStm, pStm->nEngineOnHistory, STATE_UNDEF );
             CarStm_EndTrans( pCarBody, pStm );
@@ -538,8 +538,8 @@ static BOOL CarStm_StateDefaultTrans( CarBody* pCarBody, CarStm* pStm ){
             CarStm_EndTrans( pCarBody, pStm );
             bResult = TRUE;
         }
-    }else if( pStm->base.nPseudostate == CarStm_InitialPseudostate0 ){
-        CarStm_BgnTrans( pCarBody, pStm, CarStm_EngineOn, CarStm_InitialPowerOn );
+    }else if( pStm->base.nPseudostate == CarStm_InitialPowerOnRegion0 ){
+        CarStm_BgnTrans( pCarBody, pStm, CarStm_EngineOn, CarStm_InitialEngineOn );
         CarStm_EndTrans( pCarBody, pStm );
         bResult = TRUE;
     }else if( pStm->base.nPseudostate == CarStm_InitialMain ){
@@ -547,7 +547,7 @@ static BOOL CarStm_StateDefaultTrans( CarBody* pCarBody, CarStm* pStm ){
         CarStm_EndTrans( pCarBody, pStm );
         bResult = TRUE;
     }else if( pStm->base.nCurrentState == CarStm_SubmachineState0 && pStm->base.nPseudostate == WiperTestStm_ExitPoint0 ){
-        CarStm_BgnTrans( pCarBody, pStm, CarStm_PowerOn, CarStm_InitialPseudostate0 );
+        CarStm_BgnTrans( pCarBody, pStm, CarStm_PowerOn, CarStm_InitialPowerOnRegion0 );
         CarStm_EndTrans( pCarBody, pStm );
         bResult = TRUE;
     }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, CarStm_CarTop) ){
