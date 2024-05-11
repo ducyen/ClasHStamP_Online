@@ -16,6 +16,8 @@ int HdStateMachine_Exitable( HdStateMachine* pHdStateMachine, uint64_t nThisStat
     .nSourceState = STATE_UNDEF,\
     .nPseudostate = _nPseudostate,\
     .bIsExternTrans = false,\
+    .m_stmImage = null,\
+    .m_stmRect = null,\
 
 #define HdStateMachine_Ctor( _nCurrentState, _nPseudostate )    ( HdStateMachine ){ \
     HdStateMachine_Init( P( _nCurrentState ), P( _nPseudostate ) ) \
@@ -33,6 +35,8 @@ HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdSt
     uint64_t nSourceState;                                                                                              \
     uint64_t nPseudostate;                                                                                              \
     bool bIsExternTrans;                                                                                                  \
+    SDL_Texture* m_stmImage;                                                                                          \
+    SDL_Rect m_stmRect;                                                                                                    \
 
 typedef struct tagHdStateMachine{
     HdStateMachine_CLASS    

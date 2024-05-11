@@ -8,7 +8,6 @@
 #include "UsedDependency.h"
 typedef struct tagContext Context;
 void Context_classOrStaticMethod(  );
- Context_Context( Context* pContext );
 void Context_methodWithParams( Context* pContext, String parm1, float parm2 );
 UsedDependency* Context_methodReturnsSomething( Context* pContext );
 void Context_methodThrowsException( Context* pContext );

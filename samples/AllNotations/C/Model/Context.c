@@ -27,12 +27,6 @@ static void Context_privateLeafMethod(
 } /* Context_privateLeafMethod */
 
 /** @public @memberof Context */
- Context_Context(
-    Context* pContext
-){
-} /* Context_Context */
-
-/** @public @memberof Context */
 void Context_methodWithParams(
     Context* pContext,
     String parm1,
