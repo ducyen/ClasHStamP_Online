@@ -1,24 +1,45 @@
-#!/bin/sh
+#!/bin/bash
+# Shell script to run ASTAH on macOS
 
-## Execution examples
-#astah-run.sh ASTAH_PROJECT_PATH update-all
-#astah-run.sh ASTAH_PROJECT_PATH update-all use-builtin-timestamp
-#astah-run.sh ASTAH_PROJECT_PATH update-all ubt
-#astah-run.sh ASTAH_PROJECT_PATH update-all-force
-#astah-run.sh ASTAH_PROJECT_PATH xml sample.asta sample.xml
-#astah-run.sh ASTAH_PROJECT_PATH obfuscated-xml sample.asta sample.xml
+# Uncomment the following two lines to set JAVA_HOME manually.
+# export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_45.jdk/Contents/Home
+# export PATH=$JAVA_HOME/bin:$PATH
 
-#export JAVA_HOME=/usr/java/latest
-#export PATH=$PATH:$JAVA_HOME/bin
+ASTAH_JAR=astah-pro.jar
+INITIAL_HEAP_SIZE=16m
+MAXIMUM_HEAP_SIZE=384m
 
-#ASTAH_HOME=/usr/lib/astah_professional
-ASTAH_HOME=`dirname $0`
+USER_LANGUAGE=en
+# USER_LANGUAGE=ja
+# USER_LANGUAGE=en
 
-INITIAL_HEAP_SIZE=64m
-MAXIMUM_HEAP_SIZE=1024m
-LIBPATH="$ASTAH_HOME/lib/rlm"
+USER_COUNTRY=
+# USER_COUNTRY=JP
+# USER_COUNTRY=US
 
-JAVA_OPTS="-Xms$INITIAL_HEAP_SIZE -Xmx$MAXIMUM_HEAP_SIZE -Djava.library.path=$LIBPATH"
-#JAVA_OPTS="\$JAVA_OPTS -DrootLevel=DEBUG"
+# ASTAH_HOME should be this folder
+ASTAH_HOME=$(dirname "$0")
 
-java $JAVA_OPTS -cp "$ASTAH_HOME/astah-pro.jar" JP.co.esm.caddies.jomt.JudeProRunner "$@"
+if [ ! -f "$ASTAH_HOME/$ASTAH_JAR" ]; then
+    echo "ASTAH_HOME is invalid. Please check your ASTAH_HOME."
+    exit 1
+fi
+
+JAVA_OPTS="-Xms$INITIAL_HEAP_SIZE -Xmx$MAXIMUM_HEAP_SIZE -Dsun.java2d.d3d=false"
+# JAVA_OPTS="$JAVA_OPTS -DrootLevel=DEBUG"
+
+if [ ! -z "$USER_LANGUAGE" ]; then
+    JAVA_OPTS="$JAVA_OPTS -Duser.language=$USER_LANGUAGE"
+fi
+
+if [ ! -z "$USER_COUNTRY" ]; then
+    JAVA_OPTS="$JAVA_OPTS -Duser.country=$USER_COUNTRY"
+fi
+
+# Check if the JRE bundled version is being used
+if [ -x "$ASTAH_HOME/jre/bin/java" ]; then
+    PATH="$ASTAH_HOME/jre/bin:$PATH"
+fi
+
+# Run Astah
+java $JAVA_OPTS -jar "$ASTAH_HOME/$ASTAH_JAR" "$@"
