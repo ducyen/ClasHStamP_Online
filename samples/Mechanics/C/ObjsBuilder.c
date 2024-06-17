@@ -7,78 +7,14 @@
 #include "AttachmentConstraint.h"                               
 #include "RotationConstraint.h"                                 
 #include "TrackToConstraint.h"                                  
-#include "CarWheel.h"                                           
-#include "CarBody.h"                                            
-#include "WindscreenWiper.h"                                    
-#include "MotorRotor.h"                                         
-#include "Lever.h"                                              
 #include "FlexButton.h"                                         
-#include "Button.h"                                             
 #include "MouseListener.h"                                      
+#include "PhxSprite.h"                                          
+/** @private @static @memberof ObjsBuilder */
+static int hardwareAccelerationAvailable = SDL_RENDERER_SOFTWARE;
 Sprite* g_objects[] = {
-    &WindscreenWiper_Ctor(                                      /* rightWiperArm */
-        P( { 0.45530726256983234, 0.3988275637571839, 0.31883172573324003, 0.06776726382902298 } )/* m_iniRect */,
-        P( "rightWiperArm" )                                    /* m_name */,
-        P( "WindscreenWiper.png" )                              /* m_imgPath */,
-        P( null )                                               /* m_constraints */,
-        P( null )                                               /* m_mouseListeners */,
-        P( null )                                               /* m_onDrawListeners */
-    ),
-    &WindscreenWiper_Ctor(                                      /* leftWiperArm */
-        P( { 0.19776536312849158, 0.3994252873563218, 0.31883172573324003, 0.06776726382902298 } )/* m_iniRect */,
-        P( "leftWiperArm" )                                     /* m_name */,
-        P( "WindscreenWiper.png" )                              /* m_imgPath */,
-        P( null )                                               /* m_constraints */,
-        P( null )                                               /* m_mouseListeners */,
-        P( null )                                               /* m_onDrawListeners */
-    ),
-    &MotorRotor_Ctor(                                           /* rightWiperMotor */
-        P( { 0.4480446927374302, 0.44803733387212646, 0.0223463687150838, 0.028735632183908046 } )/* m_iniRect */,
-        P( "rightWiperMotor" )                                  /* m_name */,
-        P( "MotorRotor.png" )                                   /* m_imgPath */,
-        P( &AttachmentConstraint_Ctor( &rightWiperArm, 1, &RotationConstraint_Ctor( &rightWiperArm, 1, null ) ) )/* m_constraints */,
-        P( null )                                               /* m_mouseListeners */,
-        P( null )                                               /* m_onDrawListeners */
-    ),
-    &MotorRotor_Ctor(                                           /* leftWiperMotor */
-        P( { 0.18994413407821228, 0.4482758620689655, 0.0223463687150838, 0.028735632183908046 } )/* m_iniRect */,
-        P( "leftWiperMotor" )                                   /* m_name */,
-        P( "MotorRotor.png" )                                   /* m_imgPath */,
-        P( &RotationConstraint_Ctor( &rightWiperMotor, 1, &AttachmentConstraint_Ctor( &leftWiperArm, 1, &RotationConstraint_Ctor( &leftWiperArm, 1, null ) ) ) )/* m_constraints */,
-        P( null )                                               /* m_mouseListeners */,
-        P( null )                                               /* m_onDrawListeners */
-    ),
-    &Lever_Ctor(                                                /* wiperLever */
-        P( { 0.5770949720670391, 0.5672902074353449, 0.1329608938547486, 0.04597701149425287 } )/* m_iniRect */,
-        P( "wiperLever" )                                       /* m_name */,
-        P( "Lever.png" )                                        /* m_imgPath */,
-        P( null )                                               /* m_constraints */,
-        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, CarBody_EventProc, &carBody, CarBody_E_WIPER_LEVER, null ) )/* m_mouseListeners */,
-        P( null )                                               /* m_onDrawListeners */
-    ),
-    &Button_Ctor(                                               /* powerButton */
-        P( { 0.4949720670391061, 0.6118304373204023, 0.035754189944134075, 0.04597701149425287 } )/* m_iniRect */,
-        P( "powerButton" )                                      /* m_name */,
-        P( "Button.png" )                                       /* m_imgPath */,
-        P( null )                                               /* m_constraints */,
-        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, CarBody_EventProc, &carBody, CarBody_E_PWR_BTN, null ) )/* m_mouseListeners */,
-        P( null )                                               /* m_onDrawListeners */
-    ),
-    &CarBody_Ctor(                                              /* carBody */
-        P( { 0.252813734841259, 0.6125313063980585, 0.07150837988826815, 0.09195402298850575 } )/* m_iniRect */,
-        P( "carBody" )                                          /* m_name */,
-        P( "CarBody.png" )                                      /* m_imgPath */,
-        P( null )                                               /* m_constraints */,
-        P( null )                                               /* m_mouseListeners */,
-        P( &MouseListener_Ctor( 0, CarBody_Start, &carBody, 0, &MouseListener_Ctor( 1, CarBody_EventProc, &carBody, CarBody_TICK, null ) ) )/* m_onDrawListeners */
-    ),
-    &Primitive_Ctor(                                            /* Text_427 */
-        P( { 0.23569745111731844, 0.1331492456896552, 0.10614525139664804, 0.04974856321839081 } )/* 427-83c825c22d57330effb946e3b23d7b6d */,
-        P( "Text_427" )                                         /* Text_427 */,
-        P( "Text 000000 line 2 null 000000 null Monospaced 8 Text\nThe second line" )/* Text_427 */
-    ),
     &FlexButton_Ctor(                                           /* pushButton */
-        P( { 0.09952024820309308, 0.6438644216680246, 0.022938418666529032, 0.02875963215872062 } )/* m_iniRect */,
+        P( { 0.12037436608572989, 0.781722833562586, 0.022938418666529032, 0.027533292960755917 } )/* m_iniRect */,
         P( "pushButton" )                                       /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 1 )                                                  /* m_valueMax */,
@@ -86,32 +22,10 @@ Sprite* g_objects[] = {
         P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
         P( null )                                               /* m_buttonListeners */
     ),
-    &FlexButton_Ctor(                                           /* selectButton */
-        P( { 0.09940749814134461, 0.7015349032800673, 0.0223463687150838, 0.08658602656563726 } )/* m_iniRect */,
-        P( "selectButton" )                                     /* m_name */,
-        P( "FlexButton.png" )                                   /* m_imgPath */,
-        P( 3 )                                                  /* m_valueMax */,
-        P( FlexBtnStm_SelectStyle )                             /* m_style */,
-        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &selectButton, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &selectButton, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &selectButton, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
-        P( null )                                               /* m_buttonListeners */
-    ),
-    &FlexButton_Ctor(                                           /* toggleButton */
-        P( { 0.09940749814134447, 0.8171783010933571, 0.04417121233094814, 0.028735632183908046 } )/* m_iniRect */,
-        P( "toggleButton" )                                     /* m_name */,
-        P( "FlexButton.png" )                                   /* m_imgPath */,
-        P( 2 )                                                  /* m_valueMax */,
-        P( FlexBtnStm_ToggleStyle )                             /* m_style */,
-        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleButton, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleButton, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleButton, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
-        P( null )                                               /* m_buttonListeners */
-    ),
-    &FlexButton_Ctor(                                           /* slideButton */
-        P( { 0.09940749814134453, 0.8742991309223448, 0.11230038524278896, 0.028735632183908046 } )/* m_iniRect */,
-        P( "slideButton" )                                      /* m_name */,
-        P( "FlexButton.png" )                                   /* m_imgPath */,
-        P( 5 )                                                  /* m_valueMax */,
-        P( FlexBtnStm_SlideStyle )                              /* m_style */,
-        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &slideButton, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &slideButton, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &slideButton, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
-        P( null )                                               /* m_buttonListeners */
+    &PhxSprite_Ctor(                                            /* phxItem */
+        P( { 0.2837988826815642, 0.266162310866575, 0.24581005586592172, 0.234525447042641 } )/* m_iniRect */,
+        P( "phxItem" )                                          /* m_name */,
+        P( "M 43.030393,62.006529 34.2105,74.835466 41.694047,89.53529 61.739261,93.009796 74.568197,81.517206 57.195677,84.1899 45.70309,78.844509 48.108515,66.282842 Z" )/* m_imgPath */
     )
 };
 Sprite* getobj( int id ){
@@ -218,7 +132,7 @@ int ObjsBuilder_startSim(
         SDL_SetRenderTarget(renderer, NULL);       
     }
     
-    carBody->m_stmShow = true;
+    //carBody->m_stmShow = true;
 
     if (nResult == S_OK) {
         bool quit = false;
