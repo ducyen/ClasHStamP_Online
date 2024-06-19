@@ -13,6 +13,8 @@
         "contextimpl.h": "c",
         "carbody.h": "c",
         "stdarg.h": "c",
-        "b2_api.h": "c"
+        "b2_api.h": "c",
+        "chipmunk.h": "c",
+        "cpshape.h": "c"
     }
 }
