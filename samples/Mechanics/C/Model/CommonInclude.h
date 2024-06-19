@@ -7,7 +7,7 @@
 #include <SDL2_gfxPrimitives.h>
 #include <SDL_ttf.h>
 
-#include <box2d/b2_api.h>
+#include <chipmunk/chipmunk.h>
 
 #include <stddef.h>
 #include <stdint.h>

@@ -36,6 +36,7 @@ static bool PhxSprite_load(
     PhxSprite* pPhxSprite,
     SDL_Renderer* renderer
 ){
+    //b2CollidePolygons
 } /* PhxSprite_load */
 
 /** @public @memberof PhxSprite */
@@ -46,6 +47,7 @@ static void PhxSprite_free(
 
 Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource ){
     Sprite_Copy( ( Sprite* )pPhxSprite, ( Sprite* )pSource );
+    pPhxSprite->m_mass = pSource->m_mass;
     return ( Sprite* )pPhxSprite;
 }
 const SpriteVtbl gPhxSpriteVtbl = {

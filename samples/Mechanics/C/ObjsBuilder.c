@@ -14,7 +14,7 @@
 static int hardwareAccelerationAvailable = SDL_RENDERER_SOFTWARE;
 Sprite* g_objects[] = {
     &FlexButton_Ctor(                                           /* pushButton */
-        P( { 0.12037436608572989, 0.781722833562586, 0.022938418666529032, 0.027533292960755917 } )/* m_iniRect */,
+        P( { 0.056028795455243065, 0.8271639811357832, 0.022938418666529032, 0.027533292960755917 } )/* m_iniRect */,
         P( "pushButton" )                                       /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 1 )                                                  /* m_valueMax */,
@@ -22,10 +22,25 @@ Sprite* g_objects[] = {
         P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
         P( null )                                               /* m_buttonListeners */
     ),
-    &PhxSprite_Ctor(                                            /* phxItem */
-        P( { 0.2837988826815642, 0.266162310866575, 0.24581005586592172, 0.234525447042641 } )/* m_iniRect */,
-        P( "phxItem" )                                          /* m_name */,
-        P( "M 43.030393,62.006529 34.2105,74.835466 41.694047,89.53529 61.739261,93.009796 74.568197,81.517206 57.195677,84.1899 45.70309,78.844509 48.108515,66.282842 Z" )/* m_imgPath */
+    &PhxSprite_Ctor(                                            /* craneArmRight */
+        P( { 0.33629938749411054, 0.22794081090118218, 0.08760853469744906, 0.1594769725394011 } )/* m_iniRect */,
+        P( "craneArmRight" )                                    /* m_name */,
+        P( "m 87.387408,61.226632 12.742612,-14.34927 -1.269532,-3.407688 -4.74404,0.200452 -14.16528,17.038432 14.16529,13.56393 6.815372,-1.469985 -4.409952,-1.937702 z" )/* m_imgPath */
+    ),
+    &PhxSprite_Ctor(                                            /* craneArmLeft */
+        P( { 0.2363306660754091, 0.22832197793520542, 0.08760853469744906, 0.1594769725394011 } )/* m_iniRect */,
+        P( "craneArmLeft" )                                     /* m_name */,
+        P( "m 121.85539,61.455525 -12.74261,-14.34927 1.26953,-3.407688 4.74404,0.200452 14.16528,17.038432 -14.16529,13.56393 -6.81537,-1.469985 4.40995,-1.937702 z" )/* m_imgPath */
+    ),
+    &PhxSprite_Ctor(                                            /* craneArmMain */
+        P( { 0.2672925022469108, 0.10173991540236522, 0.12460119808844317, 0.20302262533425228 } )/* m_iniRect */,
+        P( "craneArmMain" )                                     /* m_name */,
+        P( "" )                                                 /* m_imgPath */
+    ),
+    &PhxSprite_Ctor(                                            /* prize0 */
+        P( { 0.27433968539290254, 0.462930287376547, 0.0945993813962704, 0.16810294824414587 } )/* m_iniRect */,
+        P( "prize0" )                                           /* m_name */,
+        P( "m 99.023359,86.72896 4.944481,-1.00226 4.81086,0.668174 2.00452,-2.271792 4.14268,1.002263 0.60135,3.942225 -2.00452,1.804069 2.6727,7.149458 -2.73952,5.479023 5.47903,7.34992 v 2.60588 l -2.20497,0.66816 -4.47677,-2.80632 0.26727,8.68626 -1.46998,3.94222 -2.33861,0.0668 -3.67496,-5.87993 -2.40542,6.34765 -2.806332,0.26727 -2.472242,-5.74629 -0.534541,-6.74856 -3.674956,2.6727 -2.071339,-0.26727 -0.467722,-2.6727 5.545844,-7.95127 -3.474504,-5.078118 1.870885,-7.617183 -2.405425,-1.804069 1.202713,-3.942225 3.808591,-0.734992 z" )/* m_imgPath */
     )
 };
 Sprite* getobj( int id ){
