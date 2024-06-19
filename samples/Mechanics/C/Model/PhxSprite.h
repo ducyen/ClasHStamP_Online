@@ -9,13 +9,14 @@ typedef struct tagPhxSprite PhxSprite;
 /** @memberof PhxSprite
  * @brief PhxSprite auto-generated constructor
  */
-#define PhxSprite_Init(_m_iniRect, _m_name, _m_imgPath, _m_mass)\
+#define PhxSprite_Init(_m_iniRect, _m_name, _m_imgPath, _m_verts, _m_mass)\
     Sprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ) )\
     .vTbl = &gPhxSpriteVtbl,\
+    .m_verts = _m_verts,\
     .m_mass = _m_mass,\
 
-#define PhxSprite_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_mass )    ( PhxSprite ){ \
-    PhxSprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_mass ) ) \
+#define PhxSprite_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_verts, _m_mass )    ( PhxSprite ){ \
+    PhxSprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_verts ), P( _m_mass ) ) \
 }
 extern const SpriteVtbl gPhxSpriteVtbl;
 Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource );
@@ -24,6 +25,7 @@ Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource );
  */
 #define PhxSprite_CLASS                                                                         \
     Sprite_CLASS                                                                                \
+    cpVect* m_verts;                                                                                                          \
     float m_mass;                                                                                                                \
 
 typedef struct tagPhxSprite{

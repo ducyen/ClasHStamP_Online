@@ -47,6 +47,7 @@ static void PhxSprite_free(
 
 Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource ){
     Sprite_Copy( ( Sprite* )pPhxSprite, ( Sprite* )pSource );
+    pPhxSprite->m_verts = pSource->m_verts;
     pPhxSprite->m_mass = pSource->m_mass;
     return ( Sprite* )pPhxSprite;
 }
