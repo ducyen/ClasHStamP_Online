@@ -7,6 +7,25 @@ static void PhxSprite_draw0(
     PhxSprite* pPhxSprite,
     SDL_Renderer* renderer
 ){
+    /*
+    // Get the size of the renderer
+    int width, height;
+    if (SDL_GetRendererOutputSize(renderer, &width, &height) != 0) {
+        printf("Error getting renderer size: %s\n", SDL_GetError());
+    }
+    pPrimitive->m_rect = (SDL_Rect){
+        pPrimitive->m_iniRect.x * width, 
+        pPrimitive->m_iniRect.y * height, 
+        pPrimitive->m_iniRect.w * width, 
+        pPrimitive->m_iniRect.h * height
+    };
+
+    int x1 = pPrimitive->m_rect.x;
+    int y1 = pPrimitive->m_rect.y;
+    int x2 = pPrimitive->m_rect.w;
+    int y2 = pPrimitive->m_rect.h;
+    lineRGBA( renderer, x1, y1, x2, y2, LOBYTE((lineColor)>>16), LOBYTE(((WORD)(lineColor)) >> 8), LOBYTE(lineColor), 0xFF );
+    */
 } /* PhxSprite_draw0 */
 
 /** @public @memberof PhxSprite */
@@ -29,6 +48,8 @@ static void PhxSprite_draw1(
     PhxSprite* pPhxSprite,
     SDL_Renderer* renderer
 ){
+    // Render the texture
+    SDL_RenderCopyEx(renderer, pPhxSprite->m_image, NULL, &pPhxSprite->m_rect, 0, NULL, SDL_FLIP_NONE);
 } /* PhxSprite_draw1 */
 
 /** @public @memberof PhxSprite */
@@ -36,7 +57,26 @@ static bool PhxSprite_load(
     PhxSprite* pPhxSprite,
     SDL_Renderer* renderer
 ){
-    //b2CollidePolygons
+    char sRelPath[ 256 ];
+    sprintf( sRelPath, "%s/../%s", getInputDir(), pPhxSprite->m_imgPath );
+    pPhxSprite->m_image = IMG_LoadTexture(renderer, sRelPath);
+    if (!pPhxSprite->m_image) {
+        printf("Failed to load image: %s\n", IMG_GetError());
+        return false;
+    }
+
+    int width, height;
+    // Get the size of the renderer
+    if (SDL_GetRendererOutputSize(renderer, &width, &height) != 0) {
+        printf("Error getting renderer size: %s\n", SDL_GetError());
+    }
+
+    pPhxSprite->m_rect = (SDL_Rect){
+        pPhxSprite->m_iniRect.x * width, 
+        pPhxSprite->m_iniRect.y * height, 
+        pPhxSprite->m_iniRect.w * width, 
+        pPhxSprite->m_iniRect.h * height
+    };    
 } /* PhxSprite_load */
 
 /** @public @memberof PhxSprite */
@@ -48,6 +88,7 @@ static void PhxSprite_free(
 Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource ){
     Sprite_Copy( ( Sprite* )pPhxSprite, ( Sprite* )pSource );
     pPhxSprite->m_verts = pSource->m_verts;
+    pPhxSprite->m_vertsCnt = pSource->m_vertsCnt;
     pPhxSprite->m_mass = pSource->m_mass;
     return ( Sprite* )pPhxSprite;
 }
