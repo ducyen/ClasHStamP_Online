@@ -7,25 +7,6 @@ static void PhxSprite_draw0(
     PhxSprite* pPhxSprite,
     SDL_Renderer* renderer
 ){
-    /*
-    // Get the size of the renderer
-    int width, height;
-    if (SDL_GetRendererOutputSize(renderer, &width, &height) != 0) {
-        printf("Error getting renderer size: %s\n", SDL_GetError());
-    }
-    pPrimitive->m_rect = (SDL_Rect){
-        pPrimitive->m_iniRect.x * width, 
-        pPrimitive->m_iniRect.y * height, 
-        pPrimitive->m_iniRect.w * width, 
-        pPrimitive->m_iniRect.h * height
-    };
-
-    int x1 = pPrimitive->m_rect.x;
-    int y1 = pPrimitive->m_rect.y;
-    int x2 = pPrimitive->m_rect.w;
-    int y2 = pPrimitive->m_rect.h;
-    lineRGBA( renderer, x1, y1, x2, y2, LOBYTE((lineColor)>>16), LOBYTE(((WORD)(lineColor)) >> 8), LOBYTE(lineColor), 0xFF );
-    */
 } /* PhxSprite_draw0 */
 
 /** @public @memberof PhxSprite */
@@ -59,8 +40,9 @@ static bool PhxSprite_load(
 ){
     char sRelPath[ 256 ];
     sprintf( sRelPath, "%s/../%s", getInputDir(), pPhxSprite->m_imgPath );
-    pPhxSprite->m_image = IMG_LoadTexture(renderer, sRelPath);
-    if (!pPhxSprite->m_image) {
+    // Load PNG image
+    SDL_Texture* pPngImg = IMG_LoadTexture(renderer, sRelPath);
+    if (!pPngImg) {
         printf("Failed to load image: %s\n", IMG_GetError());
         return false;
     }
@@ -76,13 +58,48 @@ static bool PhxSprite_load(
         pPhxSprite->m_iniRect.y * height, 
         pPhxSprite->m_iniRect.w * width, 
         pPhxSprite->m_iniRect.h * height
-    };    
+    };
+
+    // Query the original texture to get its width, height, and format
+    Uint32 format;
+    SDL_QueryTexture(pPngImg, &format, NULL, &width, &height);
+
+    pPhxSprite->m_image = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, width, height);
+
+    // Set the blend mode for the new texture to enable alpha blending
+    SDL_SetTextureBlendMode(pPhxSprite->m_image, SDL_BLENDMODE_BLEND);
+    // Set the render target to the buffer texture
+    SDL_SetRenderTarget(renderer, pPhxSprite->m_image);
+
+    SDL_RenderCopy( renderer, pPngImg, NULL, NULL );
+
+    cpFloat vertX = 0, vertY = 0;
+    for( int i = 0; i < pPhxSprite->m_vertsCnt; i++ ){
+        pPhxSprite->m_verts[ i ].x *= width;
+        pPhxSprite->m_verts[ i ].y *= height;
+        if( i > 0 ){
+            lineRGBA( renderer, vertX, vertY, pPhxSprite->m_verts[ i ].x , pPhxSprite->m_verts[ i ].y, 0, 0, 0, 0xFF );
+        }
+        vertX = pPhxSprite->m_verts[ i ].x;
+        vertY = pPhxSprite->m_verts[ i ].y;
+    }
+
+    // Recover render target
+    SDL_SetRenderTarget(renderer, NULL);
+
+    // Free PNG image
+    SDL_DestroyTexture(pPngImg);
+
+    return TRUE;
 } /* PhxSprite_load */
 
 /** @public @memberof PhxSprite */
 static void PhxSprite_free(
     PhxSprite* pPhxSprite
 ){
+    if (pPhxSprite->m_image) {
+        SDL_DestroyTexture(pPhxSprite->m_image);
+    }
 } /* PhxSprite_free */
 
 Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource ){
