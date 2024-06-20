@@ -2,6 +2,7 @@
 #define __PhxSprite_INTERNAL__
 #include "CommonInclude.h"
 #include "PhxSprite.h"
+#include "ObjsBuilder.h"
 /** @public @memberof PhxSprite */
 static void PhxSprite_draw0(
     PhxSprite* pPhxSprite,
@@ -30,7 +31,12 @@ static void PhxSprite_draw1(
     SDL_Renderer* renderer
 ){
     // Render the texture
-    SDL_RenderCopyEx(renderer, pPhxSprite->m_image, NULL, &pPhxSprite->m_rect, 0, NULL, SDL_FLIP_NONE);
+    cpVect pos = cpBodyGetPosition(pPhxSprite->m_body);
+    cpFloat angle = cpBodyGetAngle(pPhxSprite->m_body);
+    SDL_Rect rect = pPhxSprite->m_rect;
+    rect.x = pPhxSprite->m_rect.x + pos.x;
+    rect.y = pPhxSprite->m_rect.y + pos.y;
+    SDL_RenderCopyEx(renderer, pPhxSprite->m_image, NULL, &rect, angle, NULL, SDL_FLIP_NONE);
 } /* PhxSprite_draw1 */
 
 /** @public @memberof PhxSprite */
@@ -89,6 +95,12 @@ static bool PhxSprite_load(
 
     // Free PNG image
     SDL_DestroyTexture(pPngImg);
+    
+    // Set physic information
+    cpFloat moment = cpMomentForPoly(pPhxSprite->m_mass, pPhxSprite->m_vertsCnt, pPhxSprite->m_verts, cpvzero, 0.0);
+    cpSpace* space = ObjsBuilder_getPhxSpace();
+    pPhxSprite->m_body = cpSpaceAddBody(space, cpBodyNew(pPhxSprite->m_mass, moment));
+    pPhxSprite->m_shape = cpSpaceAddShape(space, cpPolyShapeNew(pPhxSprite->m_body, pPhxSprite->m_vertsCnt, pPhxSprite->m_verts, cpTransformIdentity, 0.0) );
 
     return TRUE;
 } /* PhxSprite_load */
@@ -100,6 +112,8 @@ static void PhxSprite_free(
     if (pPhxSprite->m_image) {
         SDL_DestroyTexture(pPhxSprite->m_image);
     }
+    cpShapeFree(pPhxSprite->m_shape);
+    cpBodyFree(pPhxSprite->m_body);    
 } /* PhxSprite_free */
 
 Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource ){
@@ -107,6 +121,8 @@ Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource ){
     pPhxSprite->m_verts = pSource->m_verts;
     pPhxSprite->m_vertsCnt = pSource->m_vertsCnt;
     pPhxSprite->m_mass = pSource->m_mass;
+    pPhxSprite->m_body = pSource->m_body;
+    pPhxSprite->m_shape = pSource->m_shape;
     return ( Sprite* )pPhxSprite;
 }
 const SpriteVtbl gPhxSpriteVtbl = {

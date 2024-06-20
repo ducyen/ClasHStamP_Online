@@ -15,6 +15,7 @@
         "stdarg.h": "c",
         "b2_api.h": "c",
         "chipmunk.h": "c",
-        "cpshape.h": "c"
+        "cpshape.h": "c",
+        "phxsprite.h": "c"
     }
 }
