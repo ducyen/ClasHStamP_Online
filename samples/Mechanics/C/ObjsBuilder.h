@@ -6,12 +6,6 @@ extern Sprite* g_objects[];
 enum {
 #define pushButton              ( g_objects[ _pushButton ] )
     _pushButton,
-#define craneArmRight           ( g_objects[ _craneArmRight ] )
-    _craneArmRight,
-#define craneArmLeft            ( g_objects[ _craneArmLeft ] )
-    _craneArmLeft,
-#define craneArmMain            ( g_objects[ _craneArmMain ] )
-    _craneArmMain,
 #define prize0                  ( g_objects[ _prize0 ] )
     _prize0
 };

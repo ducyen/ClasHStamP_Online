@@ -2,7 +2,7 @@
 #define __PhxSprite_INTERNAL__
 #include "CommonInclude.h"
 #include "PhxSprite.h"
-#include "ObjsBuilder.h"
+#include "ObjsBuilder.h"                                        
 /** @public @memberof PhxSprite */
 static void PhxSprite_draw0(
     PhxSprite* pPhxSprite,
@@ -30,13 +30,22 @@ static void PhxSprite_draw1(
     PhxSprite* pPhxSprite,
     SDL_Renderer* renderer
 ){
+    // Get the size of the renderer
+    int SCREEN_WIDTH, SCREEN_HEIGHT;
+    if (SDL_GetRendererOutputSize(renderer, &SCREEN_WIDTH, &SCREEN_HEIGHT) != 0) {
+        printf("Error getting renderer size: %s\n", SDL_GetError());
+    }
+
     // Render the texture
     cpVect pos = cpBodyGetPosition(pPhxSprite->m_body);
     cpFloat angle = cpBodyGetAngle(pPhxSprite->m_body);
+    double degrees = -angle * (180.0 / M_PI); // Convert radians to degrees
+    //cpBB bb = cpShapeCacheBB( pPhxSprite->m_shape );
+    //SDL_Rect rect = ( SDL_Rect ){ .x = bb.l, .y = SCREEN_HEIGHT - bb.t, .w = bb.r - bb.l, .h = bb.t - bb.b };
     SDL_Rect rect = pPhxSprite->m_rect;
-    rect.x = pPhxSprite->m_rect.x + pos.x;
-    rect.y = pPhxSprite->m_rect.y + pos.y;
-    SDL_RenderCopyEx(renderer, pPhxSprite->m_image, NULL, &rect, angle, NULL, SDL_FLIP_NONE);
+    rect.x = pos.x;
+    rect.y = ( SCREEN_HEIGHT - (pos.y + pPhxSprite->m_rect.h) );
+    SDL_RenderCopyEx(renderer, pPhxSprite->m_image, NULL, &rect, degrees, NULL, SDL_FLIP_NONE);
 } /* PhxSprite_draw1 */
 
 /** @public @memberof PhxSprite */
@@ -53,21 +62,22 @@ static bool PhxSprite_load(
         return false;
     }
 
-    int width, height;
     // Get the size of the renderer
-    if (SDL_GetRendererOutputSize(renderer, &width, &height) != 0) {
+    int SCREEN_WIDTH, SCREEN_HEIGHT;
+    if (SDL_GetRendererOutputSize(renderer, &SCREEN_WIDTH, &SCREEN_HEIGHT) != 0) {
         printf("Error getting renderer size: %s\n", SDL_GetError());
     }
 
     pPhxSprite->m_rect = (SDL_Rect){
-        pPhxSprite->m_iniRect.x * width, 
-        pPhxSprite->m_iniRect.y * height, 
-        pPhxSprite->m_iniRect.w * width, 
-        pPhxSprite->m_iniRect.h * height
+        pPhxSprite->m_iniRect.x * SCREEN_WIDTH, 
+        pPhxSprite->m_iniRect.y * SCREEN_HEIGHT, 
+        pPhxSprite->m_iniRect.w * SCREEN_WIDTH, 
+        pPhxSprite->m_iniRect.h * SCREEN_HEIGHT
     };
 
     // Query the original texture to get its width, height, and format
     Uint32 format;
+    int width, height;
     SDL_QueryTexture(pPngImg, &format, NULL, &width, &height);
 
     pPhxSprite->m_image = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, width, height);
@@ -77,17 +87,12 @@ static bool PhxSprite_load(
     // Set the render target to the buffer texture
     SDL_SetRenderTarget(renderer, pPhxSprite->m_image);
 
-    SDL_RenderCopy( renderer, pPngImg, NULL, NULL );
+    //SDL_RenderCopy( renderer, pPngImg, NULL, NULL );
 
-    cpFloat vertX = 0, vertY = 0;
     for( int i = 0; i < pPhxSprite->m_vertsCnt; i++ ){
         pPhxSprite->m_verts[ i ].x *= width;
-        pPhxSprite->m_verts[ i ].y *= height;
-        if( i > 0 ){
-            lineRGBA( renderer, vertX, vertY, pPhxSprite->m_verts[ i ].x , pPhxSprite->m_verts[ i ].y, 0, 0, 0, 0xFF );
-        }
-        vertX = pPhxSprite->m_verts[ i ].x;
-        vertY = pPhxSprite->m_verts[ i ].y;
+        pPhxSprite->m_verts[ i ].y = height - pPhxSprite->m_verts[ i ].y * height ;
+        circleRGBA( renderer, pPhxSprite->m_verts[ i ].x , height - pPhxSprite->m_verts[ i ].y, 1, 0, 0, 0, 0xFF );
     }
 
     // Recover render target
@@ -100,8 +105,10 @@ static bool PhxSprite_load(
     cpFloat moment = cpMomentForPoly(pPhxSprite->m_mass, pPhxSprite->m_vertsCnt, pPhxSprite->m_verts, cpvzero, 0.0);
     cpSpace* space = ObjsBuilder_getPhxSpace();
     pPhxSprite->m_body = cpSpaceAddBody(space, cpBodyNew(pPhxSprite->m_mass, moment));
-    pPhxSprite->m_shape = cpSpaceAddShape(space, cpPolyShapeNew(pPhxSprite->m_body, pPhxSprite->m_vertsCnt, pPhxSprite->m_verts, cpTransformIdentity, 0.0) );
+    cpBodySetPosition(pPhxSprite->m_body, cpv(pPhxSprite->m_rect.x, SCREEN_HEIGHT - (pPhxSprite->m_rect.y + pPhxSprite->m_rect.h)));
 
+    pPhxSprite->m_shape = cpSpaceAddShape(space, cpPolyShapeNew(pPhxSprite->m_body, pPhxSprite->m_vertsCnt, pPhxSprite->m_verts, cpTransformIdentity, 0.0) );
+    cpShapeSetFriction(pPhxSprite->m_shape, 0.7);
     return TRUE;
 } /* PhxSprite_load */
 
@@ -120,6 +127,7 @@ Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource ){
     Sprite_Copy( ( Sprite* )pPhxSprite, ( Sprite* )pSource );
     pPhxSprite->m_verts = pSource->m_verts;
     pPhxSprite->m_vertsCnt = pSource->m_vertsCnt;
+    pPhxSprite->m_center = pSource->m_center;
     pPhxSprite->m_mass = pSource->m_mass;
     pPhxSprite->m_body = pSource->m_body;
     pPhxSprite->m_shape = pSource->m_shape;

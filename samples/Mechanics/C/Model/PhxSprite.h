@@ -9,17 +9,18 @@ typedef struct tagPhxSprite PhxSprite;
 /** @memberof PhxSprite
  * @brief PhxSprite auto-generated constructor
  */
-#define PhxSprite_Init(_m_iniRect, _m_name, _m_imgPath, _m_verts, _m_vertsCnt, _m_mass)\
+#define PhxSprite_Init(_m_iniRect, _m_name, _m_imgPath, _m_verts, _m_vertsCnt, _m_center, _m_mass)\
     Sprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ) )\
     .vTbl = &gPhxSpriteVtbl,\
     .m_verts = _m_verts,\
     .m_vertsCnt = _m_vertsCnt,\
+    .m_center = _m_center,\
     .m_mass = _m_mass,\
     .m_body = null,\
     .m_shape = null,\
 
-#define PhxSprite_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_verts, _m_vertsCnt, _m_mass )    ( PhxSprite ){ \
-    PhxSprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_verts ), P( _m_vertsCnt ), P( _m_mass ) ) \
+#define PhxSprite_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_verts, _m_vertsCnt, _m_center, _m_mass )    ( PhxSprite ){ \
+    PhxSprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_verts ), P( _m_vertsCnt ), P( _m_center ), P( _m_mass ) ) \
 }
 extern const SpriteVtbl gPhxSpriteVtbl;
 Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource );
@@ -30,6 +31,7 @@ Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource );
     Sprite_CLASS                                                                                \
     cpVect* m_verts;                                                                                                          \
     int m_vertsCnt;                                                                                                            \
+    cpVect m_center;                                                                                                          \
     float m_mass;                                                                                                                \
     cpBody* m_body;                                                                                                            \
     cpShape* m_shape;                                                                                                        \
