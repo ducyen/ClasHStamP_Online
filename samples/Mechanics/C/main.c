@@ -19,7 +19,7 @@ const char* getInputDir( void ) { return g_sInputDir; }
 static char* g_sOutputDir = "../TransImg/Design";
 const char* getOutputDir( void ) { return g_sOutputDir; }
 
-#if 0
+#if 1
 int main(int argc, char **argv){
     printf("Number of arguments (argc): %d\n", argc);
     for (int i = 0; i < argc; i++) {

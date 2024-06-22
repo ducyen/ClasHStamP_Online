@@ -43,9 +43,11 @@ static void PhxSprite_draw1(
     //cpBB bb = cpShapeCacheBB( pPhxSprite->m_shape );
     //SDL_Rect rect = ( SDL_Rect ){ .x = bb.l, .y = SCREEN_HEIGHT - bb.t, .w = bb.r - bb.l, .h = bb.t - bb.b };
     SDL_Rect rect = pPhxSprite->m_rect;
-    rect.x = pos.x;
-    rect.y = ( SCREEN_HEIGHT - (pos.y + pPhxSprite->m_rect.h) );
-    SDL_RenderCopyEx(renderer, pPhxSprite->m_image, NULL, &rect, degrees, NULL, SDL_FLIP_NONE);
+    rect.x = pos.x - pPhxSprite->m_center.x;
+    rect.y = SCREEN_HEIGHT - pos.y - pPhxSprite->m_center.y;
+
+    SDL_Point center = { pPhxSprite->m_center.x, pPhxSprite->m_center.y };
+    SDL_RenderCopyEx(renderer, pPhxSprite->m_image, NULL, &rect, degrees, &center, SDL_FLIP_NONE);
 } /* PhxSprite_draw1 */
 
 /** @public @memberof PhxSprite */
@@ -76,11 +78,19 @@ static bool PhxSprite_load(
     };
 
     // Query the original texture to get its width, height, and format
-    Uint32 format;
-    int width, height;
-    SDL_QueryTexture(pPngImg, &format, NULL, &width, &height);
+    // Uint32 format;
+    int textureWidth = pPhxSprite->m_rect.w;
+    int textureHeight = pPhxSprite->m_rect.h;
+    // SDL_QueryTexture(pPngImg, &format, NULL, &textureWidth, &textureHeight);
 
-    pPhxSprite->m_image = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, width, height);
+    pPhxSprite->m_image = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, textureWidth, textureHeight);
+
+    pPhxSprite->m_center.x *= (double)textureWidth;
+    pPhxSprite->m_center.y = pPhxSprite->m_center.y * (double)textureHeight;
+    for (int i = 0; i < pPhxSprite->m_vertsCnt; i++) {
+        pPhxSprite->m_verts[ i ].x *= (double)textureWidth;
+        pPhxSprite->m_verts[ i ].y = -pPhxSprite->m_verts[ i ].y * textureHeight;
+    }
 
     // Set the blend mode for the new texture to enable alpha blending
     SDL_SetTextureBlendMode(pPhxSprite->m_image, SDL_BLENDMODE_BLEND);
@@ -89,11 +99,27 @@ static bool PhxSprite_load(
 
     //SDL_RenderCopy( renderer, pPngImg, NULL, NULL );
 
+#if 1
+    // Draw the polygon on the texture
+    for (int i = 0; i < pPhxSprite->m_vertsCnt; i++) {
+        cpVect v1 = pPhxSprite->m_verts[i];
+        cpVect v2 = pPhxSprite->m_verts[(i + 1) % pPhxSprite->m_vertsCnt];
+
+        // Convert polygon coordinates to texture coordinates
+        int x1 = (int)(v1.x + pPhxSprite->m_center.x);
+        int y1 = (int)(pPhxSprite->m_center.y - v1.y);
+        int x2 = (int)(v2.x + pPhxSprite->m_center.x);
+        int y2 = (int)(pPhxSprite->m_center.y - v2.y);
+
+        lineRGBA(renderer, x1, y1, x2, y2, 0, 0, 0, 255);
+    }
+#else
     for( int i = 0; i < pPhxSprite->m_vertsCnt; i++ ){
         pPhxSprite->m_verts[ i ].x *= width;
         pPhxSprite->m_verts[ i ].y = height - pPhxSprite->m_verts[ i ].y * height ;
         circleRGBA( renderer, pPhxSprite->m_verts[ i ].x , height - pPhxSprite->m_verts[ i ].y, 1, 0, 0, 0, 0xFF );
     }
+#endif
 
     // Recover render target
     SDL_SetRenderTarget(renderer, NULL);
@@ -105,7 +131,8 @@ static bool PhxSprite_load(
     cpFloat moment = cpMomentForPoly(pPhxSprite->m_mass, pPhxSprite->m_vertsCnt, pPhxSprite->m_verts, cpvzero, 0.0);
     cpSpace* space = ObjsBuilder_getPhxSpace();
     pPhxSprite->m_body = cpSpaceAddBody(space, cpBodyNew(pPhxSprite->m_mass, moment));
-    cpBodySetPosition(pPhxSprite->m_body, cpv(pPhxSprite->m_rect.x, SCREEN_HEIGHT - (pPhxSprite->m_rect.y + pPhxSprite->m_rect.h)));
+    cpBodySetPosition(pPhxSprite->m_body, cpv(pPhxSprite->m_rect.x + pPhxSprite->m_center.x, 
+        SCREEN_HEIGHT - (pPhxSprite->m_rect.y + pPhxSprite->m_center.y)));
 
     pPhxSprite->m_shape = cpSpaceAddShape(space, cpPolyShapeNew(pPhxSprite->m_body, pPhxSprite->m_vertsCnt, pPhxSprite->m_verts, cpTransformIdentity, 0.0) );
     cpShapeSetFriction(pPhxSprite->m_shape, 0.7);
