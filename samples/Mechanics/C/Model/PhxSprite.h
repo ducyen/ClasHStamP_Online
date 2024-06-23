@@ -18,6 +18,7 @@ typedef struct tagPhxSprite PhxSprite;
     .m_mass = _m_mass,\
     .m_body = null,\
     .m_shape = null,\
+    .m_decomposedPolygons = null,\
 
 #define PhxSprite_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_verts, _m_vertsCnt, _m_center, _m_mass )    ( PhxSprite ){ \
     PhxSprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_verts ), P( _m_vertsCnt ), P( _m_center ), P( _m_mass ) ) \

@@ -7,7 +7,17 @@ enum {
 #define pushButton              ( g_objects[ _pushButton ] )
     _pushButton,
 #define prize0                  ( g_objects[ _prize0 ] )
-    _prize0
+    _prize0,
+#define prize1                  ( g_objects[ _prize1 ] )
+    _prize1,
+#define prize2                  ( g_objects[ _prize2 ] )
+    _prize2,
+#define arm_main                ( g_objects[ _arm_main ] )
+    _arm_main,
+#define arm_right               ( g_objects[ _arm_right ] )
+    _arm_right,
+#define arm_left                ( g_objects[ _arm_left ] )
+    _arm_left
 };
 int ObjsBuilder_startSim( void   );
 void ObjsBuilder_showEntry( void* pObj, void* pStm_, char* pMsg );
