@@ -102,6 +102,13 @@ typedef enum{
     MDD_EVENT_TYPE_MAX
 }MDD_EventType;
 
+typedef struct Polygon {
+    cpVect *vertices;
+    int vertexCount;
+    cpShape* shape;
+    struct Polygon *next;
+} Polygon;
+
 const char* getInputDir( void );
 const char* getOutputDir( void );
 
@@ -111,5 +118,8 @@ void ResetActionCounter( void );
 void ObjsBuilder_showEntry( void*, void*, char* );
 void ObjsBuilder_showExit( void*, void*, char* );
 void ObjsBuilder_showDoing( void*, void*, char* );
+
+Polygon* decomposeConcavePolygon(cpVect *vertices, int vertexCount);
+void freePolygons(Polygon *polygons);
 
 #endif//__COMMON_INCLUDE_H__

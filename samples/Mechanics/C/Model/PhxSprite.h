@@ -35,6 +35,7 @@ Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource );
     float m_mass;                                                                                                                \
     cpBody* m_body;                                                                                                            \
     cpShape* m_shape;                                                                                                        \
+    Polygon* m_decomposedPolygons;                                                                              \
 
 typedef struct tagPhxSprite{
     PhxSprite_CLASS    

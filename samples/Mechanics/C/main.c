@@ -19,7 +19,6 @@ const char* getInputDir( void ) { return g_sInputDir; }
 static char* g_sOutputDir = "../TransImg/Design";
 const char* getOutputDir( void ) { return g_sOutputDir; }
 
-#if 1
 int main(int argc, char **argv){
     printf("Number of arguments (argc): %d\n", argc);
     for (int i = 0; i < argc; i++) {
@@ -32,93 +31,155 @@ int main(int argc, char **argv){
     }
     return ObjsBuilder_startSim();
 }
-#elif 0
-#include <SDL2/SDL.h>
-#include <GLES2/gl2.h>
-#include <stdio.h>
-
-void PrintOpenGLInfo() {
-    const GLubyte *renderer = glGetString(GL_RENDERER);
-    const GLubyte *version = glGetString(GL_VERSION);
-    printf("Renderer: %s\n", renderer);
-    printf("OpenGL version supported %s\n", version);
-}
-
-int main(int argc, char *argv[]) {
-    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-        printf("SDL_Init Error: %s\n", SDL_GetError());
-        return 1;
-    }
-
-    // Try to set OpenGL ES attributes
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-
-    SDL_Window *window = SDL_CreateWindow("OpenGL Info", 100, 100, 800, 600, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
-    if (window == NULL) {
-        printf("SDL_CreateWindow Error: %s\n", SDL_GetError());
-        SDL_Quit();
-        return 1;
-    }
-
-    SDL_GLContext glContext = SDL_GL_CreateContext(window);
-    if (glContext == NULL) {
-        printf("SDL_GL_CreateContext (OpenGL ES) Error: %s\n", SDL_GetError());
-        printf("Falling back to standard OpenGL context.\n");
-
-        // Reset attributes for standard OpenGL
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-
-        glContext = SDL_GL_CreateContext(window);
-        if (glContext == NULL) {
-            printf("SDL_GL_CreateContext (OpenGL) Error: %s\n", SDL_GetError());
-            SDL_DestroyWindow(window);
-            SDL_Quit();
-            return 1;
-        }
-    }
-
-    PrintOpenGLInfo();
-
-    SDL_GL_DeleteContext(glContext);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
-
-    return 0;
-}
-
-#else
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <chipmunk/chipmunk.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
 #include <math.h>
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
-
 const int SPRITE_WIDTH = 100;
-const int SPRITE_HEIGHT = 100;
+const int SPRITE_HEIGHT = 200;
+
+double crossProduct(cpVect a, cpVect b) {
+    return a.x * b.y - a.y * b.x;
+}
+
+bool isConvex(cpVect prev, cpVect current, cpVect next) {
+    cpVect edge1 = cpvsub(current, prev);
+    cpVect edge2 = cpvsub(next, current);
+    double crossProductValue = crossProduct(edge1, edge2);
+    return crossProductValue > 0;
+}
+
+bool isPointInTriangle(cpVect p, cpVect a, cpVect b, cpVect c) {
+    double areaOrig = fabs(crossProduct(cpvsub(b, a), cpvsub(c, a)));
+    double area1 = fabs(crossProduct(cpvsub(a, p), cpvsub(b, p)));
+    double area2 = fabs(crossProduct(cpvsub(b, p), cpvsub(c, p)));
+    double area3 = fabs(crossProduct(cpvsub(c, p), cpvsub(a, p)));
+    return (area1 + area2 + area3 <= areaOrig);
+}
+
+bool isEar(cpVect *polygon, int vertexCount, int i) {
+    int prevIndex = (i == 0) ? vertexCount - 1 : i - 1;
+    int nextIndex = (i == vertexCount - 1) ? 0 : i + 1;
+
+    cpVect prev = polygon[prevIndex];
+    cpVect current = polygon[i];
+    cpVect next = polygon[nextIndex];
+
+    if (!isConvex(prev, current, next)) {
+        return false;
+    }
+
+    for (int j = 0; j < vertexCount; j++) {
+        if (j == prevIndex || j == i || j == nextIndex) {
+            continue;
+        }
+        if (isPointInTriangle(polygon[j], prev, current, next)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool isPolygonConvex(cpVect *vertices, int vertexCount) {
+    for (int i = 0; i < vertexCount; i++) {
+        int prevIndex = (i == 0) ? vertexCount - 1 : i - 1;
+        int nextIndex = (i == vertexCount - 1) ? 0 : i + 1;
+
+        if (!isConvex(vertices[prevIndex], vertices[i], vertices[nextIndex])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+Polygon* decomposeConcavePolygon(cpVect *vertices, int vertexCount) {
+    if (isPolygonConvex(vertices, vertexCount)) {
+        Polygon *polygon = malloc(sizeof(Polygon));
+        polygon->vertices = malloc(vertexCount * sizeof(cpVect));
+        memcpy(polygon->vertices, vertices, vertexCount * sizeof(cpVect));
+        polygon->vertexCount = vertexCount;
+        polygon->next = NULL;
+        return polygon;
+    }
+
+    Polygon *result = NULL;
+    Polygon *last = NULL;
+    cpVect *polygon = malloc(vertexCount * sizeof(cpVect));
+    memcpy(polygon, vertices, vertexCount * sizeof(cpVect));
+
+    while (vertexCount > 3) {
+        bool earFound = false;
+        for (int i = 0; i < vertexCount; i++) {
+            if (isEar(polygon, vertexCount, i)) {
+                Polygon *ear = malloc(sizeof(Polygon));
+                ear->vertices = malloc(3 * sizeof(cpVect));
+                ear->vertexCount = 3;
+                ear->vertices[0] = polygon[(i == 0) ? vertexCount - 1 : i - 1];
+                ear->vertices[1] = polygon[i];
+                ear->vertices[2] = polygon[(i == vertexCount - 1) ? 0 : i + 1];
+                ear->next = NULL;
+
+                if (last == NULL) {
+                    result = ear;
+                } else {
+                    last->next = ear;
+                }
+                last = ear;
+
+                for (int j = i; j < vertexCount - 1; j++) {
+                    polygon[j] = polygon[j + 1];
+                }
+                vertexCount--;
+                earFound = true;
+                break;
+            }
+        }
+        if (!earFound) {
+            free(polygon);
+            while (result != NULL) {
+                Polygon *temp = result;
+                result = result->next;
+                free(temp->vertices);
+                free(temp);
+            }
+            return NULL;
+        }
+    }
+
+    Polygon *finalPolygon = malloc(sizeof(Polygon));
+    finalPolygon->vertices = malloc(vertexCount * sizeof(cpVect));
+    memcpy(finalPolygon->vertices, polygon, vertexCount * sizeof(cpVect));
+    finalPolygon->vertexCount = vertexCount;
+    finalPolygon->next = NULL;
+
+    if (last == NULL) {
+        result = finalPolygon;
+    } else {
+        last->next = finalPolygon;
+    }
+
+    free(polygon);
+    return result;
+}
 
 void DrawPolygonToTexture(SDL_Renderer *renderer, SDL_Texture *texture, cpVect *vertices, int vertexCount, int textureWidth, int textureHeight) {
-    // Set render target to the texture
     SDL_SetRenderTarget(renderer, texture);
-
-    // Clear the texture
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
 
-    // Draw the polygon on the texture
     for (int i = 0; i < vertexCount; i++) {
         cpVect v1 = vertices[i];
         cpVect v2 = vertices[(i + 1) % vertexCount];
 
-        // Convert polygon coordinates to texture coordinates
         int x1 = (int)(v1.x + textureWidth / 2);
         int y1 = (int)(textureHeight / 2 - v1.y);
         int x2 = (int)(v2.x + textureWidth / 2);
@@ -127,18 +188,17 @@ void DrawPolygonToTexture(SDL_Renderer *renderer, SDL_Texture *texture, cpVect *
         lineRGBA(renderer, x1, y1, x2, y2, 255, 255, 255, 255);
     }
 
-    // Reset render target to default (the screen)
     SDL_SetRenderTarget(renderer, NULL);
 }
 
 void DrawSprite(SDL_Renderer *renderer, SDL_Texture *texture, cpBody *body) {
     cpVect pos = cpBodyGetPosition(body);
     cpFloat angle = cpBodyGetAngle(body);
-    float degrees = -angle * (180.0 / M_PI); // Convert radians to degrees and invert the angle
+    float degrees = -angle * (180.0 / M_PI);
 
     SDL_Rect dstrect;
-    dstrect.x = (int)pos.x - SPRITE_WIDTH / 2; // Center the texture horizontally
-    dstrect.y = (int)(SCREEN_HEIGHT - pos.y - SPRITE_HEIGHT / 2); // Convert y-coordinate and center the texture vertically
+    dstrect.x = (int)pos.x - SPRITE_WIDTH / 2;
+    dstrect.y = (int)(SCREEN_HEIGHT - pos.y - SPRITE_HEIGHT / 2);
     dstrect.w = SPRITE_WIDTH;
     dstrect.h = SPRITE_HEIGHT;
 
@@ -147,32 +207,72 @@ void DrawSprite(SDL_Renderer *renderer, SDL_Texture *texture, cpBody *body) {
     SDL_RenderCopyEx(renderer, texture, NULL, &dstrect, degrees, &center, SDL_FLIP_NONE);
 }
 
-int main(int argc, char *argv[]) {
+bool InitializeSDL(SDL_Window **window, SDL_Renderer **renderer) {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         printf("SDL_Init Error: %s\n", SDL_GetError());
-        return 1;
+        return false;
     }
 
-    SDL_Window *window = SDL_CreateWindow("Chipmunk2D with SDL2 - Polygon Shape", 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    if (window == NULL) {
+    *window = SDL_CreateWindow("Chipmunk2D with SDL2 - Polygon Shape", 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    if (*window == NULL) {
         printf("SDL_CreateWindow Error: %s\n", SDL_GetError());
         SDL_Quit();
-        return 1;
+        return false;
     }
 
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (renderer == NULL) {
-        SDL_DestroyWindow(window);
+    *renderer = SDL_CreateRenderer(*window, -1, SDL_RENDERER_ACCELERATED);
+    if (*renderer == NULL) {
         printf("SDL_CreateRenderer Error: %s\n", SDL_GetError());
+        SDL_DestroyWindow(*window);
         SDL_Quit();
-        return 1;
+        return false;
     }
 
     if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
         printf("IMG_Init Error: %s\n", IMG_GetError());
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
+        SDL_DestroyRenderer(*renderer);
+        SDL_DestroyWindow(*window);
         SDL_Quit();
+        return false;
+    }
+
+    return true;
+}
+
+void Cleanup(SDL_Window *window, SDL_Renderer *renderer) {
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    IMG_Quit();
+    SDL_Quit();
+}
+
+void printPolygons(Polygon *polygons) {
+    Polygon *current = polygons;
+    while (current != NULL) {
+        printf("Polygon:\n");
+        for (int i = 0; i < current->vertexCount; i++) {
+            printf("  (%f, %f)\n", current->vertices[i].x, current->vertices[i].y);
+        }
+        current = current->next;
+    }
+}
+
+void freePolygons(Polygon *polygons) {
+    while (polygons != NULL) {
+        Polygon *temp = polygons;
+        polygons = polygons->next;
+        free(temp->vertices);
+        cpShapeFree(temp->shape);
+        free(temp);
+    }
+}
+
+#if 0
+int main(int argc, char *argv[]) {
+    SDL_Window *window = NULL;
+    SDL_Renderer *renderer = NULL;
+
+    if (!InitializeSDL(&window, &renderer)) {
         return 1;
     }
 
@@ -180,45 +280,66 @@ int main(int argc, char *argv[]) {
     cpSpace *space = cpSpaceNew();
     cpSpaceSetGravity(space, gravity);
 
-    // Ground
     cpShape *ground = cpSpaceAddShape(space, cpSegmentShapeNew(cpSpaceGetStaticBody(space), cpv(0, 50), cpv(SCREEN_WIDTH, 50), 0));
     cpShapeSetFriction(ground, 1.0);
 
-    // Custom polygon (triangle)
-    cpVect vertices[] = {
+    cpVect concaveVertices[] = {
         cpv(-50, -50),
-        cpv(-50, 50),
-        cpv(50, 50)
+        cpv(10, -0),
+        cpv(50, -40),
+        cpv(0, 100)
     };
-    int vertexCount = sizeof(vertices) / sizeof(vertices[0]);
+    int concaveVertexCount = sizeof(concaveVertices) / sizeof(concaveVertices[0]);
 
-    cpFloat mass = 1.0;
-    cpFloat moment = cpMomentForPoly(mass, vertexCount, vertices, cpvzero, 0.0);
-    cpBody *polygonBody = cpSpaceAddBody(space, cpBodyNew(mass, moment));
-    cpBodySetPosition(polygonBody, cpv(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
+    Polygon *decomposedPolygons = decomposeConcavePolygon(concaveVertices, concaveVertexCount);
 
-    cpFloat radius = 0.0; // Set radius for rounded edges
-    cpShape *polygonShape = cpSpaceAddShape(space, cpPolyShapeNew(polygonBody, vertexCount, vertices, cpTransformIdentity, radius));
-    cpShapeSetFriction(polygonShape, 0.7);
-
-    // Create a texture for the polygon
-    SDL_Texture *polygonTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SPRITE_WIDTH, SPRITE_HEIGHT);
-    if (polygonTexture == NULL) {
-        printf("SDL_CreateTexture Error: %s\n", SDL_GetError());
-        cpShapeFree(polygonShape);
-        cpBodyFree(polygonBody);
-        cpShapeFree(ground);
-        cpSpaceFree(space);
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        IMG_Quit();
-        SDL_Quit();
+    if (decomposedPolygons == NULL) {
+        printf("Failed to decompose polygon.\n");
+        Cleanup(window, renderer);
         return 1;
     }
-    // Set the blend mode for the new texture to enable alpha blending
-    SDL_SetTextureBlendMode(polygonTexture, SDL_BLENDMODE_BLEND);
-    // Draw the polygon to the texture
-    DrawPolygonToTexture(renderer, polygonTexture, vertices, vertexCount, SPRITE_WIDTH, SPRITE_HEIGHT);
+
+    cpFloat mass = 1.0;
+    cpFloat totalMoment = 0.0;
+    Polygon *current = decomposedPolygons;
+    while (current != NULL) {
+        totalMoment += cpMomentForPoly(mass / decomposedPolygons->vertexCount, current->vertexCount, current->vertices, cpvzero, 0.0);
+        current = current->next;
+    }
+
+    cpBody *polygonBody = cpSpaceAddBody(space, cpBodyNew(mass, totalMoment));
+    cpBodySetPosition(polygonBody, cpv(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
+
+    current = decomposedPolygons;
+    while (current != NULL) {
+        cpShape *shape = cpSpaceAddShape(space, cpPolyShapeNew(polygonBody, current->vertexCount, current->vertices, cpTransformIdentity, 0.0));
+        cpShapeSetFriction(shape, 0.7);
+        current = current->next;
+    }
+
+    int polygonCount = 0;
+    current = decomposedPolygons;
+    while (current != NULL) {
+        polygonCount++;
+        current = current->next;
+    }
+
+    SDL_Texture **polygonTextures = (SDL_Texture **)malloc(polygonCount * sizeof(SDL_Texture *));
+    current = decomposedPolygons;
+    for (int i = 0; i < polygonCount; i++) {
+        polygonTextures[i] = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SPRITE_WIDTH, SPRITE_HEIGHT);
+        if (polygonTextures[i] == NULL) {
+            printf("SDL_CreateTexture Error: %s\n", SDL_GetError());
+            freePolygons(decomposedPolygons);
+            cpShapeFree(ground);
+            cpSpaceFree(space);
+            Cleanup(window, renderer);
+            return 1;
+        }
+        SDL_SetTextureBlendMode(polygonTextures[i], SDL_BLENDMODE_BLEND);
+        DrawPolygonToTexture(renderer, polygonTextures[i], current->vertices, current->vertexCount, SPRITE_WIDTH, SPRITE_HEIGHT);
+        current = current->next;
+    }
 
     int quit = 0;
     SDL_Event e;
@@ -230,37 +351,34 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        // Update physics
         cpSpaceStep(space, 1.0 / 60.0);
 
-        // Clear screen
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-        // Draw ground
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderDrawLine(renderer, 0, SCREEN_HEIGHT - 50, SCREEN_WIDTH, SCREEN_HEIGHT - 50);
 
-        // Draw the sprite
-        DrawSprite(renderer, polygonTexture, polygonBody);
+        current = decomposedPolygons;
+        for (int i = 0; i < polygonCount; i++) {
+            DrawSprite(renderer, polygonTextures[i], polygonBody);
+            current = current->next;
+        }
 
-        // Update screen
         SDL_RenderPresent(renderer);
 
-        SDL_Delay(16); // Roughly 60 FPS
+        SDL_Delay(16);
     }
 
-    // Cleanup
-    SDL_DestroyTexture(polygonTexture);
-    cpShapeFree(polygonShape);
-    cpBodyFree(polygonBody);
+    for (int i = 0; i < polygonCount; i++) {
+        SDL_DestroyTexture(polygonTextures[i]);
+    }
+    free(polygonTextures);
+
+    freePolygons(decomposedPolygons);
     cpShapeFree(ground);
     cpSpaceFree(space);
-
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    IMG_Quit();
-    SDL_Quit();
+    Cleanup(window, renderer);
 
     return 0;
 }

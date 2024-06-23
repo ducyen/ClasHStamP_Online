@@ -77,11 +77,8 @@ static bool PhxSprite_load(
         pPhxSprite->m_iniRect.h * SCREEN_HEIGHT
     };
 
-    // Query the original texture to get its width, height, and format
-    // Uint32 format;
     int textureWidth = pPhxSprite->m_rect.w;
     int textureHeight = pPhxSprite->m_rect.h;
-    // SDL_QueryTexture(pPngImg, &format, NULL, &textureWidth, &textureHeight);
 
     pPhxSprite->m_image = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, textureWidth, textureHeight);
 
@@ -92,6 +89,11 @@ static bool PhxSprite_load(
         pPhxSprite->m_verts[ i ].y = -pPhxSprite->m_verts[ i ].y * textureHeight;
     }
 
+    int concaveVertexCount = pPhxSprite->m_vertsCnt;
+    cpVect* concaveVertices = pPhxSprite->m_verts;
+    pPhxSprite->m_decomposedPolygons = decomposeConcavePolygon(concaveVertices, concaveVertexCount);
+    assert(pPhxSprite->m_decomposedPolygons != NULL);
+
     // Set the blend mode for the new texture to enable alpha blending
     SDL_SetTextureBlendMode(pPhxSprite->m_image, SDL_BLENDMODE_BLEND);
     // Set the render target to the buffer texture
@@ -99,7 +101,6 @@ static bool PhxSprite_load(
 
     //SDL_RenderCopy( renderer, pPngImg, NULL, NULL );
 
-#if 1
     // Draw the polygon on the texture
     for (int i = 0; i < pPhxSprite->m_vertsCnt; i++) {
         cpVect v1 = pPhxSprite->m_verts[i];
@@ -113,13 +114,6 @@ static bool PhxSprite_load(
 
         lineRGBA(renderer, x1, y1, x2, y2, 0, 0, 0, 255);
     }
-#else
-    for( int i = 0; i < pPhxSprite->m_vertsCnt; i++ ){
-        pPhxSprite->m_verts[ i ].x *= width;
-        pPhxSprite->m_verts[ i ].y = height - pPhxSprite->m_verts[ i ].y * height ;
-        circleRGBA( renderer, pPhxSprite->m_verts[ i ].x , height - pPhxSprite->m_verts[ i ].y, 1, 0, 0, 0, 0xFF );
-    }
-#endif
 
     // Recover render target
     SDL_SetRenderTarget(renderer, NULL);
@@ -128,14 +122,25 @@ static bool PhxSprite_load(
     SDL_DestroyTexture(pPngImg);
     
     // Set physic information
-    cpFloat moment = cpMomentForPoly(pPhxSprite->m_mass, pPhxSprite->m_vertsCnt, pPhxSprite->m_verts, cpvzero, 0.0);
+    cpFloat totalMoment = 0.0;
+    Polygon *current = pPhxSprite->m_decomposedPolygons;
+    while (current != NULL) {
+        totalMoment += cpMomentForPoly(pPhxSprite->m_mass / pPhxSprite->m_decomposedPolygons->vertexCount, current->vertexCount, current->vertices, cpvzero, 0.0);
+        current = current->next;
+    }
+
     cpSpace* space = ObjsBuilder_getPhxSpace();
-    pPhxSprite->m_body = cpSpaceAddBody(space, cpBodyNew(pPhxSprite->m_mass, moment));
+    pPhxSprite->m_body = cpSpaceAddBody(space, cpBodyNew(pPhxSprite->m_mass, totalMoment));
+   
     cpBodySetPosition(pPhxSprite->m_body, cpv(pPhxSprite->m_rect.x + pPhxSprite->m_center.x, 
         SCREEN_HEIGHT - (pPhxSprite->m_rect.y + pPhxSprite->m_center.y)));
 
-    pPhxSprite->m_shape = cpSpaceAddShape(space, cpPolyShapeNew(pPhxSprite->m_body, pPhxSprite->m_vertsCnt, pPhxSprite->m_verts, cpTransformIdentity, 0.0) );
-    cpShapeSetFriction(pPhxSprite->m_shape, 0.7);
+    current = pPhxSprite->m_decomposedPolygons;
+    while (current != NULL) {
+        current->shape = cpSpaceAddShape(space, cpPolyShapeNew(pPhxSprite->m_body, current->vertexCount, current->vertices, cpTransformIdentity, 0.0));
+        cpShapeSetFriction(current->shape, 0.7);
+        current = current->next;
+    }
     return TRUE;
 } /* PhxSprite_load */
 
@@ -146,7 +151,8 @@ static void PhxSprite_free(
     if (pPhxSprite->m_image) {
         SDL_DestroyTexture(pPhxSprite->m_image);
     }
-    cpShapeFree(pPhxSprite->m_shape);
+    freePolygons(pPhxSprite->m_decomposedPolygons);
+    //cpShapeFree(pPhxSprite->m_shape);
     cpBodyFree(pPhxSprite->m_body);    
 } /* PhxSprite_free */
 
