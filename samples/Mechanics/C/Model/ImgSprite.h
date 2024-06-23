@@ -12,7 +12,7 @@ void ImgSprite_setRotation( ImgSprite* pImgSprite, double value );
 double ImgSprite_getRotation( ImgSprite* pImgSprite );
 void ImgSprite_setBrightness( ImgSprite* pImgSprite, double value );
 #endif//__ImgSprite_H__
-#if !defined( ImgSprite_Init ) && ( defined( __ImgSprite_INTERNAL__ )  )
+#if !defined( ImgSprite_Init ) && ( defined( __ImgSprite_INTERNAL__ )  || defined( __ObjsBuilder_INTERNAL__ )  )
 #define __Sprite_INTERNAL__
 #include "Sprite.h"
 #include "Constraint.h"
@@ -20,17 +20,17 @@ void ImgSprite_setBrightness( ImgSprite* pImgSprite, double value );
 /** @memberof ImgSprite
  * @brief ImgSprite auto-generated constructor
  */
-#define ImgSprite_Init(_m_iniRect, _m_name, _m_imgPath, _m_constraints, _m_mouseListeners, _m_onDrawListeners)\
+#define ImgSprite_Init(_m_iniRect, _m_name, _m_imgPath, _m_center, _m_constraints, _m_mouseListeners, _m_onDrawListeners)\
     Sprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ) )\
     .vTbl = &gImgSpriteVtbl,\
     .m_buffer = null,\
-    .m_center = { 0 },\
+    .m_center = _m_center,\
     .m_constraints = _m_constraints,\
     .m_mouseListeners = _m_mouseListeners,\
     .m_onDrawListeners = _m_onDrawListeners,\
 
-#define ImgSprite_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_constraints, _m_mouseListeners, _m_onDrawListeners )    ( ImgSprite ){ \
-    ImgSprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_constraints ), P( _m_mouseListeners ), P( _m_onDrawListeners ) ) \
+#define ImgSprite_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_center, _m_constraints, _m_mouseListeners, _m_onDrawListeners )    ( ImgSprite ){ \
+    ImgSprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_center ), P( _m_constraints ), P( _m_mouseListeners ), P( _m_onDrawListeners ) ) \
 }
 extern const SpriteVtbl gImgSpriteVtbl;
 Sprite* ImgSprite_Copy( ImgSprite* pImgSprite, const ImgSprite* pSource );

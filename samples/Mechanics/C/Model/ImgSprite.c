@@ -175,25 +175,23 @@ static void ImgSprite_draw1(
 #endif
 
     // Set texture color modulation (brightness)
-    SDL_SetTextureColorMod(
-        pImgSprite->m_image, 
-        pImgSprite->m_brightness * 255, 
-        pImgSprite->m_brightness * 255, 
-        pImgSprite->m_brightness * 255
-    );
-
+    if( pImgSprite->m_image ){
+        SDL_SetTextureColorMod(
+            pImgSprite->m_image, 
+            pImgSprite->m_brightness * 255, 
+            pImgSprite->m_brightness * 255, 
+            pImgSprite->m_brightness * 255
+        );
+    }
     // Execute transformation
     SDL_Rect rect = pImgSprite->m_rect;
     rect.x = pImgSprite->m_rect.x + pImgSprite->m_offset.x;
     rect.y = pImgSprite->m_rect.y + pImgSprite->m_offset.y;
 
     // Render the texture
-#if 0
-    SDL_RenderCopyEx(renderer, pImgSprite->m_buffer, NULL, &rect, 0, NULL, SDL_FLIP_NONE);
-#else
-    SDL_RenderCopyEx(renderer, pImgSprite->m_image, NULL, &rect, pImgSprite->m_angle, NULL, SDL_FLIP_NONE);
-#endif
-
+    if( pImgSprite->m_image ){
+        SDL_RenderCopyEx(renderer, pImgSprite->m_image, NULL, &rect, pImgSprite->m_angle, NULL, SDL_FLIP_NONE);
+    }
     // Reset transformation
     pImgSprite->m_angle = 0;
     pImgSprite->m_offset.x = 0;
@@ -220,7 +218,7 @@ static bool ImgSprite_load(
     pImgSprite->m_image = IMG_LoadTexture(renderer, sRelPath);
     if (!pImgSprite->m_image) {
         printf("Failed to load image: %s\n", IMG_GetError());
-        return false;
+        return true;
     }
 
     // Query the original texture to get its width, height, and format

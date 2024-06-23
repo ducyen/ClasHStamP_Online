@@ -17,7 +17,11 @@ enum {
 #define arm_right               ( g_objects[ _arm_right ] )
     _arm_right,
 #define arm_left                ( g_objects[ _arm_left ] )
-    _arm_left
+    _arm_left,
+#define arm_main_hanger         ( g_objects[ _arm_main_hanger ] )
+    _arm_main_hanger,
+#define arm_main_anchor         ( g_objects[ _arm_main_anchor ] )
+    _arm_main_anchor
 };
 int ObjsBuilder_startSim( void   );
 void ObjsBuilder_showEntry( void* pObj, void* pStm_, char* pMsg );
