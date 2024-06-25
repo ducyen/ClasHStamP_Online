@@ -8,10 +8,6 @@ static void PhxPinJoint_apply(
     PhxPinJoint* pPhxPinJoint,
     Sprite* target
 ){
-    #if 1
-    extern cpSpace* ObjsBuilder_getPhxSpace( void );
-    extern int ObjsBuilder_getScreenWidth( void );
-    extern int ObjsBuilder_getScreenHeight( void );
     cpSpace *space = ObjsBuilder_getPhxSpace();
     PhxSprite* pTarget = ( PhxSprite* )target;
     cpBody* pBodyTgt = PhxSprite_getBody( pTarget );
@@ -37,7 +33,6 @@ static void PhxPinJoint_apply(
             anchorTgt
         )
     );
-    #endif
 } /* PhxPinJoint_apply */
 
 PhxJoint* PhxPinJoint_Copy( PhxPinJoint* pPhxPinJoint, const PhxPinJoint* pSource ){

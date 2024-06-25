@@ -21,7 +21,11 @@ enum {
 #define arm_main_hanger         ( g_objects[ _arm_main_hanger ] )
     _arm_main_hanger,
 #define arm_main_anchor         ( g_objects[ _arm_main_anchor ] )
-    _arm_main_anchor
+    _arm_main_anchor,
+#define arm_right_anchor        ( g_objects[ _arm_right_anchor ] )
+    _arm_right_anchor,
+#define arm_left_anchor         ( g_objects[ _arm_left_anchor ] )
+    _arm_left_anchor
 };
 int ObjsBuilder_startSim( void   );
 void ObjsBuilder_showEntry( void* pObj, void* pStm_, char* pMsg );
@@ -29,6 +33,8 @@ void ObjsBuilder_showDoing( void* pObj, void* pStm_, char* pMsg );
 void ObjsBuilder_showExit( void* pObj, void* pStm_, char* pMsg );
 void ObjsBuilder_showDiagram( void* pObj, void* pStm_, char* pMsg, char r, char g, char b );
 cpSpace* ObjsBuilder_getPhxSpace( void   );
+int ObjsBuilder_getScreenWidth( void   );
+int ObjsBuilder_getScreenHeight( void   );
 #endif//__ObjsBuilder_H__
 #if !defined( ObjsBuilder_Init ) && ( defined( __ObjsBuilder_INTERNAL__ )  )
 /** @memberof ObjsBuilder

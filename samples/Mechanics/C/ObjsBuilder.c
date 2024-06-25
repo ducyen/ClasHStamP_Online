@@ -23,9 +23,10 @@
 #include "PhxGrooveJoint.h"                                     
 /** @private @static @memberof ObjsBuilder */
 static int hardwareAccelerationAvailable = SDL_RENDERER_SOFTWARE;
-static int SCREEN_WIDTH = 640;
-static int SCREEN_HEIGHT = 480;
-
+/** @private @static @memberof ObjsBuilder */
+static int SCREEN_WIDTH = 640;                                  
+/** @private @static @memberof ObjsBuilder */
+static int SCREEN_HEIGHT = 480;                                 
 Sprite* g_objects[] = {
     &FlexButton_Ctor(                                           /* pushButton */
         P( { 0.05899502580287358, 0.8263998812821528, 0.02415280553710998, 0.02772396673472237 } )/* m_iniRect */,
@@ -70,15 +71,18 @@ Sprite* g_objects[] = {
         P( null )                                               /* m_joints */
     ),
     &PhxSprite_Ctor(                                            /* arm_main */
-        P( { 0.3035294117647059, 0.19433864265927978, 0.08588235294117647, 0.13934268931682417 } )/* m_iniRect */,
+        P( { 0.301078431372549, 0.19194367497691603, 0.0932352941176471, 0.14173765699918797 } )/* m_iniRect */,
         P( "arm_main" )                                         /* m_name */,
         P( "crane_game_arm_main.png" )                          /* m_imgPath */,
         P( (cpVect[]){ {-0.002241446747613223, -0.24924157349244283}, {-0.20214066471269057, -0.22409027808094623}, {-0.3520649135829009, -0.14419786832719542}, {-0.4231828855969844, -0.03175670842925858}, {-0.4212607545186077, 0.07772543578917089}, {-0.31746699311504745, 0.18572807216784668}, {-0.17138700640159057, 0.2552640959754797}, {0.0016025959376765651, 0.2730179366542869}, {0.2130341614300869, 0.24490762556328297}, {0.339893276302704, 0.1753716862217289}, {0.42254359584412055, 0.07328699673598885}, {0.42254359584412055, -0.03175670842925858}, {0.3591141481435438, -0.14271836048744174}, {0.21495607303699998, -0.2181722467219315} } )/* m_verts */,
         P( 14 )                                                 /* m_vertsCnt */,
         P( { 0.4981663473146601, 0.6850584542796103 } )         /* m_center */,
         P( 1 )                                                  /* m_mass */,
-        P( 1 )                                                  /* m_group */,
-        P( &PhxPinJoint_Ctor( null, 1, &arm_main_anchor, &arm_main_hanger, null ) )/* m_joints */
+        P( 3 )                                                  /* m_group */,
+        P( &PhxPinJoint_Ctor( null, 1, &arm_main_anchor, &arm_main_hanger,
+           &PhxPivotJoint_Ctor( &arm_left, 1, &arm_left_anchor, 
+           &PhxPivotJoint_Ctor( &arm_right, 1, &arm_right_anchor, null )
+        ) ) )/* m_joints */
     ),
     &PhxSprite_Ctor(                                            /* arm_right */
         P( { 0.3552941176470588, 0.2878289473684211, 0.0611764705882353, 0.1018005540166205 } )/* m_iniRect */,
@@ -99,7 +103,7 @@ Sprite* g_objects[] = {
         P( 8 )                                                  /* m_vertsCnt */,
         P( { 0.4700343441061353, 0.4219351061308493 } )         /* m_center */,
         P( 1 )                                                  /* m_mass */,
-        P( 1 )                                                  /* m_group */,
+        P( 2 )                                                  /* m_group */,
         P( null )                                               /* m_joints */
     ),
     &ImgSprite_Ctor(                                            /* arm_main_hanger */
@@ -112,8 +116,26 @@ Sprite* g_objects[] = {
         P( null )                                               /* m_onDrawListeners */
     ),
     &ImgSprite_Ctor(                                            /* arm_main_anchor */
-        P( { 0.3347058823529412, 0.2649757617728532, 0.023529411764705882, 0.027700831024930747 } )/* m_iniRect */,
+        P( { 0.3352941176470588, 0.249047783933518, 0.023529411764705882, 0.027700831024930747 } )/* m_iniRect */,
         P( "arm_main_anchor" )                                  /* m_name */,
+        P( "ImgSprite.png" )                                    /* m_imgPath */,
+        P( { 0.0, 0.0 } )                                       /* m_center */,
+        P( null )                                               /* m_constraints */,
+        P( null )                                               /* m_mouseListeners */,
+        P( null )                                               /* m_onDrawListeners */
+    ),
+    &ImgSprite_Ctor(                                            /* arm_right_anchor */
+        P( { 0.3551960784313726, 0.27643120960295475, 0.023529411764705882, 0.027700831024930747 } )/* m_iniRect */,
+        P( "arm_right_anchor" )                                 /* m_name */,
+        P( "ImgSprite.png" )                                    /* m_imgPath */,
+        P( { 0.0, 0.0 } )                                       /* m_center */,
+        P( null )                                               /* m_constraints */,
+        P( null )                                               /* m_mouseListeners */,
+        P( null )                                               /* m_onDrawListeners */
+    ),
+    &ImgSprite_Ctor(                                            /* arm_left_anchor */
+        P( { 0.31696078431372543, 0.27643120960295475, 0.023529411764705882, 0.027700831024930747 } )/* m_iniRect */,
+        P( "arm_left_anchor" )                                  /* m_name */,
         P( "ImgSprite.png" )                                    /* m_imgPath */,
         P( { 0.0, 0.0 } )                                       /* m_center */,
         P( null )                                               /* m_constraints */,
@@ -497,13 +519,13 @@ int ObjsBuilder_getScreenWidth(
     void  
 ){
     return SCREEN_WIDTH;
-}
+} /* ObjsBuilder_getScreenWidth */
 
 int ObjsBuilder_getScreenHeight(
     void  
 ){
     return SCREEN_HEIGHT;
-}
+} /* ObjsBuilder_getScreenHeight */
 
 ObjsBuilder* ObjsBuilder_Copy( ObjsBuilder* pObjsBuilder, const ObjsBuilder* pSource ){
     return ( ObjsBuilder* )pObjsBuilder;

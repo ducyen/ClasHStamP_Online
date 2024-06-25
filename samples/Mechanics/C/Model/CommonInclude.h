@@ -118,7 +118,9 @@ void ResetActionCounter( void );
 void ObjsBuilder_showEntry( void*, void*, char* );
 void ObjsBuilder_showExit( void*, void*, char* );
 void ObjsBuilder_showDoing( void*, void*, char* );
-
+cpSpace* ObjsBuilder_getPhxSpace( void   );
+int ObjsBuilder_getScreenWidth( void   );
+int ObjsBuilder_getScreenHeight( void   );
 Polygon* decomposeConcavePolygon(cpVect *vertices, int vertexCount);
 void freePolygons(Polygon *polygons);
 

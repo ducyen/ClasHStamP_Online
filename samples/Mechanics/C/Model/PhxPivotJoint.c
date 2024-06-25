@@ -2,11 +2,34 @@
 #define __PhxPivotJoint_INTERNAL__
 #include "CommonInclude.h"
 #include "PhxPivotJoint.h"
+#include "PhxSprite.h"
 /** @public @memberof PhxPivotJoint */
 static void PhxPivotJoint_apply(
     PhxPivotJoint* pPhxPivotJoint,
     Sprite* target
 ){
+    cpSpace *space = ObjsBuilder_getPhxSpace();
+    PhxSprite* pTarget = ( PhxSprite* )target;
+    cpBody* pBodyTgt = PhxSprite_getBody( pTarget );
+    cpBody* pBodySrc;
+    if( pPhxPivotJoint->m_source == null ){
+        pBodySrc = cpSpaceGetStaticBody( space );
+    }else{
+        PhxSprite* pSource = ( PhxSprite* )( *pPhxPivotJoint->m_source );
+        pBodySrc = PhxSprite_getBody( pSource );
+    }
+    SDL_Rect* pRect = Sprite_getRect( *pPhxPivotJoint->m_anchorTgt );
+    cpBB bbTarget = cpBBNew( pRect->x, ObjsBuilder_getScreenHeight() - pRect->y - pRect->h, pRect->x + pRect->w, ObjsBuilder_getScreenHeight() - pRect->y );
+    cpVect anchorTgt = cpBBCenter( bbTarget );
+    pPhxPivotJoint->m_cpJoint = cpSpaceAddConstraint(
+        space, 
+        cpPivotJointNew(
+            pBodySrc, 
+            pBodyTgt, 
+            anchorTgt
+        )
+    );
+
 } /* PhxPivotJoint_apply */
 
 PhxJoint* PhxPivotJoint_Copy( PhxPivotJoint* pPhxPivotJoint, const PhxPivotJoint* pSource ){
