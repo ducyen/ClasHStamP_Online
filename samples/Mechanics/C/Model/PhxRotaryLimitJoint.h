@@ -9,12 +9,12 @@ typedef struct tagPhxRotaryLimitJoint PhxRotaryLimitJoint;
 /** @memberof PhxRotaryLimitJoint
  * @brief PhxRotaryLimitJoint auto-generated constructor
  */
-#define PhxRotaryLimitJoint_Init(_m_source, _m_influence, _m_next)\
-    PhxJoint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) )\
+#define PhxRotaryLimitJoint_Init(_m_source, _m_influence, _m_anchorTgt, _m_anchorSrc, _m_next)\
+    PhxJoint_Init( P( _m_source ), P( _m_influence ), P( _m_anchorTgt ), P( _m_anchorSrc ), P( _m_next ) )\
     .vTbl = &gPhxRotaryLimitJointVtbl,\
 
-#define PhxRotaryLimitJoint_Ctor( _m_source, _m_influence, _m_next )    ( PhxRotaryLimitJoint ){ \
-    PhxRotaryLimitJoint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) ) \
+#define PhxRotaryLimitJoint_Ctor( _m_source, _m_influence, _m_anchorTgt, _m_anchorSrc, _m_next )    ( PhxRotaryLimitJoint ){ \
+    PhxRotaryLimitJoint_Init( P( _m_source ), P( _m_influence ), P( _m_anchorTgt ), P( _m_anchorSrc ), P( _m_next ) ) \
 }
 extern const PhxJointVtbl gPhxRotaryLimitJointVtbl;
 PhxJoint* PhxRotaryLimitJoint_Copy( PhxRotaryLimitJoint* pPhxRotaryLimitJoint, const PhxRotaryLimitJoint* pSource );

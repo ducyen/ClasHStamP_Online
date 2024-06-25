@@ -218,29 +218,30 @@ static bool ImgSprite_load(
     pImgSprite->m_image = IMG_LoadTexture(renderer, sRelPath);
     if (!pImgSprite->m_image) {
         printf("Failed to load image: %s\n", IMG_GetError());
-        return true;
+    }else{
+
+        // Query the original texture to get its width, height, and format
+        Uint32 format;
+        int width, height;
+        SDL_QueryTexture(pImgSprite->m_image, &format, NULL, &width, &height);
+
+        // Create a new texture with the same format and dimensions
+        pImgSprite->m_buffer = SDL_CreateTexture(renderer, format, SDL_TEXTUREACCESS_TARGET, width, height);
+        if (!pImgSprite->m_buffer) {
+            printf("Failed to create new texture: %s\n", SDL_GetError());
+            return false;
+        }
+
+        // Set the blend mode for the new texture to enable alpha blending
+        SDL_SetTextureBlendMode(pImgSprite->m_buffer, SDL_BLENDMODE_BLEND);
     }
 
-    // Query the original texture to get its width, height, and format
-    Uint32 format;
     int width, height;
-    SDL_QueryTexture(pImgSprite->m_image, &format, NULL, &width, &height);
-
-    // Create a new texture with the same format and dimensions
-    pImgSprite->m_buffer = SDL_CreateTexture(renderer, format, SDL_TEXTUREACCESS_TARGET, width, height);
-    if (!pImgSprite->m_buffer) {
-        printf("Failed to create new texture: %s\n", SDL_GetError());
-        return NULL;
-    }
-
-    // Set the blend mode for the new texture to enable alpha blending
-    SDL_SetTextureBlendMode(pImgSprite->m_buffer, SDL_BLENDMODE_BLEND);
-
     // Get the size of the renderer
     if (SDL_GetRendererOutputSize(renderer, &width, &height) != 0) {
         printf("Error getting renderer size: %s\n", SDL_GetError());
     }
-
+    
     pImgSprite->m_rect = (SDL_Rect){
         pImgSprite->m_iniRect.x * width, 
         pImgSprite->m_iniRect.y * height, 

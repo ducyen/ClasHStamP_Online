@@ -63,6 +63,13 @@ bool Sprite_isUpdated(
     return pSprite->m_updated;
 } /* Sprite_isUpdated */
 
+/** @public @memberof Sprite */
+SDL_Rect* Sprite_getRect(
+    Sprite* pSprite
+){
+    return &pSprite->m_rect;
+} /* Sprite_getRect */
+
 Sprite* Sprite_Copy( Sprite* pSprite, const Sprite* pSource ){
     pSprite->m_iniRect = pSource->m_iniRect;
     pSprite->m_name = pSource->m_name;

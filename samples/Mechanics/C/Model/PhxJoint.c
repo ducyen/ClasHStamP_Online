@@ -12,14 +12,25 @@ void PhxJoint_apply(
 } /* PhxJoint_apply */
 
 /** @public @memberof PhxJoint */
+void PhxJoint_free(
+    PhxJoint* pPhxJoint
+){
+    cpConstraintFree( pPhxJoint->m_cpJoint );
+} /* PhxJoint_free */
+
+/** @public @memberof PhxJoint */
 PhxJoint* PhxJoint_getNext(
     PhxJoint* pPhxJoint
 ){
+    return pPhxJoint->m_next;
 } /* PhxJoint_getNext */
 
 PhxJoint* PhxJoint_Copy( PhxJoint* pPhxJoint, const PhxJoint* pSource ){
     pPhxJoint->m_source = pSource->m_source;
     pPhxJoint->m_influence = pSource->m_influence;
+    pPhxJoint->m_anchorTgt = pSource->m_anchorTgt;
+    pPhxJoint->m_anchorSrc = pSource->m_anchorSrc;
+    pPhxJoint->m_cpJoint = pSource->m_cpJoint;
     pPhxJoint->m_next = pSource->m_next;
     return ( PhxJoint* )pPhxJoint;
 }

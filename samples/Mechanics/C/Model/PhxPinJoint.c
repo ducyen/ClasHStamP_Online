@@ -2,11 +2,42 @@
 #define __PhxPinJoint_INTERNAL__
 #include "CommonInclude.h"
 #include "PhxPinJoint.h"
+#include "PhxSprite.h"                                          
 /** @public @memberof PhxPinJoint */
 static void PhxPinJoint_apply(
     PhxPinJoint* pPhxPinJoint,
     Sprite* target
 ){
+    #if 1
+    extern cpSpace* ObjsBuilder_getPhxSpace( void );
+    extern int ObjsBuilder_getScreenWidth( void );
+    extern int ObjsBuilder_getScreenHeight( void );
+    cpSpace *space = ObjsBuilder_getPhxSpace();
+    PhxSprite* pTarget = ( PhxSprite* )target;
+    cpBody* pBodyTgt = PhxSprite_getBody( pTarget );
+    cpBody* pBodySrc;
+    if( pPhxPinJoint->m_source == null ){
+        pBodySrc = cpSpaceGetStaticBody( space );
+    }else{
+        PhxSprite* pSource = ( PhxSprite* )( *pPhxPinJoint->m_source );
+        pBodySrc = PhxSprite_getBody( pSource );
+    }
+    SDL_Rect* pRect = Sprite_getRect( *pPhxPinJoint->m_anchorSrc );
+    cpBB bbSource = cpBBNew( pRect->x, ObjsBuilder_getScreenHeight() - pRect->y - pRect->h, pRect->x + pRect->w, ObjsBuilder_getScreenHeight() - pRect->y );
+    pRect = Sprite_getRect( *pPhxPinJoint->m_anchorTgt );
+    cpBB bbTarget = cpBBNew( pRect->x, ObjsBuilder_getScreenHeight() - pRect->y - pRect->h, pRect->x + pRect->w, ObjsBuilder_getScreenHeight() - pRect->y );
+    cpVect anchorSrc = cpBodyWorldToLocal( pBodySrc, cpBBCenter( bbSource ) );
+    cpVect anchorTgt = cpBodyWorldToLocal( pBodyTgt, cpBBCenter( bbTarget ) );
+    pPhxPinJoint->m_cpJoint = cpSpaceAddConstraint(
+        space, 
+        cpPinJointNew(
+            pBodySrc, 
+            pBodyTgt, 
+            anchorSrc, 
+            anchorTgt
+        )
+    );
+    #endif
 } /* PhxPinJoint_apply */
 
 PhxJoint* PhxPinJoint_Copy( PhxPinJoint* pPhxPinJoint, const PhxPinJoint* pSource ){

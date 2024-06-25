@@ -8,6 +8,12 @@ static void PhxSprite_draw0(
     PhxSprite* pPhxSprite,
     SDL_Renderer* renderer
 ){
+    // Apply joints
+    PhxJoint* pCurJoint = pPhxSprite->m_joints;
+    while( pCurJoint != null ){
+        PhxJoint_apply( pCurJoint, ( Sprite* )pPhxSprite );
+        pCurJoint = PhxJoint_getNext( pCurJoint );
+    }    
 } /* PhxSprite_draw0 */
 
 /** @public @memberof PhxSprite */
@@ -138,9 +144,14 @@ static bool PhxSprite_load(
     current = pPhxSprite->m_decomposedPolygons;
     while (current != NULL) {
         current->shape = cpSpaceAddShape(space, cpPolyShapeNew(pPhxSprite->m_body, current->vertexCount, current->vertices, cpTransformIdentity, 0.0));
+        if( pPhxSprite->m_group != 0 ){
+            cpShapeFilter filter = cpShapeFilterNew(CP_NO_GROUP, pPhxSprite->m_group, ~pPhxSprite->m_group);
+            cpShapeSetFilter(current->shape, filter);
+        }
         cpShapeSetFriction(current->shape, 0.7);
         current = current->next;
     }
+
     return TRUE;
 } /* PhxSprite_load */
 
@@ -151,10 +162,22 @@ static void PhxSprite_free(
     if (pPhxSprite->m_image) {
         SDL_DestroyTexture(pPhxSprite->m_image);
     }
-    freePolygons(pPhxSprite->m_decomposedPolygons);
-    //cpShapeFree(pPhxSprite->m_shape);
+    freePolygons(pPhxSprite->m_decomposedPolygons);        
     cpBodyFree(pPhxSprite->m_body);    
+
+    PhxJoint* pCurJoint = pPhxSprite->m_joints;
+    while( pCurJoint != null ){
+        PhxJoint_free( pCurJoint );
+        pCurJoint = PhxJoint_getNext( pCurJoint );
+    }    
 } /* PhxSprite_free */
+
+/** @public @memberof PhxSprite */
+cpBody* PhxSprite_getBody(
+    PhxSprite* pPhxSprite
+){
+    return pPhxSprite->m_body;
+} /* PhxSprite_getBody */
 
 Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource ){
     Sprite_Copy( ( Sprite* )pPhxSprite, ( Sprite* )pSource );
@@ -162,6 +185,8 @@ Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource ){
     pPhxSprite->m_vertsCnt = pSource->m_vertsCnt;
     pPhxSprite->m_center = pSource->m_center;
     pPhxSprite->m_mass = pSource->m_mass;
+    pPhxSprite->m_group = pSource->m_group;
+    pPhxSprite->m_joints = pSource->m_joints;
     pPhxSprite->m_body = pSource->m_body;
     pPhxSprite->m_shape = pSource->m_shape;
     pPhxSprite->m_decomposedPolygons = pSource->m_decomposedPolygons;

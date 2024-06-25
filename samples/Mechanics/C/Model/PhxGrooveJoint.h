@@ -9,12 +9,12 @@ typedef struct tagPhxGrooveJoint PhxGrooveJoint;
 /** @memberof PhxGrooveJoint
  * @brief PhxGrooveJoint auto-generated constructor
  */
-#define PhxGrooveJoint_Init(_m_source, _m_influence, _m_next)\
-    PhxJoint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) )\
+#define PhxGrooveJoint_Init(_m_source, _m_influence, _m_anchorTgt, _m_anchorSrc, _m_next)\
+    PhxJoint_Init( P( _m_source ), P( _m_influence ), P( _m_anchorTgt ), P( _m_anchorSrc ), P( _m_next ) )\
     .vTbl = &gPhxGrooveJointVtbl,\
 
-#define PhxGrooveJoint_Ctor( _m_source, _m_influence, _m_next )    ( PhxGrooveJoint ){ \
-    PhxGrooveJoint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) ) \
+#define PhxGrooveJoint_Ctor( _m_source, _m_influence, _m_anchorTgt, _m_anchorSrc, _m_next )    ( PhxGrooveJoint ){ \
+    PhxGrooveJoint_Init( P( _m_source ), P( _m_influence ), P( _m_anchorTgt ), P( _m_anchorSrc ), P( _m_next ) ) \
 }
 extern const PhxJointVtbl gPhxGrooveJointVtbl;
 PhxJoint* PhxGrooveJoint_Copy( PhxGrooveJoint* pPhxGrooveJoint, const PhxGrooveJoint* pSource );

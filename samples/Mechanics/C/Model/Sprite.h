@@ -8,6 +8,7 @@ void Sprite_draw1( Sprite* pSprite, SDL_Renderer* renderer );
 bool Sprite_load( Sprite* pSprite, SDL_Renderer* renderer );
 void Sprite_free( Sprite* pSprite );
 bool Sprite_isUpdated( Sprite* pSprite );
+SDL_Rect* Sprite_getRect( Sprite* pSprite );
 #endif//__Sprite_H__
 #if !defined( Sprite_Init ) && ( defined( __Sprite_INTERNAL__ )  )
 /** @memberof Sprite

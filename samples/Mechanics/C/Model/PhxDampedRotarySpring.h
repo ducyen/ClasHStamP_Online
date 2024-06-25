@@ -9,12 +9,12 @@ typedef struct tagPhxDampedRotarySpring PhxDampedRotarySpring;
 /** @memberof PhxDampedRotarySpring
  * @brief PhxDampedRotarySpring auto-generated constructor
  */
-#define PhxDampedRotarySpring_Init(_m_source, _m_influence, _m_next)\
-    PhxJoint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) )\
+#define PhxDampedRotarySpring_Init(_m_source, _m_influence, _m_anchorTgt, _m_anchorSrc, _m_next)\
+    PhxJoint_Init( P( _m_source ), P( _m_influence ), P( _m_anchorTgt ), P( _m_anchorSrc ), P( _m_next ) )\
     .vTbl = &gPhxDampedRotarySpringVtbl,\
 
-#define PhxDampedRotarySpring_Ctor( _m_source, _m_influence, _m_next )    ( PhxDampedRotarySpring ){ \
-    PhxDampedRotarySpring_Init( P( _m_source ), P( _m_influence ), P( _m_next ) ) \
+#define PhxDampedRotarySpring_Ctor( _m_source, _m_influence, _m_anchorTgt, _m_anchorSrc, _m_next )    ( PhxDampedRotarySpring ){ \
+    PhxDampedRotarySpring_Init( P( _m_source ), P( _m_influence ), P( _m_anchorTgt ), P( _m_anchorSrc ), P( _m_next ) ) \
 }
 extern const PhxJointVtbl gPhxDampedRotarySpringVtbl;
 PhxJoint* PhxDampedRotarySpring_Copy( PhxDampedRotarySpring* pPhxDampedRotarySpring, const PhxDampedRotarySpring* pSource );

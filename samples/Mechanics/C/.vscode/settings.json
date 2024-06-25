@@ -16,6 +16,10 @@
         "b2_api.h": "c",
         "chipmunk.h": "c",
         "cpshape.h": "c",
-        "phxsprite.h": "c"
+        "phxsprite.h": "c",
+        "phxpivotjoint.h": "c",
+        "phxslidejoint.h": "c",
+        "phxjoint.h": "c",
+        "phxpinjoint.h": "c"
     }
 }

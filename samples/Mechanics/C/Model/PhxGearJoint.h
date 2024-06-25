@@ -9,12 +9,12 @@ typedef struct tagPhxGearJoint PhxGearJoint;
 /** @memberof PhxGearJoint
  * @brief PhxGearJoint auto-generated constructor
  */
-#define PhxGearJoint_Init(_m_source, _m_influence, _m_next)\
-    PhxJoint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) )\
+#define PhxGearJoint_Init(_m_source, _m_influence, _m_anchorTgt, _m_anchorSrc, _m_next)\
+    PhxJoint_Init( P( _m_source ), P( _m_influence ), P( _m_anchorTgt ), P( _m_anchorSrc ), P( _m_next ) )\
     .vTbl = &gPhxGearJointVtbl,\
 
-#define PhxGearJoint_Ctor( _m_source, _m_influence, _m_next )    ( PhxGearJoint ){ \
-    PhxGearJoint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) ) \
+#define PhxGearJoint_Ctor( _m_source, _m_influence, _m_anchorTgt, _m_anchorSrc, _m_next )    ( PhxGearJoint ){ \
+    PhxGearJoint_Init( P( _m_source ), P( _m_influence ), P( _m_anchorTgt ), P( _m_anchorSrc ), P( _m_next ) ) \
 }
 extern const PhxJointVtbl gPhxGearJointVtbl;
 PhxJoint* PhxGearJoint_Copy( PhxGearJoint* pPhxGearJoint, const PhxGearJoint* pSource );

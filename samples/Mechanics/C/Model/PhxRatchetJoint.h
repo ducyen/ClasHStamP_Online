@@ -9,12 +9,12 @@ typedef struct tagPhxRatchetJoint PhxRatchetJoint;
 /** @memberof PhxRatchetJoint
  * @brief PhxRatchetJoint auto-generated constructor
  */
-#define PhxRatchetJoint_Init(_m_source, _m_influence, _m_next)\
-    PhxJoint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) )\
+#define PhxRatchetJoint_Init(_m_source, _m_influence, _m_anchorTgt, _m_anchorSrc, _m_next)\
+    PhxJoint_Init( P( _m_source ), P( _m_influence ), P( _m_anchorTgt ), P( _m_anchorSrc ), P( _m_next ) )\
     .vTbl = &gPhxRatchetJointVtbl,\
 
-#define PhxRatchetJoint_Ctor( _m_source, _m_influence, _m_next )    ( PhxRatchetJoint ){ \
-    PhxRatchetJoint_Init( P( _m_source ), P( _m_influence ), P( _m_next ) ) \
+#define PhxRatchetJoint_Ctor( _m_source, _m_influence, _m_anchorTgt, _m_anchorSrc, _m_next )    ( PhxRatchetJoint ){ \
+    PhxRatchetJoint_Init( P( _m_source ), P( _m_influence ), P( _m_anchorTgt ), P( _m_anchorSrc ), P( _m_next ) ) \
 }
 extern const PhxJointVtbl gPhxRatchetJointVtbl;
 PhxJoint* PhxRatchetJoint_Copy( PhxRatchetJoint* pPhxRatchetJoint, const PhxRatchetJoint* pSource );
