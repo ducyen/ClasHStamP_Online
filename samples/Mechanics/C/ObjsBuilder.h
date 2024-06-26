@@ -19,13 +19,7 @@ enum {
 #define arm_left                ( g_objects[ _arm_left ] )
     _arm_left,
 #define arm_main_hanger         ( g_objects[ _arm_main_hanger ] )
-    _arm_main_hanger,
-#define arm_main_anchor         ( g_objects[ _arm_main_anchor ] )
-    _arm_main_anchor,
-#define arm_right_anchor        ( g_objects[ _arm_right_anchor ] )
-    _arm_right_anchor,
-#define arm_left_anchor         ( g_objects[ _arm_left_anchor ] )
-    _arm_left_anchor
+    _arm_main_hanger
 };
 int ObjsBuilder_startSim( void   );
 void ObjsBuilder_showEntry( void* pObj, void* pStm_, char* pMsg );

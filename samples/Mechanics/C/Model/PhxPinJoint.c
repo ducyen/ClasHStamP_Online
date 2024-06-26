@@ -18,12 +18,20 @@ static void PhxPinJoint_apply(
         PhxSprite* pSource = ( PhxSprite* )( *pPhxPinJoint->m_source );
         pBodySrc = PhxSprite_getBody( pSource );
     }
-    SDL_Rect* pRect = Sprite_getRect( *pPhxPinJoint->m_anchorSrc );
-    cpBB bbSource = cpBBNew( pRect->x, ObjsBuilder_getScreenHeight() - pRect->y - pRect->h, pRect->x + pRect->w, ObjsBuilder_getScreenHeight() - pRect->y );
-    pRect = Sprite_getRect( *pPhxPinJoint->m_anchorTgt );
-    cpBB bbTarget = cpBBNew( pRect->x, ObjsBuilder_getScreenHeight() - pRect->y - pRect->h, pRect->x + pRect->w, ObjsBuilder_getScreenHeight() - pRect->y );
-    cpVect anchorSrc = cpBodyWorldToLocal( pBodySrc, cpBBCenter( bbSource ) );
-    cpVect anchorTgt = cpBodyWorldToLocal( pBodyTgt, cpBBCenter( bbTarget ) );
+
+    cpVect anchorSrc = cpvzero;
+    if( pPhxPinJoint->m_anchorSrc != null){
+        SDL_Rect* pRect = Sprite_getRect( *pPhxPinJoint->m_anchorSrc );
+        cpBB bbSource = cpBBNew( pRect->x, ObjsBuilder_getScreenHeight() - pRect->y - pRect->h, pRect->x + pRect->w, ObjsBuilder_getScreenHeight() - pRect->y );
+        anchorSrc = cpBodyWorldToLocal( pBodySrc, cpBBCenter( bbSource ) );
+    }
+
+    cpVect anchorTgt = cpvzero;
+    if( pPhxPinJoint->m_anchorTgt != null){
+        SDL_Rect* pRect = Sprite_getRect( *pPhxPinJoint->m_anchorTgt );
+        cpBB bbTarget = cpBBNew( pRect->x, ObjsBuilder_getScreenHeight() - pRect->y - pRect->h, pRect->x + pRect->w, ObjsBuilder_getScreenHeight() - pRect->y );
+        anchorTgt = cpBodyWorldToLocal( pBodyTgt, cpBBCenter( bbTarget ) );
+    }
     pPhxPinJoint->m_cpJoint = cpSpaceAddConstraint(
         space, 
         cpPinJointNew(

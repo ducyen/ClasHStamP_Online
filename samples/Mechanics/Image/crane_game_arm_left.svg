@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    width="22.147905mm"
-   height="32.683334mm"
-   viewBox="0 0 22.147905 32.683334"
+   height="33.807289mm"
+   viewBox="0 0 22.147905 33.807289"
    version="1.1"
    id="svg8"
    inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
@@ -23,8 +23,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="3.959798"
-     inkscape:cx="369.8421"
-     inkscape:cy="206.44992"
+     inkscape:cx="369.71583"
+     inkscape:cy="206.19739"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -32,7 +32,7 @@
      inkscape:window-width="1920"
      inkscape:window-height="1027"
      inkscape:window-x="-8"
-     inkscape:window-y="-8"
+     inkscape:window-y="843"
      inkscape:window-maximized="1"
      inkscape:showpageshadow="2"
      inkscape:pagecheckerboard="0"
@@ -41,7 +41,7 @@
        id="grid8"
        units="px"
        originx="-79.676515"
-       originy="-43.391664"
+       originy="-42.267714"
        spacingx="0.26458333"
        spacingy="0.26458334"
        empcolor="#0099e5"
@@ -82,7 +82,7 @@
      inkscape:label="crane"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-79.676516,-43.391665)"><g
+     transform="translate(-79.676516,-42.267714)"><g
        id="g69"
        inkscape:label="leftArm"
        inkscape:export-filename="samples\Mechanics\Image\crane_game_arm_left.svg"
@@ -103,7 +103,7 @@
          inkscape:label="collider" /><circle
          style="fill:none;stroke:#000000;stroke-width:0.264999;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:none"
          id="circle3"
-         cx="90.086792"
-         cy="57.181911"
+         cx="95.966721"
+         cy="46.557949"
          r="4.1577382"
          inkscape:label="center" /></g></g></svg>
