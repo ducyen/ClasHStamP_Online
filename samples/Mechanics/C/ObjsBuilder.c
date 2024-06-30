@@ -90,7 +90,7 @@ Sprite* g_objects[] = {
         P( { 0.24998743673952534, 0.1266524605357124 } )        /* m_center */,
         P( 1 )                                                  /* m_mass */,
         P( 2 )                                                  /* m_group */,
-        P( &PhxPivotJoint_Ctor( &arm_main, 1, null, null ) )    /* m_joints */
+        P( &PhxPivotJoint_Ctor( &arm_main, 1, null, &PhxRotaryLimitJoint_Ctor( &arm_main, 1, -30.0, 30.0, null ) ) )/* m_joints */
     ),
     &PhxSprite_Ctor(                                            /* arm_left */
         P( { 0.27941176470588236, 0.2848699949634853, 0.0611764705882353, 0.10475950642155626 } )/* m_iniRect */,

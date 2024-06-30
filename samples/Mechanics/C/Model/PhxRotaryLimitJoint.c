@@ -2,15 +2,44 @@
 #define __PhxRotaryLimitJoint_INTERNAL__
 #include "CommonInclude.h"
 #include "PhxRotaryLimitJoint.h"
+#include "PhxSprite.h"                                          
 /** @public @memberof PhxRotaryLimitJoint */
 static void PhxRotaryLimitJoint_apply(
     PhxRotaryLimitJoint* pPhxRotaryLimitJoint,
     Sprite* target
 ){
+    cpSpace *space = ObjsBuilder_getPhxSpace();
+    PhxSprite* pTarget = ( PhxSprite* )target;
+    cpBody* pBodyTgt = PhxSprite_getBody( pTarget );
+    cpBody* pBodySrc;
+    if( pPhxRotaryLimitJoint->m_source == null ){
+        pBodySrc = cpSpaceGetStaticBody( space );
+    }else{
+        PhxSprite* pSource = ( PhxSprite* )( *pPhxRotaryLimitJoint->m_source );
+        pBodySrc = PhxSprite_getBody( pSource );
+    }
+    cpVect anchorTgt = cpBodyLocalToWorld( pBodyTgt, cpvzero );
+    if( pPhxRotaryLimitJoint->m_anchorTgt != null){
+        SDL_Rect* pRect = Sprite_getRect( *pPhxRotaryLimitJoint->m_anchorTgt );
+        cpBB bbTarget = cpBBNew( pRect->x, ObjsBuilder_getScreenHeight() - pRect->y - pRect->h, pRect->x + pRect->w, ObjsBuilder_getScreenHeight() - pRect->y );
+        anchorTgt = cpBBCenter( bbTarget );
+    }
+    pPhxRotaryLimitJoint->m_cpJoint = cpSpaceAddConstraint(
+        space, 
+        cpRotaryLimitJointNew(
+            pBodySrc, 
+            pBodyTgt, 
+            pPhxRotaryLimitJoint->min * M_PI / 180.0,
+            pPhxRotaryLimitJoint->max * M_PI / 180.0
+        )
+    );
 } /* PhxRotaryLimitJoint_apply */
 
 PhxJoint* PhxRotaryLimitJoint_Copy( PhxRotaryLimitJoint* pPhxRotaryLimitJoint, const PhxRotaryLimitJoint* pSource ){
     PhxJoint_Copy( ( PhxJoint* )pPhxRotaryLimitJoint, ( PhxJoint* )pSource );
+    pPhxRotaryLimitJoint->min = pSource->min;
+    pPhxRotaryLimitJoint->max = pSource->max;
+    pPhxRotaryLimitJoint->m_next0 = pSource->m_next0;
     return ( PhxJoint* )pPhxRotaryLimitJoint;
 }
 const PhxJointVtbl gPhxRotaryLimitJointVtbl = {
