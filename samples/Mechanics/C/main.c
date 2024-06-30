@@ -101,9 +101,9 @@ bool isPolygonConvex(cpVect *vertices, int vertexCount) {
     return true;
 }
 
-Polygon* decomposeConcavePolygon(cpVect *vertices, int vertexCount) {
+cpPolygon* decomposeConcavePolygon(cpVect *vertices, int vertexCount) {
     if (isPolygonConvex(vertices, vertexCount)) {
-        Polygon *polygon = malloc(sizeof(Polygon));
+        cpPolygon *polygon = malloc(sizeof(cpPolygon));
         polygon->vertices = malloc(vertexCount * sizeof(cpVect));
         memcpy(polygon->vertices, vertices, vertexCount * sizeof(cpVect));
         polygon->vertexCount = vertexCount;
@@ -111,8 +111,8 @@ Polygon* decomposeConcavePolygon(cpVect *vertices, int vertexCount) {
         return polygon;
     }
 
-    Polygon *result = NULL;
-    Polygon *last = NULL;
+    cpPolygon *result = NULL;
+    cpPolygon *last = NULL;
     cpVect *polygon = malloc(vertexCount * sizeof(cpVect));
     memcpy(polygon, vertices, vertexCount * sizeof(cpVect));
 
@@ -120,7 +120,7 @@ Polygon* decomposeConcavePolygon(cpVect *vertices, int vertexCount) {
         bool earFound = false;
         for (int i = 0; i < vertexCount; i++) {
             if (isEar(polygon, vertexCount, i)) {
-                Polygon *ear = malloc(sizeof(Polygon));
+                cpPolygon *ear = malloc(sizeof(cpPolygon));
                 ear->vertices = malloc(3 * sizeof(cpVect));
                 ear->vertexCount = 3;
                 ear->vertices[0] = polygon[(i == 0) ? vertexCount - 1 : i - 1];
@@ -146,7 +146,7 @@ Polygon* decomposeConcavePolygon(cpVect *vertices, int vertexCount) {
         if (!earFound) {
             free(polygon);
             while (result != NULL) {
-                Polygon *temp = result;
+                cpPolygon *temp = result;
                 result = result->next;
                 free(temp->vertices);
                 free(temp);
@@ -155,7 +155,7 @@ Polygon* decomposeConcavePolygon(cpVect *vertices, int vertexCount) {
         }
     }
 
-    Polygon *finalPolygon = malloc(sizeof(Polygon));
+    cpPolygon *finalPolygon = malloc(sizeof(cpPolygon));
     finalPolygon->vertices = malloc(vertexCount * sizeof(cpVect));
     memcpy(finalPolygon->vertices, polygon, vertexCount * sizeof(cpVect));
     finalPolygon->vertexCount = vertexCount;
@@ -246,8 +246,8 @@ void Cleanup(SDL_Window *window, SDL_Renderer *renderer) {
     SDL_Quit();
 }
 
-void printPolygons(Polygon *polygons) {
-    Polygon *current = polygons;
+void printPolygons(cpPolygon *polygons) {
+    cpPolygon *current = polygons;
     while (current != NULL) {
         printf("Polygon:\n");
         for (int i = 0; i < current->vertexCount; i++) {
@@ -257,9 +257,9 @@ void printPolygons(Polygon *polygons) {
     }
 }
 
-void freePolygons(Polygon *polygons) {
+void freePolygons(cpPolygon *polygons) {
     while (polygons != NULL) {
-        Polygon *temp = polygons;
+        cpPolygon *temp = polygons;
         polygons = polygons->next;
         free(temp->vertices);
         cpShapeFree(temp->shape);

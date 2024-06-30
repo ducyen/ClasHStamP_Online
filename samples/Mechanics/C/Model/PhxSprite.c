@@ -129,7 +129,7 @@ static bool PhxSprite_load(
     
     // Set physic information
     cpFloat totalMoment = 0.0;
-    Polygon *current = pPhxSprite->m_decomposedPolygons;
+    cpPolygon *current = pPhxSprite->m_decomposedPolygons;
     while (current != NULL) {
         totalMoment += cpMomentForPoly(pPhxSprite->m_mass / pPhxSprite->m_decomposedPolygons->vertexCount, current->vertexCount, current->vertices, cpvzero, 0.0);
         current = current->next;

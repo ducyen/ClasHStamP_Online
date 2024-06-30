@@ -22,7 +22,9 @@
 #if !defined( _MSC_VER )
 typedef int             boolean;
 #endif
+#if !defined( bool )
 typedef int             bool;
+#endif
 
 #define false   ( 0 )
 #define true    ( 1 )
@@ -102,12 +104,12 @@ typedef enum{
     MDD_EVENT_TYPE_MAX
 }MDD_EventType;
 
-typedef struct Polygon {
+typedef struct cpPolygon {
     cpVect *vertices;
     int vertexCount;
     cpShape* shape;
-    struct Polygon *next;
-} Polygon;
+    struct cpPolygon *next;
+} cpPolygon;
 
 const char* getInputDir( void );
 const char* getOutputDir( void );
@@ -121,7 +123,7 @@ void ObjsBuilder_showDoing( void*, void*, char* );
 cpSpace* ObjsBuilder_getPhxSpace( void   );
 int ObjsBuilder_getScreenWidth( void   );
 int ObjsBuilder_getScreenHeight( void   );
-Polygon* decomposeConcavePolygon(cpVect *vertices, int vertexCount);
-void freePolygons(Polygon *polygons);
+cpPolygon* decomposeConcavePolygon(cpVect *vertices, int vertexCount);
+void freePolygons(cpPolygon *polygons);
 
 #endif//__COMMON_INCLUDE_H__
