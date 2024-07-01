@@ -2,6 +2,11 @@
 #define __ClawMachine_H__
 typedef struct tagClawMachine ClawMachine;
 typedef enum tagClawMachineEvent {
+    ClawMachine_ClawBtnPressed,                                 
+    ClawMachine_LeftBtnDown,                                    
+    ClawMachine_LeftBtnUp,                                      
+    ClawMachine_RightBtnDown,                                   
+    ClawMachine_RightBtnUp,                                     
     ClawMachine_Trigger,                                        
     ClawMachine_EVENT_NUM
 }ClawMachine_EVENT;
@@ -16,9 +21,17 @@ const TCHAR* ClawMachineEvent_toString( ClawMachine_EVENT value );
 typedef struct tagClawMachineStm {
     HdStateMachine base;
 #define ClawMachineStm_ClawMachineTop_Dmy       ( 1ULL <<  0 )
-#define ClawMachineStm_ClawMachineTop           ( ClawMachineStm_ClawMachineTop_Dmy | ClawMachineStm_InitialPseudostate0 | ClawMachineStm_State0 )
+#define ClawMachineStm_ClawMachineTop           ( ClawMachineStm_ClawMachineTop_Dmy | ClawMachineStm_InitialPseudostate0 | ClawMachineStm_Ready | ClawMachineStm_GoingLeft | ClawMachineStm_GoingRight | ClawMachineStm_JunctionPoint0 | ClawMachineStm_GoingDown | ClawMachineStm_Clawing | ClawMachineStm_GoingUp | ClawMachineStm_GoingToGate | ClawMachineStm_GoingHome )
 #define ClawMachineStm_InitialPseudostate0      ( 1ULL <<  1 )
-#define ClawMachineStm_State0                   ( 1ULL <<  2 )
+#define ClawMachineStm_Ready                    ( 1ULL <<  2 )
+#define ClawMachineStm_GoingLeft                ( 1ULL <<  3 )
+#define ClawMachineStm_GoingRight               ( 1ULL <<  4 )
+#define ClawMachineStm_JunctionPoint0           ( 1ULL <<  5 )
+#define ClawMachineStm_GoingDown                ( 1ULL <<  6 )
+#define ClawMachineStm_Clawing                  ( 1ULL <<  7 )
+#define ClawMachineStm_GoingUp                  ( 1ULL <<  8 )
+#define ClawMachineStm_GoingToGate              ( 1ULL <<  9 )
+#define ClawMachineStm_GoingHome                ( 1ULL << 10 )
 }ClawMachineStm;
 #define ClawMachineStm_Init() {\
     .base = { HdStateMachine_Init( ClawMachineStm_ClawMachineTop, ClawMachineStm_ClawMachineTop ) },\
