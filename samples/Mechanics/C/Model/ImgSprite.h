@@ -7,7 +7,6 @@ typedef struct tagImgSprite ImgSprite;
 void ImgSprite_setOffset( ImgSprite* pImgSprite, int x, int y );
 const SDL_Point* ImgSprite_getOffset( ImgSprite* pImgSprite );
 const SDL_Rect* ImgSprite_getBoundary( ImgSprite* pImgSprite );
-const SDL_Point* ImgSprite_getCenter( ImgSprite* pImgSprite );
 void ImgSprite_setRotation( ImgSprite* pImgSprite, double value );
 double ImgSprite_getRotation( ImgSprite* pImgSprite );
 void ImgSprite_setBrightness( ImgSprite* pImgSprite, double value );

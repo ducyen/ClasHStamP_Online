@@ -30,7 +30,7 @@ const SDL_Rect* ImgSprite_getBoundary(
 } /* ImgSprite_getBoundary */
 
 /** @public @memberof ImgSprite */
-const SDL_Point* ImgSprite_getCenter(
+static const SDL_Point* ImgSprite_getCenter(
     ImgSprite* pImgSprite
 ){
     return &pImgSprite->m_center;
@@ -80,6 +80,9 @@ static void ImgSprite_draw0(
 static void ImgSprite_update(
     ImgSprite* pImgSprite
 ){
+    if( !Sprite_isUpdated( pImgSprite ) ){
+        return;
+    }
     Constraint* pCurConstraint = pImgSprite->m_constraints;
     while( pCurConstraint != null ){
         Constraint_apply( pCurConstraint, pImgSprite );
@@ -276,6 +279,7 @@ Sprite* ImgSprite_Copy( ImgSprite* pImgSprite, const ImgSprite* pSource ){
     return ( Sprite* )pImgSprite;
 }
 const SpriteVtbl gImgSpriteVtbl = {
+    .pgetCenter                  = ImgSprite_getCenter,
     .pdraw0                      = ImgSprite_draw0,
     .pupdate                     = ImgSprite_update,
     .pupdateMouseState           = ImgSprite_updateMouseState,

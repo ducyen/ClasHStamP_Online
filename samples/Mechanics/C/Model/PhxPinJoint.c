@@ -21,26 +21,31 @@ static void PhxPinJoint_apply(
 
     cpVect anchorSrc = cpvzero;
     if( pPhxPinJoint->m_anchorSrc != null){
-        SDL_Rect* pRect = Sprite_getRect( *pPhxPinJoint->m_anchorSrc );
-        cpBB bbSource = cpBBNew( pRect->x, ObjsBuilder_getScreenHeight() - pRect->y - pRect->h, pRect->x + pRect->w, ObjsBuilder_getScreenHeight() - pRect->y );
-        anchorSrc = cpBodyWorldToLocal( pBodySrc, cpBBCenter( bbSource ) );
+        SDL_Point* pCenter = Sprite_getCenter( *pPhxPinJoint->m_anchorSrc );
+        cpVect center = cpv( pCenter->x, ObjsBuilder_getScreenHeight() - pCenter->y );
+        anchorSrc = cpBodyWorldToLocal( pBodySrc, center );
     }
 
     cpVect anchorTgt = cpvzero;
     if( pPhxPinJoint->m_anchorTgt != null){
-        SDL_Rect* pRect = Sprite_getRect( *pPhxPinJoint->m_anchorTgt );
-        cpBB bbTarget = cpBBNew( pRect->x, ObjsBuilder_getScreenHeight() - pRect->y - pRect->h, pRect->x + pRect->w, ObjsBuilder_getScreenHeight() - pRect->y );
-        anchorTgt = cpBodyWorldToLocal( pBodyTgt, cpBBCenter( bbTarget ) );
+        SDL_Point* pCenter = Sprite_getCenter( *pPhxPinJoint->m_anchorTgt );
+        cpVect center = cpv( pCenter->x, ObjsBuilder_getScreenHeight() - pCenter->y );
+        anchorTgt = cpBodyWorldToLocal( pBodyTgt, center );
     }
-    pPhxPinJoint->m_cpJoint = cpSpaceAddConstraint(
-        space, 
-        cpPinJointNew(
-            pBodySrc, 
-            pBodyTgt, 
-            anchorSrc, 
-            anchorTgt
-        )
-    );
+    if( pPhxPinJoint->m_cpJoint == null ){
+        pPhxPinJoint->m_cpJoint = cpSpaceAddConstraint(
+            space, 
+            cpPinJointNew(
+                pBodySrc, 
+                pBodyTgt, 
+                anchorSrc, 
+                anchorTgt
+            )
+        );
+    }else{
+        cpPinJointSetAnchorA( pPhxPinJoint->m_cpJoint, anchorSrc );
+        cpPinJointSetAnchorB( pPhxPinJoint->m_cpJoint, anchorTgt );
+    }
 } /* PhxPinJoint_apply */
 
 PhxJoint* PhxPinJoint_Copy( PhxPinJoint* pPhxPinJoint, const PhxPinJoint* pSource ){

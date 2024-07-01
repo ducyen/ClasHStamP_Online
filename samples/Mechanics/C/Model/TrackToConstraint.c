@@ -14,8 +14,8 @@ static void TrackToConstraint_apply(
     ImgSprite* pSource = ( ImgSprite* )*pTrackToConstraint->m_source;
     ImgSprite* pTarget = ( ImgSprite* )target;
     
-    const SDL_Point* pSourceCenter = ImgSprite_getCenter( pSource );
-    const SDL_Point* pTargetCenter = ImgSprite_getCenter( pTarget );
+    const SDL_Point* pSourceCenter = Sprite_getCenter( pSource );
+    const SDL_Point* pTargetCenter = Sprite_getCenter( pTarget );
 
     double dx = pTargetCenter->x - pSourceCenter->x;
     double dy = pTargetCenter->y - pSourceCenter->y;

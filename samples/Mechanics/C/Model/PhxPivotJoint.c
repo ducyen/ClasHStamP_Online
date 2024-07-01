@@ -20,19 +20,20 @@ static void PhxPivotJoint_apply(
     }
     cpVect anchorTgt = cpBodyLocalToWorld( pBodyTgt, cpvzero );
     if( pPhxPivotJoint->m_anchorTgt != null){
-        SDL_Rect* pRect = Sprite_getRect( *pPhxPivotJoint->m_anchorTgt );
-        cpBB bbTarget = cpBBNew( pRect->x, ObjsBuilder_getScreenHeight() - pRect->y - pRect->h, pRect->x + pRect->w, ObjsBuilder_getScreenHeight() - pRect->y );
-        anchorTgt = cpBBCenter( bbTarget );
+        SDL_Point* pCenter = Sprite_getCenter( *pPhxPivotJoint->m_anchorTgt );
+        cpVect center = cpv( pCenter->x, ObjsBuilder_getScreenHeight() - pCenter->y );
+        anchorTgt = center;
     }
-    pPhxPivotJoint->m_cpJoint = cpSpaceAddConstraint(
-        space, 
-        cpPivotJointNew(
-            pBodySrc, 
-            pBodyTgt, 
-            anchorTgt
-        )
-    );
-
+    if( pPhxPivotJoint->m_cpJoint == null ){
+        pPhxPivotJoint->m_cpJoint = cpSpaceAddConstraint(
+            space, 
+            cpPivotJointNew(
+                pBodySrc, 
+                pBodyTgt, 
+                anchorTgt
+            )
+        );
+    }
 } /* PhxPivotJoint_apply */
 
 PhxJoint* PhxPivotJoint_Copy( PhxPivotJoint* pPhxPivotJoint, const PhxPivotJoint* pSource ){

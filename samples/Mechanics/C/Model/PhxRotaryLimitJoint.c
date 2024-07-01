@@ -20,19 +20,21 @@ static void PhxRotaryLimitJoint_apply(
     }
     cpVect anchorTgt = cpBodyLocalToWorld( pBodyTgt, cpvzero );
     if( pPhxRotaryLimitJoint->m_anchorTgt != null){
-        SDL_Rect* pRect = Sprite_getRect( *pPhxRotaryLimitJoint->m_anchorTgt );
-        cpBB bbTarget = cpBBNew( pRect->x, ObjsBuilder_getScreenHeight() - pRect->y - pRect->h, pRect->x + pRect->w, ObjsBuilder_getScreenHeight() - pRect->y );
-        anchorTgt = cpBBCenter( bbTarget );
+        SDL_Point* pCenter = Sprite_getCenter( *pPhxRotaryLimitJoint->m_anchorTgt );
+        cpVect center = cpv( pCenter->x, ObjsBuilder_getScreenHeight() - pCenter->y );
+        anchorTgt = center;
     }
-    pPhxRotaryLimitJoint->m_cpJoint = cpSpaceAddConstraint(
-        space, 
-        cpRotaryLimitJointNew(
-            pBodySrc, 
-            pBodyTgt, 
-            pPhxRotaryLimitJoint->min * M_PI / 180.0,
-            pPhxRotaryLimitJoint->max * M_PI / 180.0
-        )
-    );
+    if( pPhxRotaryLimitJoint->m_cpJoint == null ){
+        pPhxRotaryLimitJoint->m_cpJoint = cpSpaceAddConstraint(
+            space, 
+            cpRotaryLimitJointNew(
+                pBodySrc, 
+                pBodyTgt, 
+                pPhxRotaryLimitJoint->min * M_PI / 180.0,
+                pPhxRotaryLimitJoint->max * M_PI / 180.0
+            )
+        );
+    }
 } /* PhxRotaryLimitJoint_apply */
 
 PhxJoint* PhxRotaryLimitJoint_Copy( PhxRotaryLimitJoint* pPhxRotaryLimitJoint, const PhxRotaryLimitJoint* pSource ){

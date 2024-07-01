@@ -20,6 +20,12 @@ static void PhxSprite_draw0(
 static void PhxSprite_update(
     PhxSprite* pPhxSprite
 ){
+    // Update joints
+    PhxJoint* pCurJoint = pPhxSprite->m_joints;
+    while( pCurJoint != null ){
+        PhxJoint_apply( pCurJoint, ( Sprite* )pPhxSprite );
+        pCurJoint = PhxJoint_getNext( pCurJoint );
+    }
 } /* PhxSprite_update */
 
 /** @public @memberof PhxSprite */
@@ -151,7 +157,6 @@ static bool PhxSprite_load(
         cpShapeSetFriction(current->shape, 0.7);
         current = current->next;
     }
-
     return TRUE;
 } /* PhxSprite_load */
 

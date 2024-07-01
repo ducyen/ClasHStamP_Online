@@ -63,12 +63,13 @@ bool Sprite_isUpdated(
     return pSprite->m_updated;
 } /* Sprite_isUpdated */
 
-/** @public @memberof Sprite */
-SDL_Rect* Sprite_getRect(
+/** @public @pure @memberof Sprite */
+const SDL_Point* Sprite_getCenter(
     Sprite* pSprite
 ){
-    return &pSprite->m_rect;
-} /* Sprite_getRect */
+    if( pSprite->vTbl == NULL || pSprite->vTbl->pgetCenter == NULL ){ return ( const SDL_Point* )0; }
+    return pSprite->vTbl->pgetCenter( pSprite );
+} /* Sprite_getCenter */
 
 Sprite* Sprite_Copy( Sprite* pSprite, const Sprite* pSource ){
     pSprite->m_iniRect = pSource->m_iniRect;
