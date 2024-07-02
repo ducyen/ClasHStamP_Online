@@ -9,12 +9,14 @@ typedef struct tagPhxPinJoint PhxPinJoint;
 /** @memberof PhxPinJoint
  * @brief PhxPinJoint auto-generated constructor
  */
-#define PhxPinJoint_Init(_m_source, _m_influence, _m_anchorTgt, _m_anchorSrc, _m_next)\
-    PhxJoint_Init( P( _m_source ), P( _m_influence ), P( _m_anchorTgt ), P( _m_anchorSrc ), P( _m_next ) )\
+#define PhxPinJoint_Init(_m_source, _m_influence, _m_anchorTgt, _m_anchorSrc, _m_distance, _m_next0)\
+    PhxJoint_Init( P( _m_source ), P( _m_influence ), P( _m_anchorTgt ), P( _m_anchorSrc ), P( _m_next0 ) )\
     .vTbl = &gPhxPinJointVtbl,\
+    .m_distance = _m_distance,\
+    .m_next0 = _m_next0,\
 
-#define PhxPinJoint_Ctor( _m_source, _m_influence, _m_anchorTgt, _m_anchorSrc, _m_next )    ( PhxPinJoint ){ \
-    PhxPinJoint_Init( P( _m_source ), P( _m_influence ), P( _m_anchorTgt ), P( _m_anchorSrc ), P( _m_next ) ) \
+#define PhxPinJoint_Ctor( _m_source, _m_influence, _m_anchorTgt, _m_anchorSrc, _m_distance, _m_next0 )    ( PhxPinJoint ){ \
+    PhxPinJoint_Init( P( _m_source ), P( _m_influence ), P( _m_anchorTgt ), P( _m_anchorSrc ), P( _m_distance ), P( _m_next0 ) ) \
 }
 extern const PhxJointVtbl gPhxPinJointVtbl;
 PhxJoint* PhxPinJoint_Copy( PhxPinJoint* pPhxPinJoint, const PhxPinJoint* pSource );
@@ -23,6 +25,8 @@ PhxJoint* PhxPinJoint_Copy( PhxPinJoint* pPhxPinJoint, const PhxPinJoint* pSourc
  */
 #define PhxPinJoint_CLASS                                                                       \
     PhxJoint_CLASS                                                                              \
+    float* m_distance;                                                                                                      \
+    PhxJoint* m_next0;                                          \
 
 typedef struct tagPhxPinJoint{
     PhxPinJoint_CLASS    

@@ -43,14 +43,22 @@ static void PhxPinJoint_apply(
                 anchorTgt
             )
         );
+        if( pPhxPinJoint->m_distance != null ){
+            *pPhxPinJoint->m_distance = cpPinJointGetDist( pPhxPinJoint->m_cpJoint );
+        }
     }else{
         cpPinJointSetAnchorA( pPhxPinJoint->m_cpJoint, anchorSrc );
         cpPinJointSetAnchorB( pPhxPinJoint->m_cpJoint, anchorTgt );
+        if( pPhxPinJoint->m_distance != null ){
+            cpPinJointSetDist( pPhxPinJoint->m_cpJoint, *pPhxPinJoint->m_distance );
+        }
     }
 } /* PhxPinJoint_apply */
 
 PhxJoint* PhxPinJoint_Copy( PhxPinJoint* pPhxPinJoint, const PhxPinJoint* pSource ){
     PhxJoint_Copy( ( PhxJoint* )pPhxPinJoint, ( PhxJoint* )pSource );
+    pPhxPinJoint->m_distance = pSource->m_distance;
+    pPhxPinJoint->m_next0 = pSource->m_next0;
     return ( PhxJoint* )pPhxPinJoint;
 }
 const PhxJointVtbl gPhxPinJointVtbl = {

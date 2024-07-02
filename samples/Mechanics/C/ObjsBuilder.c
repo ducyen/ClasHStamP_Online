@@ -27,6 +27,7 @@ static int hardwareAccelerationAvailable = SDL_RENDERER_SOFTWARE;
 static int SCREEN_WIDTH = 640;                                  
 /** @private @static @memberof ObjsBuilder */
 static int SCREEN_HEIGHT = 480;                                 
+static float g_distance;
 Sprite* g_objects[] = {
     &FlexButton_Ctor(                                           /* pushButton */
         P( { 0.0747349964536908, 0.8263998812821528, 0.02373397075900981, 0.02772396673472237 } )/* m_iniRect */,
@@ -79,7 +80,7 @@ Sprite* g_objects[] = {
         P( { 0.4962441655295966, 0.554863466741726 } )          /* m_center */,
         P( 1 )                                                  /* m_mass */,
         P( 3 )                                                  /* m_group */,
-        P( &PhxPinJoint_Ctor( null, 1, null, &arm_main_hanger, null ) )/* m_joints */
+        P( &PhxPinJoint_Ctor( null, 1, null, &arm_main_hanger, &g_distance, null ) )/* m_joints */
     ),
     &PhxSprite_Ctor(                                            /* arm_right */
         P( { 0.12109826589595375, 0.3002943213296399, 0.06011560693641618, 0.1018005540166205 } )/* m_iniRect */,
@@ -240,6 +241,8 @@ int ObjsBuilder_startSim(
             bool hasUpdated = true;
             static int x = 0;
             ImgSprite_setOffset( arm_main_hanger, x++, 0 );
+            g_distance += 1.0;
+
             while( hasUpdated ){
                 for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
                     Sprite_update(g_objects[i]);
