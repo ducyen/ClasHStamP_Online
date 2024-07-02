@@ -168,7 +168,7 @@ vptr_impl,"const [cONTAINER]Vtbl g[tYPE]Vtbl = {
 "
 __c_oper,"/** @protected @memberof [cONTAINER] */
 static [tYPE][mODIFIER] [cONTAINER]_[nAME](
-    [cONTAINER]* p[cONTAINER]",",
+    [vALUE]* p[vALUE]",",
     [tYPE][mODIFIER] [nAME]",",
     [tYPE][mODIFIER] [nAME]","
 ){
@@ -177,7 +177,7 @@ static [tYPE][mODIFIER] [cONTAINER]_[nAME](
 "
 __b_oper,"/** @public @memberof [cONTAINER] */
 static [tYPE][mODIFIER] [cONTAINER]_[nAME](
-    [cONTAINER]* p[cONTAINER]",",
+    [vALUE]* p[vALUE]",",
     [tYPE][mODIFIER] [nAME]",",
     [tYPE][mODIFIER] [nAME]","
 ){
