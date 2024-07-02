@@ -1,4 +1,4 @@
-item,name,ext1st,extnxt,begin,end
+﻿item,name,ext1st,extnxt,begin,end
 file,[cONTAINER]/[nAME].h,"#include ""[nAME].h""
 ",,"#ifndef __[nAME]_H__
 #define __[nAME]_H__
