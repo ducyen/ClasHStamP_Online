@@ -5,7 +5,14 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "/usr/include/SDL2",
-                "/home/linuxbrew/.linuxbrew/include"
+                "/home/linuxbrew/.linuxbrew/include",
+                "/usr/include/SDL2",
+                "${workspaceFolder}",
+                "${workspaceFolder}/Model",
+                "${workspaceFolder}/NonOOP",
+                "${workspaceFolder}/include",
+                "/usr/local/include/SDL2",
+                ".",
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
