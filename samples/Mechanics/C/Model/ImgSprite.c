@@ -31,8 +31,9 @@ const SDL_Rect* ImgSprite_getBoundary(
 
 /** @public @memberof ImgSprite */
 static const SDL_Point* ImgSprite_getCenter(
-    ImgSprite* pImgSprite
+    Sprite* pSprite
 ){
+    ImgSprite* pImgSprite = ( ImgSprite* )pSprite;
     return &pImgSprite->m_center;
 } /* ImgSprite_getCenter */
 
@@ -63,9 +64,10 @@ void ImgSprite_setBrightness(
 
 /** @public @memberof ImgSprite */
 static void ImgSprite_draw0(
-    ImgSprite* pImgSprite,
+    Sprite* pSprite,
     SDL_Renderer* renderer
 ){
+    ImgSprite* pImgSprite = ( ImgSprite* )pSprite;
     ImgSprite* sprite = pImgSprite;
     EventListener* pCurListener = sprite->m_onDrawListeners;
     while( pCurListener != null ){
@@ -78,8 +80,9 @@ static void ImgSprite_draw0(
 
 /** @public @memberof ImgSprite */
 static void ImgSprite_update(
-    ImgSprite* pImgSprite
+    Sprite* pSprite
 ){
+    ImgSprite* pImgSprite = ( ImgSprite* )pSprite;
     if( !Sprite_isUpdated( pImgSprite ) ){
         return;
     }
@@ -93,48 +96,12 @@ static void ImgSprite_update(
 
 /** @public @memberof ImgSprite */
 static void ImgSprite_updateMouseState(
-    ImgSprite* pImgSprite,
+    Sprite* pSprite,
     int x,
     int y,
     int mouseEvent
 ){
-#if 0
-    extern SDL_Renderer* g_renderer;
-    SDL_Renderer* renderer = g_renderer;
-    ImgSprite* sprite = pImgSprite;
-    int mouseX = x;
-    int mouseY = y;
-    SDL_Rect rect = sprite->m_rect;
-    rect.x += sprite->m_offset.x;
-    rect.y += sprite->m_offset.y;
-
-    if (mouseX >= rect.x && mouseX < rect.x + rect.w &&
-        mouseY >= rect.y && mouseY < rect.y + rect.h) {
-        // Map mouse coordinates to texture coordinates
-        int texX = mouseX - rect.x;
-        int texY = mouseY - rect.y;
-
-        // Set the render target to the buffer texture
-        SDL_SetRenderTarget(renderer, sprite->m_buffer);
-        // Clear first
-        SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0x00); // White
-        SDL_RenderClear(renderer);
-        SDL_RenderCopyEx(renderer, sprite->m_image, NULL, NULL, sprite->m_angle, NULL, SDL_FLIP_NONE);
-
-        Uint32 pixel = { 0 };
-        int result = SDL_RenderReadPixels(renderer, &(SDL_Rect){texX, texY, 1, 1}, SDL_PIXELFORMAT_RGBA8888, &pixel, 4);
-        SDL_SetRenderTarget(renderer, NULL);
-
-        if (result == 0) {
-            Uint8 alpha = pixel >> 24;  // Extract the alpha value
-            if (alpha > 0) {
-                printf("Hehe\n");
-            }
-        } else {
-            printf("SDL_RenderReadPixels error: %s\n", SDL_GetError());
-        }
-    }
-#else
+    ImgSprite* pImgSprite = ( ImgSprite* )pSprite;
     ImgSprite* sprite = pImgSprite;
     int mouseX = x;
     int mouseY = y;
@@ -153,30 +120,15 @@ static void ImgSprite_updateMouseState(
             pCurListener = EventListener_getNext( pCurListener );
         }
     }
-#endif
 } /* ImgSprite_updateMouseState */
 
 /** @public @memberof ImgSprite */
 static void ImgSprite_draw1(
-    ImgSprite* pImgSprite,
+    Sprite* pSprite,
     SDL_Renderer* renderer
 ){
+    ImgSprite* pImgSprite = ( ImgSprite* )pSprite;
     int width, height;
-#if 0
-    // Set the new texture as the render target
-    SDL_SetRenderTarget(renderer, pImgSprite->m_buffer);
-
-    // Clear first
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0x00); // White
-    SDL_RenderClear( renderer );
-
-    // Copy the original texture to the new texture
-    SDL_RenderCopyEx(renderer, pImgSprite->m_image, NULL, NULL, pImgSprite->m_angle, NULL, SDL_FLIP_NONE);
-
-    // Reset the render target to the default
-    SDL_SetRenderTarget(renderer, NULL);
-#endif
-
     // Set texture color modulation (brightness)
     if( pImgSprite->m_image ){
         SDL_SetTextureColorMod(
@@ -213,9 +165,10 @@ static void ImgSprite_draw1(
 
 /** @public @memberof ImgSprite */
 static bool ImgSprite_load(
-    ImgSprite* pImgSprite,
+    Sprite* pSprite,
     SDL_Renderer* renderer
 ){
+    ImgSprite* pImgSprite = ( ImgSprite* )pSprite;
     char sRelPath[ 256 ];
     sprintf( sRelPath, "%s/../%s", getInputDir(), pImgSprite->m_imgPath );
     pImgSprite->m_image = IMG_LoadTexture(renderer, sRelPath);
@@ -259,8 +212,9 @@ static bool ImgSprite_load(
 
 /** @public @memberof ImgSprite */
 static void ImgSprite_free(
-    ImgSprite* pImgSprite
+    Sprite* pSprite
 ){
+    ImgSprite* pImgSprite = ( ImgSprite* )pSprite;
     if (pImgSprite->m_image) {
         SDL_DestroyTexture(pImgSprite->m_image);
     }

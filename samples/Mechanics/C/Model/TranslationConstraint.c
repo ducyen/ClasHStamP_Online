@@ -4,9 +4,10 @@
 #include "TranslationConstraint.h"
 /** @public @memberof TranslationConstraint */
 static void TranslationConstraint_apply(
-    TranslationConstraint* pTranslationConstraint,
+    Constraint* pConstraint,
     Sprite* target
 ){
+    TranslationConstraint* pTranslationConstraint = ( TranslationConstraint* )pConstraint;
     if( pTranslationConstraint->m_influence == 0 ){
         return;
     }

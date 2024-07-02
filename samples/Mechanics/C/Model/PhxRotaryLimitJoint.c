@@ -5,9 +5,10 @@
 #include "PhxSprite.h"                                          
 /** @public @memberof PhxRotaryLimitJoint */
 static void PhxRotaryLimitJoint_apply(
-    PhxRotaryLimitJoint* pPhxRotaryLimitJoint,
+    PhxJoint* pPhxJoint,
     Sprite* target
 ){
+    PhxRotaryLimitJoint* pPhxRotaryLimitJoint = ( PhxRotaryLimitJoint* )pPhxJoint;
     cpSpace *space = ObjsBuilder_getPhxSpace();
     PhxSprite* pTarget = ( PhxSprite* )target;
     cpBody* pBodyTgt = PhxSprite_getBody( pTarget );
@@ -20,7 +21,7 @@ static void PhxRotaryLimitJoint_apply(
     }
     cpVect anchorTgt = cpBodyLocalToWorld( pBodyTgt, cpvzero );
     if( pPhxRotaryLimitJoint->m_anchorTgt != null){
-        SDL_Point* pCenter = Sprite_getCenter( *pPhxRotaryLimitJoint->m_anchorTgt );
+        const SDL_Point* pCenter = Sprite_getCenter( *pPhxRotaryLimitJoint->m_anchorTgt );
         cpVect center = cpv( pCenter->x, ObjsBuilder_getScreenHeight() - pCenter->y );
         anchorTgt = center;
     }

@@ -4,9 +4,10 @@
 #include "Primitive.h"
 /** @public @memberof Primitive */
 static void Primitive_draw0(
-    Primitive* pPrimitive,
+    Sprite* pSprite,
     SDL_Renderer* renderer
 ){
+    Primitive* pPrimitive = ( Primitive* )pSprite;
     // Get the size of the renderer
     int width, height;
     if (SDL_GetRendererOutputSize(renderer, &width, &height) != 0) {
@@ -109,34 +110,38 @@ static void Primitive_draw0(
         }
         TTF_CloseFont(font);        
     }
-
+    
 } /* Primitive_draw0 */
 
 /** @public @memberof Primitive */
 static void Primitive_update(
-    Primitive* pPrimitive
+    Sprite* pSprite
 ){
+    Primitive* pPrimitive = ( Primitive* )pSprite;
 } /* Primitive_update */
 
 /** @public @memberof Primitive */
 static void Primitive_draw1(
-    Primitive* pPrimitive,
+    Sprite* pSprite,
     SDL_Renderer* renderer
 ){
+    Primitive* pPrimitive = ( Primitive* )pSprite;
 } /* Primitive_draw1 */
 
 /** @public @memberof Primitive */
 static bool Primitive_load(
-    Primitive* pPrimitive,
+    Sprite* pSprite,
     SDL_Renderer* renderer
 ){
+    Primitive* pPrimitive = ( Primitive* )pSprite;
     return true;
 } /* Primitive_load */
 
 /** @public @memberof Primitive */
 static void Primitive_free(
-    Primitive* pPrimitive
+    Sprite* pSprite
 ){
+    Primitive* pPrimitive = ( Primitive* )pSprite;
 } /* Primitive_free */
 
 Sprite* Primitive_Copy( Primitive* pPrimitive, const Primitive* pSource ){

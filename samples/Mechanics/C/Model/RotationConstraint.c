@@ -4,9 +4,10 @@
 #include "RotationConstraint.h"
 /** @public @memberof RotationConstraint */
 static void RotationConstraint_apply(
-    RotationConstraint* pRotationConstraint,
+    Constraint* pConstraint,
     Sprite* target
 ){
+    RotationConstraint* pRotationConstraint = ( RotationConstraint* )pConstraint;
     if( pRotationConstraint->m_influence == 0 ){
         return;
     }

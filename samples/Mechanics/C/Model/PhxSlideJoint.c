@@ -5,9 +5,10 @@
 #include "PhxSprite.h"                                          
 /** @public @memberof PhxSlideJoint */
 static void PhxSlideJoint_apply(
-    PhxSlideJoint* pPhxSlideJoint,
+    PhxJoint* pPhxJoint,
     Sprite* target
 ){
+    PhxSlideJoint* pPhxSlideJoint = ( PhxSlideJoint* )pPhxJoint;
     cpSpace *space = ObjsBuilder_getPhxSpace();
     PhxSprite* pTarget = ( PhxSprite* )target;
     cpBody* pBodyTgt = PhxSprite_getBody( pTarget );
@@ -21,14 +22,14 @@ static void PhxSlideJoint_apply(
 
     cpVect anchorSrc = cpvzero;
     if( pPhxSlideJoint->m_anchorSrc != null){
-        SDL_Point* pCenter = Sprite_getCenter( *pPhxSlideJoint->m_anchorSrc );
+        const SDL_Point* pCenter = Sprite_getCenter( *pPhxSlideJoint->m_anchorSrc );
         cpVect center = cpv( pCenter->x, ObjsBuilder_getScreenHeight() - pCenter->y );
         anchorSrc = cpBodyWorldToLocal( pBodySrc, center );
     }
 
     cpVect anchorTgt = cpvzero;
     if( pPhxSlideJoint->m_anchorTgt != null){
-        SDL_Point* pCenter = Sprite_getCenter( *pPhxSlideJoint->m_anchorTgt );
+        const SDL_Point* pCenter = Sprite_getCenter( *pPhxSlideJoint->m_anchorTgt );
         cpVect center = cpv( pCenter->x, ObjsBuilder_getScreenHeight() - pCenter->y );
         anchorTgt = cpBodyWorldToLocal( pBodyTgt, center );
     }

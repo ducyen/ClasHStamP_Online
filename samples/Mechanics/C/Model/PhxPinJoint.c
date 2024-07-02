@@ -5,9 +5,10 @@
 #include "PhxSprite.h"                                          
 /** @public @memberof PhxPinJoint */
 static void PhxPinJoint_apply(
-    PhxPinJoint* pPhxPinJoint,
+    PhxJoint* pPhxJoint,
     Sprite* target
 ){
+    PhxPinJoint* pPhxPinJoint = ( PhxPinJoint* )pPhxJoint;
     cpSpace *space = ObjsBuilder_getPhxSpace();
     PhxSprite* pTarget = ( PhxSprite* )target;
     cpBody* pBodyTgt = PhxSprite_getBody( pTarget );
@@ -21,14 +22,14 @@ static void PhxPinJoint_apply(
 
     cpVect anchorSrc = cpvzero;
     if( pPhxPinJoint->m_anchorSrc != null){
-        SDL_Point* pCenter = Sprite_getCenter( *pPhxPinJoint->m_anchorSrc );
+        const SDL_Point* pCenter = Sprite_getCenter( *pPhxPinJoint->m_anchorSrc );
         cpVect center = cpv( pCenter->x, ObjsBuilder_getScreenHeight() - pCenter->y );
         anchorSrc = cpBodyWorldToLocal( pBodySrc, center );
     }
 
     cpVect anchorTgt = cpvzero;
     if( pPhxPinJoint->m_anchorTgt != null){
-        SDL_Point* pCenter = Sprite_getCenter( *pPhxPinJoint->m_anchorTgt );
+        const SDL_Point* pCenter = Sprite_getCenter( *pPhxPinJoint->m_anchorTgt );
         cpVect center = cpv( pCenter->x, ObjsBuilder_getScreenHeight() - pCenter->y );
         anchorTgt = cpBodyWorldToLocal( pBodyTgt, center );
     }

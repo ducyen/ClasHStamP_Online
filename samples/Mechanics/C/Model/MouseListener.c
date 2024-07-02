@@ -4,10 +4,11 @@
 #include "MouseListener.h"
 /** @public @memberof MouseListener */
 static void MouseListener_actionPerformed(
-    MouseListener* pMouseListener,
+    EventListener* pEventListener,
     Sprite* target,
     void* pEventParams
 ){
+    MouseListener* pMouseListener = ( MouseListener* )pEventListener;
     if( pMouseListener->m_action != null ){
         if( pMouseListener->m_source != null ){
             pMouseListener->m_action( *pMouseListener->m_source, pMouseListener->m_event, pEventParams );

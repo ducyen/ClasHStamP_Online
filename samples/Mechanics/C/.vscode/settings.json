@@ -20,6 +20,8 @@
         "phxpivotjoint.h": "c",
         "phxslidejoint.h": "c",
         "phxjoint.h": "c",
-        "phxpinjoint.h": "c"
+        "phxpinjoint.h": "c",
+        "tracktoconstraint.h": "c",
+        "transformconstraint.h": "c"
     }
 }

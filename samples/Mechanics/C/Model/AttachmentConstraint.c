@@ -4,9 +4,10 @@
 #include "AttachmentConstraint.h"
 /** @public @memberof AttachmentConstraint */
 static void AttachmentConstraint_apply(
-    AttachmentConstraint* pAttachmentConstraint,
+    Constraint* pConstraint,
     Sprite* target
 ){
+    AttachmentConstraint* pAttachmentConstraint = ( AttachmentConstraint* )pConstraint;
     if( pAttachmentConstraint->m_influence == 0 ){
         return;
     }

@@ -4,15 +4,16 @@
 #include "TrackToConstraint.h"
 /** @public @memberof TrackToConstraint */
 static void TrackToConstraint_apply(
-    TrackToConstraint* pTrackToConstraint,
+    Constraint* pConstraint,
     Sprite* target
 ){
+    TrackToConstraint* pTrackToConstraint = ( TrackToConstraint* )pConstraint;
     if( pTrackToConstraint->m_influence == 0 ){
         return;
     }
 
-    ImgSprite* pSource = ( ImgSprite* )*pTrackToConstraint->m_source;
-    ImgSprite* pTarget = ( ImgSprite* )target;
+    Sprite* pSource = *pTrackToConstraint->m_source;
+    Sprite* pTarget = target;
     
     const SDL_Point* pSourceCenter = Sprite_getCenter( pSource );
     const SDL_Point* pTargetCenter = Sprite_getCenter( pTarget );

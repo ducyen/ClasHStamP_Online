@@ -4,9 +4,10 @@
 #include "PhxRatchetJoint.h"
 /** @public @memberof PhxRatchetJoint */
 static void PhxRatchetJoint_apply(
-    PhxRatchetJoint* pPhxRatchetJoint,
+    PhxJoint* pPhxJoint,
     Sprite* target
 ){
+    PhxRatchetJoint* pPhxRatchetJoint = ( PhxRatchetJoint* )pPhxJoint;
 } /* PhxRatchetJoint_apply */
 
 PhxJoint* PhxRatchetJoint_Copy( PhxRatchetJoint* pPhxRatchetJoint, const PhxRatchetJoint* pSource ){

@@ -4,9 +4,10 @@
 #include "PhxDampedRotarySpring.h"
 /** @public @memberof PhxDampedRotarySpring */
 static void PhxDampedRotarySpring_apply(
-    PhxDampedRotarySpring* pPhxDampedRotarySpring,
+    PhxJoint* pPhxJoint,
     Sprite* target
 ){
+    PhxDampedRotarySpring* pPhxDampedRotarySpring = ( PhxDampedRotarySpring* )pPhxJoint;
 } /* PhxDampedRotarySpring_apply */
 
 PhxJoint* PhxDampedRotarySpring_Copy( PhxDampedRotarySpring* pPhxDampedRotarySpring, const PhxDampedRotarySpring* pSource ){

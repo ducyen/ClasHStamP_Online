@@ -4,9 +4,10 @@
 #include "FlexButton.h"
 /** @public @memberof FlexButton */
 static bool FlexButton_load(
-    FlexButton* pFlexButton,
+    Sprite* pSprite,
     SDL_Renderer* renderer
 ){
+    FlexButton* pFlexButton = ( FlexButton* )pSprite;
     // Get the size of the renderer
     int width, height;
     if (SDL_GetRendererOutputSize(renderer, &width, &height) != 0) {
@@ -26,27 +27,30 @@ static bool FlexButton_load(
 
 /** @public @memberof FlexButton */
 static void FlexButton_draw0(
-    FlexButton* pFlexButton,
+    Sprite* pSprite,
     SDL_Renderer* renderer
 ){
+    FlexButton* pFlexButton = ( FlexButton* )pSprite;
     FlexButton_EventProc( pFlexButton, FlexButton_DRAW0, renderer );
 } /* FlexButton_draw0 */
 
 /** @public @memberof FlexButton */
 static void FlexButton_draw1(
-    FlexButton* pFlexButton,
+    Sprite* pSprite,
     SDL_Renderer* renderer
 ){
+    FlexButton* pFlexButton = ( FlexButton* )pSprite;
     FlexButton_EventProc( pFlexButton, FlexButton_DRAW1, renderer );
 } /* FlexButton_draw1 */
 
 /** @public @memberof FlexButton */
 static void FlexButton_updateMouseState(
-    FlexButton* pFlexButton,
+    Sprite* pSprite,
     int x,
     int y,
     int mouseEvent
 ){
+    FlexButton* pFlexButton = ( FlexButton* )pSprite;
     FlexButton* sprite = pFlexButton;
     int mouseX = x;
     int mouseY = y;

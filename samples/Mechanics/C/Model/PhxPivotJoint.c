@@ -5,9 +5,10 @@
 #include "PhxSprite.h"                                          
 /** @public @memberof PhxPivotJoint */
 static void PhxPivotJoint_apply(
-    PhxPivotJoint* pPhxPivotJoint,
+    PhxJoint* pPhxJoint,
     Sprite* target
 ){
+    PhxPivotJoint* pPhxPivotJoint = ( PhxPivotJoint* )pPhxJoint;
     cpSpace *space = ObjsBuilder_getPhxSpace();
     PhxSprite* pTarget = ( PhxSprite* )target;
     cpBody* pBodyTgt = PhxSprite_getBody( pTarget );
@@ -20,7 +21,7 @@ static void PhxPivotJoint_apply(
     }
     cpVect anchorTgt = cpBodyLocalToWorld( pBodyTgt, cpvzero );
     if( pPhxPivotJoint->m_anchorTgt != null){
-        SDL_Point* pCenter = Sprite_getCenter( *pPhxPivotJoint->m_anchorTgt );
+        const SDL_Point* pCenter = Sprite_getCenter( *pPhxPivotJoint->m_anchorTgt );
         cpVect center = cpv( pCenter->x, ObjsBuilder_getScreenHeight() - pCenter->y );
         anchorTgt = center;
     }

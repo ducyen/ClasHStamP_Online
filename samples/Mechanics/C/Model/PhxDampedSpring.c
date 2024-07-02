@@ -4,9 +4,10 @@
 #include "PhxDampedSpring.h"
 /** @public @memberof PhxDampedSpring */
 static void PhxDampedSpring_apply(
-    PhxDampedSpring* pPhxDampedSpring,
+    PhxJoint* pPhxJoint,
     Sprite* target
 ){
+    PhxDampedSpring* pPhxDampedSpring = ( PhxDampedSpring* )pPhxJoint;
 } /* PhxDampedSpring_apply */
 
 PhxJoint* PhxDampedSpring_Copy( PhxDampedSpring* pPhxDampedSpring, const PhxDampedSpring* pSource ){

@@ -4,9 +4,10 @@
 #include "PhxGearJoint.h"
 /** @public @memberof PhxGearJoint */
 static void PhxGearJoint_apply(
-    PhxGearJoint* pPhxGearJoint,
+    PhxJoint* pPhxJoint,
     Sprite* target
 ){
+    PhxGearJoint* pPhxGearJoint = ( PhxGearJoint* )pPhxJoint;
 } /* PhxGearJoint_apply */
 
 PhxJoint* PhxGearJoint_Copy( PhxGearJoint* pPhxGearJoint, const PhxGearJoint* pSource ){

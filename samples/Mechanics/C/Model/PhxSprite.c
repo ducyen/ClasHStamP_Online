@@ -5,9 +5,10 @@
 #include "ObjsBuilder.h"                                        
 /** @public @memberof PhxSprite */
 static void PhxSprite_draw0(
-    PhxSprite* pPhxSprite,
+    Sprite* pSprite,
     SDL_Renderer* renderer
 ){
+    PhxSprite* pPhxSprite = ( PhxSprite* )pSprite;
     // Apply joints
     PhxJoint* pCurJoint = pPhxSprite->m_joints;
     while( pCurJoint != null ){
@@ -18,8 +19,9 @@ static void PhxSprite_draw0(
 
 /** @public @memberof PhxSprite */
 static void PhxSprite_update(
-    PhxSprite* pPhxSprite
+    Sprite* pSprite
 ){
+    PhxSprite* pPhxSprite = ( PhxSprite* )pSprite;
     // Update joints
     PhxJoint* pCurJoint = pPhxSprite->m_joints;
     while( pCurJoint != null ){
@@ -30,18 +32,20 @@ static void PhxSprite_update(
 
 /** @public @memberof PhxSprite */
 static void PhxSprite_updateMouseState(
-    PhxSprite* pPhxSprite,
+    Sprite* pSprite,
     int x,
     int y,
     int mouseEvent
 ){
+    PhxSprite* pPhxSprite = ( PhxSprite* )pSprite;
 } /* PhxSprite_updateMouseState */
 
 /** @public @memberof PhxSprite */
 static void PhxSprite_draw1(
-    PhxSprite* pPhxSprite,
+    Sprite* pSprite,
     SDL_Renderer* renderer
 ){
+    PhxSprite* pPhxSprite = ( PhxSprite* )pSprite;
     // Get the size of the renderer
     int SCREEN_WIDTH, SCREEN_HEIGHT;
     if (SDL_GetRendererOutputSize(renderer, &SCREEN_WIDTH, &SCREEN_HEIGHT) != 0) {
@@ -64,9 +68,10 @@ static void PhxSprite_draw1(
 
 /** @public @memberof PhxSprite */
 static bool PhxSprite_load(
-    PhxSprite* pPhxSprite,
+    Sprite* pSprite,
     SDL_Renderer* renderer
 ){
+    PhxSprite* pPhxSprite = ( PhxSprite* )pSprite;
     char sRelPath[ 256 ];
     sprintf( sRelPath, "%s/../%s", getInputDir(), pPhxSprite->m_imgPath );
     // Load PNG image
@@ -162,8 +167,9 @@ static bool PhxSprite_load(
 
 /** @public @memberof PhxSprite */
 static void PhxSprite_free(
-    PhxSprite* pPhxSprite
+    Sprite* pSprite
 ){
+    PhxSprite* pPhxSprite = ( PhxSprite* )pSprite;
     if (pPhxSprite->m_image) {
         SDL_DestroyTexture(pPhxSprite->m_image);
     }

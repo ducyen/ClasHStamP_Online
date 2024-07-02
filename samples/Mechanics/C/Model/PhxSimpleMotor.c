@@ -4,9 +4,10 @@
 #include "PhxSimpleMotor.h"
 /** @public @memberof PhxSimpleMotor */
 static void PhxSimpleMotor_apply(
-    PhxSimpleMotor* pPhxSimpleMotor,
+    PhxJoint* pPhxJoint,
     Sprite* target
 ){
+    PhxSimpleMotor* pPhxSimpleMotor = ( PhxSimpleMotor* )pPhxJoint;
 } /* PhxSimpleMotor_apply */
 
 PhxJoint* PhxSimpleMotor_Copy( PhxSimpleMotor* pPhxSimpleMotor, const PhxSimpleMotor* pSource ){
