@@ -13,7 +13,7 @@ static void MouseListener_actionPerformed(
         if( pMouseListener->m_source != null ){
             pMouseListener->m_action( *pMouseListener->m_source, pMouseListener->m_event, pEventParams );
         } else{
-            pMouseListener->m_action( null, pMouseListener->m_event, pEventParams );
+            pMouseListener->m_action( target, pMouseListener->m_event, pEventParams );
         }
     }
 } /* MouseListener_actionPerformed */

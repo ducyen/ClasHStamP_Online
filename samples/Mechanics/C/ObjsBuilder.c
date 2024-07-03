@@ -27,7 +27,8 @@ static int hardwareAccelerationAvailable = SDL_RENDERER_SOFTWARE;
 static int SCREEN_WIDTH = 640;                                  
 /** @private @static @memberof ObjsBuilder */
 static int SCREEN_HEIGHT = 480;                                 
-static float g_distance;
+/** @private @static @memberof ObjsBuilder */
+static double g_distance;                                       
 Sprite* g_objects[] = {
     &FlexButton_Ctor(                                           /* pushButton */
         P( { 0.0747349964536908, 0.8263998812821528, 0.02373397075900981, 0.02772396673472237 } )/* m_iniRect */,
@@ -35,7 +36,7 @@ Sprite* g_objects[] = {
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 1 )                                                  /* m_valueMax */,
         P( FlexBtnStm_PushStyle )                               /* m_style */,
-        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
+        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
         P( null )                                               /* m_buttonListeners */
     ),
     &PhxSprite_Ctor(                                            /* prize0 */
@@ -241,7 +242,7 @@ int ObjsBuilder_startSim(
             bool hasUpdated = true;
             static int x = 0;
             ImgSprite_setOffset( arm_main_hanger, x++, 0 );
-            g_distance += 1.0;
+            g_distance += 0.1;
 
             while( hasUpdated ){
                 for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
