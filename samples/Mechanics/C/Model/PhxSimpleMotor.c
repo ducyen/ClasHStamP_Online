@@ -2,16 +2,46 @@
 #define __PhxSimpleMotor_INTERNAL__
 #include "CommonInclude.h"
 #include "PhxSimpleMotor.h"
+#include "PhxSprite.h"
 /** @public @memberof PhxSimpleMotor */
 static void PhxSimpleMotor_apply(
     PhxJoint* pPhxJoint,
     Sprite* target
 ){
     PhxSimpleMotor* pPhxSimpleMotor = ( PhxSimpleMotor* )pPhxJoint;
+    cpSpace *space = ObjsBuilder_getPhxSpace();
+    PhxSprite* pTarget = ( PhxSprite* )target;
+    cpBody* pBodyTgt = PhxSprite_getBody( pTarget );
+    cpBody* pBodySrc;
+    if( pPhxSimpleMotor->m_source == null ){
+        pBodySrc = cpSpaceGetStaticBody( space );
+    }else{
+        PhxSprite* pSource = ( PhxSprite* )( *pPhxSimpleMotor->m_source );
+        pBodySrc = PhxSprite_getBody( pSource );
+    }
+    cpVect anchorTgt = cpBodyLocalToWorld( pBodyTgt, cpvzero );
+    if( pPhxSimpleMotor->m_anchorTgt != null){
+        const SDL_Point* pCenter = Sprite_getCenter( *pPhxSimpleMotor->m_anchorTgt );
+        cpVect center = cpv( pCenter->x, ObjsBuilder_getScreenHeight() - pCenter->y );
+        anchorTgt = center;
+    }
+    if( pPhxSimpleMotor->m_cpJoint == null ){
+        pPhxSimpleMotor->m_cpJoint = cpSpaceAddConstraint(
+            space, 
+            cpSimpleMotorNew(
+                pBodySrc, 
+                pBodyTgt, 
+                pPhxSimpleMotor->m_rate
+            )
+        );
+    }
+
 } /* PhxSimpleMotor_apply */
 
 PhxJoint* PhxSimpleMotor_Copy( PhxSimpleMotor* pPhxSimpleMotor, const PhxSimpleMotor* pSource ){
     PhxJoint_Copy( ( PhxJoint* )pPhxSimpleMotor, ( PhxJoint* )pSource );
+    pPhxSimpleMotor->m_rate = pSource->m_rate;
+    pPhxSimpleMotor->m_next0 = pSource->m_next0;
     return ( PhxJoint* )pPhxSimpleMotor;
 }
 const PhxJointVtbl gPhxSimpleMotorVtbl = {

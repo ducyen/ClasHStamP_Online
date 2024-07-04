@@ -28,7 +28,9 @@ static int SCREEN_WIDTH = 640;
 /** @private @static @memberof ObjsBuilder */
 static int SCREEN_HEIGHT = 480;                                 
 /** @private @static @memberof ObjsBuilder */
-static double g_distance;                                       
+float g_x = 0;                                           
+/** @private @static @memberof ObjsBuilder */
+float g_y = 0;                                           
 Sprite* g_objects[] = {
     &FlexButton_Ctor(                                           /* pushButton */
         P( { 0.0747349964536908, 0.8263998812821528, 0.02373397075900981, 0.02772396673472237 } )/* m_iniRect */,
@@ -36,7 +38,7 @@ Sprite* g_objects[] = {
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 1 )                                                  /* m_valueMax */,
         P( FlexBtnStm_PushStyle )                               /* m_style */,
-        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
+        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
         P( null )                                               /* m_buttonListeners */
     ),
     &PhxSprite_Ctor(                                            /* prize0 */
@@ -81,7 +83,7 @@ Sprite* g_objects[] = {
         P( { 0.4962441655295966, 0.554863466741726 } )          /* m_center */,
         P( 1 )                                                  /* m_mass */,
         P( 3 )                                                  /* m_group */,
-        P( &PhxPinJoint_Ctor( null, 1, null, &arm_main_hanger, &g_distance, null ) )/* m_joints */
+        P( &PhxPinJoint_Ctor( null, 1, null, &arm_main_hanger, &g_y, null ) )/* m_joints */
     ),
     &PhxSprite_Ctor(                                            /* arm_right */
         P( { 0.12109826589595375, 0.3002943213296399, 0.06011560693641618, 0.1018005540166205 } )/* m_iniRect */,
@@ -103,7 +105,7 @@ Sprite* g_objects[] = {
         P( { 0.7355190028131329, 0.12690266291390603 } )        /* m_center */,
         P( 1 )                                                  /* m_mass */,
         P( 1 )                                                  /* m_group */,
-        P( &PhxPivotJoint_Ctor( &arm_main, 1, null, null ) )    /* m_joints */
+        P( &PhxPivotJoint_Ctor( &arm_main, 1, null, &PhxRotaryLimitJoint_Ctor( &arm_main, 1, -30.0, 30.0, null ) ) )    /* m_joints */
     ),
     &ImgSprite_Ctor(                                            /* arm_main_hanger */
         P( { 0.1023121387283237, 0.07106994459833794, 0.023121387283236993, 0.027700831024930747 } )/* m_iniRect */,
@@ -240,9 +242,9 @@ int ObjsBuilder_startSim(
 
         while (!quit) {
             bool hasUpdated = true;
-            static int x = 0;
-            ImgSprite_setOffset( arm_main_hanger, x++, 0 );
-            g_distance += 0.1;
+
+            ImgSprite_setOffset( arm_main_hanger, g_x += 0.1, 0 );
+            g_y += 0.1;
 
             while( hasUpdated ){
                 for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
@@ -257,6 +259,7 @@ int ObjsBuilder_startSim(
             }
 
             cpBodySetTorque( PhxSprite_getBody( arm_right ), 100 );
+            cpBodySetTorque( PhxSprite_getBody( arm_left ), -100 );
 
             while (SDL_PollEvent(&e) != 0) {
                 if (e.type == SDL_QUIT) {

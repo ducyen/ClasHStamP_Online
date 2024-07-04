@@ -111,6 +111,10 @@ typedef struct cpPolygon {
     struct cpPolygon *next;
 } cpPolygon;
 
+extern float g_x, g_y;
+#define SPEED_X ( 0.1 )
+#define SPEED_Y ( 0.1 )
+
 const char* getInputDir( void );
 const char* getOutputDir( void );
 
