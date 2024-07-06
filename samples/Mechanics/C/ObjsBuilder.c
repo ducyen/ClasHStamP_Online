@@ -417,7 +417,7 @@ void ObjsBuilder_showDiagram(
     int l, t, w, h, dgrX, dgrY, dgrW, dgrH;
     sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", s, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
     if( pSprite->m_stmWindow == null ){
-        int SCREEN_WIDTH = 0;
+        int SCREEN_WIDTH = 1;
         int SCREEN_HEIGHT = 0;
         char windowName[255];
         sprintf(windowName, "%s - %s", s, pSprite->m_name);
@@ -440,6 +440,7 @@ void ObjsBuilder_showDiagram(
         SDL_Surface *imageSurface = IMG_Load(sRelPath);
         pStm->m_stmRect.w = imageSurface->w;
         pStm->m_stmRect.h = imageSurface->h;
+        printf( "%s size: %dx%d\n", sRelPath, pStm->m_stmRect.w, pStm->m_stmRect.h );
         SDL_Renderer* stmRenderer = SDL_GetRenderer( pSprite->m_stmWindow );
         pStm->m_stmImage = SDL_CreateTextureFromSurface(stmRenderer, imageSurface);
         int width, height;
@@ -451,6 +452,7 @@ void ObjsBuilder_showDiagram(
         }
         height = height + pStm->m_stmRect.h;
         SDL_SetWindowSize( pSprite->m_stmWindow, width, height );
+        SDL_RenderPresent(stmRenderer);                         // Refresh Renderer
         SDL_FreeSurface(imageSurface);
 
         Uint32 format;
