@@ -232,6 +232,8 @@ int ObjsBuilder_startSim(
         SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF); // White
         SDL_RenderClear(renderer);
 
+        clawMachine->m_stmShow = true;
+        
         for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
             Sprite_draw0(g_objects[i], renderer);
         }
@@ -239,8 +241,6 @@ int ObjsBuilder_startSim(
         // Reset the render target to the default
         SDL_SetRenderTarget(renderer, NULL);       
     }
-    
-    clawMachine->m_stmShow = true;
     
     if (nResult == S_OK) {
         bool quit = false;
