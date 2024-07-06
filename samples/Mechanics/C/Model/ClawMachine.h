@@ -1,5 +1,6 @@
 #ifndef __ClawMachine_H__
 #define __ClawMachine_H__
+#include "Sprite.h"
 typedef struct tagClawMachine ClawMachine;
 typedef enum tagClawMachineEvent {
     ClawMachine_ClawBtnPressed,                                 
@@ -12,7 +13,9 @@ typedef enum tagClawMachineEvent {
 }ClawMachine_EVENT;
 const TCHAR* ClawMachineEvent_toString( ClawMachine_EVENT value );
 #endif//__ClawMachine_H__
-#if !defined( ClawMachine_Init ) && ( defined( __ClawMachine_INTERNAL__ )  )
+#if !defined( ClawMachine_Init ) && ( defined( __ClawMachine_INTERNAL__ ) || defined( __ObjsBuilder_INTERNAL__ )  )
+#define __Sprite_INTERNAL__
+#include "Sprite.h"
 #define __HdStateMachine_INTERNAL__
 #include "HdStateMachine.h"
 /** @class ClawMachineStm
@@ -43,18 +46,19 @@ BOOL ClawMachine_IsIn( ClawMachine* pClawMachine, uint64_t nState );
 /** @memberof ClawMachine
  * @brief ClawMachine auto-generated constructor
  */
-#define ClawMachine_Init()\
+#define ClawMachine_Init(_m_iniRect, _m_name, _m_imgPath)\
+    Sprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ) )\
     .mainStm = ClawMachineStm_Init(),\
 
-#define ClawMachine_Ctor(  )    ( ClawMachine ){ \
-    ClawMachine_Init(  ) \
+#define ClawMachine_Ctor( _m_iniRect, _m_name, _m_imgPath )    ( ClawMachine ){ \
+    ClawMachine_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ) ) \
 }
-ClawMachine* ClawMachine_Copy( ClawMachine* pClawMachine, const ClawMachine* pSource );
+Sprite* ClawMachine_Copy( ClawMachine* pClawMachine, const ClawMachine* pSource );
 /** @class ClawMachine
- * @extends 
+ * @extends Sprite
  */
 #define ClawMachine_CLASS                                                                       \
-    size_t cbSize;                                                                              \
+    Sprite_CLASS                                                                                \
     ClawMachineStm mainStm;                                     
 
 typedef struct tagClawMachine{

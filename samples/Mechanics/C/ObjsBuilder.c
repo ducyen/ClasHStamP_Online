@@ -21,6 +21,7 @@
 #include "PhxPinJoint.h"                                        
 #include "PhxPivotJoint.h"                                      
 #include "PhxGrooveJoint.h"                                     
+#include "ClawMachine.h"
 /** @private @static @memberof ObjsBuilder */
 static int hardwareAccelerationAvailable = SDL_RENDERER_SOFTWARE;
 /** @private @static @memberof ObjsBuilder */
@@ -39,7 +40,7 @@ Sprite* g_objects[] = {
         P( 1 )                                                  /* m_valueMax */,
         P( FlexBtnStm_PushStyle )                               /* m_style */,
         P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
-        P( null )                                               /* m_buttonListeners */
+        P( &EventListener_Ctor( MDD_ON_MOUSE_DOWN, ClawMachine_EventProc, &clawMachine, ClawMachine_RightBtnDown, null ) )/* m_buttonListeners */
     ),
     &PhxSprite_Ctor(                                            /* prize0 */
         P( { 0.3468601369094194, 0.7061811896436976, 0.09788028479729712, 0.1692670960851718 } )/* m_iniRect */,
@@ -105,7 +106,7 @@ Sprite* g_objects[] = {
         P( { 0.7355190028131329, 0.12690266291390603 } )        /* m_center */,
         P( 1 )                                                  /* m_mass */,
         P( 1 )                                                  /* m_group */,
-        P( &PhxPivotJoint_Ctor( &arm_main, 1, null, &PhxRotaryLimitJoint_Ctor( &arm_main, 1, -30.0, 30.0, null ) ) )    /* m_joints */
+        P( &PhxPivotJoint_Ctor( &arm_main, 1, null, null ) )    /* m_joints */
     ),
     &ImgSprite_Ctor(                                            /* arm_main_hanger */
         P( { 0.1023121387283237, 0.07106994459833794, 0.023121387283236993, 0.027700831024930747 } )/* m_iniRect */,
@@ -114,7 +115,7 @@ Sprite* g_objects[] = {
         P( { 0.0, 0.0 } )                                       /* m_center */,
         P( null )                                               /* m_constraints */,
         P( null )                                               /* m_mouseListeners */,
-        P( null )                                               /* m_onDrawListeners */
+        P( &MouseListener_Ctor( 0, ClawMachine_Start, &clawMachine, 0, null ) )/* m_onDrawListeners */
     ),
     &ImgSprite_Ctor(                                            /* gate_position */
         P( { 0.7895953757225433, 0.07063711911357343, 0.023121387283236993, 0.027700831024930747 } )/* m_iniRect */,
@@ -124,6 +125,11 @@ Sprite* g_objects[] = {
         P( null )                                               /* m_constraints */,
         P( null )                                               /* m_mouseListeners */,
         P( null )                                               /* m_onDrawListeners */
+    ),
+    &ClawMachine_Ctor(                                          /* clawMachine */
+        P( { 0.42947976878612726, 0.1520948753462604, 0.1676300578034682, 0.2027354570637119 } )/* m_iniRect */,
+        P( "clawMachine" )                                      /* m_name */,
+        P( "ClawMachine.png" )                                  /* m_imgPath */
     )
 };
 Sprite* getobj( int id ){
@@ -214,7 +220,7 @@ int ObjsBuilder_startSim(
 
     for( int i = 0; i < sizeof( g_objects ) / sizeof( g_objects[ 0 ] ) && nResult == S_OK; i++ ){
         if( Sprite_load( g_objects[ i ], renderer ) == false ){
-            nResult = S_FALSE;
+            //nResult = S_FALSE;
         }
     }
 
@@ -234,7 +240,7 @@ int ObjsBuilder_startSim(
         SDL_SetRenderTarget(renderer, NULL);       
     }
     
-    //carBody->m_stmShow = true;
+    clawMachine->m_stmShow = true;
     
     if (nResult == S_OK) {
         bool quit = false;

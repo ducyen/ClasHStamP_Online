@@ -334,6 +334,7 @@ BOOL ClawMachine_Reset( ClawMachine* pClawMachine, uint64_t nEntryPoint ){
 BOOL ClawMachine_IsIn( ClawMachine* pClawMachine, uint64_t nState ){
     return ClawMachineStm_IsIn( &pClawMachine->mainStm, nState );
 }
-ClawMachine* ClawMachine_Copy( ClawMachine* pClawMachine, const ClawMachine* pSource ){
-    return ( ClawMachine* )pClawMachine;
+Sprite* ClawMachine_Copy( ClawMachine* pClawMachine, const ClawMachine* pSource ){
+    Sprite_Copy( ( Sprite* )pClawMachine, ( Sprite* )pSource );
+    return ( Sprite* )pClawMachine;
 }

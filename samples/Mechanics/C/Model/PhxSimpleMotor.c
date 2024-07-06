@@ -2,7 +2,7 @@
 #define __PhxSimpleMotor_INTERNAL__
 #include "CommonInclude.h"
 #include "PhxSimpleMotor.h"
-#include "PhxSprite.h"
+#include "PhxSprite.h"                                          
 /** @public @memberof PhxSimpleMotor */
 static void PhxSimpleMotor_apply(
     PhxJoint* pPhxJoint,

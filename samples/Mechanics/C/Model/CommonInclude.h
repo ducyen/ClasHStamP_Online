@@ -101,6 +101,8 @@ typedef struct tagRelativeRect{
 typedef enum{
     MDD_ON_CLICK = SDL_USEREVENT,
     MDD_ON_VALUE_CHANGED,
+    MDD_ON_MOUSE_DOWN,
+    MDD_ON_MOUSE_UP,
     MDD_EVENT_TYPE_MAX
 }MDD_EventType;
 

@@ -21,7 +21,9 @@ enum {
 #define arm_main_hanger         ( g_objects[ _arm_main_hanger ] )
     _arm_main_hanger,
 #define gate_position           ( g_objects[ _gate_position ] )
-    _gate_position
+    _gate_position,
+#define clawMachine             ( g_objects[ _clawMachine ] )
+    _clawMachine
 };
 int ObjsBuilder_startSim( void   );
 void ObjsBuilder_showEntry( void* pObj, void* pStm_, char* pMsg );
