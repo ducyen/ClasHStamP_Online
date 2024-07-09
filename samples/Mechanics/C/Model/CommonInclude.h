@@ -26,8 +26,12 @@ typedef int             boolean;
 typedef int             bool;
 #endif
 
+#ifndef false
 #define false   ( 0 )
+#endif
+#ifndef true
 #define true    ( 1 )
+#endif
 
 typedef unsigned long   UINT32;
 typedef unsigned short  UINT16;

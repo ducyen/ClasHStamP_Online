@@ -321,12 +321,12 @@ int ObjsBuilder_startSim(
                 SDL_RenderCopy(renderer, imageTexture, NULL, NULL);
             }
 
-            // Draw ground
-            SDL_RenderDrawLine(renderer, 0, SCREEN_HEIGHT - 50, SCREEN_WIDTH, SCREEN_HEIGHT - 50);
-
             for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
                 Sprite_draw1(g_objects[i], renderer);
             }
+
+            // Draw ground
+            SDL_RenderDrawLine(renderer, 0, SCREEN_HEIGHT - 50, SCREEN_WIDTH, SCREEN_HEIGHT - 50);
 
             // Update the screen
             SDL_RenderPresent(renderer);

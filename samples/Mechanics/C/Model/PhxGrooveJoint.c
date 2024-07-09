@@ -2,16 +2,64 @@
 #define __PhxGrooveJoint_INTERNAL__
 #include "CommonInclude.h"
 #include "PhxGrooveJoint.h"
+#include "PhxSprite.h"
 /** @public @memberof PhxGrooveJoint */
 static void PhxGrooveJoint_apply(
     PhxJoint* pPhxJoint,
     Sprite* target
 ){
     PhxGrooveJoint* pPhxGrooveJoint = ( PhxGrooveJoint* )pPhxJoint;
+    cpSpace *space = ObjsBuilder_getPhxSpace();
+    PhxSprite* pTarget = ( PhxSprite* )target;
+    cpBody* pBodyTgt = PhxSprite_getBody( pTarget );
+    cpBody* pBodySrc;
+    if( pPhxGrooveJoint->m_source == null ){
+        pBodySrc = cpSpaceGetStaticBody( space );
+    }else{
+        PhxSprite* pSource = ( PhxSprite* )( *pPhxGrooveJoint->m_source );
+        pBodySrc = PhxSprite_getBody( pSource );
+    }
+
+    cpVect anchorSrc = cpvzero;
+    if( pPhxGrooveJoint->m_anchorSrc != null){
+        const SDL_Point* pCenter = Sprite_getCenter( *pPhxGrooveJoint->m_anchorSrc );
+        cpVect center = cpv( pCenter->x, ObjsBuilder_getScreenHeight() - pCenter->y );
+        anchorSrc = cpBodyWorldToLocal( pBodySrc, center );
+    }
+
+    cpVect anchorTgt = cpvzero;
+    if( pPhxGrooveJoint->m_anchorTgt != null){
+        const SDL_Point* pCenter = Sprite_getCenter( *pPhxGrooveJoint->m_anchorTgt );
+        cpVect center = cpv( pCenter->x, ObjsBuilder_getScreenHeight() - pCenter->y );
+        anchorTgt = cpBodyWorldToLocal( pBodyTgt, center );
+    }
+
+    cpVect pivotTgt = cpvzero;
+    if( pPhxGrooveJoint->m_pivotTgt != null){
+        const SDL_Point* pCenter = Sprite_getCenter( *pPhxGrooveJoint->m_pivotTgt );
+        cpVect center = cpv( pCenter->x, ObjsBuilder_getScreenHeight() - pCenter->y );
+        pivotTgt = cpBodyWorldToLocal( pBodyTgt, center );
+    }
+
+    if( pPhxGrooveJoint->m_cpJoint == null ){
+        pPhxGrooveJoint->m_cpJoint = cpSpaceAddConstraint(
+            space, 
+            cpGrooveJointNew(
+                pBodySrc, 
+                pBodyTgt, 
+                anchorSrc, 
+                anchorTgt,
+                pivotTgt
+            )
+        );
+    }
+
 } /* PhxGrooveJoint_apply */
 
 PhxJoint* PhxGrooveJoint_Copy( PhxGrooveJoint* pPhxGrooveJoint, const PhxGrooveJoint* pSource ){
     PhxJoint_Copy( ( PhxJoint* )pPhxGrooveJoint, ( PhxJoint* )pSource );
+    pPhxGrooveJoint->m_pivotTgt = pSource->m_pivotTgt;
+    pPhxGrooveJoint->m_next0 = pSource->m_next0;
     return ( PhxJoint* )pPhxGrooveJoint;
 }
 const PhxJointVtbl gPhxGrooveJointVtbl = {
