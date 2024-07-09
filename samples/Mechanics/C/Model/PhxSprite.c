@@ -23,11 +23,13 @@ static void PhxSprite_update(
 ){
     PhxSprite* pPhxSprite = ( PhxSprite* )pSprite;
     // Update joints
+    /*
     PhxJoint* pCurJoint = pPhxSprite->m_joints;
     while( pCurJoint != null ){
         PhxJoint_apply( pCurJoint, ( Sprite* )pPhxSprite );
         pCurJoint = PhxJoint_getNext( pCurJoint );
     }
+    */
 } /* PhxSprite_update */
 
 /** @public @memberof PhxSprite */
@@ -190,6 +192,16 @@ cpBody* PhxSprite_getBody(
     return pPhxSprite->m_body;
 } /* PhxSprite_getBody */
 
+/** @public @memberof PhxSprite */
+static const SDL_Point* PhxSprite_getCenter(
+    Sprite* pSprite
+){
+    PhxSprite* pPhxSprite = ( PhxSprite* )pSprite;
+    cpVect wldCenter = cpBodyLocalToWorld( pPhxSprite->m_body, pPhxSprite->m_center );
+    pPhxSprite->m_sdlCenter = ( SDL_Point ){ wldCenter.x, ObjsBuilder_getScreenHeight() - wldCenter.y };
+    return &pPhxSprite->m_sdlCenter;
+} /* PhxSprite_getCenter */
+
 Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource ){
     Sprite_Copy( ( Sprite* )pPhxSprite, ( Sprite* )pSource );
     pPhxSprite->m_verts = pSource->m_verts;
@@ -210,4 +222,5 @@ const SpriteVtbl gPhxSpriteVtbl = {
     .pdraw1                      = PhxSprite_draw1,
     .pload                       = PhxSprite_load,
     .pfree                       = PhxSprite_free,
+    .pgetCenter                  = PhxSprite_getCenter,
 };

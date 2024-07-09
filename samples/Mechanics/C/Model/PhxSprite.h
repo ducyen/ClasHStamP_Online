@@ -38,6 +38,7 @@ Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource );
     cpVect* m_verts;                                                                                                          \
     int m_vertsCnt;                                                                                                            \
     cpVect m_center;                                                                                                          \
+    SDL_Point m_sdlCenter;                                                                                                          \
     float m_mass;                                                                                                                \
     int m_group;                                                                                                                  \
     PhxJoint* m_joints;                                         \

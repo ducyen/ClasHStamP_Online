@@ -21,7 +21,7 @@
 #include "PhxPinJoint.h"                                        
 #include "PhxPivotJoint.h"                                      
 #include "PhxGrooveJoint.h"                                     
-#include "ClawMachine.h"
+#include "ClawMachine.h"                                        
 /** @private @static @memberof ObjsBuilder */
 static int hardwareAccelerationAvailable = SDL_RENDERER_SOFTWARE;
 /** @private @static @memberof ObjsBuilder */
@@ -29,9 +29,9 @@ static int SCREEN_WIDTH = 640;
 /** @private @static @memberof ObjsBuilder */
 static int SCREEN_HEIGHT = 480;                                 
 /** @private @static @memberof ObjsBuilder */
-float g_x = 0;                                           
+ float g_x = 0;                                           
 /** @private @static @memberof ObjsBuilder */
-float g_y = 0;                                           
+ float g_y = 0;                                           
 Sprite* g_objects[] = {
     &FlexButton_Ctor(                                           /* pushButton */
         P( { 0.0747349964536908, 0.8263998812821528, 0.02373397075900981, 0.02772396673472237 } )/* m_iniRect */,
@@ -108,14 +108,16 @@ Sprite* g_objects[] = {
         P( 1 )                                                  /* m_group */,
         P( &PhxPivotJoint_Ctor( &arm_main, 1, null, null ) )    /* m_joints */
     ),
-    &ImgSprite_Ctor(                                            /* arm_main_hanger */
+    &PhxSprite_Ctor(                                            /* arm_main_hanger */
         P( { 0.1023121387283237, 0.07106994459833794, 0.023121387283236993, 0.027700831024930747 } )/* m_iniRect */,
         P( "arm_main_hanger" )                                  /* m_name */,
         P( "GreenLight.png" )                                   /* m_imgPath */,
+        P( (cpVect[]){ {0.21630250839960008, 0.23137253783768677}, {0.21630250839960008, 0.3137254811296559}, {0.3327730814615885, 0.3137254811296559}, {0.3327730814615885, 0.23137253783768677} } )/* m_verts */,
+        P( 4 )                                                  /* m_vertsCnt */,
         P( { 0.0, 0.0 } )                                       /* m_center */,
-        P( null )                                               /* m_constraints */,
-        P( null )                                               /* m_mouseListeners */,
-        P( &MouseListener_Ctor( 0, ClawMachine_Start, &clawMachine, 0, null ) )/* m_onDrawListeners */
+        P( 1 )                                                  /* m_mass */,
+        P( 3 )                                                  /* m_group */,
+        P( &PhxSlideJoint_Ctor( null, 1, &arm_main_hanger, &gate_position, 0, 100, null ) )                                               /* m_joints */
     ),
     &ImgSprite_Ctor(                                            /* gate_position */
         P( { 0.7895953757225433, 0.07063711911357343, 0.023121387283236993, 0.027700831024930747 } )/* m_iniRect */,
@@ -248,9 +250,6 @@ int ObjsBuilder_startSim(
 
         while (!quit) {
             bool hasUpdated = true;
-
-            ImgSprite_setOffset( arm_main_hanger, g_x += 0.1, 0 );
-            g_y += 0.1;
 
             while( hasUpdated ){
                 for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
@@ -417,11 +416,9 @@ void ObjsBuilder_showDiagram(
     int l, t, w, h, dgrX, dgrY, dgrW, dgrH;
     sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", s, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
     if( pSprite->m_stmWindow == null ){
-        int SCREEN_WIDTH = 1;
-        int SCREEN_HEIGHT = 0;
         char windowName[255];
         sprintf(windowName, "%s - %s", s, pSprite->m_name);
-        pSprite->m_stmWindow = SDL_CreateWindow(windowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+        pSprite->m_stmWindow = SDL_CreateWindow(windowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1, 0, SDL_WINDOW_SHOWN);
         SDL_CreateRenderer(pSprite->m_stmWindow, -1, hardwareAccelerationAvailable);
     }
     SDL_Texture* stmImage = pStm->m_stmImage;

@@ -69,7 +69,6 @@ static BOOL ClawMachineStm_GoingLeft_EventProc( ClawMachine* pClawMachine, ClawM
         bResult = TRUE;
     } break;
     case ClawMachine_TICK:{
-        g_x -= SPEED_X;
         bResult = TRUE;
     } break;
     default: break;
@@ -97,7 +96,6 @@ static BOOL ClawMachineStm_GoingRight_EventProc( ClawMachine* pClawMachine, Claw
         bResult = TRUE;
     } break;
     case ClawMachine_TICK:{
-        g_x += SPEED_X;
         bResult = TRUE;
     } break;
     default: break;

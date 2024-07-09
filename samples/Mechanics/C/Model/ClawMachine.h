@@ -13,7 +13,7 @@ typedef enum tagClawMachineEvent {
 }ClawMachine_EVENT;
 const TCHAR* ClawMachineEvent_toString( ClawMachine_EVENT value );
 #endif//__ClawMachine_H__
-#if !defined( ClawMachine_Init ) && ( defined( __ClawMachine_INTERNAL__ ) || defined( __ObjsBuilder_INTERNAL__ )  )
+#if !defined( ClawMachine_Init ) && ( defined( __ClawMachine_INTERNAL__ )  || defined( __ObjsBuilder_INTERNAL__ )  )
 #define __Sprite_INTERNAL__
 #include "Sprite.h"
 #define __HdStateMachine_INTERNAL__
