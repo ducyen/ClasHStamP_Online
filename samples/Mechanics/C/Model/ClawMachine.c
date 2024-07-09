@@ -9,7 +9,6 @@ const TCHAR* ClawMachineEvent_toString( ClawMachine_EVENT value ){
     case ClawMachine_LeftBtnUp: return _T( "LeftBtnUp" );
     case ClawMachine_RightBtnDown: return _T( "RightBtnDown" );
     case ClawMachine_RightBtnUp: return _T( "RightBtnUp" );
-    case ClawMachine_TICK: return _T( "TICK" );
     default: return _T( "ClawMachine_UNKNOWN" );
     }
 }
@@ -68,9 +67,6 @@ static BOOL ClawMachineStm_GoingLeft_EventProc( ClawMachine* pClawMachine, ClawM
         ClawMachineStm_EndTrans( pClawMachine, pStm );
         bResult = TRUE;
     } break;
-    case ClawMachine_TICK:{
-        bResult = TRUE;
-    } break;
     default: break;
     }
     return bResult;
@@ -95,9 +91,6 @@ static BOOL ClawMachineStm_GoingRight_EventProc( ClawMachine* pClawMachine, Claw
         ClawMachineStm_EndTrans( pClawMachine, pStm );
         bResult = TRUE;
     } break;
-    case ClawMachine_TICK:{
-        bResult = TRUE;
-    } break;
     default: break;
     }
     return bResult;
@@ -116,13 +109,6 @@ static BOOL ClawMachineStm_GoingDown_EventProc( ClawMachine* pClawMachine, ClawM
     BOOL bResult = FALSE;
     pStm->base.nSourceState = ClawMachineStm_GoingDown;
     ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	132	220	89	0	0	972	586" );
-    switch( nEventId ){
-    case ClawMachine_TICK:{
-        g_y -= SPEED_Y;
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
     return bResult;
 }
 static void ClawMachineStm_GoingDown_Exit( ClawMachine* pClawMachine, ClawMachineStm* pStm ){

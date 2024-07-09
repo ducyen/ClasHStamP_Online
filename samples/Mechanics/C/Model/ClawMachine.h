@@ -8,7 +8,6 @@ typedef enum tagClawMachineEvent {
     ClawMachine_LeftBtnUp,                                      
     ClawMachine_RightBtnDown,                                   
     ClawMachine_RightBtnUp,                                     
-    ClawMachine_TICK,                                           
     ClawMachine_EVENT_NUM
 }ClawMachine_EVENT;
 const TCHAR* ClawMachineEvent_toString( ClawMachine_EVENT value );

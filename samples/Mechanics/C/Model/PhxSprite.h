@@ -24,6 +24,7 @@ cpBody* PhxSprite_getBody( PhxSprite* pPhxSprite );
     .m_body = null,\
     .m_shape = null,\
     .m_decomposedPolygons = null,\
+    .m_sdlCenter = { 0 },\
 
 #define PhxSprite_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_verts, _m_vertsCnt, _m_center, _m_mass, _m_group, _m_joints )    ( PhxSprite ){ \
     PhxSprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_verts ), P( _m_vertsCnt ), P( _m_center ), P( _m_mass ), P( _m_group ), P( _m_joints ) ) \
@@ -38,13 +39,13 @@ Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource );
     cpVect* m_verts;                                                                                                          \
     int m_vertsCnt;                                                                                                            \
     cpVect m_center;                                                                                                          \
-    SDL_Point m_sdlCenter;                                                                                                          \
     float m_mass;                                                                                                                \
     int m_group;                                                                                                                  \
     PhxJoint* m_joints;                                         \
     cpBody* m_body;                                                                                                            \
     cpShape* m_shape;                                                                                                        \
     cpPolygon* m_decomposedPolygons;                                                                          \
+    SDL_Point m_sdlCenter;                                                                                              \
 
 typedef struct tagPhxSprite{
     PhxSprite_CLASS    

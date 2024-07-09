@@ -29,9 +29,9 @@ static int SCREEN_WIDTH = 640;
 /** @private @static @memberof ObjsBuilder */
 static int SCREEN_HEIGHT = 480;                                 
 /** @private @static @memberof ObjsBuilder */
- float g_x = 0;                                           
+static float g_x = 0;                                           
 /** @private @static @memberof ObjsBuilder */
- float g_y = 0;                                           
+static float g_y = 0;                                           
 Sprite* g_objects[] = {
     &FlexButton_Ctor(                                           /* pushButton */
         P( { 0.0747349964536908, 0.8263998812821528, 0.02373397075900981, 0.02772396673472237 } )/* m_iniRect */,
@@ -112,12 +112,12 @@ Sprite* g_objects[] = {
         P( { 0.1023121387283237, 0.07106994459833794, 0.023121387283236993, 0.027700831024930747 } )/* m_iniRect */,
         P( "arm_main_hanger" )                                  /* m_name */,
         P( "GreenLight.png" )                                   /* m_imgPath */,
-        P( (cpVect[]){ {0.21630250839960008, 0.23137253783768677}, {0.21630250839960008, 0.3137254811296559}, {0.3327730814615885, 0.3137254811296559}, {0.3327730814615885, 0.23137253783768677} } )/* m_verts */,
+        P( (cpVect[]){ {1.828279769160209, 2.696922782427791}, {1.828279769160209, 3.656844521799918}, {2.81273803553565, 3.656844521799918}, {2.81273803553565, 2.696922782427791} } )/* m_verts */,
         P( 4 )                                                  /* m_vertsCnt */,
-        P( { 0.0, 0.0 } )                                       /* m_center */,
+        P( { -1.8180710658590873, -2.662044914487701 } )        /* m_center */,
         P( 1 )                                                  /* m_mass */,
         P( 3 )                                                  /* m_group */,
-        P( &PhxSlideJoint_Ctor( null, 1, &arm_main_hanger, &gate_position, 0, 100, null ) )                                               /* m_joints */
+        P( &PhxSlideJoint_Ctor( null, 1, &arm_main_hanger, &gate_position, 0, 100, null ) )/* m_joints */
     ),
     &ImgSprite_Ctor(                                            /* gate_position */
         P( { 0.7895953757225433, 0.07063711911357343, 0.023121387283236993, 0.027700831024930747 } )/* m_iniRect */,

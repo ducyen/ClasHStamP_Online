@@ -213,6 +213,7 @@ Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource ){
     pPhxSprite->m_body = pSource->m_body;
     pPhxSprite->m_shape = pSource->m_shape;
     pPhxSprite->m_decomposedPolygons = pSource->m_decomposedPolygons;
+    pPhxSprite->m_sdlCenter = pSource->m_sdlCenter;
     return ( Sprite* )pPhxSprite;
 }
 const SpriteVtbl gPhxSpriteVtbl = {
