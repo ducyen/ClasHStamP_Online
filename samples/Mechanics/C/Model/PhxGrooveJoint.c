@@ -31,7 +31,7 @@ static void PhxGrooveJoint_apply(
     if( pPhxGrooveJoint->m_anchorTgt != null){
         const SDL_Point* pCenter = Sprite_getCenter( *pPhxGrooveJoint->m_anchorTgt );
         cpVect center = cpv( pCenter->x, ObjsBuilder_getScreenHeight() - pCenter->y );
-        anchorTgt = cpBodyWorldToLocal( pBodyTgt, center );
+        anchorTgt = cpBodyWorldToLocal( pBodySrc, center );
     }
 
     cpVect pivotTgt = cpvzero;
