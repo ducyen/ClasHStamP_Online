@@ -84,7 +84,7 @@ Sprite* g_objects[] = {
         P( { 0.4962441655295966, 0.554863466741726 } )          /* m_center */,
         P( 1 )                                                  /* m_mass */,
         P( 3 )                                                  /* m_group */,
-        P( &PhxGrooveJoint_Ctor( null, 1, &arm_main_hanger, &gate_position, null, null ) )/* m_joints */
+        P( &PhxGrooveJoint_Ctor( null, 1, &arm_main, &arm_main_hanger, null, null ) )/* m_joints */
     ),
     &PhxSprite_Ctor(                                            /* arm_right */
         P( { 0.12109826589595375, 0.3002943213296399, 0.06011560693641618, 0.1018005540166205 } )/* m_iniRect */,
@@ -108,14 +108,16 @@ Sprite* g_objects[] = {
         P( 1 )                                                  /* m_group */,
         P( &PhxPivotJoint_Ctor( &arm_main, 1, null, null ) )    /* m_joints */
     ),
-    &ImgSprite_Ctor(                                            /* arm_main_hanger */
+    &PhxSprite_Ctor(                                            /* arm_main_hanger */
         P( { 0.1023121387283237, 0.07106994459833794, 0.023121387283236993, 0.027700831024930747 } )/* m_iniRect */,
         P( "arm_main_hanger" )                                  /* m_name */,
-        P( "RedLight.png" )                                     /* m_imgPath */,
-        P( { 0.0, 0.0 } )                                       /* m_center */,
-        P( null )                                               /* m_constraints */,
-        P( null )                                               /* m_mouseListeners */,
-        P( null )                                               /* m_onDrawListeners */
+        P( "GreenLight.png" )                                   /* m_imgPath */,
+        P( (cpVect[]){ {1.828279769160209, 2.696922782427791}, {1.828279769160209, 3.656844521799918}, {2.81273803553565, 3.656844521799918}, {2.81273803553565, 2.696922782427791} } )/* m_verts */,
+        P( 4 )                                                  /* m_vertsCnt */,
+        P( { -1.8180710658590873, -2.662044914487701 } )        /* m_center */,
+        P( 1 )                                                  /* m_mass */,
+        P( 3 )                                                  /* m_group */,
+        P( &PhxGrooveJoint_Ctor( null, 1, &arm_main_hanger, &gate_position, null, null ) )/* m_joints */
     ),
     &ImgSprite_Ctor(                                            /* gate_position */
         P( { 0.7895953757225433, 0.07063711911357343, 0.023121387283236993, 0.027700831024930747 } )/* m_iniRect */,
@@ -247,6 +249,9 @@ int ObjsBuilder_startSim(
         SDL_Event e;
 
         while (!quit) {
+
+            //cpBodyApplyForceAtLocalPoint( PhxSprite_getBody( arm_main ), cpv( 100, 100 ), cpvzero);
+
             bool hasUpdated = true;
 
             while( hasUpdated ){
