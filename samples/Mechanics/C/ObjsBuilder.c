@@ -112,9 +112,9 @@ Sprite* g_objects[] = {
         P( { 0.1023121387283237, 0.07106994459833794, 0.023121387283236993, 0.027700831024930747 } )/* m_iniRect */,
         P( "arm_main_hanger" )                                  /* m_name */,
         P( "GreenLight.png" )                                   /* m_imgPath */,
-        P( (cpVect[]){ {1.828279769160209, 2.696922782427791}, {1.828279769160209, 3.656844521799918}, {2.81273803553565, 3.656844521799918}, {2.81273803553565, 2.696922782427791} } )/* m_verts */,
+        P( (cpVect[]){ {-0.48502126850387656, -0.4850207048733655}, {-0.48502126850387656, 0.48502066617728246}, {0.4850196348219552, 0.48502066617728246}, {0.4850196348219552, -0.4850207048733655} } )/* m_verts */,
         P( 4 )                                                  /* m_vertsCnt */,
-        P( { -1.8180710658590873, -2.662044914487701 } )        /* m_center */,
+        P( { 0.5000005935241769, 0.5000001639256585 } )         /* m_center */,
         P( 1 )                                                  /* m_mass */,
         P( 3 )                                                  /* m_group */,
         P( &PhxGrooveJoint_Ctor( null, 1, &arm_main_hanger, &gate_position, null, null ) )/* m_joints */
@@ -250,7 +250,7 @@ int ObjsBuilder_startSim(
 
         while (!quit) {
 
-            //cpBodyApplyForceAtLocalPoint( PhxSprite_getBody( arm_main ), cpv( 100, 100 ), cpvzero);
+            cpBodyApplyForceAtLocalPoint( PhxSprite_getBody( arm_main_hanger ), cpv( 10, 0 ), cpvzero);
 
             bool hasUpdated = true;
 

@@ -2,7 +2,7 @@
 #define __PhxGrooveJoint_INTERNAL__
 #include "CommonInclude.h"
 #include "PhxGrooveJoint.h"
-#include "PhxSprite.h"
+#include "PhxSprite.h"                                          
 /** @public @memberof PhxGrooveJoint */
 static void PhxGrooveJoint_apply(
     PhxJoint* pPhxJoint,
@@ -23,21 +23,21 @@ static void PhxGrooveJoint_apply(
     cpVect anchorSrc = cpvzero;
     if( pPhxGrooveJoint->m_anchorSrc != null){
         const SDL_Point* pCenter = Sprite_getCenter( *pPhxGrooveJoint->m_anchorSrc );
-        cpVect center = cpv( pCenter->x, ObjsBuilder_getScreenHeight() - pCenter->y );
+        cpVect center = cpv( ( cpFloat )pCenter->x, ( cpFloat )ObjsBuilder_getScreenHeight() - ( cpFloat )pCenter->y );
         anchorSrc = cpBodyWorldToLocal( pBodySrc, center );
     }
 
     cpVect anchorTgt = cpvzero;
     if( pPhxGrooveJoint->m_anchorTgt != null){
         const SDL_Point* pCenter = Sprite_getCenter( *pPhxGrooveJoint->m_anchorTgt );
-        cpVect center = cpv( pCenter->x, ObjsBuilder_getScreenHeight() - pCenter->y );
+        cpVect center = cpv( ( cpFloat )pCenter->x, ( cpFloat )ObjsBuilder_getScreenHeight() - ( cpFloat )pCenter->y );
         anchorTgt = cpBodyWorldToLocal( pBodySrc, center );
     }
 
     cpVect pivotTgt = cpvzero;
     if( pPhxGrooveJoint->m_pivotTgt != null){
         const SDL_Point* pCenter = Sprite_getCenter( *pPhxGrooveJoint->m_pivotTgt );
-        cpVect center = cpv( pCenter->x, ObjsBuilder_getScreenHeight() - pCenter->y );
+        cpVect center = cpv( ( cpFloat )pCenter->x, ( cpFloat )ObjsBuilder_getScreenHeight() - ( cpFloat )pCenter->y );
         pivotTgt = cpBodyWorldToLocal( pBodyTgt, center );
     }
 

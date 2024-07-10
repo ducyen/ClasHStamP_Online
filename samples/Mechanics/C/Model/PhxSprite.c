@@ -197,8 +197,8 @@ static const SDL_Point* PhxSprite_getCenter(
     Sprite* pSprite
 ){
     PhxSprite* pPhxSprite = ( PhxSprite* )pSprite;
-    cpVect wldCenter = cpBodyLocalToWorld( pPhxSprite->m_body, pPhxSprite->m_center );
-    pPhxSprite->m_sdlCenter = ( SDL_Point ){ wldCenter.x, ObjsBuilder_getScreenHeight() - wldCenter.y };
+    cpVect wldCenter = cpBodyLocalToWorld( pPhxSprite->m_body, cpvzero );
+    pPhxSprite->m_sdlCenter = ( SDL_Point ){ ( int )wldCenter.x, ObjsBuilder_getScreenHeight() - ( int )wldCenter.y };
     return &pPhxSprite->m_sdlCenter;
 } /* PhxSprite_getCenter */
 
