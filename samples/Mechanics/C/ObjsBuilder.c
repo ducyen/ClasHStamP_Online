@@ -84,7 +84,7 @@ Sprite* g_objects[] = {
         P( { 0.4962441655295966, 0.554863466741726 } )          /* m_center */,
         P( 1 )                                                  /* m_mass */,
         P( 3 )                                                  /* m_group */,
-        P( &PhxGrooveJoint_Ctor( null, 1, &arm_main, &arm_main_hanger, null, null ) )/* m_joints */
+        P( &PhxGrooveJoint_Ctor( &arm_main_hanger, 1, &arm_main, &arm_main_hanger, null, null ) )/* m_joints */
     ),
     &PhxSprite_Ctor(                                            /* arm_right */
         P( { 0.12109826589595375, 0.3002943213296399, 0.06011560693641618, 0.1018005540166205 } )/* m_iniRect */,
@@ -106,7 +106,7 @@ Sprite* g_objects[] = {
         P( { 0.7355190028131329, 0.12690266291390603 } )        /* m_center */,
         P( 1 )                                                  /* m_mass */,
         P( 1 )                                                  /* m_group */,
-        P( &PhxPivotJoint_Ctor( &arm_main, 1, null, null ) )    /* m_joints */
+        P( &PhxPivotJoint_Ctor( &arm_main, 1, null, &PhxRotaryLimitJoint_Ctor( &arm_main, 1, -30.0, 30.0, null ) ) )    /* m_joints */
     ),
     &PhxSprite_Ctor(                                            /* arm_main_hanger */
         P( { 0.1023121387283237, 0.07106994459833794, 0.023121387283236993, 0.027700831024930747 } )/* m_iniRect */,
@@ -213,7 +213,7 @@ int ObjsBuilder_startSim(
         nResult = S_FALSE;
     }
 
-    cpVect gravity = cpv(0, -100);
+    cpVect gravity = cpv(0, -10);
     cpSpace *space = ObjsBuilder_getPhxSpace();
     cpSpaceSetGravity(space, gravity);
     // Ground
@@ -250,7 +250,20 @@ int ObjsBuilder_startSim(
 
         while (!quit) {
 
-            cpBodyApplyForceAtLocalPoint( PhxSprite_getBody( arm_main_hanger ), cpv( 10, 0 ), cpvzero);
+            //cpBodyApplyForceAtLocalPoint( PhxSprite_getBody( arm_main_hanger ), cpv( 2, 0 ), cpvzero);
+            //cpBodyApplyForceAtLocalPoint( PhxSprite_getBody( arm_main ), cpv( 0,31 ), cpvzero);
+            cpBodySetForce( 
+                PhxSprite_getBody( arm_main ), 
+                cpvmult(
+                    cpvnormalize( 
+                        cpvsub( 
+                            cpBodyGetPosition( PhxSprite_getBody( arm_main_hanger ) ),
+                            cpBodyGetPosition( PhxSprite_getBody( arm_main ) )
+                        )
+                    ),
+                    31
+                )
+            );
 
             bool hasUpdated = true;
 
