@@ -2,8 +2,8 @@
 #define __ClawMachine_INTERNAL__
 #include "CommonInclude.h"
 #include "ClawMachine.h"
+#include "PhxSprite.h"                                          
 #include "ObjsBuilder.h"
-#include "PhxSprite.h"
 const TCHAR* ClawMachineEvent_toString( ClawMachine_EVENT value ){
     switch( value ){
     case ClawMachine_ClawBtnPressed: return _T( "ClawBtnPressed" );

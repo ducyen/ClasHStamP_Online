@@ -8,7 +8,7 @@
 #include "RotationConstraint.h"                                 
 #include "TrackToConstraint.h"                                  
 #include "FlexButton.h"                                         
-#include "MouseListener.h"                                      
+#include "EventListener.h"                                      
 #include "PhxSprite.h"                                          
 #include "ImgSprite.h"                                          
 #include "PhxSimpleMotor.h"                                     
@@ -22,6 +22,7 @@
 #include "PhxPivotJoint.h"                                      
 #include "PhxGrooveJoint.h"                                     
 #include "ClawMachine.h"                                        
+#include "EventListener.h"
 /** @private @static @memberof ObjsBuilder */
 static int hardwareAccelerationAvailable = SDL_RENDERER_SOFTWARE;
 /** @private @static @memberof ObjsBuilder */
@@ -72,7 +73,7 @@ Sprite* g_objects[] = {
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 1 )                                                  /* m_valueMax */,
         P( FlexBtnStm_PushStyle )                               /* m_style */,
-        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
+        P( &EventListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_DOWN, &EventListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_UP, &EventListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
         P( &EventListener_Ctor( MDD_ON_MOUSE_DOWN, ClawMachine_EventProc, &clawMachine, ClawMachine_LeftBtnDown, &EventListener_Ctor( MDD_ON_MOUSE_UP, ClawMachine_EventProc, &clawMachine, ClawMachine_LeftBtnUp, null ) ) )/* m_buttonListeners */
     ),
     &PhxSprite_Ctor(                                            /* prize0 */
@@ -139,7 +140,7 @@ Sprite* g_objects[] = {
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 1 )                                                  /* m_valueMax */,
         P( FlexBtnStm_PushStyle )                               /* m_style */,
-        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
+        P( &EventListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_DOWN, &EventListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_UP, &EventListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
         P( &EventListener_Ctor( MDD_ON_MOUSE_DOWN, ClawMachine_EventProc, &clawMachine, ClawMachine_RightBtnDown, &EventListener_Ctor( MDD_ON_MOUSE_UP, ClawMachine_EventProc, &clawMachine, ClawMachine_RightBtnUp, null ) ) )/* m_buttonListeners */
     )
 };
