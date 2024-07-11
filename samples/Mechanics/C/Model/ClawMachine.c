@@ -2,6 +2,8 @@
 #define __ClawMachine_INTERNAL__
 #include "CommonInclude.h"
 #include "ClawMachine.h"
+#include "ObjsBuilder.h"
+#include "PhxSprite.h"
 const TCHAR* ClawMachineEvent_toString( ClawMachine_EVENT value ){
     switch( value ){
     case ClawMachine_ClawBtnPressed: return _T( "ClawBtnPressed" );
@@ -9,6 +11,7 @@ const TCHAR* ClawMachineEvent_toString( ClawMachine_EVENT value ){
     case ClawMachine_LeftBtnUp: return _T( "LeftBtnUp" );
     case ClawMachine_RightBtnDown: return _T( "RightBtnDown" );
     case ClawMachine_RightBtnUp: return _T( "RightBtnUp" );
+    case ClawMachine_TICK: return _T( "TICK" );
     default: return _T( "ClawMachine_UNKNOWN" );
     }
 }
@@ -67,6 +70,13 @@ static BOOL ClawMachineStm_GoingLeft_EventProc( ClawMachine* pClawMachine, ClawM
         ClawMachineStm_EndTrans( pClawMachine, pStm );
         bResult = TRUE;
     } break;
+    case ClawMachine_TICK:{
+        cpBodySetForce(
+            PhxSprite_getBody( arm_main_hanger ),
+            cpv( -2, 0 )
+        );
+        bResult = TRUE;
+    } break;
     default: break;
     }
     return bResult;
@@ -89,6 +99,13 @@ static BOOL ClawMachineStm_GoingRight_EventProc( ClawMachine* pClawMachine, Claw
     case ClawMachine_RightBtnUp:{
         ClawMachineStm_BgnTrans( pClawMachine, pStm, ClawMachineStm_JunctionPoint0, STATE_UNDEF );
         ClawMachineStm_EndTrans( pClawMachine, pStm );
+        bResult = TRUE;
+    } break;
+    case ClawMachine_TICK:{
+        cpBodySetForce(
+            PhxSprite_getBody( arm_main_hanger ),
+            cpv( 2, 0 )
+        );
         bResult = TRUE;
     } break;
     default: break;

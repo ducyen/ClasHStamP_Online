@@ -33,14 +33,47 @@ static float g_x = 0;
 /** @private @static @memberof ObjsBuilder */
 static float g_y = 0;                                           
 Sprite* g_objects[] = {
-    &FlexButton_Ctor(                                           /* pushButton */
-        P( { 0.0747349964536908, 0.8263998812821528, 0.02373397075900981, 0.02772396673472237 } )/* m_iniRect */,
-        P( "pushButton" )                                       /* m_name */,
+    &PhxSprite_Ctor(                                            /* arm_main */
+        P( { 0.06782273603082854, 0.7127192982456141, 0.09161849710982663, 0.14173765699918797 } )/* m_iniRect */,
+        P( "arm_main" )                                         /* m_name */,
+        P( "crane_game_arm_main.png" )                          /* m_imgPath */,
+        P( (cpVect[]){ {-3.1926496254977256E-4, -0.11904658595455851}, {-0.20021848292762712, -0.09389529054306192}, {-0.35014273179783745, -0.014002880789311088}, {-0.421260703811921, 0.09843827910862574}, {-0.4193385727335443, 0.2079204233270552}, {-0.315544811329984, 0.315923059705731}, {-0.16946482461652712, 0.38545908351336405}, {0.003524777722740015, 0.40321292419217125}, {0.21495634321515036, 0.37510261310116727}, {0.3418154580877675, 0.3055666737596132}, {0.42446577762918397, 0.20348198427387318}, {0.42446577762918397, 0.09843827910862574}, {0.36103632992860724, -0.012523372949557406}, {0.21687825482206344, -0.08797725918404718} } )/* m_verts */,
+        P( 14 )                                                 /* m_vertsCnt */,
+        P( { 0.4962441655295966, 0.554863466741726 } )          /* m_center */,
+        P( 1 )                                                  /* m_mass */,
+        P( 3 )                                                  /* m_group */,
+        P( &PhxGrooveJoint_Ctor( &arm_main_hanger, 1, &arm_main, &arm_main_hanger, null, null ) )/* m_joints */
+    ),
+    &PhxSprite_Ctor(                                            /* arm_right */
+        P( { 0.12109826589595375, 0.8086045706371191, 0.06011560693641618, 0.1018005540166205 } )/* m_iniRect */,
+        P( "arm_right" )                                        /* m_name */,
+        P( "crane_game_arm_right.png" )                         /* m_imgPath */,
+        P( (cpVect[]){ {0.39808818357082587, 0.4417649576586646}, {-0.01434201148246342, 0.7262941453848002}, {-0.21345559190639124, 0.7834970810742284}, {0.0942649889150952, 0.826892644591639}, {0.7338414222849121, 0.4264708560121022}, {0.0942649889150952, -0.07652197786396635}, {-0.11993313633811009, -0.08243950351908685}, {-0.17725371774006882, 0.018159108301710088} } )/* m_verts */,
+        P( 8 )                                                  /* m_vertsCnt */,
+        P( { 0.24998743673952534, 0.1266524605357124 } )        /* m_center */,
+        P( 1 )                                                  /* m_mass */,
+        P( 2 )                                                  /* m_group */,
+        P( &PhxPivotJoint_Ctor( &arm_main, 1, null, &PhxRotaryLimitJoint_Ctor( &arm_main, 1, -30.0, 30.0, null ) ) )/* m_joints */
+    ),
+    &PhxSprite_Ctor(                                            /* arm_left */
+        P( { 0.04653179190751445, 0.8056456182321835, 0.06011560693641618, 0.10475950642155626 } )/* m_iniRect */,
+        P( "arm_left" )                                         /* m_name */,
+        P( "crane_game_arm_left.png" )                          /* m_imgPath */,
+        P( (cpVect[]){ {-0.3873646561375531, 0.43389111042150647}, {0.18797710851665453, 0.00944803050038769}, {0.13065650641004445, -0.0913494082078489}, {-0.08354169621323272, -0.08542018693202294}, {-0.7231183606031603, 0.4185667809360949}, {-0.08354135173846045, 0.8197798653918567}, {0.224179340234155, 0.7762985332473578}, {0.02506568788881327, 0.7189825395201526} } )/* m_verts */,
+        P( 8 )                                                  /* m_vertsCnt */,
+        P( { 0.7355190028131329, 0.12690266291390603 } )        /* m_center */,
+        P( 1 )                                                  /* m_mass */,
+        P( 1 )                                                  /* m_group */,
+        P( &PhxPivotJoint_Ctor( &arm_main, 1, null, &PhxRotaryLimitJoint_Ctor( &arm_main, 1, -30.0, 30.0, null ) ) )/* m_joints */
+    ),
+    &FlexButton_Ctor(                                           /* leftButton */
+        P( { 0.7895712199604344, 0.882378643978367, 0.02373397075900981, 0.02772396673472237 } )/* m_iniRect */,
+        P( "leftButton" )                                       /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 1 )                                                  /* m_valueMax */,
         P( FlexBtnStm_PushStyle )                               /* m_style */,
-        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &pushButton, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
-        P( &EventListener_Ctor( MDD_ON_MOUSE_DOWN, ClawMachine_EventProc, &clawMachine, ClawMachine_RightBtnDown, null ) )/* m_buttonListeners */
+        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
+        P( &EventListener_Ctor( MDD_ON_MOUSE_DOWN, ClawMachine_EventProc, &clawMachine, ClawMachine_LeftBtnDown, &EventListener_Ctor( MDD_ON_MOUSE_UP, ClawMachine_EventProc, &clawMachine, ClawMachine_LeftBtnUp, null ) ) )/* m_buttonListeners */
     ),
     &PhxSprite_Ctor(                                            /* prize0 */
         P( { 0.3468601369094194, 0.7061811896436976, 0.09788028479729712, 0.1692670960851718 } )/* m_iniRect */,
@@ -75,39 +108,6 @@ Sprite* g_objects[] = {
         P( 0 )                                                  /* m_group */,
         P( null )                                               /* m_joints */
     ),
-    &PhxSprite_Ctor(                                            /* arm_main */
-        P( { 0.06782273603082854, 0.20440904893813486, 0.09161849710982663, 0.14173765699918797 } )/* m_iniRect */,
-        P( "arm_main" )                                         /* m_name */,
-        P( "crane_game_arm_main.png" )                          /* m_imgPath */,
-        P( (cpVect[]){ {-3.1926496254977256E-4, -0.11904658595455851}, {-0.20021848292762712, -0.09389529054306192}, {-0.35014273179783745, -0.014002880789311088}, {-0.421260703811921, 0.09843827910862574}, {-0.4193385727335443, 0.2079204233270552}, {-0.315544811329984, 0.315923059705731}, {-0.16946482461652712, 0.38545908351336405}, {0.003524777722740015, 0.40321292419217125}, {0.21495634321515036, 0.37510261310116727}, {0.3418154580877675, 0.3055666737596132}, {0.42446577762918397, 0.20348198427387318}, {0.42446577762918397, 0.09843827910862574}, {0.36103632992860724, -0.012523372949557406}, {0.21687825482206344, -0.08797725918404718} } )/* m_verts */,
-        P( 14 )                                                 /* m_vertsCnt */,
-        P( { 0.4962441655295966, 0.554863466741726 } )          /* m_center */,
-        P( 1 )                                                  /* m_mass */,
-        P( 3 )                                                  /* m_group */,
-        P( &PhxGrooveJoint_Ctor( &arm_main_hanger, 1, &arm_main, &arm_main_hanger, null, null ) )/* m_joints */
-    ),
-    &PhxSprite_Ctor(                                            /* arm_right */
-        P( { 0.12109826589595375, 0.3002943213296399, 0.06011560693641618, 0.1018005540166205 } )/* m_iniRect */,
-        P( "arm_right" )                                        /* m_name */,
-        P( "crane_game_arm_right.png" )                         /* m_imgPath */,
-        P( (cpVect[]){ {0.39808818357082587, 0.4417649576586646}, {-0.01434201148246342, 0.7262941453848002}, {-0.21345559190639124, 0.7834970810742284}, {0.0942649889150952, 0.826892644591639}, {0.7338414222849121, 0.4264708560121022}, {0.0942649889150952, -0.07652197786396635}, {-0.11993313633811009, -0.08243950351908685}, {-0.17725371774006882, 0.018159108301710088} } )/* m_verts */,
-        P( 8 )                                                  /* m_vertsCnt */,
-        P( { 0.24998743673952534, 0.1266524605357124 } )        /* m_center */,
-        P( 1 )                                                  /* m_mass */,
-        P( 2 )                                                  /* m_group */,
-        P( &PhxPivotJoint_Ctor( &arm_main, 1, null, &PhxRotaryLimitJoint_Ctor( &arm_main, 1, -30.0, 30.0, null ) ) )/* m_joints */
-    ),
-    &PhxSprite_Ctor(                                            /* arm_left */
-        P( { 0.04653179190751445, 0.29733536892470414, 0.06011560693641618, 0.10475950642155626 } )/* m_iniRect */,
-        P( "arm_left" )                                         /* m_name */,
-        P( "crane_game_arm_left.png" )                          /* m_imgPath */,
-        P( (cpVect[]){ {-0.3873646561375531, 0.43389111042150647}, {0.18797710851665453, 0.00944803050038769}, {0.13065650641004445, -0.0913494082078489}, {-0.08354169621323272, -0.08542018693202294}, {-0.7231183606031603, 0.4185667809360949}, {-0.08354135173846045, 0.8197798653918567}, {0.224179340234155, 0.7762985332473578}, {0.02506568788881327, 0.7189825395201526} } )/* m_verts */,
-        P( 8 )                                                  /* m_vertsCnt */,
-        P( { 0.7355190028131329, 0.12690266291390603 } )        /* m_center */,
-        P( 1 )                                                  /* m_mass */,
-        P( 1 )                                                  /* m_group */,
-        P( &PhxPivotJoint_Ctor( &arm_main, 1, null, &PhxRotaryLimitJoint_Ctor( &arm_main, 1, -30.0, 30.0, null ) ) )    /* m_joints */
-    ),
     &PhxSprite_Ctor(                                            /* arm_main_hanger */
         P( { 0.1023121387283237, 0.07106994459833794, 0.023121387283236993, 0.027700831024930747 } )/* m_iniRect */,
         P( "arm_main_hanger" )                                  /* m_name */,
@@ -132,6 +132,15 @@ Sprite* g_objects[] = {
         P( { 0.42947976878612726, 0.1520948753462604, 0.1676300578034682, 0.2027354570637119 } )/* m_iniRect */,
         P( "clawMachine" )                                      /* m_name */,
         P( "ClawMachine.png" )                                  /* m_imgPath */
+    ),
+    &FlexButton_Ctor(                                           /* rightButton */
+        P( { 0.8436243441002638, 0.8825023084025855, 0.02373397075900981, 0.02772396673472237 } )/* m_iniRect */,
+        P( "rightButton" )                                      /* m_name */,
+        P( "FlexButton.png" )                                   /* m_imgPath */,
+        P( 1 )                                                  /* m_valueMax */,
+        P( FlexBtnStm_PushStyle )                               /* m_style */,
+        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
+        P( &EventListener_Ctor( MDD_ON_MOUSE_DOWN, ClawMachine_EventProc, &clawMachine, ClawMachine_RightBtnDown, &EventListener_Ctor( MDD_ON_MOUSE_UP, ClawMachine_EventProc, &clawMachine, ClawMachine_RightBtnUp, null ) ) )/* m_buttonListeners */
     )
 };
 Sprite* getobj( int id ){
@@ -235,6 +244,7 @@ int ObjsBuilder_startSim(
         SDL_RenderClear(renderer);
 
         clawMachine->m_stmShow = true;
+        ClawMachine_Start( clawMachine );
         
         for (int i = 0; i < sizeof(g_objects) / sizeof(g_objects[0]); i++) {
             Sprite_draw0(g_objects[i], renderer);
