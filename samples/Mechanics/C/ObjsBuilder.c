@@ -22,7 +22,6 @@
 #include "PhxPivotJoint.h"                                      
 #include "PhxGrooveJoint.h"                                     
 #include "ClawMachine.h"                                        
-#include "EventListener.h"
 /** @private @static @memberof ObjsBuilder */
 static int hardwareAccelerationAvailable = SDL_RENDERER_SOFTWARE;
 /** @private @static @memberof ObjsBuilder */
@@ -116,7 +115,7 @@ Sprite* g_objects[] = {
         P( (cpVect[]){ {-0.48502126850387656, -0.4850207048733655}, {-0.48502126850387656, 0.48502066617728246}, {0.4850196348219552, 0.48502066617728246}, {0.4850196348219552, -0.4850207048733655} } )/* m_verts */,
         P( 4 )                                                  /* m_vertsCnt */,
         P( { 0.5000005935241769, 0.5000001639256585 } )         /* m_center */,
-        P( 1 )                                                  /* m_mass */,
+        P( 10 )                                                 /* m_mass */,
         P( 3 )                                                  /* m_group */,
         P( &PhxGrooveJoint_Ctor( null, 1, &arm_main_hanger, &gate_position, null, null ) )/* m_joints */
     ),
@@ -275,6 +274,7 @@ int ObjsBuilder_startSim(
                     31
                 )
             );
+            ClawMachine_EventProc( clawMachine, ClawMachine_TICK, null );
 
             bool hasUpdated = true;
 

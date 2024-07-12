@@ -3,7 +3,7 @@
 #include "CommonInclude.h"
 #include "ClawMachine.h"
 #include "PhxSprite.h"                                          
-#include "ObjsBuilder.h"
+#include "ObjsBuilder.h"                                        
 const TCHAR* ClawMachineEvent_toString( ClawMachine_EVENT value ){
     switch( value ){
     case ClawMachine_ClawBtnPressed: return _T( "ClawBtnPressed" );
@@ -73,7 +73,7 @@ static BOOL ClawMachineStm_GoingLeft_EventProc( ClawMachine* pClawMachine, ClawM
     case ClawMachine_TICK:{
         cpBodySetForce(
             PhxSprite_getBody( arm_main_hanger ),
-            cpv( -2, 0 )
+            cpv( -20, 0 )
         );
         bResult = TRUE;
     } break;
@@ -104,7 +104,7 @@ static BOOL ClawMachineStm_GoingRight_EventProc( ClawMachine* pClawMachine, Claw
     case ClawMachine_TICK:{
         cpBodySetForce(
             PhxSprite_getBody( arm_main_hanger ),
-            cpv( 2, 0 )
+            cpv( 20, 0 )
         );
         bResult = TRUE;
     } break;

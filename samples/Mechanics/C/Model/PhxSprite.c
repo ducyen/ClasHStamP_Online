@@ -161,7 +161,7 @@ static bool PhxSprite_load(
             cpShapeFilter filter = cpShapeFilterNew(CP_NO_GROUP, pPhxSprite->m_group, ~pPhxSprite->m_group);
             cpShapeSetFilter(current->shape, filter);
         }
-        cpShapeSetFriction(current->shape, 0.7);
+        cpShapeSetFriction(current->shape, 100);
         current = current->next;
     }
     return TRUE;

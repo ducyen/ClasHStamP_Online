@@ -6,7 +6,7 @@ void EventListener_actionPerformed( EventListener* pEventListener, Sprite* targe
 int EventListener_getType( EventListener* pEventListener );
 EventListener* EventListener_getNext( EventListener* pEventListener );
 #endif//__EventListener_H__
-#if !defined( EventListener_Init ) && ( defined( __EventListener_INTERNAL__ ) || defined( __ObjsBuilder_INTERNAL__ ) )
+#if !defined( EventListener_Init ) && ( defined( __EventListener_INTERNAL__ )  || defined( __ObjsBuilder_INTERNAL__ )  )
 #include "Sprite.h"
 /** @memberof EventListener
  * @brief EventListener auto-generated constructor
