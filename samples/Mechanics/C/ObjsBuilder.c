@@ -262,6 +262,7 @@ int ObjsBuilder_startSim(
 
             //cpBodyApplyForceAtLocalPoint( PhxSprite_getBody( arm_main_hanger ), cpv( 2, 0 ), cpvzero);
             //cpBodyApplyForceAtLocalPoint( PhxSprite_getBody( arm_main ), cpv( 0,31 ), cpvzero);
+            /*
             cpBodySetForce( 
                 PhxSprite_getBody( arm_main ), 
                 cpvmult(
@@ -274,6 +275,7 @@ int ObjsBuilder_startSim(
                     31
                 )
             );
+            */
             ClawMachine_EventProc( clawMachine, ClawMachine_TICK, null );
 
             bool hasUpdated = true;

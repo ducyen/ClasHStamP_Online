@@ -21,15 +21,25 @@ static BOOL ClawMachineStm_Reset( ClawMachine* pClawMachineTop, ClawMachineStm* 
 static BOOL ClawMachineStm_Abort( ClawMachine* pClawMachineTop, ClawMachineStm* pStm );
 static BOOL ClawMachineStm_EventProc( ClawMachine* pClawMachineTop, ClawMachineStm* pStm, ClawMachine_EVENT nEventId, void* pEventParams );
 static BOOL ClawMachineStm_RunToCompletion( ClawMachine* pClawMachineTop, ClawMachineStm* pStm );
+void apply_braking_force(cpBody *body, cpFloat braking_force) {
+    cpVect velocity = cpBodyGetVelocity(body);
+    cpVect braking_force_vector = cpvneg(cpvmult(velocity, braking_force));
+    cpBodyApplyForceAtWorldPoint(body, braking_force_vector, cpBodyGetPosition(body));
+}
+void update_braking(cpSpace *space, cpFloat dt, cpFloat *braking_force, cpFloat braking_decrement) {
+    cpBody *body = PhxSprite_getBody( arm_main_hanger );
+    apply_braking_force(body, *braking_force);
+    *braking_force = (*braking_force > braking_decrement) ? *braking_force - braking_decrement : 0;
+}
 static void ClawMachineStm_Ready_Entry( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, ClawMachineStm_Ready ) ){
-        ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	132	220	89	0	0	972	586" );
+        ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	129	220	96	0	0	972	586" );
     }
 }
 static BOOL ClawMachineStm_Ready_EventProc( ClawMachine* pClawMachine, ClawMachineStm* pStm, ClawMachine_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = ClawMachineStm_Ready;
-    ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	132	220	89	0	0	972	586" );
+    ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	129	220	96	0	0	972	586" );
     switch( nEventId ){
     case ClawMachine_ClawBtnPressed:{
         ClawMachineStm_BgnTrans( pClawMachine, pStm, ClawMachineStm_GoingDown, STATE_UNDEF );
@@ -46,13 +56,21 @@ static BOOL ClawMachineStm_Ready_EventProc( ClawMachine* pClawMachine, ClawMachi
         ClawMachineStm_EndTrans( pClawMachine, pStm );
         bResult = TRUE;
     } break;
+    case ClawMachine_TICK:{
+        cpFloat braking_force = 10.0;
+        cpFloat dt = 1.0 / 60.0;
+        cpFloat braking_decrement = 0.5; // Adjust as needed for smooth stopping
+        update_braking(ObjsBuilder_getPhxSpace(),  dt, &braking_force, braking_decrement);
+
+        bResult = TRUE;
+    } break;
     default: break;
     }
     return bResult;
 }
 static void ClawMachineStm_Ready_Exit( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, ClawMachineStm_Ready ) ){ 
-        ObjsBuilder_showExit( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	132	220	89	0	0	972	586" );
+        ObjsBuilder_showExit( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	129	220	96	0	0	972	586" );
     }
 }
 static void ClawMachineStm_GoingLeft_Entry( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
