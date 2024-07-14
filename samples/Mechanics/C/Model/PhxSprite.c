@@ -157,6 +157,7 @@ static bool PhxSprite_load(
     current = pPhxSprite->m_decomposedPolygons;
     while (current != NULL) {
         current->shape = cpSpaceAddShape(space, cpPolyShapeNew(pPhxSprite->m_body, current->vertexCount, current->vertices, cpTransformIdentity, 0.0));
+        cpShapeSetUserData( current->shape, ( cpDataPointer )pPhxSprite );
         if( pPhxSprite->m_group != 0 ){
             cpShapeFilter filter = cpShapeFilterNew(CP_NO_GROUP, pPhxSprite->m_group, ~pPhxSprite->m_group);
             cpShapeSetFilter(current->shape, filter);

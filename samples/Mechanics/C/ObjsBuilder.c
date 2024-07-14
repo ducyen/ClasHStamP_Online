@@ -157,6 +157,23 @@ Sprite* g_objects[] = {
 Sprite* getobj( int id ){
     return g_objects[ id ];
 }
+
+// Collision callback function
+cpBool ObjBuilder_collisionBegin(cpArbiter *arb, cpSpace *space, cpDataPointer userData) {
+    // Get the shapes involved in the collision
+    cpShape *a, *b;
+    cpArbiterGetShapes(arb, &a, &b);
+    PhxSprite* pa = ( PhxSprite* )cpShapeGetUserData( a );
+    PhxSprite* pb = ( PhxSprite* )cpShapeGetUserData( b );
+    if( pa && ( pa->m_group & 3 ) != 0 || pb && ( pb->m_group & 3 ) != 0 ){
+        // Print a message indicating a collision occurred
+        printf("Collision detected between ball and box!\n");
+    }
+
+    // Return true to process the collision normally
+    return cpTrue;
+}
+
 int ObjsBuilder_startSim(
     void  
 ){
@@ -264,6 +281,10 @@ int ObjsBuilder_startSim(
         // Reset the render target to the default
         SDL_SetRenderTarget(renderer, NULL);       
     }
+    
+    cpCollisionHandler *handler = cpSpaceAddDefaultCollisionHandler( ObjsBuilder_getPhxSpace() );
+    handler->beginFunc = collisionBegin;
+
     
     if (nResult == S_OK) {
         bool quit = false;

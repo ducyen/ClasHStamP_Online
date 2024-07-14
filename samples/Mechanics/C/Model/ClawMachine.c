@@ -35,10 +35,31 @@ STATIC bool ClawMachine_homing(
     cpVect hangerPos = cpBodyGetPosition( PhxSprite_getBody( arm_main_hanger ) );
     cpVect moveDir = cpvsub( center, hangerPos );
     moveDir = cpvnormalize( moveDir );
+
     moveDir = cpvmult( moveDir, 20 );
     moveDir.y = 0;
     cpBodySetForce( PhxSprite_getBody( arm_main_hanger ), moveDir );
-    if( hangerPos.x <= center.x ){
+
+    cpVect tgtPos = cpvsub( cpBodyGetPosition( PhxSprite_getBody( arm_main ) ), hangerPos );
+    tgtPos = cpvnormalize( tgtPos );
+    tgtPos = cpvmult( tgtPos, 50 );
+    tgtPos = cpvadd( hangerPos, tgtPos );
+    cpBodySetForce( 
+        PhxSprite_getBody( arm_main ), 
+        cpvmult(
+            cpvnormalize( 
+                cpvsub( 
+                    tgtPos,
+                    cpBodyGetPosition( PhxSprite_getBody( arm_main ) )
+                )
+            ),
+            31
+        )
+    );
+
+    if( cpvnear( hangerPos, center, 1.0 )
+     && cpvnear( tgtPos, cpBodyGetPosition( PhxSprite_getBody( arm_main ) ), 1.0 ) 
+    ){
         return true;
     }
     return false;
