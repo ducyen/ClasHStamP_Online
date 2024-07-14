@@ -26,6 +26,10 @@ typedef int             boolean;
 typedef int             bool;
 #endif
 
+#ifndef STATIC
+#define STATIC  static
+#endif
+
 #ifndef false
 #define false   ( 0 )
 #endif

@@ -25,7 +25,9 @@ enum {
 #define clawMachine             ( g_objects[ _clawMachine ] )
     _clawMachine,
 #define rightButton             ( g_objects[ _rightButton ] )
-    _rightButton
+    _rightButton,
+#define home_position           ( g_objects[ _home_position ] )
+    _home_position
 };
 int ObjsBuilder_startSim( void   );
 void ObjsBuilder_showEntry( void* pObj, void* pStm_, char* pMsg );

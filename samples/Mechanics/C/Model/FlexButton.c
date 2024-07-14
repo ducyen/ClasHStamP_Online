@@ -212,7 +212,7 @@ void FlexButton_DrawPressed(
             clampKnopY = pFlexButton->m_rect.h - 2*r;
         }
         pFlexButton->m_valueTmp = 0;
-        if ((pFlexButton->m_rect.h - 2*r) != 0){
+        if ((pFlexButton->m_rect.h - 2*r) != 0 && pFlexButton->m_valueMax > 1){
             pFlexButton->m_valueTmp = (( pFlexButton->m_valueMax-1) * clampKnopY + (pFlexButton->m_rect.h - 2*r)/2)/ (pFlexButton->m_rect.h - 2*r);
             clampKnopY = (pFlexButton->m_valueTmp * (pFlexButton->m_rect.h - 2*r) + ( pFlexButton->m_valueMax-1)/2)/ ( pFlexButton->m_valueMax-1);
         }

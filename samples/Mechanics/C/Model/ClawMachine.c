@@ -4,9 +4,8 @@
 #include "ClawMachine.h"
 #include "PhxSprite.h"                                          
 #include "ObjsBuilder.h"                                        
-/** @private @memberof ClawMachine */
-static void ClawMachine_apply_braking_force(
-    ClawMachine* pClawMachine,
+/** @private @static @memberof ClawMachine */
+STATIC void ClawMachine_apply_braking_force(
     cpBody* body,
     cpFloat braking_force
 ){
@@ -15,18 +14,35 @@ static void ClawMachine_apply_braking_force(
     cpBodyApplyForceAtWorldPoint(body, braking_force_vector, cpBodyGetPosition(body));
 } /* ClawMachine_apply_braking_force */
 
-/** @private @memberof ClawMachine */
-static void ClawMachine_update_braking(
-    ClawMachine* pClawMachine,
+/** @private @static @memberof ClawMachine */
+STATIC void ClawMachine_update_braking(
     cpSpace* space,
     cpFloat dt,
     cpFloat* braking_force,
     cpFloat braking_decrement
 ){
     cpBody *body = PhxSprite_getBody( arm_main_hanger );
-    ClawMachine_apply_braking_force(pClawMachine, body, *braking_force);
+    ClawMachine_apply_braking_force(body, *braking_force);
     *braking_force = (*braking_force > braking_decrement) ? *braking_force - braking_decrement : 0;
 } /* ClawMachine_update_braking */
+
+/** @private @static @memberof ClawMachine */
+STATIC bool ClawMachine_homing(
+    void  
+){
+    const SDL_Point* pCenter = Sprite_getCenter( home_position );
+    cpVect center = cpv( ( cpFloat )pCenter->x, ( cpFloat )ObjsBuilder_getScreenHeight() - ( cpFloat )pCenter->y );
+    cpVect hangerPos = cpBodyGetPosition( PhxSprite_getBody( arm_main_hanger ) );
+    cpVect moveDir = cpvsub( center, hangerPos );
+    moveDir = cpvnormalize( moveDir );
+    moveDir = cpvmult( moveDir, 20 );
+    moveDir.y = 0;
+    cpBodySetForce( PhxSprite_getBody( arm_main_hanger ), moveDir );
+    if( hangerPos.x <= center.x ){
+        return true;
+    }
+    return false;
+} /* ClawMachine_homing */
 
 const TCHAR* ClawMachineEvent_toString( ClawMachine_EVENT value ){
     switch( value ){
@@ -72,7 +88,7 @@ static BOOL ClawMachineStm_Ready_EventProc( ClawMachine* pClawMachine, ClawMachi
     } break;
     case ClawMachine_TICK:{
         cpFloat braking_force = 10.0;
-        ClawMachine_update_braking(pClawMachine,
+        ClawMachine_update_braking(
             ObjsBuilder_getPhxSpace(),
             1.0 / 60.0,
             &braking_force,
@@ -224,6 +240,16 @@ static BOOL ClawMachineStm_GoingHome_EventProc( ClawMachine* pClawMachine, ClawM
     BOOL bResult = FALSE;
     pStm->base.nSourceState = ClawMachineStm_GoingHome;
     ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	42	132	220	89	0	0	972	586" );
+    switch( nEventId ){
+    case ClawMachine_TICK:{
+        if (ClawMachine_homing()) {
+            ClawMachineStm_BgnTrans( pClawMachine, pStm, ClawMachineStm_Ready, STATE_UNDEF );
+            ClawMachineStm_EndTrans( pClawMachine, pStm );
+            bResult = TRUE;
+        }
+    } break;
+    default: break;
+    }
     return bResult;
 }
 static void ClawMachineStm_GoingHome_Exit( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
@@ -286,10 +312,6 @@ static BOOL ClawMachineStm_StateDefaultTrans( ClawMachine* pClawMachine, ClawMac
         bResult = TRUE;
     }else if( pStm->base.nPseudostate == ClawMachineStm_GoingUp ){
         ClawMachineStm_BgnTrans( pClawMachine, pStm, ClawMachineStm_GoingToGate, STATE_UNDEF );
-        ClawMachineStm_EndTrans( pClawMachine, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nPseudostate == ClawMachineStm_GoingHome ){
-        ClawMachineStm_BgnTrans( pClawMachine, pStm, ClawMachineStm_Ready, STATE_UNDEF );
         ClawMachineStm_EndTrans( pClawMachine, pStm );
         bResult = TRUE;
     }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, ClawMachineStm_ClawMachineTop) ){
