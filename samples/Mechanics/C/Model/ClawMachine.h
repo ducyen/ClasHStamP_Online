@@ -46,12 +46,14 @@ BOOL ClawMachine_IsIn( ClawMachine* pClawMachine, uint64_t nState );
 /** @memberof ClawMachine
  * @brief ClawMachine auto-generated constructor
  */
-#define ClawMachine_Init(_m_iniRect, _m_name, _m_imgPath)\
+#define ClawMachine_Init(_m_iniRect, _m_name, _m_imgPath, _braking_force, _braking_decrement)\
     Sprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ) )\
+    .braking_force = _braking_force,\
+    .braking_decrement = _braking_decrement,\
     .mainStm = ClawMachineStm_Init(),\
 
-#define ClawMachine_Ctor( _m_iniRect, _m_name, _m_imgPath )    ( ClawMachine ){ \
-    ClawMachine_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ) ) \
+#define ClawMachine_Ctor( _m_iniRect, _m_name, _m_imgPath, _braking_force, _braking_decrement )    ( ClawMachine ){ \
+    ClawMachine_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _braking_force ), P( _braking_decrement ) ) \
 }
 Sprite* ClawMachine_Copy( ClawMachine* pClawMachine, const ClawMachine* pSource );
 /** @class ClawMachine
@@ -59,6 +61,8 @@ Sprite* ClawMachine_Copy( ClawMachine* pClawMachine, const ClawMachine* pSource 
  */
 #define ClawMachine_CLASS                                                                       \
     Sprite_CLASS                                                                                \
+    cpFloat braking_force;                                                                                              \
+    cpFloat braking_decrement;                                                                                      \
     ClawMachineStm mainStm;                                     
 
 typedef struct tagClawMachine{
