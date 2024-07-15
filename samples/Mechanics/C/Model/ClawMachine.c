@@ -26,9 +26,9 @@ STATIC void ClawMachine_update_braking(
     *braking_force = (*braking_force > braking_decrement) ? *braking_force - braking_decrement : 0;
 } /* ClawMachine_update_braking */
 
-/** @private @static @memberof ClawMachine */
-STATIC bool ClawMachine_homing(
-    void  
+/** @private @memberof ClawMachine */
+static bool ClawMachine_homing(
+    ClawMachine* pClawMachine
 ){
     const SDL_Point* pCenter = Sprite_getCenter( home_position );
     cpVect center = cpv( ( cpFloat )pCenter->x, ( cpFloat )ObjsBuilder_getScreenHeight() - ( cpFloat )pCenter->y );
@@ -53,7 +53,7 @@ STATIC bool ClawMachine_homing(
                     cpBodyGetPosition( PhxSprite_getBody( arm_main ) )
                 )
             ),
-            31
+            50
         )
     );
 
@@ -65,9 +65,9 @@ STATIC bool ClawMachine_homing(
     return false;
 } /* ClawMachine_homing */
 
-/** @private @static @memberof ClawMachine */
-STATIC void ClawMachine_holding(
-    void  
+/** @private @memberof ClawMachine */
+static void ClawMachine_holding(
+    ClawMachine* pClawMachine
 ){
     cpFloat braking_force = 10.0;
     ClawMachine_update_braking(
@@ -93,40 +93,17 @@ STATIC void ClawMachine_holding(
             50
         )
     );
-
 } /* ClawMachine_holding */
 
-/** @private @static @memberof ClawMachine */
-STATIC void ClawMachine_goingLeft(
-    void  
+/** @private @memberof ClawMachine */
+static void ClawMachine_goingLeft(
+    ClawMachine* pClawMachine
 ){
-    cpBodySetForce(
-        PhxSprite_getBody( arm_main_hanger ),
-        cpv( -20, 0 )
-    );    
-    cpVect hangerPos = cpBodyGetPosition( PhxSprite_getBody( arm_main_hanger ) );
-    cpVect tgtPos = cpvsub( cpBodyGetPosition( PhxSprite_getBody( arm_main ) ), hangerPos );
-    tgtPos = cpvnormalize( tgtPos );
-    tgtPos = cpvmult( tgtPos, 50 );
-    tgtPos = cpvadd( hangerPos, tgtPos );
-    cpBodySetForce( 
-        PhxSprite_getBody( arm_main ), 
-        cpvmult(
-            cpvnormalize( 
-                cpvsub( 
-                    tgtPos,
-                    cpBodyGetPosition( PhxSprite_getBody( arm_main ) )
-                )
-            ),
-            50
-        )
-    );
-    
 } /* ClawMachine_goingLeft */
 
-/** @private @static @memberof ClawMachine */
-STATIC void ClawMachine_goingRight(
-    void  
+/** @private @memberof ClawMachine */
+static void ClawMachine_goingRight(
+    ClawMachine* pClawMachine
 ){
     cpBodySetForce(
         PhxSprite_getBody( arm_main_hanger ),
@@ -151,9 +128,9 @@ STATIC void ClawMachine_goingRight(
     );
 } /* ClawMachine_goingRight */
 
-/** @private @static @memberof ClawMachine */
-STATIC bool ClawMachine_goingDown(
-    ClawMachine* pClawMachine  
+/** @private @memberof ClawMachine */
+static bool ClawMachine_goingDown(
+    ClawMachine* pClawMachine
 ){
     cpFloat braking_force = 10.0;
     ClawMachine_update_braking(
@@ -179,25 +156,131 @@ STATIC bool ClawMachine_goingDown(
             50
         )
     );
+    cpBodySetTorque( PhxSprite_getBody( arm_right ), 500 );
+    cpBodySetTorque( PhxSprite_getBody( arm_left ), -500 );
+    if( pClawMachine->arm_height >= 550 ){
+        return true;
+    }
+    return false;
 } /* ClawMachine_goingDown */
 
-/** @private @static @memberof ClawMachine */
-STATIC bool ClawMachine_goingUp(
-    void  
+/** @private @memberof ClawMachine */
+static bool ClawMachine_goingUp(
+    ClawMachine* pClawMachine
 ){
+    cpFloat braking_force = 10.0;
+    ClawMachine_update_braking(
+        PhxSprite_getBody( arm_main_hanger ),
+        1.0 / 60.0,
+        &braking_force,
+        0.5
+    );
+    cpVect hangerPos = cpBodyGetPosition( PhxSprite_getBody( arm_main_hanger ) );
+    cpVect tgtPos = cpvsub( cpBodyGetPosition( PhxSprite_getBody( arm_main ) ), hangerPos );
+    tgtPos = cpvnormalize( tgtPos );
+    tgtPos = cpvmult( tgtPos, pClawMachine->arm_height-=0.1 );
+    tgtPos = cpvadd( hangerPos, tgtPos );
+    cpBodySetForce( 
+        PhxSprite_getBody( arm_main ), 
+        cpvmult(
+            cpvnormalize( 
+                cpvsub( 
+                    tgtPos,
+                    cpBodyGetPosition( PhxSprite_getBody( arm_main ) )
+                )
+            ),
+            50
+        )
+    );
+    cpBodySetTorque( PhxSprite_getBody( arm_right ), -500 );
+    cpBodySetTorque( PhxSprite_getBody( arm_left ), 500 );
+    if( pClawMachine->arm_height <= 50 ){
+        return true;
+    }
+    return false;
 } /* ClawMachine_goingUp */
 
-/** @private @static @memberof ClawMachine */
-STATIC bool ClawMachine_clamping(
-    void  
+/** @private @memberof ClawMachine */
+static bool ClawMachine_clamping(
+    ClawMachine* pClawMachine
 ){
+    cpFloat braking_force = 10.0;
+    ClawMachine_update_braking(
+        PhxSprite_getBody( arm_main_hanger ),
+        1.0 / 60.0,
+        &braking_force,
+        0.5
+    );
+    cpBodySetTorque( PhxSprite_getBody( arm_right ), -500 );
+    cpBodySetTorque( PhxSprite_getBody( arm_left ), 500 );
+    pClawMachine->arm_height += 0.1;
+    if( pClawMachine->arm_height >= 50 ){
+        return true;
+    }
+    return false;
 } /* ClawMachine_clamping */
 
-/** @private @static @memberof ClawMachine */
-STATIC bool ClawMachine_goingToGate(
-    void  
+/** @private @memberof ClawMachine */
+static bool ClawMachine_goingToGate(
+    ClawMachine* pClawMachine
 ){
+    const SDL_Point* pCenter = Sprite_getCenter( gate_position );
+    cpVect center = cpv( ( cpFloat )pCenter->x, ( cpFloat )ObjsBuilder_getScreenHeight() - ( cpFloat )pCenter->y );
+    cpVect hangerPos = cpBodyGetPosition( PhxSprite_getBody( arm_main_hanger ) );
+    cpVect moveDir = cpvsub( center, hangerPos );
+    moveDir = cpvnormalize( moveDir );
+
+    moveDir = cpvmult( moveDir, 20 );
+    moveDir.y = 0;
+    cpBodySetForce( PhxSprite_getBody( arm_main_hanger ), moveDir );
+
+    cpVect tgtPos = cpvsub( cpBodyGetPosition( PhxSprite_getBody( arm_main ) ), hangerPos );
+    tgtPos = cpvnormalize( tgtPos );
+    tgtPos = cpvmult( tgtPos, 50 );
+    tgtPos = cpvadd( hangerPos, tgtPos );
+    cpBodySetForce( 
+        PhxSprite_getBody( arm_main ), 
+        cpvmult(
+            cpvnormalize( 
+                cpvsub( 
+                    tgtPos,
+                    cpBodyGetPosition( PhxSprite_getBody( arm_main ) )
+                )
+            ),
+            50
+        )
+    );
+
+    cpBodySetTorque( PhxSprite_getBody( arm_right ), -500 );
+    cpBodySetTorque( PhxSprite_getBody( arm_left ), 500 );
+    
+    if( cpvnear( hangerPos, center, 1.0 )
+     && cpvnear( tgtPos, cpBodyGetPosition( PhxSprite_getBody( arm_main ) ), 1.0 ) 
+    ){
+        return true;
+    }
+    return false;
 } /* ClawMachine_goingToGate */
+
+/** @private @memberof ClawMachine */
+static bool ClawMachine_releasing(
+    ClawMachine* pClawMachine
+){
+    cpFloat braking_force = 10.0;
+    ClawMachine_update_braking(
+        PhxSprite_getBody( arm_main_hanger ),
+        1.0 / 60.0,
+        &braking_force,
+        0.5
+    );
+    cpBodySetTorque( PhxSprite_getBody( arm_right ), 500 );
+    cpBodySetTorque( PhxSprite_getBody( arm_left ), +500 );
+    pClawMachine->arm_height += 0.1;
+    if( pClawMachine->arm_height >= 50 ){
+        return true;
+    }
+    return false;
+} /* ClawMachine_releasing */
 
 const TCHAR* ClawMachineEvent_toString( ClawMachine_EVENT value ){
     switch( value ){
@@ -218,13 +301,13 @@ static BOOL ClawMachineStm_EventProc( ClawMachine* pClawMachineTop, ClawMachineS
 static BOOL ClawMachineStm_RunToCompletion( ClawMachine* pClawMachineTop, ClawMachineStm* pStm );
 static void ClawMachineStm_Ready_Entry( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, ClawMachineStm_Ready ) ){
-        ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	129	220	96	-16	0	988	586" );
+        ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	129	220	96	-43	0	1015	624" );
     }
 }
 static BOOL ClawMachineStm_Ready_EventProc( ClawMachine* pClawMachine, ClawMachineStm* pStm, ClawMachine_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = ClawMachineStm_Ready;
-    ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	129	220	96	-16	0	988	586" );
+    ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	129	220	96	-43	0	1015	624" );
     switch( nEventId ){
     case ClawMachine_ClawBtnPressed:{
         ClawMachineStm_BgnTrans( pClawMachine, pStm, ClawMachineStm_GoingDown, STATE_UNDEF );
@@ -242,7 +325,7 @@ static BOOL ClawMachineStm_Ready_EventProc( ClawMachine* pClawMachine, ClawMachi
         bResult = TRUE;
     } break;
     case ClawMachine_TICK:{
-        ClawMachine_holding();
+        ClawMachine_holding(pClawMachine);
         bResult = TRUE;
     } break;
     default: break;
@@ -251,18 +334,18 @@ static BOOL ClawMachineStm_Ready_EventProc( ClawMachine* pClawMachine, ClawMachi
 }
 static void ClawMachineStm_Ready_Exit( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, ClawMachineStm_Ready ) ){ 
-        ObjsBuilder_showExit( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	129	220	96	-16	0	988	586" );
+        ObjsBuilder_showExit( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	129	220	96	-43	0	1015	624" );
     }
 }
 static void ClawMachineStm_GoingLeft_Entry( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, ClawMachineStm_GoingLeft ) ){
-        ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	41	302	220	89	-16	0	988	586" );
+        ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	41	302	220	89	-43	0	1015	624" );
     }
 }
 static BOOL ClawMachineStm_GoingLeft_EventProc( ClawMachine* pClawMachine, ClawMachineStm* pStm, ClawMachine_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = ClawMachineStm_GoingLeft;
-    ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	41	302	220	89	-16	0	988	586" );
+    ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	41	302	220	89	-43	0	1015	624" );
     switch( nEventId ){
     case ClawMachine_LeftBtnUp:{
         ClawMachineStm_BgnTrans( pClawMachine, pStm, ClawMachineStm_JunctionPoint0, STATE_UNDEF );
@@ -270,7 +353,7 @@ static BOOL ClawMachineStm_GoingLeft_EventProc( ClawMachine* pClawMachine, ClawM
         bResult = TRUE;
     } break;
     case ClawMachine_TICK:{
-        ClawMachine_goingLeft();
+        ClawMachine_goingLeft(pClawMachine);
         bResult = TRUE;
     } break;
     default: break;
@@ -279,18 +362,18 @@ static BOOL ClawMachineStm_GoingLeft_EventProc( ClawMachine* pClawMachine, ClawM
 }
 static void ClawMachineStm_GoingLeft_Exit( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, ClawMachineStm_GoingLeft ) ){ 
-        ObjsBuilder_showExit( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	41	302	220	89	-16	0	988	586" );
+        ObjsBuilder_showExit( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	41	302	220	89	-43	0	1015	624" );
     }
 }
 static void ClawMachineStm_GoingRight_Entry( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, ClawMachineStm_GoingRight ) ){
-        ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	302	220	89	-16	0	988	586" );
+        ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	302	220	89	-43	0	1015	624" );
     }
 }
 static BOOL ClawMachineStm_GoingRight_EventProc( ClawMachine* pClawMachine, ClawMachineStm* pStm, ClawMachine_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = ClawMachineStm_GoingRight;
-    ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	302	220	89	-16	0	988	586" );
+    ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	302	220	89	-43	0	1015	624" );
     switch( nEventId ){
     case ClawMachine_RightBtnUp:{
         ClawMachineStm_BgnTrans( pClawMachine, pStm, ClawMachineStm_JunctionPoint0, STATE_UNDEF );
@@ -298,7 +381,7 @@ static BOOL ClawMachineStm_GoingRight_EventProc( ClawMachine* pClawMachine, Claw
         bResult = TRUE;
     } break;
     case ClawMachine_TICK:{
-        ClawMachine_goingRight();
+        ClawMachine_goingRight(pClawMachine);
         bResult = TRUE;
     } break;
     default: break;
@@ -307,21 +390,22 @@ static BOOL ClawMachineStm_GoingRight_EventProc( ClawMachine* pClawMachine, Claw
 }
 static void ClawMachineStm_GoingRight_Exit( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, ClawMachineStm_GoingRight ) ){ 
-        ObjsBuilder_showExit( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	302	220	89	-16	0	988	586" );
+        ObjsBuilder_showExit( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	302	220	89	-43	0	1015	624" );
     }
 }
 static void ClawMachineStm_GoingDown_Entry( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, ClawMachineStm_GoingDown ) ){
-        ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	132	220	89	-16	0	988	586" );
+        ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	132	220	89	-43	0	1015	624" );
+        pClawMachine->arm_height = 50;
     }
 }
 static BOOL ClawMachineStm_GoingDown_EventProc( ClawMachine* pClawMachine, ClawMachineStm* pStm, ClawMachine_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = ClawMachineStm_GoingDown;
-    ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	132	220	89	-16	0	988	586" );
+    ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	132	220	89	-43	0	1015	624" );
     switch( nEventId ){
     case ClawMachine_TICK:{
-        if (ClawMachine_goingDown( pClawMachine )) {
+        if (ClawMachine_goingDown(pClawMachine)) {
             ClawMachineStm_BgnTrans( pClawMachine, pStm, ClawMachineStm_Clawing, STATE_UNDEF );
             ClawMachineStm_EndTrans( pClawMachine, pStm );
             bResult = TRUE;
@@ -333,21 +417,22 @@ static BOOL ClawMachineStm_GoingDown_EventProc( ClawMachine* pClawMachine, ClawM
 }
 static void ClawMachineStm_GoingDown_Exit( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, ClawMachineStm_GoingDown ) ){ 
-        ObjsBuilder_showExit( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	132	220	89	-16	0	988	586" );
+        ObjsBuilder_showExit( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	132	220	89	-43	0	1015	624" );
     }
 }
 static void ClawMachineStm_Clawing_Entry( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, ClawMachineStm_Clawing ) ){
-        ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	302	220	89	-16	0	988	586" );
+        ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	302	220	89	-43	0	1015	624" );
+        pClawMachine->arm_height = 0;
     }
 }
 static BOOL ClawMachineStm_Clawing_EventProc( ClawMachine* pClawMachine, ClawMachineStm* pStm, ClawMachine_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = ClawMachineStm_Clawing;
-    ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	302	220	89	-16	0	988	586" );
+    ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	302	220	89	-43	0	1015	624" );
     switch( nEventId ){
     case ClawMachine_TICK:{
-        if (ClawMachine_clamping()) {
+        if (ClawMachine_clamping(pClawMachine)) {
             ClawMachineStm_BgnTrans( pClawMachine, pStm, ClawMachineStm_GoingUp, STATE_UNDEF );
             ClawMachineStm_EndTrans( pClawMachine, pStm );
             bResult = TRUE;
@@ -359,21 +444,22 @@ static BOOL ClawMachineStm_Clawing_EventProc( ClawMachine* pClawMachine, ClawMac
 }
 static void ClawMachineStm_Clawing_Exit( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, ClawMachineStm_Clawing ) ){ 
-        ObjsBuilder_showExit( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	302	220	89	-16	0	988	586" );
+        ObjsBuilder_showExit( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	302	220	89	-43	0	1015	624" );
     }
 }
 static void ClawMachineStm_GoingUp_Entry( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, ClawMachineStm_GoingUp ) ){
-        ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	472	220	89	-16	0	988	586" );
+        ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	472	220	89	-43	0	1015	624" );
+        pClawMachine->arm_height = 550;
     }
 }
 static BOOL ClawMachineStm_GoingUp_EventProc( ClawMachine* pClawMachine, ClawMachineStm* pStm, ClawMachine_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = ClawMachineStm_GoingUp;
-    ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	472	220	89	-16	0	988	586" );
+    ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	472	220	89	-43	0	1015	624" );
     switch( nEventId ){
     case ClawMachine_TICK:{
-        if (ClawMachine_goingUp()) {
+        if (ClawMachine_goingUp(pClawMachine)) {
             ClawMachineStm_BgnTrans( pClawMachine, pStm, ClawMachineStm_GoingToGate, STATE_UNDEF );
             ClawMachineStm_EndTrans( pClawMachine, pStm );
             bResult = TRUE;
@@ -385,22 +471,22 @@ static BOOL ClawMachineStm_GoingUp_EventProc( ClawMachine* pClawMachine, ClawMac
 }
 static void ClawMachineStm_GoingUp_Exit( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, ClawMachineStm_GoingUp ) ){ 
-        ObjsBuilder_showExit( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	472	220	89	-16	0	988	586" );
+        ObjsBuilder_showExit( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	472	220	89	-43	0	1015	624" );
     }
 }
 static void ClawMachineStm_GoingToGate_Entry( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, ClawMachineStm_GoingToGate ) ){
-        ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	472	220	89	-16	0	988	586" );
+        ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	472	220	89	-43	0	1015	624" );
     }
 }
 static BOOL ClawMachineStm_GoingToGate_EventProc( ClawMachine* pClawMachine, ClawMachineStm* pStm, ClawMachine_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = ClawMachineStm_GoingToGate;
-    ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	472	220	89	-16	0	988	586" );
+    ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	472	220	89	-43	0	1015	624" );
     switch( nEventId ){
     case ClawMachine_TICK:{
-        if (ClawMachine_goingToGate()) {
-            ClawMachineStm_BgnTrans( pClawMachine, pStm, ClawMachineStm_GoingHome, STATE_UNDEF );
+        if (ClawMachine_goingToGate(pClawMachine)) {
+            ClawMachineStm_BgnTrans( pClawMachine, pStm, ClawMachineStm_Releasing, STATE_UNDEF );
             ClawMachineStm_EndTrans( pClawMachine, pStm );
             bResult = TRUE;
         }
@@ -411,21 +497,21 @@ static BOOL ClawMachineStm_GoingToGate_EventProc( ClawMachine* pClawMachine, Cla
 }
 static void ClawMachineStm_GoingToGate_Exit( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, ClawMachineStm_GoingToGate ) ){ 
-        ObjsBuilder_showExit( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	472	220	89	-16	0	988	586" );
+        ObjsBuilder_showExit( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	390	472	220	89	-43	0	1015	624" );
     }
 }
 static void ClawMachineStm_GoingHome_Entry( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, ClawMachineStm_GoingHome ) ){
-        ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	42	132	220	89	-16	0	988	586" );
+        ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	42	132	220	89	-43	0	1015	624" );
     }
 }
 static BOOL ClawMachineStm_GoingHome_EventProc( ClawMachine* pClawMachine, ClawMachineStm* pStm, ClawMachine_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = ClawMachineStm_GoingHome;
-    ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	42	132	220	89	-16	0	988	586" );
+    ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	42	132	220	89	-43	0	1015	624" );
     switch( nEventId ){
     case ClawMachine_TICK:{
-        if (ClawMachine_homing()) {
+        if (ClawMachine_homing(pClawMachine)) {
             ClawMachineStm_BgnTrans( pClawMachine, pStm, ClawMachineStm_Ready, STATE_UNDEF );
             ClawMachineStm_EndTrans( pClawMachine, pStm );
             bResult = TRUE;
@@ -437,7 +523,34 @@ static BOOL ClawMachineStm_GoingHome_EventProc( ClawMachine* pClawMachine, ClawM
 }
 static void ClawMachineStm_GoingHome_Exit( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, ClawMachineStm_GoingHome ) ){ 
-        ObjsBuilder_showExit( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	42	132	220	89	-16	0	988	586" );
+        ObjsBuilder_showExit( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	42	132	220	89	-43	0	1015	624" );
+    }
+}
+static void ClawMachineStm_Releasing_Entry( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
+    if( HdStateMachine_Enterable( &pStm->base, ClawMachineStm_Releasing ) ){
+        ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	42	472	220	89	-43	0	1015	624" );
+        pClawMachine->arm_height = 0;
+    }
+}
+static BOOL ClawMachineStm_Releasing_EventProc( ClawMachine* pClawMachine, ClawMachineStm* pStm, ClawMachine_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->base.nSourceState = ClawMachineStm_Releasing;
+    ObjsBuilder_showDoing( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	42	472	220	89	-43	0	1015	624" );
+    switch( nEventId ){
+    case ClawMachine_TICK:{
+        if (ClawMachine_releasing(pClawMachine)) {
+            ClawMachineStm_BgnTrans( pClawMachine, pStm, ClawMachineStm_GoingHome, STATE_UNDEF );
+            ClawMachineStm_EndTrans( pClawMachine, pStm );
+            bResult = TRUE;
+        }
+    } break;
+    default: break;
+    }
+    return bResult;
+}
+static void ClawMachineStm_Releasing_Exit( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
+    if( HdStateMachine_Exitable( &pStm->base, ClawMachineStm_Releasing ) ){ 
+        ObjsBuilder_showExit( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	42	472	220	89	-43	0	1015	624" );
     }
 }
 static void ClawMachineStm_EndTrans( ClawMachine *pClawMachine, ClawMachineStm* pStm ){
@@ -452,6 +565,7 @@ static void ClawMachineStm_EndTrans( ClawMachine *pClawMachine, ClawMachineStm* 
     case ClawMachineStm_GoingUp:ClawMachineStm_GoingUp_Entry( pClawMachine, pStm ); break;
     case ClawMachineStm_GoingToGate:ClawMachineStm_GoingToGate_Entry( pClawMachine, pStm ); break;
     case ClawMachineStm_GoingHome:ClawMachineStm_GoingHome_Entry( pClawMachine, pStm ); break;
+    case ClawMachineStm_Releasing:ClawMachineStm_Releasing_Entry( pClawMachine, pStm ); break;
     default: break;
     }
 }
@@ -470,6 +584,7 @@ static void ClawMachineStm_BgnTrans( ClawMachine *pClawMachine, ClawMachineStm* 
     case ClawMachineStm_GoingUp:ClawMachineStm_GoingUp_Exit( pClawMachine, pStm ); break;
     case ClawMachineStm_GoingToGate:ClawMachineStm_GoingToGate_Exit( pClawMachine, pStm ); break;
     case ClawMachineStm_GoingHome:ClawMachineStm_GoingHome_Exit( pClawMachine, pStm ); break;
+    case ClawMachineStm_Releasing:ClawMachineStm_Releasing_Exit( pClawMachine, pStm ); break;
     default: break;
     }
 }
@@ -533,6 +648,7 @@ static BOOL ClawMachineStm_EventProc( ClawMachine* pClawMachine, ClawMachineStm*
     case ClawMachineStm_GoingUp:                bResult |= ClawMachineStm_GoingUp_EventProc( pClawMachine, pStm, nEventId, pEventParams ); break;
     case ClawMachineStm_GoingToGate:            bResult |= ClawMachineStm_GoingToGate_EventProc( pClawMachine, pStm, nEventId, pEventParams ); break;
     case ClawMachineStm_GoingHome:              bResult |= ClawMachineStm_GoingHome_EventProc( pClawMachine, pStm, nEventId, pEventParams ); break;
+    case ClawMachineStm_Releasing:              bResult |= ClawMachineStm_Releasing_EventProc( pClawMachine, pStm, nEventId, pEventParams ); break;
     default: break;
     }
     ClawMachineStm_RunToCompletion( pClawMachine, pStm );
@@ -566,5 +682,6 @@ Sprite* ClawMachine_Copy( ClawMachine* pClawMachine, const ClawMachine* pSource 
     Sprite_Copy( ( Sprite* )pClawMachine, ( Sprite* )pSource );
     pClawMachine->braking_force = pSource->braking_force;
     pClawMachine->braking_decrement = pSource->braking_decrement;
+    pClawMachine->arm_height = pSource->arm_height;
     return ( Sprite* )pClawMachine;
 }

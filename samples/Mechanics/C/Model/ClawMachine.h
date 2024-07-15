@@ -24,7 +24,7 @@ const TCHAR* ClawMachineEvent_toString( ClawMachine_EVENT value );
 typedef struct tagClawMachineStm {
     HdStateMachine base;
 #define ClawMachineStm_ClawMachineTop_Dmy       ( 1ULL <<  0 )
-#define ClawMachineStm_ClawMachineTop           ( ClawMachineStm_ClawMachineTop_Dmy | ClawMachineStm_InitialPseudostate0 | ClawMachineStm_Ready | ClawMachineStm_GoingLeft | ClawMachineStm_GoingRight | ClawMachineStm_JunctionPoint0 | ClawMachineStm_GoingDown | ClawMachineStm_Clawing | ClawMachineStm_GoingUp | ClawMachineStm_GoingToGate | ClawMachineStm_GoingHome )
+#define ClawMachineStm_ClawMachineTop           ( ClawMachineStm_ClawMachineTop_Dmy | ClawMachineStm_InitialPseudostate0 | ClawMachineStm_Ready | ClawMachineStm_GoingLeft | ClawMachineStm_GoingRight | ClawMachineStm_JunctionPoint0 | ClawMachineStm_GoingDown | ClawMachineStm_Clawing | ClawMachineStm_GoingUp | ClawMachineStm_GoingToGate | ClawMachineStm_GoingHome | ClawMachineStm_Releasing )
 #define ClawMachineStm_InitialPseudostate0      ( 1ULL <<  1 )
 #define ClawMachineStm_Ready                    ( 1ULL <<  2 )
 #define ClawMachineStm_GoingLeft                ( 1ULL <<  3 )
@@ -35,6 +35,7 @@ typedef struct tagClawMachineStm {
 #define ClawMachineStm_GoingUp                  ( 1ULL <<  8 )
 #define ClawMachineStm_GoingToGate              ( 1ULL <<  9 )
 #define ClawMachineStm_GoingHome                ( 1ULL << 10 )
+#define ClawMachineStm_Releasing                ( 1ULL << 11 )
 }ClawMachineStm;
 #define ClawMachineStm_Init() {\
     .base = { HdStateMachine_Init( ClawMachineStm_ClawMachineTop, ClawMachineStm_ClawMachineTop ) },\
@@ -64,7 +65,7 @@ Sprite* ClawMachine_Copy( ClawMachine* pClawMachine, const ClawMachine* pSource 
     Sprite_CLASS                                                                                \
     cpFloat braking_force;                                                                                              \
     cpFloat braking_decrement;                                                                                      \
-    cpFloat arm_height;\
+    cpFloat arm_height;                                                                                                    \
     ClawMachineStm mainStm;                                     
 
 typedef struct tagClawMachine{
