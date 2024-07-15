@@ -16,12 +16,12 @@ STATIC void ClawMachine_apply_braking_force(
 
 /** @private @static @memberof ClawMachine */
 STATIC void ClawMachine_update_braking(
-    cpSpace* space,
+    cpBody* body,
     cpFloat dt,
     cpFloat* braking_force,
     cpFloat braking_decrement
 ){
-    cpBody *body = PhxSprite_getBody( arm_main_hanger );
+    cpSpace* space = ObjsBuilder_getPhxSpace();
     ClawMachine_apply_braking_force(body, *braking_force);
     *braking_force = (*braking_force > braking_decrement) ? *braking_force - braking_decrement : 0;
 } /* ClawMachine_update_braking */
@@ -64,6 +64,116 @@ STATIC bool ClawMachine_homing(
     }
     return false;
 } /* ClawMachine_homing */
+
+/** @private @static @memberof ClawMachine */
+STATIC void ClawMachine_holding(
+    void  
+){
+    cpFloat braking_force = 10.0;
+    ClawMachine_update_braking(
+        PhxSprite_getBody( arm_main_hanger ),
+        1.0 / 60.0,
+        &braking_force,
+        0.5
+    );
+    cpVect hangerPos = cpBodyGetPosition( PhxSprite_getBody( arm_main_hanger ) );
+    cpVect tgtPos = cpvsub( cpBodyGetPosition( PhxSprite_getBody( arm_main ) ), hangerPos );
+    tgtPos = cpvnormalize( tgtPos );
+    tgtPos = cpvmult( tgtPos, 50 );
+    tgtPos = cpvadd( hangerPos, tgtPos );
+    cpBodySetForce( 
+        PhxSprite_getBody( arm_main ), 
+        cpvmult(
+            cpvnormalize( 
+                cpvsub( 
+                    tgtPos,
+                    cpBodyGetPosition( PhxSprite_getBody( arm_main ) )
+                )
+            ),
+            50
+        )
+    );
+
+} /* ClawMachine_holding */
+
+/** @private @static @memberof ClawMachine */
+STATIC void ClawMachine_goingLeft(
+    void  
+){
+    cpBodySetForce(
+        PhxSprite_getBody( arm_main_hanger ),
+        cpv( -20, 0 )
+    );    
+    cpVect hangerPos = cpBodyGetPosition( PhxSprite_getBody( arm_main_hanger ) );
+    cpVect tgtPos = cpvsub( cpBodyGetPosition( PhxSprite_getBody( arm_main ) ), hangerPos );
+    tgtPos = cpvnormalize( tgtPos );
+    tgtPos = cpvmult( tgtPos, 50 );
+    tgtPos = cpvadd( hangerPos, tgtPos );
+    cpBodySetForce( 
+        PhxSprite_getBody( arm_main ), 
+        cpvmult(
+            cpvnormalize( 
+                cpvsub( 
+                    tgtPos,
+                    cpBodyGetPosition( PhxSprite_getBody( arm_main ) )
+                )
+            ),
+            50
+        )
+    );
+    
+} /* ClawMachine_goingLeft */
+
+/** @private @static @memberof ClawMachine */
+STATIC void ClawMachine_goingRight(
+    void  
+){
+    cpBodySetForce(
+        PhxSprite_getBody( arm_main_hanger ),
+        cpv( 20, 0 )
+    );
+    cpVect hangerPos = cpBodyGetPosition( PhxSprite_getBody( arm_main_hanger ) );
+    cpVect tgtPos = cpvsub( cpBodyGetPosition( PhxSprite_getBody( arm_main ) ), hangerPos );
+    tgtPos = cpvnormalize( tgtPos );
+    tgtPos = cpvmult( tgtPos, 50 );
+    tgtPos = cpvadd( hangerPos, tgtPos );
+    cpBodySetForce( 
+        PhxSprite_getBody( arm_main ), 
+        cpvmult(
+            cpvnormalize( 
+                cpvsub( 
+                    tgtPos,
+                    cpBodyGetPosition( PhxSprite_getBody( arm_main ) )
+                )
+            ),
+            50
+        )
+    );
+} /* ClawMachine_goingRight */
+
+/** @private @static @memberof ClawMachine */
+STATIC void ClawMachine_goingDown(
+    void  
+){
+} /* ClawMachine_goingDown */
+
+/** @private @static @memberof ClawMachine */
+STATIC void ClawMachine_goingUp(
+    void  
+){
+} /* ClawMachine_goingUp */
+
+/** @private @static @memberof ClawMachine */
+STATIC void ClawMachine_clamping(
+    void  
+){
+} /* ClawMachine_clamping */
+
+/** @private @static @memberof ClawMachine */
+STATIC void ClawMachine_goingToGate(
+    void  
+){
+} /* ClawMachine_goingToGate */
 
 const TCHAR* ClawMachineEvent_toString( ClawMachine_EVENT value ){
     switch( value ){
@@ -108,13 +218,7 @@ static BOOL ClawMachineStm_Ready_EventProc( ClawMachine* pClawMachine, ClawMachi
         bResult = TRUE;
     } break;
     case ClawMachine_TICK:{
-        cpFloat braking_force = 10.0;
-        ClawMachine_update_braking(
-            ObjsBuilder_getPhxSpace(),
-            1.0 / 60.0,
-            &braking_force,
-            0.5
-        );
+        ClawMachine_holding();
         bResult = TRUE;
     } break;
     default: break;
@@ -142,10 +246,7 @@ static BOOL ClawMachineStm_GoingLeft_EventProc( ClawMachine* pClawMachine, ClawM
         bResult = TRUE;
     } break;
     case ClawMachine_TICK:{
-        cpBodySetForce(
-            PhxSprite_getBody( arm_main_hanger ),
-            cpv( -20, 0 )
-        );
+        ClawMachine_goingLeft();
         bResult = TRUE;
     } break;
     default: break;
@@ -173,10 +274,7 @@ static BOOL ClawMachineStm_GoingRight_EventProc( ClawMachine* pClawMachine, Claw
         bResult = TRUE;
     } break;
     case ClawMachine_TICK:{
-        cpBodySetForce(
-            PhxSprite_getBody( arm_main_hanger ),
-            cpv( 20, 0 )
-        );
+        ClawMachine_goingRight();
         bResult = TRUE;
     } break;
     default: break;

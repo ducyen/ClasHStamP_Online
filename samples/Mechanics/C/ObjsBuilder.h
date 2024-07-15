@@ -27,8 +27,11 @@ enum {
 #define rightButton             ( g_objects[ _rightButton ] )
     _rightButton,
 #define home_position           ( g_objects[ _home_position ] )
-    _home_position
+    _home_position,
+#define clawButton              ( g_objects[ _clawButton ] )
+    _clawButton
 };
+cpBool ObjsBuilder_collisionBegin( cpArbiter* arb, cpSpace* space, cpDataPointer userData );
 int ObjsBuilder_startSim( void   );
 void ObjsBuilder_showEntry( void* pObj, void* pStm_, char* pMsg );
 void ObjsBuilder_showDoing( void* pObj, void* pStm_, char* pMsg );

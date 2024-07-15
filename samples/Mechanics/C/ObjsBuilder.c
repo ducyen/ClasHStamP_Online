@@ -67,7 +67,7 @@ Sprite* g_objects[] = {
         P( &PhxPivotJoint_Ctor( &arm_main, 1, null, &PhxRotaryLimitJoint_Ctor( &arm_main, 1, -30.0, 30.0, null ) ) )/* m_joints */
     ),
     &FlexButton_Ctor(                                           /* leftButton */
-        P( { 0.7660273180258715, 0.882378643978367, 0.022339374000591387, 0.02772396673472237 } )/* m_iniRect */,
+        P( { 0.7649391787440435, 0.882378643978367, 0.022339374000591387, 0.02772396673472237 } )/* m_iniRect */,
         P( "leftButton" )                                       /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 1 )                                                  /* m_valueMax */,
@@ -136,7 +136,7 @@ Sprite* g_objects[] = {
         P( 0.5 )                                                /* braking_decrement */
     ),
     &FlexButton_Ctor(                                           /* rightButton */
-        P( { 0.8169043064708685, 0.8825023084025855, 0.022339374000591387, 0.02772396673472237 } )/* m_iniRect */,
+        P( { 0.8430196492347423, 0.8825023084025855, 0.022339374000591387, 0.02772396673472237 } )/* m_iniRect */,
         P( "rightButton" )                                      /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 1 )                                                  /* m_valueMax */,
@@ -152,14 +152,25 @@ Sprite* g_objects[] = {
         P( null )                                               /* m_constraints */,
         P( null )                                               /* m_mouseListeners */,
         P( null )                                               /* m_onDrawListeners */
+    ),
+    &FlexButton_Ctor(                                           /* clawButton */
+        P( { 0.9208216078854496, 0.8822714681440443, 0.022339374000591387, 0.02772396673472237 } )/* m_iniRect */,
+        P( "clawButton" )                                       /* m_name */,
+        P( "FlexButton.png" )                                   /* m_imgPath */,
+        P( 1 )                                                  /* m_valueMax */,
+        P( FlexBtnStm_PushStyle )                               /* m_style */,
+        P( &EventListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_DOWN, &EventListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_UP, &EventListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, null, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
+        P( &EventListener_Ctor( MDD_ON_CLICK, ClawMachine_EventProc, &clawMachine, ClawMachine_ClawBtnPressed, null ) )/* m_buttonListeners */
     )
 };
 Sprite* getobj( int id ){
     return g_objects[ id ];
 }
-
-// Collision callback function
-cpBool ObjBuilder_collisionBegin(cpArbiter *arb, cpSpace *space, cpDataPointer userData) {
+cpBool ObjsBuilder_collisionBegin(
+    cpArbiter* arb,
+    cpSpace* space,
+    cpDataPointer userData
+){
     // Get the shapes involved in the collision
     cpShape *a, *b;
     cpArbiterGetShapes(arb, &a, &b);
@@ -172,7 +183,7 @@ cpBool ObjBuilder_collisionBegin(cpArbiter *arb, cpSpace *space, cpDataPointer u
 
     // Return true to process the collision normally
     return cpTrue;
-}
+} /* ObjsBuilder_collisionBegin */
 
 int ObjsBuilder_startSim(
     void  
@@ -283,7 +294,7 @@ int ObjsBuilder_startSim(
     }
     
     cpCollisionHandler *handler = cpSpaceAddDefaultCollisionHandler( ObjsBuilder_getPhxSpace() );
-    handler->beginFunc = collisionBegin;
+    handler->beginFunc = ObjsBuilder_collisionBegin;
 
     
     if (nResult == S_OK) {
