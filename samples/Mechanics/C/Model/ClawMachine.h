@@ -50,6 +50,7 @@ BOOL ClawMachine_IsIn( ClawMachine* pClawMachine, uint64_t nState );
     Sprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ) )\
     .braking_force = _braking_force,\
     .braking_decrement = _braking_decrement,\
+    .arm_height = 50,\
     .mainStm = ClawMachineStm_Init(),\
 
 #define ClawMachine_Ctor( _m_iniRect, _m_name, _m_imgPath, _braking_force, _braking_decrement )    ( ClawMachine ){ \
@@ -63,6 +64,7 @@ Sprite* ClawMachine_Copy( ClawMachine* pClawMachine, const ClawMachine* pSource 
     Sprite_CLASS                                                                                \
     cpFloat braking_force;                                                                                              \
     cpFloat braking_decrement;                                                                                      \
+    cpFloat arm_height;\
     ClawMachineStm mainStm;                                     
 
 typedef struct tagClawMachine{
