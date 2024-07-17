@@ -99,6 +99,27 @@ static void ClawMachine_holding(
 static void ClawMachine_goingLeft(
     ClawMachine* pClawMachine
 ){
+    cpBodySetForce(
+        PhxSprite_getBody( arm_main_hanger ),
+        cpv( -20, 0 )
+    );
+    cpVect hangerPos = cpBodyGetPosition( PhxSprite_getBody( arm_main_hanger ) );
+    cpVect tgtPos = cpvsub( cpBodyGetPosition( PhxSprite_getBody( arm_main ) ), hangerPos );
+    tgtPos = cpvnormalize( tgtPos );
+    tgtPos = cpvmult( tgtPos, 50 );
+    tgtPos = cpvadd( hangerPos, tgtPos );
+    cpBodySetForce( 
+        PhxSprite_getBody( arm_main ), 
+        cpvmult(
+            cpvnormalize( 
+                cpvsub( 
+                    tgtPos,
+                    cpBodyGetPosition( PhxSprite_getBody( arm_main ) )
+                )
+            ),
+            50
+        )
+    );
 } /* ClawMachine_goingLeft */
 
 /** @private @memberof ClawMachine */
@@ -273,8 +294,25 @@ static bool ClawMachine_releasing(
         &braking_force,
         0.5
     );
+    cpVect hangerPos = cpBodyGetPosition( PhxSprite_getBody( arm_main_hanger ) );
+    cpVect tgtPos = cpvsub( cpBodyGetPosition( PhxSprite_getBody( arm_main ) ), hangerPos );
+    tgtPos = cpvnormalize( tgtPos );
+    tgtPos = cpvmult( tgtPos, 50 );
+    tgtPos = cpvadd( hangerPos, tgtPos );
+    cpBodySetForce( 
+        PhxSprite_getBody( arm_main ), 
+        cpvmult(
+            cpvnormalize( 
+                cpvsub( 
+                    tgtPos,
+                    cpBodyGetPosition( PhxSprite_getBody( arm_main ) )
+                )
+            ),
+            50
+        )
+    );
     cpBodySetTorque( PhxSprite_getBody( arm_right ), 500 );
-    cpBodySetTorque( PhxSprite_getBody( arm_left ), +500 );
+    cpBodySetTorque( PhxSprite_getBody( arm_left ), -500 );
     pClawMachine->arm_height += 0.1;
     if( pClawMachine->arm_height >= 50 ){
         return true;

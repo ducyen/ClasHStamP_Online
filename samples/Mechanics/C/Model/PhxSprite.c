@@ -118,7 +118,7 @@ static bool PhxSprite_load(
     // Set the render target to the buffer texture
     SDL_SetRenderTarget(renderer, pPhxSprite->m_image);
 
-    //SDL_RenderCopy( renderer, pPngImg, NULL, NULL );
+    SDL_RenderCopy( renderer, pPngImg, NULL, NULL );
 
     // Draw the polygon on the texture
     for (int i = 0; i < pPhxSprite->m_vertsCnt; i++) {
