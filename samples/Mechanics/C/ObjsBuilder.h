@@ -39,7 +39,17 @@ enum {
 #define prize3                  ( g_objects[ _prize3 ] )
     _prize3,
 #define prize4                  ( g_objects[ _prize4 ] )
-    _prize4
+    _prize4,
+#define Text_6xj                ( g_objects[ _Text_6xj ] )
+    _Text_6xj,
+#define Text_76r                ( g_objects[ _Text_76r ] )
+    _Text_76r,
+#define Text_7ll                ( g_objects[ _Text_7ll ] )
+    _Text_7ll,
+#define Text_8as                ( g_objects[ _Text_8as ] )
+    _Text_8as,
+#define Text_8it                ( g_objects[ _Text_8it ] )
+    _Text_8it
 };
 cpBool ObjsBuilder_collisionBegin( cpArbiter* arb, cpSpace* space, cpDataPointer userData );
 int ObjsBuilder_startSim( void   );

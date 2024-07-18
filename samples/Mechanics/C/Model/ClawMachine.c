@@ -163,7 +163,7 @@ static bool ClawMachine_goingDown(
     cpVect hangerPos = cpBodyGetPosition( PhxSprite_getBody( arm_main_hanger ) );
     cpVect tgtPos = cpvsub( cpBodyGetPosition( PhxSprite_getBody( arm_main ) ), hangerPos );
     tgtPos = cpvnormalize( tgtPos );
-    tgtPos = cpvmult( tgtPos, pClawMachine->arm_height+=0.1 );
+    tgtPos = cpvmult( tgtPos, pClawMachine->arm_height+=0.5 );
     tgtPos = cpvadd( hangerPos, tgtPos );
     cpBodySetForce( 
         PhxSprite_getBody( arm_main ), 
@@ -179,7 +179,7 @@ static bool ClawMachine_goingDown(
     );
     cpBodySetTorque( PhxSprite_getBody( arm_right ), 500 );
     cpBodySetTorque( PhxSprite_getBody( arm_left ), -500 );
-    if( pClawMachine->arm_height >= 450 ){
+    if( pClawMachine->arm_height >= 350 ){
         return true;
     }
     return false;
@@ -199,7 +199,7 @@ static bool ClawMachine_goingUp(
     cpVect hangerPos = cpBodyGetPosition( PhxSprite_getBody( arm_main_hanger ) );
     cpVect tgtPos = cpvsub( cpBodyGetPosition( PhxSprite_getBody( arm_main ) ), hangerPos );
     tgtPos = cpvnormalize( tgtPos );
-    tgtPos = cpvmult( tgtPos, pClawMachine->arm_height-=0.1 );
+    tgtPos = cpvmult( tgtPos, pClawMachine->arm_height-=0.5 );
     tgtPos = cpvadd( hangerPos, tgtPos );
     cpBodySetForce( 
         PhxSprite_getBody( arm_main ), 
@@ -234,7 +234,7 @@ static bool ClawMachine_clamping(
     );
     cpBodySetTorque( PhxSprite_getBody( arm_right ), -500 );
     cpBodySetTorque( PhxSprite_getBody( arm_left ), 500 );
-    pClawMachine->arm_height += 0.1;
+    pClawMachine->arm_height += 0.5;
     if( pClawMachine->arm_height >= 50 ){
         return true;
     }
@@ -313,7 +313,7 @@ static bool ClawMachine_releasing(
     );
     cpBodySetTorque( PhxSprite_getBody( arm_right ), 500 );
     cpBodySetTorque( PhxSprite_getBody( arm_left ), -500 );
-    pClawMachine->arm_height += 0.1;
+    pClawMachine->arm_height += 0.5;
     if( pClawMachine->arm_height >= 50 ){
         return true;
     }
@@ -488,7 +488,7 @@ static void ClawMachineStm_Clawing_Exit( ClawMachine* pClawMachine, ClawMachineS
 static void ClawMachineStm_GoingUp_Entry( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, ClawMachineStm_GoingUp ) ){
         ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	472	220	89	-43	0	1015	624" );
-        pClawMachine->arm_height = 450;
+        pClawMachine->arm_height = 350;
     }
 }
 static BOOL ClawMachineStm_GoingUp_EventProc( ClawMachine* pClawMachine, ClawMachineStm* pStm, ClawMachine_EVENT nEventId, void* pEventParams ){
