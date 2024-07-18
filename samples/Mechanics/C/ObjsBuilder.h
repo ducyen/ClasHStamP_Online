@@ -39,9 +39,7 @@ enum {
 #define prize3                  ( g_objects[ _prize3 ] )
     _prize3,
 #define prize4                  ( g_objects[ _prize4 ] )
-    _prize4,
-#define arm_pivot_position      ( g_objects[ _arm_pivot_position ] )
-    _arm_pivot_position
+    _prize4
 };
 cpBool ObjsBuilder_collisionBegin( cpArbiter* arb, cpSpace* space, cpDataPointer userData );
 int ObjsBuilder_startSim( void   );
