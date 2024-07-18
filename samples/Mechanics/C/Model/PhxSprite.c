@@ -118,7 +118,7 @@ static bool PhxSprite_load(
     // Set the render target to the buffer texture
     SDL_SetRenderTarget(renderer, pPhxSprite->m_image);
 
-    SDL_RenderCopy( renderer, pPngImg, NULL, NULL );
+    //SDL_RenderCopy( renderer, pPngImg, NULL, NULL );
 
     // Draw the polygon on the texture
     for (int i = 0; i < pPhxSprite->m_vertsCnt; i++) {
@@ -149,7 +149,11 @@ static bool PhxSprite_load(
     }
 
     cpSpace* space = ObjsBuilder_getPhxSpace();
-    pPhxSprite->m_body = cpSpaceAddBody(space, cpBodyNew(pPhxSprite->m_mass, totalMoment));
+    if( pPhxSprite->m_isStaticBody ){
+        pPhxSprite->m_body = cpSpaceAddBody(space, cpBodyNewStatic());
+    }else{
+        pPhxSprite->m_body = cpSpaceAddBody(space, cpBodyNew(pPhxSprite->m_mass, totalMoment));
+    }
    
     cpBodySetPosition(pPhxSprite->m_body, cpv(pPhxSprite->m_rect.x + pPhxSprite->m_center.x, 
         SCREEN_HEIGHT - (pPhxSprite->m_rect.y + pPhxSprite->m_center.y)));
@@ -163,6 +167,7 @@ static bool PhxSprite_load(
             cpShapeSetFilter(current->shape, filter);
         }
         cpShapeSetFriction(current->shape, 100);
+        cpShapeSetElasticity(current->shape, 0.1); 
         current = current->next;
     }
     return TRUE;
@@ -211,6 +216,7 @@ Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource ){
     pPhxSprite->m_mass = pSource->m_mass;
     pPhxSprite->m_group = pSource->m_group;
     pPhxSprite->m_joints = pSource->m_joints;
+    pPhxSprite->m_isStaticBody = pSource->m_isStaticBody;
     pPhxSprite->m_body = pSource->m_body;
     pPhxSprite->m_shape = pSource->m_shape;
     pPhxSprite->m_decomposedPolygons = pSource->m_decomposedPolygons;

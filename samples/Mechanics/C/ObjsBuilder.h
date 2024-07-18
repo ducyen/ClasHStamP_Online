@@ -4,6 +4,12 @@
 typedef struct tagObjsBuilder ObjsBuilder;
 extern Sprite* g_objects[];
 enum {
+#define right_wall              ( g_objects[ _right_wall ] )
+    _right_wall,
+#define left_wall               ( g_objects[ _left_wall ] )
+    _left_wall,
+#define floor                   ( g_objects[ _floor ] )
+    _floor,
 #define arm_main                ( g_objects[ _arm_main ] )
     _arm_main,
 #define arm_right               ( g_objects[ _arm_right ] )

@@ -12,7 +12,7 @@ cpBody* PhxSprite_getBody( PhxSprite* pPhxSprite );
 /** @memberof PhxSprite
  * @brief PhxSprite auto-generated constructor
  */
-#define PhxSprite_Init(_m_iniRect, _m_name, _m_imgPath, _m_verts, _m_vertsCnt, _m_center, _m_mass, _m_group, _m_joints)\
+#define PhxSprite_Init(_m_iniRect, _m_name, _m_imgPath, _m_verts, _m_vertsCnt, _m_center, _m_mass, _m_group, _m_joints, _m_isStaticBody)\
     Sprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ) )\
     .vTbl = &gPhxSpriteVtbl,\
     .m_verts = _m_verts,\
@@ -21,13 +21,14 @@ cpBody* PhxSprite_getBody( PhxSprite* pPhxSprite );
     .m_mass = _m_mass,\
     .m_group = _m_group,\
     .m_joints = _m_joints,\
+    .m_isStaticBody = _m_isStaticBody,\
     .m_body = null,\
     .m_shape = null,\
     .m_decomposedPolygons = null,\
     .m_sdlCenter = { 0 },\
 
-#define PhxSprite_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_verts, _m_vertsCnt, _m_center, _m_mass, _m_group, _m_joints )    ( PhxSprite ){ \
-    PhxSprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_verts ), P( _m_vertsCnt ), P( _m_center ), P( _m_mass ), P( _m_group ), P( _m_joints ) ) \
+#define PhxSprite_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_verts, _m_vertsCnt, _m_center, _m_mass, _m_group, _m_joints, _m_isStaticBody )    ( PhxSprite ){ \
+    PhxSprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_verts ), P( _m_vertsCnt ), P( _m_center ), P( _m_mass ), P( _m_group ), P( _m_joints ), P( _m_isStaticBody ) ) \
 }
 extern const SpriteVtbl gPhxSpriteVtbl;
 Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource );
@@ -42,6 +43,7 @@ Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource );
     float m_mass;                                                                                                                \
     int m_group;                                                                                                                  \
     PhxJoint* m_joints;                                         \
+    bool m_isStaticBody;                                                                                                  \
     cpBody* m_body;                                                                                                            \
     cpShape* m_shape;                                                                                                        \
     cpPolygon* m_decomposedPolygons;                                                                          \

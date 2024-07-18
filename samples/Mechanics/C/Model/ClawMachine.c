@@ -179,7 +179,7 @@ static bool ClawMachine_goingDown(
     );
     cpBodySetTorque( PhxSprite_getBody( arm_right ), 500 );
     cpBodySetTorque( PhxSprite_getBody( arm_left ), -500 );
-    if( pClawMachine->arm_height >= 550 ){
+    if( pClawMachine->arm_height >= 450 ){
         return true;
     }
     return false;
@@ -488,7 +488,7 @@ static void ClawMachineStm_Clawing_Exit( ClawMachine* pClawMachine, ClawMachineS
 static void ClawMachineStm_GoingUp_Entry( ClawMachine* pClawMachine, ClawMachineStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, ClawMachineStm_GoingUp ) ){
         ObjsBuilder_showEntry( pClawMachine, pStm, "Model/ClawMachine/ClawMachineStm	707	472	220	89	-43	0	1015	624" );
-        pClawMachine->arm_height = 550;
+        pClawMachine->arm_height = 450;
     }
 }
 static BOOL ClawMachineStm_GoingUp_EventProc( ClawMachine* pClawMachine, ClawMachineStm* pStm, ClawMachine_EVENT nEventId, void* pEventParams ){
