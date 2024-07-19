@@ -74,12 +74,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>__syntax__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Abstracts;$(ProjectDir)Interfaces;$(ProjectDir)NonOOP;$(ProjectDir)Model;$(SolutionDir)..\..\lib\Windows\libsdl2\include;$(SolutionDir)..\..\lib\Windows\libsdl2-image\include;$(SolutionDir)..\..\lib\Windows\libsdl2-mixer\include;$(SolutionDir)..\..\lib\Windows\libsdl2-gfx\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>__syntax__;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Abstracts;$(ProjectDir)Interfaces;$(ProjectDir)NonOOP;$(ProjectDir)Model;$(SolutionDir)..\..\lib\Windows\libsdl2\include;$(SolutionDir)..\..\lib\Windows\libsdl2-image\include;$(SolutionDir)..\..\lib\Windows\libsdl2-mixer\include;$(SolutionDir)..\..\lib\Windows\libsdl2-gfx\include;$(SolutionDir)..\..\lib\Windows\libsdl2-ttf\include;$(SolutionDir)..\..\lib\Windows\chipmunk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>$(SolutionDir)..\..\lib\Windows\libsdl2\lib\$(PlatformTarget)\SDL2.lib;$(SolutionDir)..\..\lib\Windows\libsdl2\lib\$(PlatformTarget)\SDL2main.lib;$(SolutionDir)..\..\lib\Windows\libsdl2-image\lib\$(PlatformTarget)\SDL2_image.lib;$(SolutionDir)..\..\lib\Windows\libsdl2-mixer\lib\$(PlatformTarget)\SDL2_mixer.lib;$(SolutionDir)..\..\lib\Windows\libsdl2-gfx\lib\$(PlatformTarget)\SDL2_gfx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)..\..\lib\Windows\libsdl2\lib\$(PlatformTarget)\SDL2.lib;$(SolutionDir)..\..\lib\Windows\libsdl2\lib\$(PlatformTarget)\SDL2main.lib;$(SolutionDir)..\..\lib\Windows\libsdl2-image\lib\$(PlatformTarget)\SDL2_image.lib;$(SolutionDir)..\..\lib\Windows\libsdl2-mixer\lib\$(PlatformTarget)\SDL2_mixer.lib;$(SolutionDir)..\..\lib\Windows\libsdl2-gfx\lib\$(PlatformTarget)\SDL2_gfx.lib;$(SolutionDir)..\..\lib\Windows\libsdl2-ttf\lib\$(PlatformTarget)\SDL2_ttf.lib;$(SolutionDir)..\..\lib\Windows\chipmunk\lib\$(Platform)\$(Configuration)\chipmunk.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -116,67 +116,68 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Model\AttachmentConstraint.h" />
-    <ClInclude Include="Model\Barrier.h" />
-    <ClInclude Include="Model\Button.h" />
-    <ClInclude Include="Model\CarBody.h" />
-    <ClInclude Include="Model\CarWheel.h" />
-    <ClInclude Include="Model\CommonInclude.h" />
-    <ClInclude Include="Model\Constraint.h" />
-    <ClInclude Include="Model\ContextImpl.h" />
-    <ClInclude Include="Model\EventListener.h" />
-    <ClInclude Include="Model\GreenLight.h" />
-    <ClInclude Include="Model\ImgSprite.h" />
-    <ClInclude Include="Model\Lever.h" />
-    <ClInclude Include="Model\MotorRotor.h" />
-    <ClInclude Include="Model\MouseListener.h" />
-    <ClInclude Include="Model\Primitive.h" />
-    <ClInclude Include="Model\RedLight.h" />
-    <ClInclude Include="Model\RotationConstraint.h" />
-    <ClInclude Include="Model\Sprite.h" />
-    <ClInclude Include="Model\TrackToConstraint.h" />
-    <ClInclude Include="Model\TransformConstraint.h" />
-    <ClInclude Include="Model\TranslationConstraint.h" />
-    <ClInclude Include="Model\UsedDependency.h" />
-    <ClInclude Include="Model\WindscreenWiper.h" />
-    <ClInclude Include="Model\YellowLight.h" />
-    <ClInclude Include="NonOOP\HdStateMachine.h" />
-    <ClInclude Include="ObjsBuilder.h" />
+    <None Include="..\GenCode_C.bat" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="main.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="main_win.c" />
     <ClCompile Include="Model\AttachmentConstraint.c" />
-    <ClCompile Include="Model\Barrier.c" />
-    <ClCompile Include="Model\Button.c" />
-    <ClCompile Include="Model\CarBody.c" />
-    <ClCompile Include="Model\CarWheel.c" />
+    <ClCompile Include="Model\ClawMachine.c" />
     <ClCompile Include="Model\Constraint.c" />
-    <ClCompile Include="Model\ContextImpl.c">
-      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreprocessToFile>
-      <PreprocessSuppressLineNumbers Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreprocessSuppressLineNumbers>
-    </ClCompile>
     <ClCompile Include="Model\EventListener.c" />
-    <ClCompile Include="Model\GreenLight.c" />
+    <ClCompile Include="Model\FlexButton.c" />
     <ClCompile Include="Model\ImgSprite.c" />
-    <ClCompile Include="Model\Lever.c" />
-    <ClCompile Include="Model\MotorRotor.c" />
-    <ClCompile Include="Model\MouseListener.c" />
+    <ClCompile Include="Model\PhxDampedRotarySpring.c" />
+    <ClCompile Include="Model\PhxDampedSpring.c" />
+    <ClCompile Include="Model\PhxGearJoint.c" />
+    <ClCompile Include="Model\PhxGrooveJoint.c" />
+    <ClCompile Include="Model\PhxJoint.c" />
+    <ClCompile Include="Model\PhxPinJoint.c" />
+    <ClCompile Include="Model\PhxPivotJoint.c" />
+    <ClCompile Include="Model\PhxRatchetJoint.c" />
+    <ClCompile Include="Model\PhxRotaryLimitJoint.c" />
+    <ClCompile Include="Model\PhxSimpleMotor.c" />
+    <ClCompile Include="Model\PhxSlideJoint.c" />
+    <ClCompile Include="Model\PhxSprite.c" />
     <ClCompile Include="Model\Primitive.c" />
-    <ClCompile Include="Model\RedLight.c" />
     <ClCompile Include="Model\RotationConstraint.c" />
     <ClCompile Include="Model\Sprite.c" />
     <ClCompile Include="Model\TrackToConstraint.c" />
     <ClCompile Include="Model\TransformConstraint.c" />
     <ClCompile Include="Model\TranslationConstraint.c" />
-    <ClCompile Include="Model\WindscreenWiper.c" />
-    <ClCompile Include="Model\YellowLight.c" />
     <ClCompile Include="NonOOP\HdStateMachine.c" />
-    <ClCompile Include="ObjsBuilder.c">
-      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreprocessToFile>
-    </ClCompile>
+    <ClCompile Include="ObjsBuilder.c" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\GenCode_C.bat" />
+    <ClInclude Include="Model\AttachmentConstraint.h" />
+    <ClInclude Include="Model\ClawMachine.h" />
+    <ClInclude Include="Model\CommonInclude.h" />
+    <ClInclude Include="Model\Constraint.h" />
+    <ClInclude Include="Model\EventListener.h" />
+    <ClInclude Include="Model\FlexButton.h" />
+    <ClInclude Include="Model\ImgSprite.h" />
+    <ClInclude Include="Model\PhxDampedRotarySpring.h" />
+    <ClInclude Include="Model\PhxDampedSpring.h" />
+    <ClInclude Include="Model\PhxGearJoint.h" />
+    <ClInclude Include="Model\PhxGrooveJoint.h" />
+    <ClInclude Include="Model\PhxJoint.h" />
+    <ClInclude Include="Model\PhxPinJoint.h" />
+    <ClInclude Include="Model\PhxPivotJoint.h" />
+    <ClInclude Include="Model\PhxRatchetJoint.h" />
+    <ClInclude Include="Model\PhxRotaryLimitJoint.h" />
+    <ClInclude Include="Model\PhxSimpleMotor.h" />
+    <ClInclude Include="Model\PhxSlideJoint.h" />
+    <ClInclude Include="Model\PhxSprite.h" />
+    <ClInclude Include="Model\Primitive.h" />
+    <ClInclude Include="Model\RotationConstraint.h" />
+    <ClInclude Include="Model\Sprite.h" />
+    <ClInclude Include="Model\TrackToConstraint.h" />
+    <ClInclude Include="Model\TransformConstraint.h" />
+    <ClInclude Include="Model\TranslationConstraint.h" />
+    <ClInclude Include="NonOOP\HdStateMachine.h" />
+    <ClInclude Include="ObjsBuilder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

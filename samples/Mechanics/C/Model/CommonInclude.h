@@ -121,6 +121,9 @@ typedef struct cpPolygon {
     struct cpPolygon *next;
 } cpPolygon;
 
+#ifdef _MSC_VER
+# define strtok_r strtok_s
+#endif
 const char* getInputDir( void );
 const char* getOutputDir( void );
 

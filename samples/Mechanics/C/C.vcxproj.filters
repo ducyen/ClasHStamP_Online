@@ -15,96 +15,66 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Model\ContextImpl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\UsedDependency.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="NonOOP\HdStateMachine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Barrier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\RotationConstraint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Sprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\TrackToConstraint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\TranslationConstraint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Constraint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjsBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\RedLight.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\GreenLight.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ImgSprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Primitive.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\YellowLight.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\TransformConstraint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\AttachmentConstraint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\CarBody.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\CarWheel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\MouseListener.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\CommonInclude.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\EventListener.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Button.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Lever.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\MotorRotor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\WindscreenWiper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <None Include="..\GenCode_C.bat">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="NonOOP\HdStateMachine.c">
+    <ClCompile Include="Model\AttachmentConstraint.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model\ContextImpl.c">
+    <ClCompile Include="Model\ClawMachine.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main_win.c">
+    <ClCompile Include="Model\Constraint.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Barrier.c">
+    <ClCompile Include="Model\EventListener.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\FlexButton.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ImgSprite.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\PhxDampedRotarySpring.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\PhxDampedSpring.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\PhxGearJoint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\PhxGrooveJoint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\PhxJoint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\PhxPinJoint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\PhxPivotJoint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\PhxRatchetJoint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\PhxRotaryLimitJoint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\PhxSimpleMotor.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\PhxSlideJoint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\PhxSprite.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Primitive.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Model\RotationConstraint.c">
@@ -116,64 +86,106 @@
     <ClCompile Include="Model\TrackToConstraint.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Model\TransformConstraint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Model\TranslationConstraint.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Constraint.c">
+    <ClCompile Include="NonOOP\HdStateMachine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ObjsBuilder.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model\RedLight.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\GreenLight.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\ImgSprite.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Primitive.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\YellowLight.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\TransformConstraint.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\AttachmentConstraint.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\CarBody.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\CarWheel.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\MouseListener.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\EventListener.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Button.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Lever.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\MotorRotor.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\WindscreenWiper.c">
+    <ClCompile Include="main_win.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\GenCode_C.bat">
-      <Filter>Resource Files</Filter>
-    </None>
+    <ClInclude Include="Model\AttachmentConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ClawMachine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\CommonInclude.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Constraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\EventListener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\FlexButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ImgSprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PhxDampedRotarySpring.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PhxDampedSpring.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PhxGearJoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PhxGrooveJoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PhxJoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PhxPinJoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PhxPivotJoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PhxRatchetJoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PhxRotaryLimitJoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PhxSimpleMotor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PhxSlideJoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PhxSprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Primitive.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\RotationConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Sprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\TrackToConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\TransformConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\TranslationConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NonOOP\HdStateMachine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjsBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
