@@ -7,6 +7,7 @@ TOOL_DIR=$WORKING_DIR/release
 export PROJECT=$WORKING_DIR/samples/$1/Design.asta
 export EXT_CODE_OPT=y
 export ENCODING=UTF-8
+export NEWLINE_LF=1
 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
 
 BAT_DIR=$WORKING_DIR
