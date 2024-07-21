@@ -6,7 +6,7 @@ CC = gcc
 CFLAGS = -Wall $(addprefix -I,$(shell find $(SRC_DIR) -type d)) -I./include -I/usr/local/include/SDL2 -I/home/linuxbrew/.linuxbrew/include -D_REENTRANT $(shell sdl2-config --cflags)
 
 # Linker flags
-LDFLAGS = $(shell sdl2-config --libs) -L/usr/local/lib -L/home/linuxbrew/.linuxbrew/lib -lSDL2_gfx -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lm -lchipmunk
+LDFLAGS = $(shell sdl2-config --libs) -L/usr/local/lib -L/home/linuxbrew/.linuxbrew/lib -lSDL2 -lSDL2_gfx -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lm -lchipmunk
 
 # Source files
 SRC_FILES = $(shell find $(SRC_DIR) -name "*.c")
