@@ -23,6 +23,11 @@ Sprite* Primitive_Copy( Primitive* pPrimitive, const Primitive* pSource );
  */
 #define Primitive_CLASS                                                                         \
     Sprite_CLASS                                                                                \
+	char primitiveType[ 50 ];                                                                   \
+    char fontFace[50];                                                                          \
+    int fontSize;                                                                               \
+    const char* textLabel;                                                                      \
+
 
 typedef struct tagPrimitive{
     Primitive_CLASS    
