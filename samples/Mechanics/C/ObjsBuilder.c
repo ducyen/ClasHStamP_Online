@@ -245,14 +245,14 @@ Sprite* g_objects[] = {
         P( "Text 000000 line 2 null 000000 null Monospaced 8 Clamp" )/* Text_7ll */
     ),
     &Primitive_Ctor(                                            /* Text_8as */
-        P( { 0.8824419778002018, 0.0702175564236111, 0.045408678102926335, 0.030056423611111112 } )/* 8as-91a7c503fd456f398eb812c8f82c654c */,
+        P( { 0.872351160443996, 0.0702175564236111, 0.045408678102926335, 0.030056423611111112 } )/* 8as-91a7c503fd456f398eb812c8f82c654c */,
         P( "Text_8as" )                                         /* Text_8as */,
         P( "Text 000000 line 2 null 000000 null Monospaced 8 Time:" )/* Text_8as */
     ),
     &Primitive_Ctor(                                            /* Text_8it */
-        P( { 0.922300706357215, 0.0702175564236111, 0.030272452068617558, 0.030056423611111112 } )/* 8it-91a7c503fd456f398eb812c8f82c654c */,
+        P( { 0.9096871846619576, 0.0702175564236111, 0.055499495459132187, 0.030056423611111112 } )/* 8it-91a7c503fd456f398eb812c8f82c654c */,
         P( "Text_8it" )                                         /* Text_8it */,
-        P( "Text 000000 line 2 null 000000 null Monospaced 8 ##" )/* Text_8it */
+        P( "Text 000000 line 2 null 000000 null Monospaced 8 _______" )/* Text_8it */
     )
 };
 Sprite* getobj( int id ){

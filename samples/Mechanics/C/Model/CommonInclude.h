@@ -72,9 +72,7 @@ typedef char            TCHAR;
 
 #define P( ... )                    __VA_ARGS__
 
-typedef struct tagString{ char buf[255]; }* String;
-#define MakeString( charBuf )       ( ( String )&( struct tagString ){ charBuf } )
-#define GetCharBuf( pStr )          ( ( pStr )->buf )
+typedef char  STR255[255];
 
 #ifndef LOBYTE
 #define LOBYTE(w)           ((BYTE)(((DWORD_PTR)(w)) & 0xff))

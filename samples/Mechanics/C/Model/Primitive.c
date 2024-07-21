@@ -38,7 +38,7 @@ static void Primitive_draw0(
 	sscanf( currentPos, "%s %n", rectType     , &numRead ); currentPos += numRead;
     sscanf( currentPos, "%s %n", pPrimitive->fontFace     , &numRead ); currentPos += numRead;
     sscanf( currentPos, "%u %n", &pPrimitive->fontSize    , &numRead ); currentPos += numRead;
-    pPrimitive->textLabel = currentPos;
+    strcpy( pPrimitive->textLabel, currentPos );
 
     if( strcmp( pPrimitive->primitiveType, "Rectangle" ) == 0 ){
         int x1 = pPrimitive->m_rect.x;
@@ -81,8 +81,8 @@ static void Primitive_draw0(
         SDL_Color textColor = { 0, 0, 0, 255 }; // White color
         static char fontPath[1024];
         sprintf( fontPath, "%s/../../../../resources/Arial.ttf", getInputDir());
-        TTF_Font* font = TTF_OpenFont(fontPath, pPrimitive->fontSize);
-        if (!font) {
+        pPrimitive->font = TTF_OpenFont(fontPath, pPrimitive->fontSize);
+        if (!pPrimitive->font) {
             printf("Failed to load font: %s\n", TTF_GetError());
         }
         char* next_line;
@@ -90,21 +90,28 @@ static void Primitive_draw0(
         strncpy(copy, text, sizeof(copy));
         copy[sizeof(copy) - 1] = '\0';
         char* line = strtok_r(copy, "\n", &next_line);
+        pPrimitive->m_rect.h = 0;
+        pPrimitive->m_rect.w = 0;
         while (line != NULL) {
-            SDL_Surface* surface = TTF_RenderText_Solid(font, line, textColor);
+            SDL_Surface* surface = TTF_RenderText_Solid(pPrimitive->font, line, textColor);
             if (surface != NULL) {
-                SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-                if (texture != NULL) {
+                if( pPrimitive->m_rect.w < surface->w ){
+                    pPrimitive->m_rect.w = surface->w;
+                }
+                pPrimitive->m_image = SDL_CreateTextureFromSurface(renderer, surface);
+                if (pPrimitive->m_image != NULL) {
                     SDL_Rect dstRect = { x, y, surface->w, surface->h };
-                    SDL_RenderCopy(renderer, texture, NULL, &dstRect);
-                    SDL_DestroyTexture(texture);
+                    SDL_RenderCopy(renderer, pPrimitive->m_image, NULL, &dstRect);
                     y += surface->h; // Move y down for the next line
+                    pPrimitive->m_rect.h += surface->h;
+                    SDL_DestroyTexture(pPrimitive->m_image);
+                    pPrimitive->m_image = null;
                 }
                 SDL_FreeSurface(surface);
             }
             line = strtok_r(NULL, "\n", &next_line);
         }
-        TTF_CloseFont(font);        
+        strcpy( pPrimitive->oldLabel, pPrimitive->textLabel );
     }
     
 } /* Primitive_draw0 */
@@ -124,8 +131,6 @@ static void Primitive_draw1(
     Primitive* pPrimitive = ( Primitive* )pSprite;
     // Get the size of the renderer
 
-    pPrimitive->textLabel = "Hello";
-
     if( strcmp( pPrimitive->primitiveType, "Rectangle" ) == 0 ){
     }else if( strcmp( pPrimitive->primitiveType, "Oval" ) == 0 ){
     }else if( strcmp( pPrimitive->primitiveType, "Line" ) == 0 ){
@@ -134,32 +139,37 @@ static void Primitive_draw1(
         int y = pPrimitive->m_rect.y;
         const char* text = pPrimitive->textLabel;
         SDL_Color textColor = { 0, 0, 0, 255 }; // White color
-        static char fontPath[1024];
-        sprintf( fontPath, "%s/../../../../resources/Arial.ttf", getInputDir());
-        TTF_Font* font = TTF_OpenFont(fontPath, pPrimitive->fontSize);
-        if (!font) {
-            printf("Failed to load font: %s\n", TTF_GetError());
-        }
         char* next_line;
         char copy[1024]; // Ensure your buffer is large enough to hold the text
         strncpy(copy, text, sizeof(copy));
         copy[sizeof(copy) - 1] = '\0';
         char* line = strtok_r(copy, "\n", &next_line);
+        pPrimitive->m_rect.h = 0;
+        pPrimitive->m_rect.w = 0;
         while (line != NULL) {
-            SDL_Surface* surface = TTF_RenderText_Solid(font, line, textColor);
-            if (surface != NULL) {
-                SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-                if (texture != NULL) {
-                    SDL_Rect dstRect = { x, y, surface->w, surface->h };
-                    SDL_RenderCopy(renderer, texture, NULL, &dstRect);
-                    SDL_DestroyTexture(texture);
-                    y += surface->h; // Move y down for the next line
+            if( strcmp( pPrimitive->textLabel, pPrimitive->oldLabel ) != 0 ){
+                SDL_Surface* surface = TTF_RenderText_Solid(pPrimitive->font, line, textColor);
+                if (surface != NULL) {
+                    if( pPrimitive->m_rect.w < surface->w ){
+                        pPrimitive->m_rect.w = surface->w;
+                    }
+                    if( pPrimitive->m_image ){
+                        SDL_DestroyTexture(pPrimitive->m_image);
+                    }
+                    pPrimitive->m_image = SDL_CreateTextureFromSurface(renderer, surface);
                 }
+                pPrimitive->m_rect.w = surface->w;
+                pPrimitive->m_rect.h = surface->h;
                 SDL_FreeSurface(surface);
+                strcpy( pPrimitive->oldLabel, pPrimitive->textLabel );
+            }
+            if (pPrimitive->m_image != NULL) {
+                SDL_Rect dstRect = { x, y, pPrimitive->m_rect.w, pPrimitive->m_rect.h };
+                SDL_RenderCopy(renderer, pPrimitive->m_image, NULL, &dstRect);
+                y += pPrimitive->m_rect.h; // Move y down for the next line
             }
             line = strtok_r(NULL, "\n", &next_line);
         }
-        TTF_CloseFont(font);        
     }
 } /* Primitive_draw1 */
 
@@ -177,10 +187,31 @@ static void Primitive_free(
     Sprite* pSprite
 ){
     Primitive* pPrimitive = ( Primitive* )pSprite;
+    if( pPrimitive->m_image ){
+        SDL_DestroyTexture(pPrimitive->m_image);
+    }
+    if( pPrimitive->font ){
+        TTF_CloseFont(pPrimitive->font);        
+    }
 } /* Primitive_free */
+
+/** @public @memberof Primitive */
+static void Primitive_setLabel(
+    Sprite* pSprite,
+    char* value
+){
+    Primitive* pPrimitive = ( Primitive* )pSprite;
+    strcpy( pPrimitive->textLabel, value );
+} /* Primitive_setLabel */
 
 Sprite* Primitive_Copy( Primitive* pPrimitive, const Primitive* pSource ){
     Sprite_Copy( ( Sprite* )pPrimitive, ( Sprite* )pSource );
+    memcpy( &pPrimitive->primitiveType, &pSource->primitiveType, sizeof( pPrimitive->primitiveType ) );
+    memcpy( &pPrimitive->fontFace, &pSource->fontFace, sizeof( pPrimitive->fontFace ) );
+    pPrimitive->fontSize = pSource->fontSize;
+    memcpy( &pPrimitive->textLabel, &pSource->textLabel, sizeof( pPrimitive->textLabel ) );
+    memcpy( &pPrimitive->oldLabel, &pSource->oldLabel, sizeof( pPrimitive->oldLabel ) );
+    pPrimitive->font = pSource->font;
     return ( Sprite* )pPrimitive;
 }
 const SpriteVtbl gPrimitiveVtbl = {
@@ -189,4 +220,5 @@ const SpriteVtbl gPrimitiveVtbl = {
     .pdraw1                      = Primitive_draw1,
     .pload                       = Primitive_load,
     .pfree                       = Primitive_free,
+    .psetLabel                   = Primitive_setLabel,
 };

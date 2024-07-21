@@ -12,6 +12,12 @@ typedef struct tagPrimitive Primitive;
 #define Primitive_Init(_m_iniRect, _m_name, _m_imgPath)\
     Sprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ) )\
     .vTbl = &gPrimitiveVtbl,\
+    .primitiveType = P( "" ),\
+    .fontFace = P( "" ),\
+    .fontSize = 12,\
+    .textLabel = P( "" ),\
+    .oldLabel = P( "" ),\
+    .font = null,\
 
 #define Primitive_Ctor( _m_iniRect, _m_name, _m_imgPath )    ( Primitive ){ \
     Primitive_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ) ) \
@@ -23,11 +29,12 @@ Sprite* Primitive_Copy( Primitive* pPrimitive, const Primitive* pSource );
  */
 #define Primitive_CLASS                                                                         \
     Sprite_CLASS                                                                                \
-	char primitiveType[ 50 ];                                                                   \
-    char fontFace[50];                                                                          \
-    int fontSize;                                                                               \
-    const char* textLabel;                                                                      \
-
+    STR255 primitiveType;                                       \
+    STR255 fontFace;                                            \
+    int fontSize;                                                                                                                \
+    STR255 textLabel;                                           \
+    STR255 oldLabel;                                            \
+    TTF_Font* font;                                                                                                            \
 
 typedef struct tagPrimitive{
     Primitive_CLASS    

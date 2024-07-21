@@ -354,6 +354,9 @@ static BOOL State0_Region1_CoutingDown_EventProc( ClawMachine* pClawMachine, Sta
         }
         else {
             pClawMachine->playCountDown -= 1;
+            char countDown[50];
+            sprintf( countDown, "%d", pClawMachine->playCountDown );
+            Sprite_setLabel( Text_8it, countDown );
             bResult = TRUE;
         }
     } break;
