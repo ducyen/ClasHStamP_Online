@@ -44,18 +44,18 @@ static BOOL S832_Region1_EventProc( CarBody* pS832, S832_Region1* pStm, CarBody_
 static BOOL S832_Region1_RunToCompletion( CarBody* pS832, S832_Region1* pStm );
 static void S832_Region1_S8322_Entry( CarBody* pCarBody, S832_Region1* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, S832_Region1_S8322 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	764	855	45	30	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	764	586	45	30	10	-24	1235	686" );
     }
 }
 static BOOL S832_Region1_S8322_EventProc( CarBody* pCarBody, S832_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = S832_Region1_S8322;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	764	855	45	30	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	764	586	45	30	10	-24	1235	686" );
     return bResult;
 }
 static void S832_Region1_S8322_Exit( CarBody* pCarBody, S832_Region1* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, S832_Region1_S8322 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	764	855	45	30	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	764	586	45	30	10	-24	1235	686" );
     }
 }
 static void S832_Region1_EndTrans( CarBody *pCarBody, S832_Region1* pStm ){
@@ -149,29 +149,29 @@ static BOOL S8_Region1_EventProc( CarBody* pS8, S8_Region1* pStm, CarBody_EVENT 
 static BOOL S8_Region1_RunToCompletion( CarBody* pS8, S8_Region1* pStm );
 static void S8_Region1_S821_Entry( CarBody* pCarBody, S8_Region1* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, S8_Region1_S821 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	427	717	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	427	456	61	53	10	-24	1235	686" );
     }
 }
 static BOOL S8_Region1_S821_EventProc( CarBody* pCarBody, S8_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = S8_Region1_S821;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	427	717	61	53	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	427	456	61	53	10	-24	1235	686" );
     return bResult;
 }
 static void S8_Region1_S821_Exit( CarBody* pCarBody, S8_Region1* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, S8_Region1_S821 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	427	717	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	427	456	61	53	10	-24	1235	686" );
     }
 }
 static void S8_Region1_S822_Entry( CarBody* pCarBody, S8_Region1* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, S8_Region1_S822 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	748	717	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	748	456	61	53	10	-24	1235	686" );
     }
 }
 static BOOL S8_Region1_S822_EventProc( CarBody* pCarBody, S8_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = S8_Region1_S822;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	748	717	61	53	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	748	456	61	53	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E1:{
         E1Params* e = ( E1Params* )pEventParams;
@@ -185,7 +185,7 @@ static BOOL S8_Region1_S822_EventProc( CarBody* pCarBody, S8_Region1* pStm, CarB
 }
 static void S8_Region1_S822_Exit( CarBody* pCarBody, S8_Region1* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, S8_Region1_S822 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	748	717	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	748	456	61	53	10	-24	1235	686" );
     }
 }
 static void S8_Region1_EndTrans( CarBody *pCarBody, S8_Region1* pStm ){
@@ -282,13 +282,13 @@ static BOOL S8_Region2_EventProc( CarBody* pS8, S8_Region2* pStm, CarBody_EVENT 
 static BOOL S8_Region2_RunToCompletion( CarBody* pS8, S8_Region2* pStm );
 static void S8_Region2_S831_Entry( CarBody* pCarBody, S8_Region2* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, S8_Region2_S831 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	427	832	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	427	563	61	53	10	-24	1235	686" );
     }
 }
 static BOOL S8_Region2_S831_EventProc( CarBody* pCarBody, S8_Region2* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = S8_Region2_S831;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	427	832	61	53	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	427	563	61	53	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E3:{
         if (CarBody_IsIn( pCarBody, S8_Region1_S821 )
@@ -305,19 +305,19 @@ static BOOL S8_Region2_S831_EventProc( CarBody* pCarBody, S8_Region2* pStm, CarB
 }
 static void S8_Region2_S831_Exit( CarBody* pCarBody, S8_Region2* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, S8_Region2_S831 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	427	832	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	427	563	61	53	10	-24	1235	686" );
     }
 }
 static void S8_Region2_S832_Entry( CarBody* pCarBody, S8_Region2* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, S8_Region2_S832 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	627	787	210	109	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	627	536	211	90	10	-24	1235	686" );
         S832_Region1_Reset( pCarBody, &pStm->S832S832_Region1, &pStm->base, STATE_UNDEF );
     }
 }
 static BOOL S8_Region2_S832_EventProc( CarBody* pCarBody, S8_Region2* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = S8_Region2_S832;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	627	787	210	109	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	627	536	211	90	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E0:{
         CarBody_Reset( pCarBody, MainStm_S10 );
@@ -329,24 +329,24 @@ static BOOL S8_Region2_S832_EventProc( CarBody* pCarBody, S8_Region2* pStm, CarB
 static void S8_Region2_S832_Exit( CarBody* pCarBody, S8_Region2* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, S8_Region2_S832 ) ){ 
         S832_Region1_Abort( pCarBody, &pStm->S832S832_Region1 );
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	627	787	210	109	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	627	536	211	90	10	-24	1235	686" );
     }
 }
 static void S8_Region2_S8321_Entry( CarBody* pCarBody, S8_Region2* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, S8_Region2_S8321 ) ){
         S8_Region2_S832_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	653	853	45	30	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	653	584	45	30	10	-24	1235	686" );
     }
 }
 static BOOL S8_Region2_S8321_EventProc( CarBody* pCarBody, S8_Region2* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = S8_Region2_S8321;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	653	853	45	30	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	653	584	45	30	10	-24	1235	686" );
     return bResult ? bResult : S8_Region2_S832_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void S8_Region2_S8321_Exit( CarBody* pCarBody, S8_Region2* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, S8_Region2_S8321 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	653	853	45	30	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	653	584	45	30	10	-24	1235	686" );
         S8_Region2_S832_Exit( pCarBody, pStm );
     }
 }
@@ -605,13 +605,13 @@ static BOOL MainStm_EventProc( CarBody* pMainTop_0, MainStm* pStm, CarBody_EVENT
 static BOOL MainStm_RunToCompletion( CarBody* pMainTop_0, MainStm* pStm );
 static void MainStm_S1_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S1 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	151	52	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	151	52	61	53	10	-24	1235	686" );
     }
 }
 static BOOL MainStm_S1_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S1;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	151	52	61	53	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	151	52	61	53	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E1:{
         E1Params* e = ( E1Params* )pEventParams;
@@ -641,19 +641,19 @@ static BOOL MainStm_S1_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVEN
 }
 static void MainStm_S1_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S1 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	151	52	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	151	52	61	53	10	-24	1235	686" );
     }
 }
 static void MainStm_S2_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S2 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	301	8	599	143	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	300	33	599	90	10	-24	1235	686" );
         DisplayMsg("Do something");
     }
 }
 static BOOL MainStm_S2_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S2;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	301	8	599	143	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	300	33	599	90	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E2:{
         MainStm_BgnTrans( pCarBody, pStm, MainStm_S3, STATE_UNDEF );
@@ -672,19 +672,19 @@ static BOOL MainStm_S2_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVEN
 static void MainStm_S2_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S2 ) ){ 
         DisplayMsg("Do another thing");
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	301	8	599	143	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	300	33	599	90	10	-24	1235	686" );
     }
 }
 static void MainStm_S22_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S22 ) ){
         MainStm_S2_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	748	77	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	747	55	61	53	10	-24	1235	686" );
     }
 }
 static BOOL MainStm_S22_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S22;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	748	77	61	53	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	747	55	61	53	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E0:{
         MainStm_BgnTrans( pCarBody, pStm, MainStm_S2, STATE_UNDEF );
@@ -697,20 +697,20 @@ static BOOL MainStm_S22_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVE
 }
 static void MainStm_S22_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S22 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	748	77	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	747	55	61	53	10	-24	1235	686" );
         MainStm_S2_Exit( pCarBody, pStm );
     }
 }
 static void MainStm_S21_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S21 ) ){
         MainStm_S2_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	541	77	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	540	55	61	53	10	-24	1235	686" );
     }
 }
 static BOOL MainStm_S21_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S21;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	541	77	61	53	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	540	55	61	53	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E0:{
         MainStm_BgnTrans( pCarBody, pStm, MainStm_S22, STATE_UNDEF );
@@ -729,19 +729,19 @@ static BOOL MainStm_S21_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVE
 }
 static void MainStm_S21_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S21 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	541	77	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	540	55	61	53	10	-24	1235	686" );
         MainStm_S2_Exit( pCarBody, pStm );
     }
 }
 static void MainStm_S3_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S3 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	988	52	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	988	52	61	53	10	-24	1235	686" );
     }
 }
 static BOOL MainStm_S3_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S3;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	988	52	61	53	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	988	52	61	53	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E0:{
         MainStm_BgnTrans( pCarBody, pStm, MainStm_Junction, STATE_UNDEF );
@@ -754,18 +754,18 @@ static BOOL MainStm_S3_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVEN
 }
 static void MainStm_S3_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S3 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	988	52	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	988	52	61	53	10	-24	1235	686" );
     }
 }
 static void MainStm_S4_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S4 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	363	228	537	141	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	363	160	537	90	10	-24	1235	686" );
     }
 }
 static BOOL MainStm_S4_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S4;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	363	228	537	141	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	363	160	537	90	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E2:{
         pStm->base.bIsExternTrans = TRUE;
@@ -779,20 +779,20 @@ static BOOL MainStm_S4_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVEN
 }
 static void MainStm_S4_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S4 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	363	228	537	141	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	363	160	537	90	10	-24	1235	686" );
     }
 }
 static void MainStm_S42_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S42 ) ){
         MainStm_S4_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	669	275	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	669	173	61	53	10	-24	1235	686" );
         pStm->nS4History = MainStm_S42;
     }
 }
 static BOOL MainStm_S42_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S42;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	669	275	61	53	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	669	173	61	53	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E1:{
         E1Params* e = ( E1Params* )pEventParams;
@@ -807,21 +807,21 @@ static BOOL MainStm_S42_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVE
 }
 static void MainStm_S42_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S42 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	669	275	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	669	173	61	53	10	-24	1235	686" );
         MainStm_S4_Exit( pCarBody, pStm );
     }
 }
 static void MainStm_S41_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S41 ) ){
         MainStm_S4_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	472	275	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	472	173	61	53	10	-24	1235	686" );
         pStm->nS4History = MainStm_S41;
     }
 }
 static BOOL MainStm_S41_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S41;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	472	275	61	53	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	472	173	61	53	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E1:{
         E1Params* e = ( E1Params* )pEventParams;
@@ -835,20 +835,20 @@ static BOOL MainStm_S41_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVE
 }
 static void MainStm_S41_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S41 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	472	275	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	472	173	61	53	10	-24	1235	686" );
         MainStm_S4_Exit( pCarBody, pStm );
     }
 }
 static void MainStm_S6_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S6 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	953	377	130	114	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	953	272	130	72	10	-24	1235	686" );
         SharedStm_Reset( pCarBody, &pStm->S6SharedStm, &pStm->base, STATE_UNDEF );
     }
 }
 static BOOL MainStm_S6_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S6;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	953	377	130	114	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	953	272	130	72	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E4:{
         MainStm_BgnTrans( pCarBody, pStm, MainStm_S4, MainStm_S4Init );
@@ -862,12 +862,12 @@ static BOOL MainStm_S6_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVEN
 static void MainStm_S6_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S6 ) ){ 
         SharedStm_Abort( pCarBody, &pStm->S6SharedStm );
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	953	377	130	114	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	953	272	130	72	10	-24	1235	686" );
     }
 }
 static void MainStm_S8_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S8 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	362	536	522	369	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	362	340	522	296	10	-24	1235	686" );
         S8_Region1_Reset( pCarBody, &pStm->S8S8_Region1, &pStm->base, STATE_UNDEF );
         S8_Region2_Reset( pCarBody, &pStm->S8S8_Region2, &pStm->base, STATE_UNDEF );
     }
@@ -875,7 +875,7 @@ static void MainStm_S8_Entry( CarBody* pCarBody, MainStm* pStm ){
 static BOOL MainStm_S8_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S8;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	362	536	522	369	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	362	340	522	296	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E4:{
         MainStm_BgnTrans( pCarBody, pStm, MainStm_MainTop_0, STATE_UNDEF );
@@ -895,19 +895,19 @@ static void MainStm_S8_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S8 ) ){ 
         S8_Region1_Abort( pCarBody, &pStm->S8S8_Region1 );
         S8_Region2_Abort( pCarBody, &pStm->S8S8_Region2 );
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	362	536	522	369	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	362	340	522	296	10	-24	1235	686" );
     }
 }
 static void MainStm_S812_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S812 ) ){
         MainStm_S8_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	569	569	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	569	373	61	53	10	-24	1235	686" );
     }
 }
 static BOOL MainStm_S812_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S812;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	569	569	61	53	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	569	373	61	53	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E1:{
         E1Params* e = ( E1Params* )pEventParams;
@@ -924,20 +924,20 @@ static BOOL MainStm_S812_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EV
 }
 static void MainStm_S812_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S812 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	569	569	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	569	373	61	53	10	-24	1235	686" );
         MainStm_S8_Exit( pCarBody, pStm );
     }
 }
 static void MainStm_S813_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S813 ) ){
         MainStm_S8_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	748	569	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	748	373	61	53	10	-24	1235	686" );
     }
 }
 static BOOL MainStm_S813_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S813;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	748	569	61	53	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	748	373	61	53	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E5:{
         if (CarBody_IsIn( pCarBody, S8_Region1_S822 )) {
@@ -952,20 +952,20 @@ static BOOL MainStm_S813_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EV
 }
 static void MainStm_S813_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S813 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	748	569	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	748	373	61	53	10	-24	1235	686" );
         MainStm_S8_Exit( pCarBody, pStm );
     }
 }
 static void MainStm_S811_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S811 ) ){
         MainStm_S8_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	427	569	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	427	373	61	53	10	-24	1235	686" );
     }
 }
 static BOOL MainStm_S811_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S811;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	427	569	61	53	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	427	373	61	53	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E1:{
         E1Params* e = ( E1Params* )pEventParams;
@@ -979,19 +979,19 @@ static BOOL MainStm_S811_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EV
 }
 static void MainStm_S811_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S811 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	427	569	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	427	373	61	53	10	-24	1235	686" );
         MainStm_S8_Exit( pCarBody, pStm );
     }
 }
 static void MainStm_S7_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S7 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	118	538	132	366	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	113	342	142	293	10	-24	1235	686" );
     }
 }
 static BOOL MainStm_S7_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S7;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	118	538	132	366	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	113	342	142	293	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E1:{
         E1Params* e = ( E1Params* )pEventParams;
@@ -1018,58 +1018,58 @@ static BOOL MainStm_S7_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVEN
 }
 static void MainStm_S7_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S7 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	118	538	132	366	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	113	342	142	293	10	-24	1235	686" );
     }
 }
 static void MainStm_S72_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S72 ) ){
         MainStm_S7_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	137	821	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	137	552	61	53	10	-24	1235	686" );
         pStm->nS7History = MainStm_S72;
     }
 }
 static BOOL MainStm_S72_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S72;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	137	821	61	53	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	137	552	61	53	10	-24	1235	686" );
     return bResult ? bResult : MainStm_S7_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void MainStm_S72_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S72 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	137	821	61	53	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	137	552	61	53	10	-24	1235	686" );
         MainStm_S7_Exit( pCarBody, pStm );
     }
 }
 static void MainStm_S71_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S71 ) ){
         MainStm_S7_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	133	617	105	187	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	127	421	117	122	10	-24	1235	686" );
         pStm->nS7History = MainStm_S71;
     }
 }
 static BOOL MainStm_S71_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S71;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	133	617	105	187	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	127	421	117	122	10	-24	1235	686" );
     return bResult ? bResult : MainStm_S7_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void MainStm_S71_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S71 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	133	617	105	187	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	127	421	117	122	10	-24	1235	686" );
         MainStm_S7_Exit( pCarBody, pStm );
     }
 }
 static void MainStm_S711_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S711 ) ){
         MainStm_S71_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	164	693	40	30	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	180	458	40	30	10	-24	1235	686" );
         pStm->nS7History = MainStm_S711;
     }
 }
 static BOOL MainStm_S711_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S711;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	164	693	40	30	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	180	458	40	30	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E0:{
         MainStm_BgnTrans( pCarBody, pStm, MainStm_S712, STATE_UNDEF );
@@ -1082,38 +1082,38 @@ static BOOL MainStm_S711_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EV
 }
 static void MainStm_S711_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S711 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	164	693	40	30	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	180	458	40	30	10	-24	1235	686" );
         MainStm_S71_Exit( pCarBody, pStm );
     }
 }
 static void MainStm_S712_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S712 ) ){
         MainStm_S71_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	164	760	40	30	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	180	499	40	30	10	-24	1235	686" );
         pStm->nS7History = MainStm_S712;
     }
 }
 static BOOL MainStm_S712_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S712;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	164	760	40	30	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	180	499	40	30	10	-24	1235	686" );
     return bResult ? bResult : MainStm_S71_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void MainStm_S712_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S712 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	164	760	40	30	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	180	499	40	30	10	-24	1235	686" );
         MainStm_S71_Exit( pCarBody, pStm );
     }
 }
 static void MainStm_S10_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S10 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	988	748	231	53	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	988	487	231	53	10	-24	1235	686" );
     }
 }
 static BOOL MainStm_S10_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S10;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	988	748	231	53	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	988	487	231	53	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E1:{
         E1Params* e = ( E1Params* )pEventParams;
@@ -1133,18 +1133,18 @@ static BOOL MainStm_S10_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVE
 }
 static void MainStm_S10_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S10 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	988	748	231	53	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	988	487	231	53	10	-24	1235	686" );
     }
 }
 static void MainStm_S5_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S5 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	301	417	130	53	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	301	270	130	53	10	-24	1235	686" );
     }
 }
 static BOOL MainStm_S5_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S5;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	301	417	130	53	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	301	270	130	53	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E1:{
         E1Params* e = ( E1Params* )pEventParams;
@@ -1176,25 +1176,25 @@ static BOOL MainStm_S5_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVEN
 }
 static void MainStm_S5_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S5 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	301	417	130	53	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	301	270	130	53	10	-24	1235	686" );
     }
 }
 static void MainStm_S9_Entry( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, MainStm_S9 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	1100	545	115	48	-20	-71	1281	1055" );
+        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	1100	349	115	48	10	-24	1235	686" );
         SharedStm_Reset( pCarBody, &pStm->S9SharedStm, &pStm->base, STATE_UNDEF );
     }
 }
 static BOOL MainStm_S9_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = MainStm_S9;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	1100	545	115	48	-20	-71	1281	1055" );
+    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	1100	349	115	48	10	-24	1235	686" );
     return bResult;
 }
 static void MainStm_S9_Exit( CarBody* pCarBody, MainStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, MainStm_S9 ) ){ 
         SharedStm_Abort( pCarBody, &pStm->S9SharedStm );
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	1100	545	115	48	-20	-71	1281	1055" );
+        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	1100	349	115	48	10	-24	1235	686" );
     }
 }
 static void MainStm_EndTrans( CarBody *pCarBody, MainStm* pStm ){
