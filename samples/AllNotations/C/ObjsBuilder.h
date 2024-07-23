@@ -5,7 +5,11 @@ typedef struct tagObjsBuilder ObjsBuilder;
 extern Sprite* g_objects[];
 enum {
 #define carBody                 ( g_objects[ _carBody ] )
-    _carBody
+    _carBody,
+#define toggleBtn               ( g_objects[ _toggleBtn ] )
+    _toggleBtn,
+#define Text_1sh                ( g_objects[ _Text_1sh ] )
+    _Text_1sh
 };
 int ObjsBuilder_startSim( void   );
 void ObjsBuilder_showEntry( void* pObj, void* pStm_, char* pMsg );
