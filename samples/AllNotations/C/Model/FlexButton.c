@@ -4,60 +4,32 @@
 #include "FlexButton.h"
 /** @public @memberof FlexButton */
 static bool FlexButton_load(
-    FlexButton* pFlexButton,
+    Sprite* pSprite,
     SDL_Renderer* renderer
 ){
-    // Get the size of the renderer
-    int width, height;
-    if (SDL_GetRendererOutputSize(renderer, &width, &height) != 0) {
-        printf("Error getting renderer size: %s\n", SDL_GetError());
-    }
-
-    pFlexButton->m_rect = (SDL_Rect){
-        pFlexButton->m_iniRect.x * width, 
-        pFlexButton->m_iniRect.y * height, 
-        pFlexButton->m_iniRect.w * width, 
-        pFlexButton->m_iniRect.h * height
-    };
-
-    FlexButton_Start( pFlexButton );
-    return true;
 } /* FlexButton_load */
 
 /** @public @memberof FlexButton */
 static void FlexButton_draw0(
-    FlexButton* pFlexButton,
+    Sprite* pSprite,
     SDL_Renderer* renderer
 ){
-    FlexButton_EventProc( pFlexButton, FlexButton_DRAW0, renderer );
 } /* FlexButton_draw0 */
 
 /** @public @memberof FlexButton */
 static void FlexButton_draw1(
-    FlexButton* pFlexButton,
+    Sprite* pSprite,
     SDL_Renderer* renderer
 ){
-    FlexButton_EventProc( pFlexButton, FlexButton_DRAW1, renderer );
 } /* FlexButton_draw1 */
 
 /** @public @memberof FlexButton */
 static void FlexButton_updateMouseState(
-    FlexButton* pFlexButton,
+    Sprite* pSprite,
     int x,
     int y,
     int mouseEvent
 ){
-    FlexButton* sprite = pFlexButton;
-    int mouseX = x;
-    int mouseY = y;
-    EventListener* pCurListener = sprite->m_mouseListeners;
-    MouseEventParams mouseEventParams = { .pos.x = mouseX, .pos.y = mouseY };
-    while( pCurListener != null ){
-        if( EventListener_getType( pCurListener ) == mouseEvent ){
-            EventListener_actionPerformed( pCurListener, sprite, &mouseEventParams );
-        }
-        pCurListener = EventListener_getNext( pCurListener );
-    }
 } /* FlexButton_updateMouseState */
 
 /** @public @memberof FlexButton */
@@ -246,6 +218,19 @@ void FlexButton_DrawKnob(
         filledCircleRGBA( renderer, x, y, r, 0x00, 0x00, 0x00, 0xFF );
     }
 } /* FlexButton_DrawKnob */
+
+/** @public @memberof FlexButton */
+int FlexButton_GetValue(
+    FlexButton* pFlexButton
+){
+} /* FlexButton_GetValue */
+
+/** @public @memberof FlexButton */
+void FlexButton_SetValue(
+    FlexButton* pFlexButton,
+    int value
+){
+} /* FlexButton_SetValue */
 
 const TCHAR* FlexButtonEvent_toString( FlexButton_EVENT value ){
     switch( value ){

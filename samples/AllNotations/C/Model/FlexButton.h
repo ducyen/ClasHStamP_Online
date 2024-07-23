@@ -14,6 +14,8 @@ void FlexButton_DrawToggleStyle( FlexButton* pFlexButton, SDL_Renderer* renderer
 void FlexButton_DrawSlideStyle( FlexButton* pFlexButton, SDL_Renderer* renderer );
 void FlexButton_DrawPressed( FlexButton* pFlexButton, SDL_Renderer* renderer );
 void FlexButton_DrawKnob( FlexButton* pFlexButton, SDL_Renderer* renderer );
+int FlexButton_GetValue( FlexButton* pFlexButton );
+void FlexButton_SetValue( FlexButton* pFlexButton, int value );
 typedef enum tagFlexButtonEvent {
     FlexButton_DRAW0,                                           
     FlexButton_DRAW1,                                           

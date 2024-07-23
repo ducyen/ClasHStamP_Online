@@ -4,18 +4,9 @@
 #include "TranslationConstraint.h"
 /** @public @memberof TranslationConstraint */
 static void TranslationConstraint_apply(
-    TranslationConstraint* pTranslationConstraint,
+    Constraint* pConstraint,
     Sprite* target
 ){
-    if( pTranslationConstraint->m_influence == 0 ){
-        return;
-    }
-
-    ImgSprite* pSource = ( ImgSprite* )*pTranslationConstraint->m_source;
-    ImgSprite* pTarget = ( ImgSprite* )target;
-    SDL_Point* sourceOfs = ImgSprite_getOffset( pSource );
-    SDL_Point* targetOfs = ImgSprite_getOffset( pTarget );
-    ImgSprite_setOffset( pSource, sourceOfs->x + targetOfs->x, sourceOfs->y + targetOfs->y );
 } /* TranslationConstraint_apply */
 
 TransformConstraint* TranslationConstraint_Copy( TranslationConstraint* pTranslationConstraint, const TranslationConstraint* pSource ){

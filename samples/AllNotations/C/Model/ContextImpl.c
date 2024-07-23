@@ -2,11 +2,9 @@
 #define __ContextImpl_INTERNAL__
 #include "CommonInclude.h"
 #include "ContextImpl.h"
-/** @private @static @memberof ContextImpl */
-static ContextImpl contextImpl = ContextImpl_Ctor( 4, "", 1, 2, 3, { 0 }, Composition_Ctor( 3 ) );
 /** @protected @memberof ContextImpl */
 static void ContextImpl_protectedMethod(
-    ContextImpl* pContextImpl
+    BaseClass* pBaseClass
 ){
 } /* ContextImpl_protectedMethod */
 

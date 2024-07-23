@@ -21,6 +21,7 @@ Sprite* g_objects[] = {
         P( { 0.3920008267879289, 0.3645829478553404, 0.1807909604519774, 0.2206896551724138 } )/* m_iniRect */,
         P( "carBody" )                                          /* m_name */,
         P( "CarBody.png" )                                      /* m_imgPath */,
+        P( { 0.0, 0.0 } )                                       /* m_center */,
         P( null )                                               /* m_constraints */,
         P( null )                                               /* m_mouseListeners */,
         P( &MouseListener_Ctor( 0, CarBody_Start, &carBody, 0, null ) )/* m_onDrawListeners */
@@ -29,7 +30,7 @@ Sprite* g_objects[] = {
         P( { 0.3460451977401129, 0.23900862068965517, 0.1101694915254239, 0.06896551724137931 } )/* m_iniRect */,
         P( "toggleBtn" )                                        /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
-        1,
+        P( 1 )                                                  /* m_valueMax */,
         P( FlexBtnStm_ToggleStyle )                             /* m_style */,
         P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleBtn, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleBtn, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleBtn, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
         P( null )                                               /* m_buttonListeners */
