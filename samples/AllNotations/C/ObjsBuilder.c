@@ -18,12 +18,26 @@
 #include "ContextImpl.h"                                        
 Sprite* g_objects[] = {
     &CarBody_Ctor(                                              /* carBody */
-        P( { 0.17963978682849027, 0.6096577431796677, 0.051036682615629984, 0.09195402298850575 } )/* m_iniRect */,
+        P( { 0.3920008267879289, 0.3645829478553404, 0.1807909604519774, 0.2206896551724138 } )/* m_iniRect */,
         P( "carBody" )                                          /* m_name */,
         P( "CarBody.png" )                                      /* m_imgPath */,
         P( null )                                               /* m_constraints */,
         P( null )                                               /* m_mouseListeners */,
         P( &MouseListener_Ctor( 0, CarBody_Start, &carBody, 0, null ) )/* m_onDrawListeners */
+    ),
+    &FlexButton_Ctor(                                           /* toggleBtn */
+        P( { 0.3460451977401129, 0.23900862068965517, 0.1101694915254239, 0.06896551724137931 } )/* m_iniRect */,
+        P( "toggleBtn" )                                        /* m_name */,
+        P( "FlexButton.png" )                                   /* m_imgPath */,
+        1,
+        P( FlexBtnStm_ToggleStyle )                             /* m_style */,
+        P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleBtn, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleBtn, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleBtn, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
+        P( null )                                               /* m_buttonListeners */
+    ),
+    &Primitive_Ctor(                                            /* Text_1sh */
+        P( { 0.21327683615819218, 0.7241379310344828, 0.536723163841808, 0.05969827586206897 } )/* 1sh-c8099ab49758debe3aa2523402f0bf52 */,
+        P( "Text_1sh" )                                         /* Text_1sh */,
+        P( "Text 000000 line 2 null 000000 null Monospaced 8 Press Number key for event trigger" )/* Text_1sh */
     )
 };
 Sprite* getobj( int id ){
