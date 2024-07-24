@@ -16,6 +16,8 @@
 #include "Button.h"                                             
 #include "MouseListener.h"                                      
 #include "ContextImpl.h"                                        
+/** @private @static @memberof ObjsBuilder */
+static int hardwareAccelerationAvailable = SDL_RENDERER_SOFTWARE;
 Sprite* g_objects[] = {
     &CarBody_Ctor(                                              /* carBody */
         P( { 0.3920008267879289, 0.3645829478553404, 0.1807909604519774, 0.2206896551724138 } )/* m_iniRect */,
@@ -44,6 +46,44 @@ Sprite* g_objects[] = {
 Sprite* getobj( int id ){
     return g_objects[ id ];
 }
+/** @private @static @memberof ObjsBuilder */
+STATIC SDL_Texture* ObjsBuilder_ResizeTexture(
+    SDL_Renderer* renderer,
+    SDL_Texture* originalTexture,
+    int newWidth,
+    int newHeight
+){
+    // Get the original texture dimensions
+    int originalWidth, originalHeight;
+    SDL_QueryTexture(originalTexture, NULL, NULL, &originalWidth, &originalHeight);
+
+    // Create a new texture with the desired size
+    SDL_Texture* newTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, newWidth, newHeight);
+    if (newTexture == NULL) {
+        fprintf(stderr, "SDL_CreateTexture error: %s\n", SDL_GetError());
+        return NULL;
+    }
+
+    // Set the renderer target to the new texture
+    SDL_SetRenderTarget(renderer, newTexture);
+
+    // Clear the new texture
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+    SDL_RenderClear(renderer);
+
+    // Set up the source and destination rectangles
+    SDL_Rect srcRect = { 0, 0, originalWidth, originalHeight };
+    SDL_Rect dstRect = { 0, 0, newWidth, newHeight };
+
+    // Copy the original texture to the new texture, scaling it
+    SDL_RenderCopy(renderer, originalTexture, &srcRect, &srcRect);
+
+    // Reset the renderer target to the default
+    SDL_SetRenderTarget(renderer, NULL);
+
+    return newTexture;
+} /* ObjsBuilder_ResizeTexture */
+
 int ObjsBuilder_startSim(
     void  
 ){
@@ -86,7 +126,6 @@ int ObjsBuilder_startSim(
     if (nResult == S_OK) {
         SDL_RendererInfo rendererInfo;
         int numRenderDrivers = SDL_GetNumRenderDrivers();
-        SDL_RendererFlags hardwareAccelerationAvailable = SDL_RENDERER_SOFTWARE;
 
         for (int i = 0; i < numRenderDrivers; ++i) {
             if (SDL_GetRenderDriverInfo(i, &rendererInfo) == 0) {
@@ -331,7 +370,7 @@ void ObjsBuilder_showDiagram(
         char windowName[255];
         sprintf(windowName, "%s - %s", s, pSprite->m_name);
         pSprite->m_stmWindow = SDL_CreateWindow(windowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-        SDL_CreateRenderer(pSprite->m_stmWindow, -1, SDL_RENDERER_ACCELERATED);
+        SDL_CreateRenderer(pSprite->m_stmWindow, -1, hardwareAccelerationAvailable);
     }
     SDL_Texture* stmImage = pStm->m_stmImage;
     SDL_Rect* stmRect = &pStm->m_stmRect;
@@ -366,11 +405,7 @@ void ObjsBuilder_showDiagram(
         int dmyW, dmyH;
         SDL_QueryTexture(pStm->m_stmImage, &format, NULL, &dmyW, &dmyH);
 
-        // Create a new texture with the same format and dimensions
-        if( pSprite->m_stmTexture != null ){
-            SDL_DestroyTexture(pSprite->m_stmTexture);
-        }
-        pSprite->m_stmTexture = SDL_CreateTexture(stmRenderer, format, SDL_TEXTUREACCESS_TARGET, width, height);
+        pSprite->m_stmTexture = ObjsBuilder_ResizeTexture( stmRenderer, pSprite->m_stmTexture, width, height );
 
         // Get current texture count from window data
         int textureCount = (int)(intptr_t)SDL_GetWindowData(pSprite->m_stmWindow, "textureCount");

@@ -32,6 +32,10 @@ typedef int             BOOL;
 typedef int             Bool;
 typedef char            TCHAR;
 
+#ifndef STATIC
+#define STATIC          static
+#endif
+
 #define _T(x)           x
 
 #ifndef FALSE
