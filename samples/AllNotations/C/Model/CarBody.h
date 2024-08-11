@@ -116,6 +116,21 @@ BOOL S8_Region2_Reset( CarBody* pS8, S8_Region2* pStm, HdStateMachine* pParentSt
     .base = { HdStateMachine_Init( S8_Region2_S8, S8_Region2_S8 ) },\
     .S832S832_Region1 = S832_Region1_Init(),\
 }
+/** @class S71_Region1
+ * @extends HdStateMachine
+ */
+typedef struct tagS71_Region1 {
+    HdStateMachine base;
+#define S71_Region1_S71_Dmy                     ( 1ULL << 24 )
+#define S71_Region1_S71                         ( S71_Region1_S71_Dmy | S71_Region1_S722 | S71_Region1_S721 | S71_Region1_S72Init )
+#define S71_Region1_S722                        ( 1ULL << 25 )
+#define S71_Region1_S721                        ( 1ULL << 26 )
+#define S71_Region1_S72Init                     ( 1ULL << 27 )
+}S71_Region1;
+BOOL S71_Region1_Reset( CarBody* pS71, S71_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
+#define S71_Region1_Init() {\
+    .base = { HdStateMachine_Init( S71_Region1_S71, S71_Region1_S71 ) },\
+}
 /** @class MainStm
  * @extends HdStateMachine
  */
@@ -124,43 +139,44 @@ typedef struct tagMainStm {
     SharedStm S6SharedStm;                                      
     S8_Region1 S8S8_Region1;                                    
     S8_Region2 S8S8_Region2;                                    
+    S71_Region1 S71S71_Region1;                                 
     SharedStm S9SharedStm;                                      
     uint64_t nS4History;
     uint64_t nS7History;
-#define MainStm_MainTop_0_Dmy                   ( 1ULL << 24 )
+#define MainStm_MainTop_0_Dmy                   ( 1ULL << 28 )
 #define MainStm_MainTop_0                       ( MainStm_MainTop_0_Dmy | MainStm_MainStmInit | MainStm_S1 | MainStm_S2 | MainStm_S3 | MainStm_S4 | MainStm_Junction | MainStm_S6 | MainStm_S8 | MainStm_S7 | MainStm_S10 | MainStm_S5 | MainStm_S9 )
-#define MainStm_MainStmInit                     ( 1ULL << 25 )
-#define MainStm_S1                              ( 1ULL << 26 )
-#define MainStm_S2Init                          ( 1ULL << 27 )
-#define MainStm_S22                             ( 1ULL << 28 )
-#define MainStm_S21                             ( 1ULL << 29 )
-#define MainStm_S3                              ( 1ULL << 30 )
-#define MainStm_S4Init                          ( 1ULL << 31 )
-#define MainStm_S42                             ( 1ULL << 32 )
-#define MainStm_S41                             ( 1ULL << 33 )
-#define MainStm_Junction                        ( 1ULL << 34 )
-#define MainStm_S6                              ( 1ULL << 35 )
-#define MainStm_S812                            ( 1ULL << 36 )
-#define MainStm_S813                            ( 1ULL << 37 )
-#define MainStm_S811                            ( 1ULL << 38 )
-#define MainStm_S8Init                          ( 1ULL << 39 )
-#define MainStm_S72                             ( 1ULL << 40 )
-#define MainStm_S711                            ( 1ULL << 41 )
-#define MainStm_S712                            ( 1ULL << 42 )
-#define MainStm_S71Init                         ( 1ULL << 43 )
-#define MainStm_S7Init                          ( 1ULL << 44 )
-#define MainStm_S10                             ( 1ULL << 45 )
-#define MainStm_S5                              ( 1ULL << 46 )
-#define MainStm_S9                              ( 1ULL << 47 )
-#define MainStm_S2_Dmy                          ( 1ULL << 48 )
+#define MainStm_MainStmInit                     ( 1ULL << 29 )
+#define MainStm_S1                              ( 1ULL << 30 )
+#define MainStm_S2Init                          ( 1ULL << 31 )
+#define MainStm_S22                             ( 1ULL << 32 )
+#define MainStm_S21                             ( 1ULL << 33 )
+#define MainStm_S3                              ( 1ULL << 34 )
+#define MainStm_S4Init                          ( 1ULL << 35 )
+#define MainStm_S42                             ( 1ULL << 36 )
+#define MainStm_S41                             ( 1ULL << 37 )
+#define MainStm_Junction                        ( 1ULL << 38 )
+#define MainStm_S6                              ( 1ULL << 39 )
+#define MainStm_S812                            ( 1ULL << 40 )
+#define MainStm_S813                            ( 1ULL << 41 )
+#define MainStm_S811                            ( 1ULL << 42 )
+#define MainStm_S8Init                          ( 1ULL << 43 )
+#define MainStm_S72                             ( 1ULL << 44 )
+#define MainStm_S711                            ( 1ULL << 45 )
+#define MainStm_S712                            ( 1ULL << 46 )
+#define MainStm_S71Init                         ( 1ULL << 47 )
+#define MainStm_S7Init                          ( 1ULL << 48 )
+#define MainStm_S10                             ( 1ULL << 49 )
+#define MainStm_S5                              ( 1ULL << 50 )
+#define MainStm_S9                              ( 1ULL << 51 )
+#define MainStm_S2_Dmy                          ( 1ULL << 52 )
 #define MainStm_S2                              ( MainStm_S2_Dmy | MainStm_S2Init | MainStm_S22 | MainStm_S21 )
-#define MainStm_S4_Dmy                          ( 1ULL << 49 )
+#define MainStm_S4_Dmy                          ( 1ULL << 53 )
 #define MainStm_S4                              ( MainStm_S4_Dmy | MainStm_S4Init | MainStm_S42 | MainStm_S41 )
-#define MainStm_S8_Dmy                          ( 1ULL << 50 )
+#define MainStm_S8_Dmy                          ( 1ULL << 54 )
 #define MainStm_S8                              ( MainStm_S8_Dmy | MainStm_S812 | MainStm_S813 | MainStm_S811 | MainStm_S8Init )
-#define MainStm_S71_Dmy                         ( 1ULL << 51 )
+#define MainStm_S71_Dmy                         ( 1ULL << 55 )
 #define MainStm_S71                             ( MainStm_S71_Dmy | MainStm_S711 | MainStm_S712 | MainStm_S71Init )
-#define MainStm_S7_Dmy                          ( 1ULL << 52 )
+#define MainStm_S7_Dmy                          ( 1ULL << 56 )
 #define MainStm_S7                              ( MainStm_S7_Dmy | MainStm_S72 | MainStm_S71 | MainStm_S7Init )
 }MainStm;
 BOOL MainStm_Reset( CarBody* pMainTop_0, MainStm* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
@@ -169,6 +185,7 @@ BOOL MainStm_Reset( CarBody* pMainTop_0, MainStm* pStm, HdStateMachine* pParentS
     .S6SharedStm = SharedStm_Init(),\
     .S8S8_Region1 = S8_Region1_Init(),\
     .S8S8_Region2 = S8_Region2_Init(),\
+    .S71S71_Region1 = S71_Region1_Init(),\
     .S9SharedStm = SharedStm_Init(),\
 }
 BOOL CarBody_EventProc( CarBody* pCarBody, CarBody_EVENT nEventId, void* pEventParams );
