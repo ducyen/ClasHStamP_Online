@@ -51,6 +51,9 @@
     <ClInclude Include="Abstracts\BaseClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ObjsBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Model\Context.c">
@@ -72,6 +75,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\CarBody.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjsBuilder.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

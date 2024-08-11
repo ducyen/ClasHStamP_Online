@@ -24,6 +24,7 @@ Sprite* g_objects[] = {
         P( "carBody" )                                          /* m_name */,
         P( "CarBody.png" )                                      /* m_imgPath */,
         P( { 0.0, 0.0 } )                                       /* m_center */,
+//        P( 0.0 )                                                /* m_angle */,
         P( null )                                               /* m_constraints */,
         P( null )                                               /* m_mouseListeners */,
         P( &MouseListener_Ctor( 0, CarBody_Start, &carBody, 0, null ) )/* m_onDrawListeners */
@@ -32,6 +33,7 @@ Sprite* g_objects[] = {
         P( { 0.3460451977401129, 0.23900862068965517, 0.1101694915254239, 0.06896551724137931 } )/* m_iniRect */,
         P( "toggleBtn" )                                        /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
+        P( 0.0 )                                                /* m_angle */,
         P( 1 )                                                  /* m_valueMax */,
         P( FlexBtnStm_ToggleStyle )                             /* m_style */,
         P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleBtn, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleBtn, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleBtn, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
@@ -60,7 +62,7 @@ STATIC SDL_Texture* ObjsBuilder_ResizeTexture(
     // Create a new texture with the desired size
     SDL_Texture* newTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, newWidth, newHeight);
     if (newTexture == NULL) {
-        fprintf(stderr, "SDL_CreateTexture error: %s\n", SDL_GetError());
+        printf("SDL_CreateTexture error: %s\n", SDL_GetError());
         return NULL;
     }
 
@@ -365,11 +367,9 @@ void ObjsBuilder_showDiagram(
     int l, t, w, h, dgrX, dgrY, dgrW, dgrH;
     sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", s, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
     if( pSprite->m_stmWindow == null ){
-        int SCREEN_WIDTH = 0;
-        int SCREEN_HEIGHT = 0;
         char windowName[255];
         sprintf(windowName, "%s - %s", s, pSprite->m_name);
-        pSprite->m_stmWindow = SDL_CreateWindow(windowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+        pSprite->m_stmWindow = SDL_CreateWindow(windowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1, 0, SDL_WINDOW_SHOWN);
         SDL_CreateRenderer(pSprite->m_stmWindow, -1, hardwareAccelerationAvailable);
     }
     SDL_Texture* stmImage = pStm->m_stmImage;
@@ -399,6 +399,7 @@ void ObjsBuilder_showDiagram(
         }
         height = height + pStm->m_stmRect.h;
         SDL_SetWindowSize( pSprite->m_stmWindow, width, height );
+        SDL_RenderPresent(stmRenderer);                         // Refresh Renderer
         SDL_FreeSurface(imageSurface);
 
         Uint32 format;

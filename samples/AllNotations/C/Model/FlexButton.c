@@ -533,14 +533,14 @@ static void FlexBtnStm_Ready_Exit( FlexButton* pFlexButton, FlexBtnStm* pStm ){
 static void FlexBtnStm_PushStyle_Entry( FlexButton* pFlexButton, FlexBtnStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, FlexBtnStm_PushStyle ) ){
         FlexBtnStm_Ready_Entry( pFlexButton, pStm );
-        ObjsBuilder_showEntry( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	132	200	96	-126	-25	1199	764" );
+        ObjsBuilder_showEntry( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	132	200	105	-126	-25	1199	764" );
         pStm->nReadyHistory = FlexBtnStm_PushStyle;
     }
 }
 static BOOL FlexBtnStm_PushStyle_EventProc( FlexButton* pFlexButton, FlexBtnStm* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = FlexBtnStm_PushStyle;
-    ObjsBuilder_showDoing( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	132	200	96	-126	-25	1199	764" );
+    ObjsBuilder_showDoing( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	132	200	105	-126	-25	1199	764" );
     switch( nEventId ){
     case FlexButton_DRAW0:{
         FlexButton_DrawPushStyle(
@@ -560,21 +560,21 @@ static BOOL FlexBtnStm_PushStyle_EventProc( FlexButton* pFlexButton, FlexBtnStm*
 }
 static void FlexBtnStm_PushStyle_Exit( FlexButton* pFlexButton, FlexBtnStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, FlexBtnStm_PushStyle ) ){ 
-        ObjsBuilder_showExit( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	132	200	96	-126	-25	1199	764" );
+        ObjsBuilder_showExit( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	132	200	105	-126	-25	1199	764" );
         FlexBtnStm_Ready_Exit( pFlexButton, pStm );
     }
 }
 static void FlexBtnStm_SelectStyle_Entry( FlexButton* pFlexButton, FlexBtnStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, FlexBtnStm_SelectStyle ) ){
         FlexBtnStm_Ready_Entry( pFlexButton, pStm );
-        ObjsBuilder_showEntry( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	256	200	77	-126	-25	1199	764" );
+        ObjsBuilder_showEntry( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	256	200	84	-126	-25	1199	764" );
         pStm->nReadyHistory = FlexBtnStm_SelectStyle;
     }
 }
 static BOOL FlexBtnStm_SelectStyle_EventProc( FlexButton* pFlexButton, FlexBtnStm* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = FlexBtnStm_SelectStyle;
-    ObjsBuilder_showDoing( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	256	200	77	-126	-25	1199	764" );
+    ObjsBuilder_showDoing( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	256	200	84	-126	-25	1199	764" );
     switch( nEventId ){
     case FlexButton_DRAW0:{
         FlexButton_DrawSelectStyle(
@@ -589,21 +589,21 @@ static BOOL FlexBtnStm_SelectStyle_EventProc( FlexButton* pFlexButton, FlexBtnSt
 }
 static void FlexBtnStm_SelectStyle_Exit( FlexButton* pFlexButton, FlexBtnStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, FlexBtnStm_SelectStyle ) ){ 
-        ObjsBuilder_showExit( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	256	200	77	-126	-25	1199	764" );
+        ObjsBuilder_showExit( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	256	200	84	-126	-25	1199	764" );
         FlexBtnStm_Ready_Exit( pFlexButton, pStm );
     }
 }
 static void FlexBtnStm_SlideStyle_Entry( FlexButton* pFlexButton, FlexBtnStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, FlexBtnStm_SlideStyle ) ){
         FlexBtnStm_Ready_Entry( pFlexButton, pStm );
-        ObjsBuilder_showEntry( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	484	200	77	-126	-25	1199	764" );
+        ObjsBuilder_showEntry( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	484	200	84	-126	-25	1199	764" );
         pStm->nReadyHistory = FlexBtnStm_SlideStyle;
     }
 }
 static BOOL FlexBtnStm_SlideStyle_EventProc( FlexButton* pFlexButton, FlexBtnStm* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = FlexBtnStm_SlideStyle;
-    ObjsBuilder_showDoing( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	484	200	77	-126	-25	1199	764" );
+    ObjsBuilder_showDoing( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	484	200	84	-126	-25	1199	764" );
     switch( nEventId ){
     case FlexButton_DRAW0:{
         FlexButton_DrawSlideStyle(
@@ -618,21 +618,21 @@ static BOOL FlexBtnStm_SlideStyle_EventProc( FlexButton* pFlexButton, FlexBtnStm
 }
 static void FlexBtnStm_SlideStyle_Exit( FlexButton* pFlexButton, FlexBtnStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, FlexBtnStm_SlideStyle ) ){ 
-        ObjsBuilder_showExit( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	484	200	77	-126	-25	1199	764" );
+        ObjsBuilder_showExit( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	484	200	84	-126	-25	1199	764" );
         FlexBtnStm_Ready_Exit( pFlexButton, pStm );
     }
 }
 static void FlexBtnStm_ToggleStyle_Entry( FlexButton* pFlexButton, FlexBtnStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, FlexBtnStm_ToggleStyle ) ){
         FlexBtnStm_Ready_Entry( pFlexButton, pStm );
-        ObjsBuilder_showEntry( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	370	200	77	-126	-25	1199	764" );
+        ObjsBuilder_showEntry( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	370	200	84	-126	-25	1199	764" );
         pStm->nReadyHistory = FlexBtnStm_ToggleStyle;
     }
 }
 static BOOL FlexBtnStm_ToggleStyle_EventProc( FlexButton* pFlexButton, FlexBtnStm* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->base.nSourceState = FlexBtnStm_ToggleStyle;
-    ObjsBuilder_showDoing( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	370	200	77	-126	-25	1199	764" );
+    ObjsBuilder_showDoing( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	370	200	84	-126	-25	1199	764" );
     switch( nEventId ){
     case FlexButton_DRAW0:{
         FlexButton_DrawToggleStyle(
@@ -647,7 +647,7 @@ static BOOL FlexBtnStm_ToggleStyle_EventProc( FlexButton* pFlexButton, FlexBtnSt
 }
 static void FlexBtnStm_ToggleStyle_Exit( FlexButton* pFlexButton, FlexBtnStm* pStm ){
     if( HdStateMachine_Exitable( &pStm->base, FlexBtnStm_ToggleStyle ) ){ 
-        ObjsBuilder_showExit( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	370	200	77	-126	-25	1199	764" );
+        ObjsBuilder_showExit( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	370	200	84	-126	-25	1199	764" );
         FlexBtnStm_Ready_Exit( pFlexButton, pStm );
     }
 }
