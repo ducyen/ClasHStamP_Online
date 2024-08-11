@@ -299,7 +299,7 @@ state_impl,"static int [sCOPE]_IsFinished([sCOPE]* p[sCOPE]){
 }
 static BOOL [Scope]_Reset( [tYPE]* p[tYPE], [sCOPE]* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
     pStm->base.pParentStm = pParentStm;
-    if( nEntryPoint == NULL ){
+    if( nEntryPoint == STATE_UNDEF ){
         if( [Scope]_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = [sCOPE]_[mODIFIER];
         }
@@ -445,7 +445,7 @@ substm_impl,"[->]if( ![sCOPE]_IsIn( &pStm->[nAME][sCOPE], [mODIFIER]_[vALUE] ) )
 ","[->][tYPE]_Abort( p[cONTAINER], &pStm->[nAME][tYPE] );
 "
 substm_decl,,,"[->]bResult |= [tYPE]_StateDefaultTrans( p[cONTAINER], &pStm->[nAME][tYPE] );
-","[->][tYPE]_Reset( p[tYPE], [sCOPE]_[vALUE] );
+","[->][Scope]_Reset( p[tYPE], pStm->base.pParentStm, pStm->base.pParentStm->pParentStm, [mODIFIER]_[vALUE] );
 ","[->][Scope]_Reset( p[tYPE], &pStm->[nAME][sCOPE], &pStm->base, [mODIFIER]_[vALUE] );
 "
 history,,,"[->]pStm->n[nAME]History = [sCOPE]_[vALUE];
@@ -480,8 +480,7 @@ BOOL [tYPE]_IsIn( [tYPE]* p[tYPE], uint64_t nState ){
 }
 ","[->]pStm->base.bIsExternTrans = TRUE;
 ","[->]if( [tYPE]_IsIn( &pStm->[nAME][tYPE], nCompositeState ) ){ return TRUE; }
-","[->]if( [sCOPE]_Reset( p[cONTAINER], &pStm->[nAME][sCOPE], &pStm->base, nEntryPoint ) ){ return TRUE; }
-",
+",,
 friend,,,,,
 visibility,,,,,
 object,"Sprite* g_objects[] = {
