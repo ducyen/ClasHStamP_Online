@@ -297,7 +297,7 @@ state_exit,"static void [Scope]_BgnTrans( [tYPE] *p[tYPE], [sCOPE]* pStm, uint64
 state_impl,"static int [sCOPE]_IsFinished([sCOPE]* p[sCOPE]){
     return p[sCOPE]->base.nCurrentState == [sCOPE]_[nAME] && p[sCOPE]->base.nCurrentState == p[sCOPE]->base.nPseudostate;
 }
-static BOOL [Scope]_Reset( [tYPE]* p[tYPE], [sCOPE]* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
+BOOL [Scope]_Reset( [tYPE]* p[tYPE], [sCOPE]* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
     pStm->base.pParentStm = pParentStm;
     if( nEntryPoint == STATE_UNDEF ){
         if( [Scope]_IsFinished( &pStm->base ) ){
@@ -411,7 +411,6 @@ inheritance,,,,,
 template,,,,,
 statemachine,,,,"static void [nAME]_BgnTrans( [cONTAINER] *p[tYPE], [nAME]* pStm, uint64_t targetState, uint64_t initState );
 static void [nAME]_EndTrans( [cONTAINER] *p[tYPE], [nAME]* pStm );
-static BOOL [nAME]_Reset( [cONTAINER]* p[tYPE], [nAME]* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 static BOOL [nAME]_Abort( [cONTAINER]* p[tYPE], [nAME]* pStm );
 static BOOL [nAME]_EventProc( [cONTAINER]* p[tYPE], [nAME]* pStm, [cONTAINER]_EVENT nEventId, void* pEventParams );
 static BOOL [nAME]_RunToCompletion( [cONTAINER]* p[tYPE], [nAME]* pStm );

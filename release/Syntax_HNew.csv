@@ -50,15 +50,15 @@ attr_group,"[cONTAINER]* [nAME]_Copy( [nAME]* p[nAME], const [nAME]* pSource );
 /** @class [nAME]
  * @extends [tYPE]
  */
+struct tag[nAME]{
 #define [nAME]_CLASS[->96]\
 ","    const [cONTAINER]Vtbl* const vTbl;[->96]\
     size_t cbSize;[->96]\
 ","    [cONTAINER]_CLASS[->96]\
 ","    size_t cbSize;[->96]\
 ","
-typedef struct tag[nAME]{
     [nAME]_CLASS    
-}[nAME];
+};
 "
 ctor_call,")\
     [cONTAINER]_Init( [vALUE] )\
@@ -199,6 +199,7 @@ statemachine,"#define __HdStateMachine_INTERNAL__
 typedef struct tag[nAME] {
     HdStateMachine base;
 ","}[nAME];
+BOOL [nAME]_Reset( [cONTAINER]* p[tYPE], [nAME]* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 #define [nAME]_Init() {\
     .base = { HdStateMachine_Init( [nAME]_[tYPE], [nAME]_[tYPE] ) },\
 [vALUE]}
