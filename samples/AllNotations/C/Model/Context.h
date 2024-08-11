@@ -45,6 +45,7 @@ BaseClass* Context_Copy( Context* pContext, const Context* pSource );
 /** @class Context
  * @extends BaseClass
  */
+struct tagContext{
 #define Context_CLASS                                                                           \
     BaseClass_CLASS                                                                             \
     String publicAttribute;                                                                                            \
@@ -55,7 +56,6 @@ BaseClass* Context_Copy( Context* pContext, const Context* pSource );
     Aggregration* anAggregation[ 3 ];                           \
     Composition aProtectedComposition[ 10 ];                    \
 
-typedef struct tagContext{
     Context_CLASS    
-}Context;
+};
 #endif//__Context_INTERNAL__

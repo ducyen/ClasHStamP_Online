@@ -24,11 +24,11 @@ ImgSprite* MotorRotor_Copy( MotorRotor* pMotorRotor, const MotorRotor* pSource )
 /** @class MotorRotor
  * @extends ImgSprite
  */
+struct tagMotorRotor{
 #define MotorRotor_CLASS                                                                        \
     ImgSprite_CLASS                                                                             \
     double rotation;                                                                                                          \
 
-typedef struct tagMotorRotor{
     MotorRotor_CLASS    
-}MotorRotor;
+};
 #endif//__MotorRotor_INTERNAL__

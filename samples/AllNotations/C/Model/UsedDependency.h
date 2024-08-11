@@ -16,11 +16,11 @@ UsedDependency* UsedDependency_Copy( UsedDependency* pUsedDependency, const Used
 /** @class UsedDependency
  * @extends 
  */
+struct tagUsedDependency{
 #define UsedDependency_CLASS                                                                    \
     size_t cbSize;                                                                              \
     int attribute6;                                                                                                            \
 
-typedef struct tagUsedDependency{
     UsedDependency_CLASS    
-}UsedDependency;
+};
 #endif//__UsedDependency_INTERNAL__

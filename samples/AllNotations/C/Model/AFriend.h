@@ -18,11 +18,11 @@ AFriend* AFriend_Copy( AFriend* pAFriend, const AFriend* pSource );
 /** @class AFriend
  * @extends 
  */
+struct tagAFriend{
 #define AFriend_CLASS                                                                           \
     size_t cbSize;                                                                              \
     int attribute3;                                                                                                            \
 
-typedef struct tagAFriend{
     AFriend_CLASS    
-}AFriend;
+};
 #endif//__AFriend_INTERNAL__

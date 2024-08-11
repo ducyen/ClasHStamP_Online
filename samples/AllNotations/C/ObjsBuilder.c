@@ -24,7 +24,6 @@ Sprite* g_objects[] = {
         P( "carBody" )                                          /* m_name */,
         P( "CarBody.png" )                                      /* m_imgPath */,
         P( { 0.0, 0.0 } )                                       /* m_center */,
-//        P( 0.0 )                                                /* m_angle */,
         P( null )                                               /* m_constraints */,
         P( null )                                               /* m_mouseListeners */,
         P( &MouseListener_Ctor( 0, CarBody_Start, &carBody, 0, null ) )/* m_onDrawListeners */

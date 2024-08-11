@@ -38,7 +38,6 @@ const TCHAR* CarBodyEvent_toString( CarBody_EVENT value ){
 }
 static void Shared2_Region1_BgnTrans( CarBody *pShared2, Shared2_Region1* pStm, uint64_t targetState, uint64_t initState );
 static void Shared2_Region1_EndTrans( CarBody *pShared2, Shared2_Region1* pStm );
-static BOOL Shared2_Region1_Reset( CarBody* pShared2, Shared2_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 static BOOL Shared2_Region1_Abort( CarBody* pShared2, Shared2_Region1* pStm );
 static BOOL Shared2_Region1_EventProc( CarBody* pShared2, Shared2_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams );
 static BOOL Shared2_Region1_RunToCompletion( CarBody* pShared2, Shared2_Region1* pStm );
@@ -103,9 +102,9 @@ static BOOL Shared2_Region1_RunToCompletion( CarBody* pCarBody, Shared2_Region1*
 static int Shared2_Region1_IsFinished(Shared2_Region1* pShared2_Region1){
     return pShared2_Region1->base.nCurrentState == Shared2_Region1_Shared2 && pShared2_Region1->base.nCurrentState == pShared2_Region1->base.nPseudostate;
 }
-static BOOL Shared2_Region1_Reset( CarBody* pCarBody, Shared2_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
+BOOL Shared2_Region1_Reset( CarBody* pCarBody, Shared2_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
     pStm->base.pParentStm = pParentStm;
-    if( nEntryPoint == NULL ){
+    if( nEntryPoint == STATE_UNDEF ){
         if( Shared2_Region1_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = Shared2_Region1_InitialPseudostate1;
         }
@@ -143,7 +142,6 @@ static BOOL Shared2_Region1_Abort( CarBody* pCarBody, Shared2_Region1* pStm ) {
 }
 static void SharedStm_BgnTrans( CarBody *pSharedTop, SharedStm* pStm, uint64_t targetState, uint64_t initState );
 static void SharedStm_EndTrans( CarBody *pSharedTop, SharedStm* pStm );
-static BOOL SharedStm_Reset( CarBody* pSharedTop, SharedStm* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 static BOOL SharedStm_Abort( CarBody* pSharedTop, SharedStm* pStm );
 static BOOL SharedStm_EventProc( CarBody* pSharedTop, SharedStm* pStm, CarBody_EVENT nEventId, void* pEventParams );
 static BOOL SharedStm_RunToCompletion( CarBody* pSharedTop, SharedStm* pStm );
@@ -159,7 +157,7 @@ static BOOL SharedStm_Shared1_EventProc( CarBody* pCarBody, SharedStm* pStm, Car
     switch( nEventId ){
     case CarBody_E0:{
         SharedStm_BgnTrans( pCarBody, pStm, SharedStm_Shared2, SharedStm_InitialPseudostate0 );
-                CarBody_Reset( pCarBody, Shared2_Region1_State22 );
+                Shared2_Region1_Reset( pCarBody, &pStm->Shared2Shared2_Region1, &pStm->base, Shared2_Region1_State22 );
         SharedStm_EndTrans( pCarBody, pStm );
         bResult = TRUE;
     } break;
@@ -280,15 +278,14 @@ static BOOL SharedStm_RunToCompletion( CarBody* pCarBody, SharedStm* pStm ){
 static int SharedStm_IsFinished(SharedStm* pSharedStm){
     return pSharedStm->base.nCurrentState == SharedStm_SharedTop && pSharedStm->base.nCurrentState == pSharedStm->base.nPseudostate;
 }
-static BOOL SharedStm_Reset( CarBody* pCarBody, SharedStm* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
+BOOL SharedStm_Reset( CarBody* pCarBody, SharedStm* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
     pStm->base.pParentStm = pParentStm;
-    if( nEntryPoint == NULL ){
+    if( nEntryPoint == STATE_UNDEF ){
         if( SharedStm_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = SharedStm_InitPt;
         }
         return FALSE;
     }else{
-    if( Shared2_Region1_Reset( pCarBody, &pStm->Shared2Shared2_Region1, &pStm->base, nEntryPoint ) ){ return TRUE; }
     if( !IS_IN( nEntryPoint, SharedStm_SharedTop ) ){ return FALSE; }
         if( SharedStm_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = nEntryPoint;
@@ -325,7 +322,6 @@ static BOOL SharedStm_Abort( CarBody* pCarBody, SharedStm* pStm ) {
 }
 static void S8_Region1_BgnTrans( CarBody *pS8, S8_Region1* pStm, uint64_t targetState, uint64_t initState );
 static void S8_Region1_EndTrans( CarBody *pS8, S8_Region1* pStm );
-static BOOL S8_Region1_Reset( CarBody* pS8, S8_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 static BOOL S8_Region1_Abort( CarBody* pS8, S8_Region1* pStm );
 static BOOL S8_Region1_EventProc( CarBody* pS8, S8_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams );
 static BOOL S8_Region1_RunToCompletion( CarBody* pS8, S8_Region1* pStm );
@@ -417,9 +413,9 @@ static BOOL S8_Region1_RunToCompletion( CarBody* pCarBody, S8_Region1* pStm ){
 static int S8_Region1_IsFinished(S8_Region1* pS8_Region1){
     return pS8_Region1->base.nCurrentState == S8_Region1_S8 && pS8_Region1->base.nCurrentState == pS8_Region1->base.nPseudostate;
 }
-static BOOL S8_Region1_Reset( CarBody* pCarBody, S8_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
+BOOL S8_Region1_Reset( CarBody* pCarBody, S8_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
     pStm->base.pParentStm = pParentStm;
-    if( nEntryPoint == NULL ){
+    if( nEntryPoint == STATE_UNDEF ){
         if( S8_Region1_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = S8_Region1_S82Init;
         }
@@ -458,7 +454,6 @@ static BOOL S8_Region1_Abort( CarBody* pCarBody, S8_Region1* pStm ) {
 }
 static void S832_Region1_BgnTrans( CarBody *pS832, S832_Region1* pStm, uint64_t targetState, uint64_t initState );
 static void S832_Region1_EndTrans( CarBody *pS832, S832_Region1* pStm );
-static BOOL S832_Region1_Reset( CarBody* pS832, S832_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 static BOOL S832_Region1_Abort( CarBody* pS832, S832_Region1* pStm );
 static BOOL S832_Region1_EventProc( CarBody* pS832, S832_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams );
 static BOOL S832_Region1_RunToCompletion( CarBody* pS832, S832_Region1* pStm );
@@ -523,9 +518,9 @@ static BOOL S832_Region1_RunToCompletion( CarBody* pCarBody, S832_Region1* pStm 
 static int S832_Region1_IsFinished(S832_Region1* pS832_Region1){
     return pS832_Region1->base.nCurrentState == S832_Region1_S832 && pS832_Region1->base.nCurrentState == pS832_Region1->base.nPseudostate;
 }
-static BOOL S832_Region1_Reset( CarBody* pCarBody, S832_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
+BOOL S832_Region1_Reset( CarBody* pCarBody, S832_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
     pStm->base.pParentStm = pParentStm;
-    if( nEntryPoint == NULL ){
+    if( nEntryPoint == STATE_UNDEF ){
         if( S832_Region1_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = S832_Region1_InitialPseudostate1;
         }
@@ -563,7 +558,6 @@ static BOOL S832_Region1_Abort( CarBody* pCarBody, S832_Region1* pStm ) {
 }
 static void S8_Region2_BgnTrans( CarBody *pS8, S8_Region2* pStm, uint64_t targetState, uint64_t initState );
 static void S8_Region2_EndTrans( CarBody *pS8, S8_Region2* pStm );
-static BOOL S8_Region2_Reset( CarBody* pS8, S8_Region2* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 static BOOL S8_Region2_Abort( CarBody* pS8, S8_Region2* pStm );
 static BOOL S8_Region2_EventProc( CarBody* pS8, S8_Region2* pStm, CarBody_EVENT nEventId, void* pEventParams );
 static BOOL S8_Region2_RunToCompletion( CarBody* pS8, S8_Region2* pStm );
@@ -581,7 +575,7 @@ static BOOL S8_Region2_S831_EventProc( CarBody* pCarBody, S8_Region2* pStm, CarB
         if (CarBody_IsIn( pCarBody, S8_Region1_S821 )
          && CarBody_IsIn( pCarBody, MainStm_S811 )) {
             S8_Region2_BgnTrans( pCarBody, pStm, S8_Region2_S832, S8_Region2_InitialPseudostate0 );
-                        CarBody_Reset( pCarBody, MainStm_S812 );
+                        MainStm_Reset( pCarBody, pStm->base.pParentStm, pStm->base.pParentStm->pParentStm, MainStm_S812 );
             S8_Region2_EndTrans( pCarBody, pStm );
             bResult = TRUE;
         }
@@ -607,7 +601,7 @@ static BOOL S8_Region2_S832_EventProc( CarBody* pCarBody, S8_Region2* pStm, CarB
     ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	627	536	211	91	10	-24	1235	686" );
     switch( nEventId ){
     case CarBody_E0:{
-        CarBody_Reset( pCarBody, MainStm_S10 );
+        MainStm_Reset( pCarBody, pStm->base.pParentStm, pStm->base.pParentStm->pParentStm, MainStm_S10 );
     } break;
     default: break;
     }
@@ -691,15 +685,14 @@ static BOOL S8_Region2_RunToCompletion( CarBody* pCarBody, S8_Region2* pStm ){
 static int S8_Region2_IsFinished(S8_Region2* pS8_Region2){
     return pS8_Region2->base.nCurrentState == S8_Region2_S8 && pS8_Region2->base.nCurrentState == pS8_Region2->base.nPseudostate;
 }
-static BOOL S8_Region2_Reset( CarBody* pCarBody, S8_Region2* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
+BOOL S8_Region2_Reset( CarBody* pCarBody, S8_Region2* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
     pStm->base.pParentStm = pParentStm;
-    if( nEntryPoint == NULL ){
+    if( nEntryPoint == STATE_UNDEF ){
         if( S8_Region2_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = S8_Region2_S83Init;
         }
         return FALSE;
     }else{
-    if( S832_Region1_Reset( pCarBody, &pStm->S832S832_Region1, &pStm->base, nEntryPoint ) ){ return TRUE; }
     if( !IS_IN( nEntryPoint, S8_Region2_S8 ) ){ return FALSE; }
         if( S8_Region2_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = nEntryPoint;
@@ -736,7 +729,6 @@ static BOOL S8_Region2_Abort( CarBody* pCarBody, S8_Region2* pStm ) {
 }
 static void MainStm_BgnTrans( CarBody *pMainTop_0, MainStm* pStm, uint64_t targetState, uint64_t initState );
 static void MainStm_EndTrans( CarBody *pMainTop_0, MainStm* pStm );
-static BOOL MainStm_Reset( CarBody* pMainTop_0, MainStm* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 static BOOL MainStm_Abort( CarBody* pMainTop_0, MainStm* pStm );
 static BOOL MainStm_EventProc( CarBody* pMainTop_0, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams );
 static BOOL MainStm_RunToCompletion( CarBody* pMainTop_0, MainStm* pStm );
@@ -1050,7 +1042,7 @@ static BOOL MainStm_S812_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EV
         E1Params* e = ( E1Params* )pEventParams;
         if (CarBody_IsIn( pCarBody, S8_Region1_S821 )) {
             MainStm_BgnTrans( pCarBody, pStm, MainStm_S813, STATE_UNDEF );
-                        CarBody_Reset( pCarBody, S8_Region1_S822 );
+                        S8_Region1_Reset( pCarBody, &pStm->S8S8_Region1, &pStm->base, S8_Region1_S822 );
             MainStm_EndTrans( pCarBody, pStm );
             bResult = TRUE;
         }
@@ -1144,8 +1136,8 @@ static BOOL MainStm_S7_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVEN
     } break;
     case CarBody_E3:{
         MainStm_BgnTrans( pCarBody, pStm, MainStm_S8, MainStm_S8Init );
-                CarBody_Reset( pCarBody, S8_Region1_S821 );
-                CarBody_Reset( pCarBody, S8_Region2_S831 );
+                S8_Region1_Reset( pCarBody, &pStm->S8S8_Region1, &pStm->base, S8_Region1_S821 );
+                S8_Region2_Reset( pCarBody, &pStm->S8S8_Region2, &pStm->base, S8_Region2_S831 );
         MainStm_EndTrans( pCarBody, pStm );
         bResult = TRUE;
     } break;
@@ -1260,7 +1252,7 @@ static BOOL MainStm_S10_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVE
     } break;
     case CarBody_E2:{
         MainStm_BgnTrans( pCarBody, pStm, MainStm_S8, MainStm_S8Init );
-                CarBody_Reset( pCarBody, S8_Region2_InitialPseudostate0 );
+                S8_Region2_Reset( pCarBody, &pStm->S8S8_Region2, &pStm->base, S8_Region2_InitialPseudostate0 );
         MainStm_EndTrans( pCarBody, pStm );
         bResult = TRUE;
     } break;
@@ -1477,18 +1469,14 @@ static BOOL MainStm_RunToCompletion( CarBody* pCarBody, MainStm* pStm ){
 static int MainStm_IsFinished(MainStm* pMainStm){
     return pMainStm->base.nCurrentState == MainStm_MainTop_0 && pMainStm->base.nCurrentState == pMainStm->base.nPseudostate;
 }
-static BOOL MainStm_Reset( CarBody* pCarBody, MainStm* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
+BOOL MainStm_Reset( CarBody* pCarBody, MainStm* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
     pStm->base.pParentStm = pParentStm;
-    if( nEntryPoint == NULL ){
+    if( nEntryPoint == STATE_UNDEF ){
         if( MainStm_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = MainStm_MainStmInit;
         }
         return FALSE;
     }else{
-    if( SharedStm_Reset( pCarBody, &pStm->S6SharedStm, &pStm->base, nEntryPoint ) ){ return TRUE; }
-    if( S8_Region1_Reset( pCarBody, &pStm->S8S8_Region1, &pStm->base, nEntryPoint ) ){ return TRUE; }
-    if( S8_Region2_Reset( pCarBody, &pStm->S8S8_Region2, &pStm->base, nEntryPoint ) ){ return TRUE; }
-    if( SharedStm_Reset( pCarBody, &pStm->S9SharedStm, &pStm->base, nEntryPoint ) ){ return TRUE; }
     if( !IS_IN( nEntryPoint, MainStm_MainTop_0 ) ){ return FALSE; }
         if( MainStm_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = nEntryPoint;

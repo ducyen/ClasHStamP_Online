@@ -22,11 +22,11 @@ ImgSprite* CarWheel_Copy( CarWheel* pCarWheel, const CarWheel* pSource );
 /** @class CarWheel
  * @extends ImgSprite
  */
+struct tagCarWheel{
 #define CarWheel_CLASS                                                                          \
     ImgSprite_CLASS                                                                             \
     double rotation;                                                                                                          \
 
-typedef struct tagCarWheel{
     CarWheel_CLASS    
-}CarWheel;
+};
 #endif//__CarWheel_INTERNAL__

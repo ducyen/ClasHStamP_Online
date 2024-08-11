@@ -16,11 +16,11 @@ Composition* Composition_Copy( Composition* pComposition, const Composition* pSo
 /** @class Composition
  * @extends 
  */
+struct tagComposition{
 #define Composition_CLASS                                                                       \
     size_t cbSize;                                                                              \
     int attribute4;                                                                                                            \
 
-typedef struct tagComposition{
     Composition_CLASS    
-}Composition;
+};
 #endif//__Composition_INTERNAL__

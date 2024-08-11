@@ -16,10 +16,10 @@ Interface2* Interface2_Copy( Interface2* pInterface2, const Interface2* pSource 
 /** @class Interface2
  * @extends 
  */
+struct tagInterface2{
 #define Interface2_CLASS                                                                        \
     size_t cbSize;                                                                              \
 
-typedef struct tagInterface2{
     Interface2_CLASS    
-}Interface2;
+};
 #endif//__Interface2_INTERNAL__

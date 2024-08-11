@@ -25,6 +25,7 @@ Constraint* Constraint_Copy( Constraint* pConstraint, const Constraint* pSource 
 /** @class Constraint
  * @extends 
  */
+struct tagConstraint{
 #define Constraint_CLASS                                                                        \
     const ConstraintVtbl* const vTbl;                                                           \
     size_t cbSize;                                                                              \
@@ -32,7 +33,6 @@ Constraint* Constraint_Copy( Constraint* pConstraint, const Constraint* pSource 
     float m_influence;                                                                                                      \
     Constraint* m_next;                                         \
 
-typedef struct tagConstraint{
     Constraint_CLASS    
-}Constraint;
+};
 #endif//__Constraint_INTERNAL__

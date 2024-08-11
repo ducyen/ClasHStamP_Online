@@ -41,6 +41,7 @@ typedef struct tagShared2_Region1 {
 #define Shared2_Region1_State22                 ( 1ULL <<  1 )
 #define Shared2_Region1_InitialPseudostate1     ( 1ULL <<  2 )
 }Shared2_Region1;
+BOOL Shared2_Region1_Reset( CarBody* pShared2, Shared2_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 #define Shared2_Region1_Init() {\
     .base = { HdStateMachine_Init( Shared2_Region1_Shared2, Shared2_Region1_Shared2 ) },\
 }
@@ -61,6 +62,7 @@ typedef struct tagSharedStm {
 #define SharedStm_Shared2_Dmy                   ( 1ULL << 10 )
 #define SharedStm_Shared2                       ( SharedStm_Shared2_Dmy | SharedStm_SHared21 | SharedStm_InitialPseudostate0 )
 }SharedStm;
+BOOL SharedStm_Reset( CarBody* pSharedTop, SharedStm* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 #define SharedStm_Init() {\
     .base = { HdStateMachine_Init( SharedStm_SharedTop, SharedStm_SharedTop ) },\
     .Shared2Shared2_Region1 = Shared2_Region1_Init(),\
@@ -76,6 +78,7 @@ typedef struct tagS8_Region1 {
 #define S8_Region1_S821                         ( 1ULL << 13 )
 #define S8_Region1_S822                         ( 1ULL << 14 )
 }S8_Region1;
+BOOL S8_Region1_Reset( CarBody* pS8, S8_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 #define S8_Region1_Init() {\
     .base = { HdStateMachine_Init( S8_Region1_S8, S8_Region1_S8 ) },\
 }
@@ -89,6 +92,7 @@ typedef struct tagS832_Region1 {
 #define S832_Region1_S8322                      ( 1ULL << 16 )
 #define S832_Region1_InitialPseudostate1        ( 1ULL << 17 )
 }S832_Region1;
+BOOL S832_Region1_Reset( CarBody* pS832, S832_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 #define S832_Region1_Init() {\
     .base = { HdStateMachine_Init( S832_Region1_S832, S832_Region1_S832 ) },\
 }
@@ -107,6 +111,7 @@ typedef struct tagS8_Region2 {
 #define S8_Region2_S832_Dmy                     ( 1ULL << 23 )
 #define S8_Region2_S832                         ( S8_Region2_S832_Dmy | S8_Region2_S8321 | S8_Region2_InitialPseudostate0 )
 }S8_Region2;
+BOOL S8_Region2_Reset( CarBody* pS8, S8_Region2* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 #define S8_Region2_Init() {\
     .base = { HdStateMachine_Init( S8_Region2_S8, S8_Region2_S8 ) },\
     .S832S832_Region1 = S832_Region1_Init(),\
@@ -158,6 +163,7 @@ typedef struct tagMainStm {
 #define MainStm_S7_Dmy                          ( 1ULL << 52 )
 #define MainStm_S7                              ( MainStm_S7_Dmy | MainStm_S72 | MainStm_S71 | MainStm_S7Init )
 }MainStm;
+BOOL MainStm_Reset( CarBody* pMainTop_0, MainStm* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 #define MainStm_Init() {\
     .base = { HdStateMachine_Init( MainStm_MainTop_0, MainStm_MainTop_0 ) },\
     .S6SharedStm = SharedStm_Init(),\
@@ -184,12 +190,12 @@ ImgSprite* CarBody_Copy( CarBody* pCarBody, const CarBody* pSource );
 /** @class CarBody
  * @extends ImgSprite
  */
+struct tagCarBody{
 #define CarBody_CLASS                                                                           \
     ImgSprite_CLASS                                                                             \
     int x;                                                                                                                              \
     MainStm mainStm;                                            
 
-typedef struct tagCarBody{
     CarBody_CLASS    
-}CarBody;
+};
 #endif//__CarBody_INTERNAL__

@@ -22,11 +22,11 @@ ImgSprite* WindscreenWiper_Copy( WindscreenWiper* pWindscreenWiper, const Windsc
 /** @class WindscreenWiper
  * @extends ImgSprite
  */
+struct tagWindscreenWiper{
 #define WindscreenWiper_CLASS                                                                   \
     ImgSprite_CLASS                                                                             \
     int x;                                                                                                                              \
 
-typedef struct tagWindscreenWiper{
     WindscreenWiper_CLASS    
-}WindscreenWiper;
+};
 #endif//__WindscreenWiper_INTERNAL__

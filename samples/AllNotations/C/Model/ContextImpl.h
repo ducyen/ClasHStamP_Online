@@ -22,10 +22,10 @@ Context* ContextImpl_Copy( ContextImpl* pContextImpl, const ContextImpl* pSource
 /** @class ContextImpl
  * @extends Context
  */
+struct tagContextImpl{
 #define ContextImpl_CLASS                                                                       \
     Context_CLASS                                                                               \
 
-typedef struct tagContextImpl{
     ContextImpl_CLASS    
-}ContextImpl;
+};
 #endif//__ContextImpl_INTERNAL__

@@ -21,10 +21,10 @@ TransformConstraint* TrackToConstraint_Copy( TrackToConstraint* pTrackToConstrai
 /** @class TrackToConstraint
  * @extends TransformConstraint
  */
+struct tagTrackToConstraint{
 #define TrackToConstraint_CLASS                                                                 \
     TransformConstraint_CLASS                                                                   \
 
-typedef struct tagTrackToConstraint{
     TrackToConstraint_CLASS    
-}TrackToConstraint;
+};
 #endif//__TrackToConstraint_INTERNAL__

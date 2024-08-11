@@ -21,10 +21,10 @@ Sprite* Primitive_Copy( Primitive* pPrimitive, const Primitive* pSource );
 /** @class Primitive
  * @extends Sprite
  */
+struct tagPrimitive{
 #define Primitive_CLASS                                                                         \
     Sprite_CLASS                                                                                \
 
-typedef struct tagPrimitive{
     Primitive_CLASS    
-}Primitive;
+};
 #endif//__Primitive_INTERNAL__

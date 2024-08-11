@@ -21,10 +21,10 @@ EventListener* MouseListener_Copy( MouseListener* pMouseListener, const MouseLis
 /** @class MouseListener
  * @extends EventListener
  */
+struct tagMouseListener{
 #define MouseListener_CLASS                                                                     \
     EventListener_CLASS                                                                         \
 
-typedef struct tagMouseListener{
     MouseListener_CLASS    
-}MouseListener;
+};
 #endif//__MouseListener_INTERNAL__

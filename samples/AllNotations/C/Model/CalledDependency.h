@@ -16,11 +16,11 @@ CalledDependency* CalledDependency_Copy( CalledDependency* pCalledDependency, co
 /** @class CalledDependency
  * @extends 
  */
+struct tagCalledDependency{
 #define CalledDependency_CLASS                                                                  \
     size_t cbSize;                                                                              \
     int attribute0;                                                                                                            \
 
-typedef struct tagCalledDependency{
     CalledDependency_CLASS    
-}CalledDependency;
+};
 #endif//__CalledDependency_INTERNAL__

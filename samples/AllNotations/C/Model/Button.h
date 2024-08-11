@@ -19,10 +19,10 @@ ImgSprite* Button_Copy( Button* pButton, const Button* pSource );
 /** @class Button
  * @extends ImgSprite
  */
+struct tagButton{
 #define Button_CLASS                                                                            \
     ImgSprite_CLASS                                                                             \
 
-typedef struct tagButton{
     Button_CLASS    
-}Button;
+};
 #endif//__Button_INTERNAL__

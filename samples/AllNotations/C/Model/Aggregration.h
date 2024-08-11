@@ -16,11 +16,11 @@ Aggregration* Aggregration_Copy( Aggregration* pAggregration, const Aggregration
 /** @class Aggregration
  * @extends 
  */
+struct tagAggregration{
 #define Aggregration_CLASS                                                                      \
     size_t cbSize;                                                                              \
     int attribute2;                                                                                                            \
 
-typedef struct tagAggregration{
     Aggregration_CLASS    
-}Aggregration;
+};
 #endif//__Aggregration_INTERNAL__

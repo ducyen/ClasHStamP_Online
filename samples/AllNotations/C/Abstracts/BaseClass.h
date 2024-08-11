@@ -24,12 +24,12 @@ BaseClass* BaseClass_Copy( BaseClass* pBaseClass, const BaseClass* pSource );
 /** @class BaseClass
  * @extends 
  */
+struct tagBaseClass{
 #define BaseClass_CLASS                                                                         \
     const BaseClassVtbl* const vTbl;                                                            \
     size_t cbSize;                                                                              \
     int derivableAttribute;                                                                                            \
 
-typedef struct tagBaseClass{
     BaseClass_CLASS    
-}BaseClass;
+};
 #endif//__BaseClass_INTERNAL__

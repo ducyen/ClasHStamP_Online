@@ -19,10 +19,10 @@ ImgSprite* Lever_Copy( Lever* pLever, const Lever* pSource );
 /** @class Lever
  * @extends ImgSprite
  */
+struct tagLever{
 #define Lever_CLASS                                                                             \
     ImgSprite_CLASS                                                                             \
 
-typedef struct tagLever{
     Lever_CLASS    
-}Lever;
+};
 #endif//__Lever_INTERNAL__

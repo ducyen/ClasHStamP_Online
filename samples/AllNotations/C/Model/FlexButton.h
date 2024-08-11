@@ -47,6 +47,7 @@ typedef struct tagReady_Region1 {
 #define Ready_Region1_Hold_Dmy                  ( 1ULL <<  6 )
 #define Ready_Region1_Hold                      ( Ready_Region1_Hold_Dmy | Ready_Region1_UnPressed | Ready_Region1_Pressed )
 }Ready_Region1;
+BOOL Ready_Region1_Reset( FlexButton* pReady, Ready_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 #define Ready_Region1_Init() {\
     .base = { HdStateMachine_Init( Ready_Region1_Ready, Ready_Region1_Ready ) },\
 }
@@ -68,6 +69,7 @@ typedef struct tagFlexBtnStm {
 #define FlexBtnStm_Ready_Dmy                    ( 1ULL << 14 )
 #define FlexBtnStm_Ready                        ( FlexBtnStm_Ready_Dmy | FlexBtnStm_PushStyle | FlexBtnStm_SelectStyle | FlexBtnStm_SlideStyle | FlexBtnStm_ToggleStyle | FlexBtnStm_InitialReady )
 }FlexBtnStm;
+BOOL FlexBtnStm_Reset( FlexButton* pStateMachine0, FlexBtnStm* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 #define FlexBtnStm_Init() {\
     .base = { HdStateMachine_Init( FlexBtnStm_StateMachine0, FlexBtnStm_StateMachine0 ) },\
     .ReadyReady_Region1 = Ready_Region1_Init(),\
@@ -99,6 +101,7 @@ Sprite* FlexButton_Copy( FlexButton* pFlexButton, const FlexButton* pSource );
 /** @class FlexButton
  * @extends Sprite
  */
+struct tagFlexButton{
 #define FlexButton_CLASS                                                                        \
     Sprite_CLASS                                                                                \
     int m_value;                                                                                                                  \
@@ -110,7 +113,6 @@ Sprite* FlexButton_Copy( FlexButton* pFlexButton, const FlexButton* pSource );
     EventListener* m_buttonListeners;                           \
     FlexBtnStm mainStm;                                         
 
-typedef struct tagFlexButton{
     FlexButton_CLASS    
-}FlexButton;
+};
 #endif//__FlexButton_INTERNAL__

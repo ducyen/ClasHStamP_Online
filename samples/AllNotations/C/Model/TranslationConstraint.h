@@ -21,10 +21,10 @@ TransformConstraint* TranslationConstraint_Copy( TranslationConstraint* pTransla
 /** @class TranslationConstraint
  * @extends TransformConstraint
  */
+struct tagTranslationConstraint{
 #define TranslationConstraint_CLASS                                                             \
     TransformConstraint_CLASS                                                                   \
 
-typedef struct tagTranslationConstraint{
     TranslationConstraint_CLASS    
-}TranslationConstraint;
+};
 #endif//__TranslationConstraint_INTERNAL__

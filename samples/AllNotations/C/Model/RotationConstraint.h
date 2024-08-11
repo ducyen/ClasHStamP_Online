@@ -21,10 +21,10 @@ TransformConstraint* RotationConstraint_Copy( RotationConstraint* pRotationConst
 /** @class RotationConstraint
  * @extends TransformConstraint
  */
+struct tagRotationConstraint{
 #define RotationConstraint_CLASS                                                                \
     TransformConstraint_CLASS                                                                   \
 
-typedef struct tagRotationConstraint{
     RotationConstraint_CLASS    
-}RotationConstraint;
+};
 #endif//__RotationConstraint_INTERNAL__
