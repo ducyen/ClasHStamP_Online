@@ -298,7 +298,9 @@ state_impl,"static int [sCOPE]_IsFinished([sCOPE]* p[sCOPE]){
     return p[sCOPE]->base.nCurrentState == [sCOPE]_[nAME] && p[sCOPE]->base.nCurrentState == p[sCOPE]->base.nPseudostate;
 }
 BOOL [Scope]_Reset( [tYPE]* p[tYPE], [sCOPE]* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
-    pStm->base.pParentStm = pParentStm;
+    if( pParentStm != NULL ){
+        pStm->base.pParentStm = pParentStm;
+    }
     if( nEntryPoint == STATE_UNDEF ){
         if( [Scope]_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = [sCOPE]_[mODIFIER];
@@ -444,12 +446,13 @@ substm_impl,"[->]if( ![sCOPE]_IsIn( &pStm->[nAME][sCOPE], [mODIFIER]_[vALUE] ) )
 ","[->][tYPE]_Abort( p[cONTAINER], &pStm->[nAME][tYPE] );
 "
 substm_decl,,,"[->]bResult |= [tYPE]_StateDefaultTrans( p[cONTAINER], &pStm->[nAME][tYPE] );
-","[->][Scope]_Reset( p[tYPE], pStm->base.pParentStm, pStm->base.pParentStm->pParentStm, [mODIFIER]_[vALUE] );
+","[->][Scope]_Reset( p[tYPE], pStm->base.pParentStm, NULL, [mODIFIER]_[vALUE] );
 ","[->][Scope]_Reset( p[tYPE], &pStm->[nAME][sCOPE], &pStm->base, [mODIFIER]_[vALUE] );
 "
-history,,,"[->]pStm->n[nAME]History = [sCOPE]_[vALUE];
+history,,,"[->]pStm->n[nAME]History &= ~[sCOPE]_[cONTAINER];
+[->]pStm->n[nAME]History |= [sCOPE]_[vALUE];
 ","[->]if( pStm->n[nAME]History && pStm->n[nAME]History != [Scope]_[nAME] ){
-[->]    [Scope]_BgnTrans( p[tYPE], pStm, pStm->n[nAME]History, STATE_UNDEF );
+[->]    [Scope]_BgnTrans( p[tYPE], pStm, pStm->n[nAME]History & [sCOPE]_[cONTAINER], STATE_UNDEF );
 [mODIFIER][->]    [Scope]_EndTrans( p[tYPE], pStm );
 [->]    bResult = TRUE;
 [->]    break;
@@ -458,6 +461,10 @@ history,,,"[->]pStm->n[nAME]History = [sCOPE]_[vALUE];
 [mODIFIER][->][Scope]_EndTrans( p[tYPE], pStm );
 [->]bResult = TRUE;
 "
+deep_hist,,,"[->](([mODIFIER]*)pStm->base.pParentStm)->n[nAME]History &= ~[sCOPE]_[cONTAINER];
+[->](([mODIFIER]*)pStm->base.pParentStm)->n[nAME]History |= [sCOPE]_[vALUE];
+","[->][tYPE]_Reset( p[cONTAINER], &pStm->[vALUE][tYPE], &pStm->base, pStm->n[nAME]History & [tYPE]_[vALUE] );
+",
 junction,"[->]pStm->base.nPseudostate = [sCOPE]_[vALUE];
 ","[->]do{   if( pStm->base.nPseudostate == [cONTAINER]_[nAME] ){
 ","[->]}else if( pStm->base.nPseudostate == [cONTAINER]_[nAME] ){
@@ -479,7 +486,8 @@ BOOL [tYPE]_IsIn( [tYPE]* p[tYPE], uint64_t nState ){
 }
 ","[->]pStm->base.bIsExternTrans = TRUE;
 ","[->]if( [tYPE]_IsIn( &pStm->[nAME][tYPE], nCompositeState ) ){ return TRUE; }
-",,
+","[->][Scope]_Reset( p[tYPE], &(([cONTAINER]*)pStm->base.pParentStm)->[nAME][sCOPE], &pStm->base, [mODIFIER]_[vALUE] );
+",
 friend,,,,,
 visibility,,,,,
 object,"Sprite* g_objects[] = {

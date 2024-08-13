@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   width="8.8454695mm"
-   height="8.8454733mm"
-   viewBox="0 0 8.8454695 8.8454731"
+   width="12.083138mm"
+   height="12.083139mm"
+   viewBox="0 0 12.083138 12.083139"
    version="1.1"
    id="svg8"
    xml:space="preserve"
@@ -18,14 +18,15 @@
          id="stop10" /></linearGradient></defs><metadata
      id="metadata5"><rdf:RDF><cc:Work
          rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><g
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work></rdf:RDF></metadata><g
      id="layer1"
-     transform="translate(-108.61583,-42.068393)"><g
-       id="g67"><circle
+     transform="translate(-106.997,-40.449563)"><g
+       id="g67"
+       transform="rotate(30,113.03856,46.491131)"><circle
          style="fill:none;stroke:#000000;stroke-width:0.264999;stroke-linecap:round;stroke-linejoin:bevel;stroke-dasharray:none"
          id="center"
          cx="113.03857"
-         cy="46.491131"
+         cy="46.491135"
          r="4.1577382" /><path
          id="collider"
          style="fill:none;stroke:#000000;stroke-width:0.264999"

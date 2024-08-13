@@ -215,6 +215,38 @@ void startTimer( int tmout ){
 }
 
 int main(int argc, char **argv){
+
+    enum{
+        A0,
+        A1,
+        A_MAX
+    };
+#ifndef S_LAST
+#undef  S_LAST
+#endif
+#define S_LAST A_MAX
+
+
+    enum{
+        B0 = S_LAST,
+        B1,
+        B_MAX
+    };
+#ifndef S_LAST
+#undef  S_LAST
+#endif
+#define S_LAST B_MAX
+
+    enum{
+        C0 = S_LAST,
+        C1,
+        C_MAX
+    };
+#ifndef S_LAST
+#undef  S_LAST
+#endif
+#define S_LAST C_MAX
+
     if (argc >= 3) {
         g_sInputDir  = argv[ 1 ];
         g_sOutputDir = argv[ 2 ];
