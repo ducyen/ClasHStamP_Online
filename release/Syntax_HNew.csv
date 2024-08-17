@@ -170,9 +170,7 @@ event_decl,"typedef enum tag[nAME]Event {
 const TCHAR* [nAME]Event_toString( [nAME]_EVENT value );
 "
 state_decl,"#define [sCOPE]_[nAME] [->48]( 1ULL << [vALUE] )
-","#define [sCOPE]_[nAME]_Dmy [->48]( 1ULL << [mODIFIER] )
-#define [sCOPE]_[nAME] [->48]( [sCOPE]_[nAME]_Dmy | [sCOPE]_[vALUE]", | [sCOPE]_[vALUE],"#define [sCOPE]_[nAME] [->48]( 1ULL << ( MAX_STATE_NUM - [vALUE] ) )
-"," )
+",#define [sCOPE]_[nAME] [->48]( [sCOPE]_[vALUE], | [sCOPE]_[vALUE],," )
 "
 state_entry,,,,,
 state_exit,,,,,
