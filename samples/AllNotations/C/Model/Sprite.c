@@ -70,7 +70,6 @@ Sprite* Sprite_Copy( Sprite* pSprite, const Sprite* pSource ){
     pSprite->m_image = pSource->m_image;
     pSprite->m_rect = pSource->m_rect;
     pSprite->m_updated = pSource->m_updated;
-    pSprite->m_angle = pSource->m_angle;
     pSprite->m_offset = pSource->m_offset;
     pSprite->m_brightness = pSource->m_brightness;
     pSprite->m_stmUpdated = pSource->m_stmUpdated;

@@ -7,11 +7,7 @@
 #include "AttachmentConstraint.h"                               
 #include "RotationConstraint.h"                                 
 #include "TrackToConstraint.h"                                  
-#include "CarWheel.h"                                           
 #include "CarBody.h"                                            
-#include "WindscreenWiper.h"                                    
-#include "MotorRotor.h"                                         
-#include "Lever.h"                                              
 #include "FlexButton.h"                                         
 #include "Button.h"                                             
 #include "MouseListener.h"                                      
@@ -33,7 +29,6 @@ Sprite* g_objects[] = {
         P( { 0.3460451977401129, 0.23900862068965517, 0.1101694915254239, 0.06896551724137931 } )/* m_iniRect */,
         P( "toggleBtn" )                                        /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
-        P( 0.0 )                                                /* m_angle */,
         P( 1 )                                                  /* m_valueMax */,
         P( FlexBtnStm_ToggleStyle )                             /* m_style */,
         P( &MouseListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleBtn, FlexButton_MOUSE_DOWN, &MouseListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleBtn, FlexButton_MOUSE_UP, &MouseListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleBtn, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,

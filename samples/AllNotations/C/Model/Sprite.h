@@ -20,7 +20,6 @@ bool Sprite_isUpdated( Sprite* pSprite );
     .m_image = null,\
     .m_rect = { 0 },\
     .m_updated = false,\
-    .m_angle = 0,\
     .m_offset = { 0 },\
     .m_brightness = 1.,\
     .m_stmUpdated = false,\
@@ -53,7 +52,6 @@ struct tagSprite{
     SDL_Texture* m_image;                                                                                                \
     SDL_Rect m_rect;                                                                                                          \
     bool m_updated;                                                                                                            \
-    double m_angle;                                                                                                            \
     SDL_Point m_offset;                                                                                                    \
     double m_brightness;                                                                                                  \
     bool* m_stmUpdated;                                                                                                    \
