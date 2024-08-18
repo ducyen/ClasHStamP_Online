@@ -63,6 +63,23 @@ bool Sprite_isUpdated(
     return pSprite->m_updated;
 } /* Sprite_isUpdated */
 
+/** @public @pure @memberof Sprite */
+const SDL_Point* Sprite_getCenter(
+    Sprite* pSprite
+){
+    if( pSprite->vTbl == NULL || pSprite->vTbl->pgetCenter == NULL ){ return ( const SDL_Point* )0; }
+    return pSprite->vTbl->pgetCenter( pSprite );
+} /* Sprite_getCenter */
+
+/** @public @pure @memberof Sprite */
+void Sprite_setLabel(
+    Sprite* pSprite,
+    char* value
+){
+    if( pSprite->vTbl == NULL || pSprite->vTbl->psetLabel == NULL ){ return; }
+    pSprite->vTbl->psetLabel( pSprite, value );
+} /* Sprite_setLabel */
+
 Sprite* Sprite_Copy( Sprite* pSprite, const Sprite* pSource ){
     pSprite->m_iniRect = pSource->m_iniRect;
     pSprite->m_name = pSource->m_name;

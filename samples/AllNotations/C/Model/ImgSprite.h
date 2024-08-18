@@ -7,12 +7,11 @@ typedef struct tagImgSprite ImgSprite;
 void ImgSprite_setOffset( ImgSprite* pImgSprite, int x, int y );
 const SDL_Point* ImgSprite_getOffset( ImgSprite* pImgSprite );
 const SDL_Rect* ImgSprite_getBoundary( ImgSprite* pImgSprite );
-const SDL_Point* ImgSprite_getCenter( ImgSprite* pImgSprite );
 void ImgSprite_setRotation( ImgSprite* pImgSprite, double value );
 double ImgSprite_getRotation( ImgSprite* pImgSprite );
 void ImgSprite_setBrightness( ImgSprite* pImgSprite, double value );
 #endif//__ImgSprite_H__
-#if !defined( ImgSprite_Init ) && ( defined( __ImgSprite_INTERNAL__ )  )
+#if !defined( ImgSprite_Init ) && ( defined( __ImgSprite_INTERNAL__ )  || defined( __ObjsBuilder_INTERNAL__ )  )
 #define __Sprite_INTERNAL__
 #include "Sprite.h"
 #include "Constraint.h"

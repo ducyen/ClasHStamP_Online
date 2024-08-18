@@ -20,10 +20,20 @@
 #if !defined( _MSC_VER )
 typedef int             boolean;
 #endif
+#if !defined( bool )
 typedef int             bool;
+#endif
 
+#ifndef STATIC
+#define STATIC  static
+#endif
+
+#ifndef false
 #define false   ( 0 )
+#endif
+#ifndef true
 #define true    ( 1 )
+#endif
 
 typedef unsigned long   UINT32;
 typedef unsigned short  UINT16;
@@ -31,10 +41,6 @@ typedef unsigned char   UINT8;
 typedef int             BOOL;
 typedef int             Bool;
 typedef char            TCHAR;
-
-#ifndef STATIC
-#define STATIC          static
-#endif
 
 #define _T(x)           x
 
@@ -64,6 +70,7 @@ typedef char            TCHAR;
 
 #define P( ... )                    __VA_ARGS__
 
+typedef char  STR255[255];
 typedef struct tagString{ char buf[255]; }* String;
 #define MakeString( charBuf )       ( ( String )&( struct tagString ){ charBuf } )
 #define GetCharBuf( pStr )          ( ( pStr )->buf )
@@ -101,12 +108,17 @@ typedef struct tagRelativeRect{
 typedef enum{
     MDD_ON_CLICK = SDL_USEREVENT,
     MDD_ON_VALUE_CHANGED,
+    MDD_ON_MOUSE_DOWN,
+    MDD_ON_MOUSE_UP,
     MDD_EVENT_TYPE_MAX
 }MDD_EventType;
 
 int InputValue(char* pMsg);
 void DisplayMsg(char* pMsg);
 
+#ifdef _MSC_VER
+# define strtok_r strtok_s
+#endif
 const char* getInputDir( void );
 const char* getOutputDir( void );
 

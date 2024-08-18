@@ -6,7 +6,7 @@ void EventListener_actionPerformed( EventListener* pEventListener, Sprite* targe
 int EventListener_getType( EventListener* pEventListener );
 EventListener* EventListener_getNext( EventListener* pEventListener );
 #endif//__EventListener_H__
-#if !defined( EventListener_Init ) && ( defined( __EventListener_INTERNAL__ )  )
+#if !defined( EventListener_Init ) && ( defined( __EventListener_INTERNAL__ )  || defined( __ObjsBuilder_INTERNAL__ )  )
 #include "Sprite.h"
 /** @memberof EventListener
  * @brief EventListener auto-generated constructor
@@ -21,16 +21,12 @@ EventListener* EventListener_getNext( EventListener* pEventListener );
 #define EventListener_Ctor( _m_type, _m_action, _m_source, _m_event, _m_next )    ( EventListener ){ \
     EventListener_Init( P( _m_type ), P( _m_action ), P( _m_source ), P( _m_event ), P( _m_next ) ) \
 }
-typedef struct tagEventListenerVtbl{
-    void ( * const pactionPerformed )( EventListener*, Sprite*, void* );
-}EventListenerVtbl;
 EventListener* EventListener_Copy( EventListener* pEventListener, const EventListener* pSource );
 /** @class EventListener
  * @extends 
  */
 struct tagEventListener{
 #define EventListener_CLASS                                                                     \
-    const EventListenerVtbl* const vTbl;                                                        \
     size_t cbSize;                                                                              \
     int m_type;                                                                                                                    \
     MouseAction m_action;                                                                                                \

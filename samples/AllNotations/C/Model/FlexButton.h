@@ -8,6 +8,8 @@ typedef struct tagMouseEventParams {
 }MouseEventParams;
 bool FlexButton_IsInRect( FlexButton* pFlexButton, MouseEventParams* pEventPrams );
 bool FlexButton_OnPushBtnPressed( FlexButton* pFlexButton );
+void FlexButton_OnHoldEntry( FlexButton* pFlexButton );
+void FlexButton_OnHoldExit( FlexButton* pFlexButton );
 void FlexButton_DrawPushStyle( FlexButton* pFlexButton, SDL_Renderer* renderer );
 void FlexButton_DrawSelectStyle( FlexButton* pFlexButton, SDL_Renderer* renderer );
 void FlexButton_DrawToggleStyle( FlexButton* pFlexButton, SDL_Renderer* renderer );

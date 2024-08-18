@@ -129,7 +129,6 @@
     <ClCompile Include="Model\EventListener.c" />
     <ClCompile Include="Model\FlexButton.c" />
     <ClCompile Include="Model\ImgSprite.c" />
-    <ClCompile Include="Model\MouseListener.c" />
     <ClCompile Include="Model\Primitive.c" />
     <ClCompile Include="Model\RotationConstraint.c" />
     <ClCompile Include="Model\Sprite.c" />
@@ -147,7 +146,6 @@
     <ClInclude Include="Model\EventListener.h" />
     <ClInclude Include="Model\FlexButton.h" />
     <ClInclude Include="Model\ImgSprite.h" />
-    <ClInclude Include="Model\MouseListener.h" />
     <ClInclude Include="Model\Primitive.h" />
     <ClInclude Include="Model\RotationConstraint.h" />
     <ClInclude Include="Model\Sprite.h" />

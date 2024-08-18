@@ -8,6 +8,8 @@ void Sprite_draw1( Sprite* pSprite, SDL_Renderer* renderer );
 bool Sprite_load( Sprite* pSprite, SDL_Renderer* renderer );
 void Sprite_free( Sprite* pSprite );
 bool Sprite_isUpdated( Sprite* pSprite );
+const SDL_Point* Sprite_getCenter( Sprite* pSprite );
+void Sprite_setLabel( Sprite* pSprite, char* value );
 #endif//__Sprite_H__
 #if !defined( Sprite_Init ) && ( defined( __Sprite_INTERNAL__ )  )
 /** @memberof Sprite
@@ -37,6 +39,8 @@ typedef struct tagSpriteVtbl{
     void ( * const pdraw1 )( Sprite*, SDL_Renderer* );
     bool ( * const pload )( Sprite*, SDL_Renderer* );
     void ( * const pfree )( Sprite* );
+    const SDL_Point* ( * const pgetCenter )( Sprite* );
+    void ( * const psetLabel )( Sprite*, char* );
 }SpriteVtbl;
 Sprite* Sprite_Copy( Sprite* pSprite, const Sprite* pSource );
 /** @class Sprite

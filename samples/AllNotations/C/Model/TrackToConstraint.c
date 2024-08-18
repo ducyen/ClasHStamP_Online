@@ -7,6 +7,24 @@ static void TrackToConstraint_apply(
     Constraint* pConstraint,
     Sprite* target
 ){
+    TrackToConstraint* pTrackToConstraint = ( TrackToConstraint* )pConstraint;
+    if( pTrackToConstraint->m_influence == 0 ){
+        return;
+    }
+
+    Sprite* pSource = *pTrackToConstraint->m_source;
+    Sprite* pTarget = target;
+    
+    const SDL_Point* pSourceCenter = Sprite_getCenter( pSource );
+    const SDL_Point* pTargetCenter = Sprite_getCenter( pTarget );
+
+    double dx = pTargetCenter->x - pSourceCenter->x;
+    double dy = pTargetCenter->y - pSourceCenter->y;
+    double angle = atan2(dy, dx) * 180.0f / M_PI;
+
+    // Set the source's rotation to face the target
+    ImgSprite_setRotation( pSource, angle );
+
 } /* TrackToConstraint_apply */
 
 TransformConstraint* TrackToConstraint_Copy( TrackToConstraint* pTrackToConstraint, const TrackToConstraint* pSource ){

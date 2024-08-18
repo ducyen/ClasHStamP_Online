@@ -2,14 +2,19 @@
 #define __EventListener_INTERNAL__
 #include "CommonInclude.h"
 #include "EventListener.h"
-/** @public @pure @memberof EventListener */
+/** @public @memberof EventListener */
 void EventListener_actionPerformed(
     EventListener* pEventListener,
     Sprite* target,
     void* pEventParams
 ){
-    if( pEventListener->vTbl == NULL || pEventListener->vTbl->pactionPerformed == NULL ){ return; }
-    pEventListener->vTbl->pactionPerformed( pEventListener, target, pEventParams );
+    if( pEventListener->m_action != null ){
+        if( pEventListener->m_source != null ){
+            pEventListener->m_action( *pEventListener->m_source, pEventListener->m_event, pEventParams );
+        } else{
+            pEventListener->m_action( target, pEventListener->m_event, pEventParams );
+        }
+    }
 } /* EventListener_actionPerformed */
 
 /** @public @memberof EventListener */

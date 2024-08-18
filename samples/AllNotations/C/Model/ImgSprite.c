@@ -30,9 +30,10 @@ const SDL_Rect* ImgSprite_getBoundary(
 } /* ImgSprite_getBoundary */
 
 /** @public @memberof ImgSprite */
-const SDL_Point* ImgSprite_getCenter(
-    ImgSprite* pImgSprite
+static const SDL_Point* ImgSprite_getCenter(
+    Sprite* pSprite
 ){
+    ImgSprite* pImgSprite = ( ImgSprite* )pSprite;
     return &pImgSprite->m_center;
 } /* ImgSprite_getCenter */
 
@@ -66,12 +67,31 @@ static void ImgSprite_draw0(
     Sprite* pSprite,
     SDL_Renderer* renderer
 ){
+    ImgSprite* pImgSprite = ( ImgSprite* )pSprite;
+    ImgSprite* sprite = pImgSprite;
+    EventListener* pCurListener = sprite->m_onDrawListeners;
+    while( pCurListener != null ){
+        if( EventListener_getType( pCurListener ) == 0 ){
+            EventListener_actionPerformed( pCurListener, sprite, null );
+        }
+        pCurListener = EventListener_getNext( pCurListener );
+    }
 } /* ImgSprite_draw0 */
 
 /** @public @memberof ImgSprite */
 static void ImgSprite_update(
     Sprite* pSprite
 ){
+    ImgSprite* pImgSprite = ( ImgSprite* )pSprite;
+    if( !Sprite_isUpdated( pImgSprite ) ){
+        return;
+    }
+    Constraint* pCurConstraint = pImgSprite->m_constraints;
+    while( pCurConstraint != null ){
+        Constraint_apply( pCurConstraint, pImgSprite );
+        pCurConstraint = Constraint_getNext( pCurConstraint );
+    }
+    pImgSprite->m_updated = false;
 } /* ImgSprite_update */
 
 /** @public @memberof ImgSprite */
@@ -81,6 +101,25 @@ static void ImgSprite_updateMouseState(
     int y,
     int mouseEvent
 ){
+    ImgSprite* pImgSprite = ( ImgSprite* )pSprite;
+    ImgSprite* sprite = pImgSprite;
+    int mouseX = x;
+    int mouseY = y;
+    SDL_Rect rect = sprite->m_rect;
+    rect.x += sprite->m_offset.x;
+    rect.y += sprite->m_offset.y;
+
+    if (mouseX >= rect.x && mouseX < rect.x + rect.w &&
+        mouseY >= rect.y && mouseY < rect.y + rect.h
+    ) {
+        EventListener* pCurListener = pImgSprite->m_mouseListeners;
+        while( pCurListener != null ){
+            if( EventListener_getType( pCurListener ) == mouseEvent ){
+                EventListener_actionPerformed( pCurListener, pImgSprite, null );
+            }
+            pCurListener = EventListener_getNext( pCurListener );
+        }
+    }
 } /* ImgSprite_updateMouseState */
 
 /** @public @memberof ImgSprite */
@@ -88,6 +127,40 @@ static void ImgSprite_draw1(
     Sprite* pSprite,
     SDL_Renderer* renderer
 ){
+    ImgSprite* pImgSprite = ( ImgSprite* )pSprite;
+    int width, height;
+    // Set texture color modulation (brightness)
+    if( pImgSprite->m_image ){
+        SDL_SetTextureColorMod(
+            pImgSprite->m_image, 
+            pImgSprite->m_brightness * 255, 
+            pImgSprite->m_brightness * 255, 
+            pImgSprite->m_brightness * 255
+        );
+    }
+    // Execute transformation
+    SDL_Rect rect = pImgSprite->m_rect;
+    rect.x = pImgSprite->m_rect.x + pImgSprite->m_offset.x;
+    rect.y = pImgSprite->m_rect.y + pImgSprite->m_offset.y;
+
+    // Render the texture
+    if( pImgSprite->m_image ){
+        SDL_RenderCopyEx(renderer, pImgSprite->m_image, NULL, &rect, pImgSprite->m_angle, NULL, SDL_FLIP_NONE);
+    }
+    // Reset transformation
+    pImgSprite->m_angle = 0;
+    pImgSprite->m_offset.x = 0;
+    pImgSprite->m_offset.y = 0;
+
+    // Event dispatch
+    ImgSprite* sprite = pImgSprite;
+    EventListener* pCurListener = sprite->m_onDrawListeners;
+    while( pCurListener != null ){
+        if( EventListener_getType( pCurListener ) == 1 ){
+            EventListener_actionPerformed( pCurListener, sprite, null );
+        }
+        pCurListener = EventListener_getNext( pCurListener );
+    }
 } /* ImgSprite_draw1 */
 
 /** @public @memberof ImgSprite */
@@ -95,12 +168,59 @@ static bool ImgSprite_load(
     Sprite* pSprite,
     SDL_Renderer* renderer
 ){
+    ImgSprite* pImgSprite = ( ImgSprite* )pSprite;
+    char sRelPath[ 256 ];
+    sprintf( sRelPath, "%s/../%s", getInputDir(), pImgSprite->m_imgPath );
+    pImgSprite->m_image = IMG_LoadTexture(renderer, sRelPath);
+    if (!pImgSprite->m_image) {
+        printf("Failed to load image: %s\n", IMG_GetError());
+    }else{
+
+        // Query the original texture to get its width, height, and format
+        Uint32 format;
+        int width, height;
+        SDL_QueryTexture(pImgSprite->m_image, &format, NULL, &width, &height);
+
+        // Create a new texture with the same format and dimensions
+        pImgSprite->m_buffer = SDL_CreateTexture(renderer, format, SDL_TEXTUREACCESS_TARGET, width, height);
+        if (!pImgSprite->m_buffer) {
+            printf("Failed to create new texture: %s\n", SDL_GetError());
+            return false;
+        }
+
+        // Set the blend mode for the new texture to enable alpha blending
+        SDL_SetTextureBlendMode(pImgSprite->m_buffer, SDL_BLENDMODE_BLEND);
+    }
+
+    int width, height;
+    // Get the size of the renderer
+    if (SDL_GetRendererOutputSize(renderer, &width, &height) != 0) {
+        printf("Error getting renderer size: %s\n", SDL_GetError());
+    }
+    
+    pImgSprite->m_rect = (SDL_Rect){
+        pImgSprite->m_iniRect.x * width, 
+        pImgSprite->m_iniRect.y * height, 
+        pImgSprite->m_iniRect.w * width, 
+        pImgSprite->m_iniRect.h * height
+    };
+
+    ImgSprite_setOffset( pImgSprite, 0, 0 );
+
+    return true;
 } /* ImgSprite_load */
 
 /** @public @memberof ImgSprite */
 static void ImgSprite_free(
     Sprite* pSprite
 ){
+    ImgSprite* pImgSprite = ( ImgSprite* )pSprite;
+    if (pImgSprite->m_image) {
+        SDL_DestroyTexture(pImgSprite->m_image);
+    }
+    if (pImgSprite->m_buffer) {
+        SDL_DestroyTexture(pImgSprite->m_buffer);
+    }
 } /* ImgSprite_free */
 
 Sprite* ImgSprite_Copy( ImgSprite* pImgSprite, const ImgSprite* pSource ){
@@ -114,6 +234,7 @@ Sprite* ImgSprite_Copy( ImgSprite* pImgSprite, const ImgSprite* pSource ){
     return ( Sprite* )pImgSprite;
 }
 const SpriteVtbl gImgSpriteVtbl = {
+    .pgetCenter                  = ImgSprite_getCenter,
     .pdraw0                      = ImgSprite_draw0,
     .pupdate                     = ImgSprite_update,
     .pupdateMouseState           = ImgSprite_updateMouseState,

@@ -7,6 +7,22 @@ static bool FlexButton_load(
     Sprite* pSprite,
     SDL_Renderer* renderer
 ){
+    FlexButton* pFlexButton = ( FlexButton* )pSprite;
+    // Get the size of the renderer
+    int width, height;
+    if (SDL_GetRendererOutputSize(renderer, &width, &height) != 0) {
+        printf("Error getting renderer size: %s\n", SDL_GetError());
+    }
+
+    pFlexButton->m_rect = (SDL_Rect){
+        pFlexButton->m_iniRect.x * width, 
+        pFlexButton->m_iniRect.y * height, 
+        pFlexButton->m_iniRect.w * width, 
+        pFlexButton->m_iniRect.h * height
+    };
+
+    FlexButton_Start( pFlexButton );
+    return true;
 } /* FlexButton_load */
 
 /** @public @memberof FlexButton */
@@ -14,6 +30,8 @@ static void FlexButton_draw0(
     Sprite* pSprite,
     SDL_Renderer* renderer
 ){
+    FlexButton* pFlexButton = ( FlexButton* )pSprite;
+    FlexButton_EventProc( pFlexButton, FlexButton_DRAW0, renderer );
 } /* FlexButton_draw0 */
 
 /** @public @memberof FlexButton */
@@ -21,6 +39,8 @@ static void FlexButton_draw1(
     Sprite* pSprite,
     SDL_Renderer* renderer
 ){
+    FlexButton* pFlexButton = ( FlexButton* )pSprite;
+    FlexButton_EventProc( pFlexButton, FlexButton_DRAW1, renderer );
 } /* FlexButton_draw1 */
 
 /** @public @memberof FlexButton */
@@ -30,6 +50,18 @@ static void FlexButton_updateMouseState(
     int y,
     int mouseEvent
 ){
+    FlexButton* pFlexButton = ( FlexButton* )pSprite;
+    FlexButton* sprite = pFlexButton;
+    int mouseX = x;
+    int mouseY = y;
+    EventListener* pCurListener = sprite->m_mouseListeners;
+    MouseEventParams mouseEventParams = { .pos.x = mouseX, .pos.y = mouseY };
+    while( pCurListener != null ){
+        if( EventListener_getType( pCurListener ) == mouseEvent ){
+            EventListener_actionPerformed( pCurListener, sprite, &mouseEventParams );
+        }
+        pCurListener = EventListener_getNext( pCurListener );
+    }
 } /* FlexButton_updateMouseState */
 
 /** @public @memberof FlexButton */
@@ -66,6 +98,36 @@ bool FlexButton_OnPushBtnPressed(
         pCurListener = EventListener_getNext( pCurListener );
     }
 } /* FlexButton_OnPushBtnPressed */
+
+/** @public @memberof FlexButton */
+void FlexButton_OnHoldEntry(
+    FlexButton* pFlexButton
+){
+    pFlexButton->m_value = pFlexButton->m_valueTmp;
+    FlexButton* sprite = pFlexButton;
+    EventListener* pCurListener = sprite->m_buttonListeners;
+    while( pCurListener != null ){
+        if( EventListener_getType( pCurListener ) == MDD_ON_MOUSE_DOWN ){
+            EventListener_actionPerformed( pCurListener, sprite, null );
+        }
+        pCurListener = EventListener_getNext( pCurListener );
+    }
+} /* FlexButton_OnHoldEntry */
+
+/** @public @memberof FlexButton */
+void FlexButton_OnHoldExit(
+    FlexButton* pFlexButton
+){
+    pFlexButton->m_value = pFlexButton->m_valueTmp;
+    FlexButton* sprite = pFlexButton;
+    EventListener* pCurListener = sprite->m_buttonListeners;
+    while( pCurListener != null ){
+        if( EventListener_getType( pCurListener ) == MDD_ON_MOUSE_UP ){
+            EventListener_actionPerformed( pCurListener, sprite, null );
+        }
+        pCurListener = EventListener_getNext( pCurListener );
+    }
+} /* FlexButton_OnHoldExit */
 
 /** @public @memberof FlexButton */
 void FlexButton_DrawPushStyle(
@@ -150,7 +212,7 @@ void FlexButton_DrawPressed(
             clampKnopY = pFlexButton->m_rect.h - 2*r;
         }
         pFlexButton->m_valueTmp = 0;
-        if ((pFlexButton->m_rect.h - 2*r) != 0){
+        if ((pFlexButton->m_rect.h - 2*r) != 0 && pFlexButton->m_valueMax > 1){
             pFlexButton->m_valueTmp = (( pFlexButton->m_valueMax-1) * clampKnopY + (pFlexButton->m_rect.h - 2*r)/2)/ (pFlexButton->m_rect.h - 2*r);
             clampKnopY = (pFlexButton->m_valueTmp * (pFlexButton->m_rect.h - 2*r) + ( pFlexButton->m_valueMax-1)/2)/ ( pFlexButton->m_valueMax-1);
         }
@@ -169,7 +231,7 @@ void FlexButton_DrawPressed(
             clampKnopX = pFlexButton->m_rect.w - 2*r;
         }
         pFlexButton->m_valueTmp = 0;
-        if( (pFlexButton->m_rect.w - 2*r) != 0 ){
+        if( (pFlexButton->m_rect.w - 2*r) != 0 && pFlexButton->m_valueMax > 1){
             pFlexButton->m_valueTmp = (( pFlexButton->m_valueMax-1) * clampKnopX + (pFlexButton->m_rect.w - 2*r)/2 )/ (pFlexButton->m_rect.w - 2*r);
             clampKnopX = (pFlexButton->m_valueTmp * (pFlexButton->m_rect.w - 2*r) + ( pFlexButton->m_valueMax-1)/2 )/ ( pFlexButton->m_valueMax-1);
         }
@@ -196,7 +258,7 @@ void FlexButton_DrawKnob(
     FlexButton* pFlexButton,
     SDL_Renderer* renderer
 ){
-    if( pFlexButton->m_rect.h >= pFlexButton->m_rect.w ){
+    if( pFlexButton->m_rect.h >= pFlexButton->m_rect.w && pFlexButton->m_valueMax > 1 ){
         int x = pFlexButton->m_rect.x + pFlexButton->m_rect.w/2;
         int r = pFlexButton->m_rect.w / 2;
         int clampKnopY = 0;
@@ -210,7 +272,7 @@ void FlexButton_DrawKnob(
         int y = pFlexButton->m_rect.y + pFlexButton->m_rect.h/2;
         int r = pFlexButton->m_rect.h / 2;
         int clampKnopX = 0;
-        if( (pFlexButton->m_rect.w - 2*r) != 0 ){
+        if( (pFlexButton->m_rect.w - 2*r) != 0 && pFlexButton->m_valueMax > 1 ){
             clampKnopX = (pFlexButton->m_value * (pFlexButton->m_rect.w - 2*r) + ( pFlexButton->m_valueMax-1)/2 )/ ( pFlexButton->m_valueMax-1);
         }
         int x = pFlexButton->m_rect.x + r + clampKnopX;
