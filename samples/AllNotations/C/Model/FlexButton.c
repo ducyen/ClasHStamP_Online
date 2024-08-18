@@ -285,6 +285,7 @@ void FlexButton_DrawKnob(
 int FlexButton_GetValue(
     FlexButton* pFlexButton
 ){
+    return pFlexButton->m_value;
 } /* FlexButton_GetValue */
 
 /** @public @memberof FlexButton */
@@ -292,6 +293,7 @@ void FlexButton_SetValue(
     FlexButton* pFlexButton,
     int value
 ){
+    pFlexButton->m_value = value;
 } /* FlexButton_SetValue */
 
 const TCHAR* FlexButtonEvent_toString( FlexButton_EVENT value ){

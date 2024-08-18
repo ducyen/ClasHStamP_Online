@@ -15,7 +15,7 @@
 static int hardwareAccelerationAvailable = SDL_RENDERER_SOFTWARE;
 Sprite* g_objects[] = {
     &CarBody_Ctor(                                              /* carBody */
-        P( { 0.3920008267879289, 0.3645829478553404, 0.1807909604519774, 0.2206896551724138 } )/* m_iniRect */,
+        P( { 0.6346094069355498, 0.47017776357199037, 0.22271426624880764, 0.23127476575352282 } )/* m_iniRect */,
         P( "carBody" )                                          /* m_name */,
         P( "CarBody.png" )                                      /* m_imgPath */,
         P( { 0.0, 0.0 } )                                       /* m_center */,
@@ -24,19 +24,46 @@ Sprite* g_objects[] = {
         P( null )                                               /* m_mouseListeners */,
         P( &EventListener_Ctor( 0, CarBody_Start, &carBody, 0, null ) )/* m_onDrawListeners */
     ),
+    &Primitive_Ctor(                                            /* Text_1sh */
+        P( { 0.22394378491620112, 0.7640441715542522, 0.5307262569832403, 0.05076979472140762 } )/* 1sh-c8099ab49758debe3aa2523402f0bf52 */,
+        P( "Text_1sh" )                                         /* Text_1sh */,
+        P( "Text 000000 line 2 null 000000 null Monospaced 8 Press Number key for event trigger" )/* Text_1sh */
+    ),
+    &FlexButton_Ctor(                                           /* selectBtn */
+        P( { 0.2442824720670391, 0.35321206011730205, 0.05700069832402227, 0.17686950146627567 } )/* m_iniRect */,
+        P( "selectBtn" )                                        /* m_name */,
+        P( "FlexButton.png" )                                   /* m_imgPath */,
+        P( 3 )                                                  /* m_valueMax */,
+        P( FlexBtnStm_SelectStyle )                             /* m_style */,
+        P( &EventListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_DOWN, &EventListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_UP, &EventListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
+        P( null )                                               /* m_buttonListeners */
+    ),
+    &FlexButton_Ctor(                                           /* pushBtn */
+        P( { 0.2446752793296089, 0.11860795454545454, 0.055865921787709494, 0.05865102639296188 } )/* m_iniRect */,
+        P( "pushBtn" )                                          /* m_name */,
+        P( "FlexButton.png" )                                   /* m_imgPath */,
+        P( 1 )                                                  /* m_valueMax */,
+        P( FlexBtnStm_PushStyle )                               /* m_style */,
+        P( &EventListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_DOWN, &EventListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_UP, &EventListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
+        P( null )                                               /* m_buttonListeners */
+    ),
     &FlexButton_Ctor(                                           /* toggleBtn */
-        P( { 0.3460451977401129, 0.23900862068965517, 0.1101694915254239, 0.06896551724137931 } )/* m_iniRect */,
+        P( { 0.2445443435754189, 0.2359100073313783, 0.11085893854748603, 0.05865102639296188 } )/* m_iniRect */,
         P( "toggleBtn" )                                        /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 2 )                                                  /* m_valueMax */,
         P( FlexBtnStm_ToggleStyle )                             /* m_style */,
-        P( &EventListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleBtn, FlexButton_MOUSE_DOWN, &EventListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleBtn, FlexButton_MOUSE_UP, &EventListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, &toggleBtn, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
+        P( &EventListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_DOWN, &EventListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_UP, &EventListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
         P( null )                                               /* m_buttonListeners */
     ),
-    &Primitive_Ctor(                                            /* Text_1sh */
-        P( { 0.21327683615819218, 0.7241379310344828, 0.536723163841808, 0.05969827586206897 } )/* 1sh-c8099ab49758debe3aa2523402f0bf52 */,
-        P( "Text_1sh" )                                         /* Text_1sh */,
-        P( "Text 000000 line 2 null 000000 null Monospaced 8 Press Number key for event trigger" )/* Text_1sh */
+    &FlexButton_Ctor(                                           /* slider */
+        P( { 0.18793645251396643, 0.5887325879765396, 0.22271426624880764, 0.05865102639296188 } )/* m_iniRect */,
+        P( "slider" )                                           /* m_name */,
+        P( "FlexButton.png" )                                   /* m_imgPath */,
+        P( 4 )                                                  /* m_valueMax */,
+        P( FlexBtnStm_SlideStyle )                              /* m_style */,
+        P( &EventListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_DOWN, &EventListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_UP, &EventListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
+        P( null )                                               /* m_buttonListeners */
     )
 };
 Sprite* getobj( int id ){
