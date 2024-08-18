@@ -281,7 +281,7 @@ public class Main extends JFrame {
     
             long xtermPid = 0;
             if (!pidString.isEmpty()) {
-                xtermPid = Long.parseLong(pidString);
+                xtermPid = Long.parseLong(pidString.trim());
             }
     
             // Monitor the status of the launched application
