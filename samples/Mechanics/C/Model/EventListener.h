@@ -25,6 +25,7 @@ EventListener* EventListener_Copy( EventListener* pEventListener, const EventLis
 /** @class EventListener
  * @extends 
  */
+struct tagEventListener{
 #define EventListener_CLASS                                                                     \
     size_t cbSize;                                                                              \
     int m_type;                                                                                                                    \
@@ -33,7 +34,6 @@ EventListener* EventListener_Copy( EventListener* pEventListener, const EventLis
     int m_event;                                                                                                                  \
     EventListener* m_next;                                      \
 
-typedef struct tagEventListener{
     EventListener_CLASS    
-}EventListener;
+};
 #endif//__EventListener_INTERNAL__

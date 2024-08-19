@@ -21,10 +21,10 @@ PhxJoint* PhxRatchetJoint_Copy( PhxRatchetJoint* pPhxRatchetJoint, const PhxRatc
 /** @class PhxRatchetJoint
  * @extends PhxJoint
  */
+struct tagPhxRatchetJoint{
 #define PhxRatchetJoint_CLASS                                                                   \
     PhxJoint_CLASS                                                                              \
 
-typedef struct tagPhxRatchetJoint{
     PhxRatchetJoint_CLASS    
-}PhxRatchetJoint;
+};
 #endif//__PhxRatchetJoint_INTERNAL__

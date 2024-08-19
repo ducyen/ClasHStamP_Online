@@ -21,10 +21,10 @@ PhxJoint* PhxDampedSpring_Copy( PhxDampedSpring* pPhxDampedSpring, const PhxDamp
 /** @class PhxDampedSpring
  * @extends PhxJoint
  */
+struct tagPhxDampedSpring{
 #define PhxDampedSpring_CLASS                                                                   \
     PhxJoint_CLASS                                                                              \
 
-typedef struct tagPhxDampedSpring{
     PhxDampedSpring_CLASS    
-}PhxDampedSpring;
+};
 #endif//__PhxDampedSpring_INTERNAL__

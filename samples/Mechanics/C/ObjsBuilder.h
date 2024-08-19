@@ -74,10 +74,10 @@ ObjsBuilder* ObjsBuilder_Copy( ObjsBuilder* pObjsBuilder, const ObjsBuilder* pSo
 /** @class ObjsBuilder
  * @extends 
  */
+struct tagObjsBuilder{
 #define ObjsBuilder_CLASS                                                                       \
     size_t cbSize;                                                                              \
 
-typedef struct tagObjsBuilder{
     ObjsBuilder_CLASS    
-}ObjsBuilder;
+};
 #endif//__ObjsBuilder_INTERNAL__

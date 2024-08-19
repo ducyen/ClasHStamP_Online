@@ -23,12 +23,12 @@ PhxJoint* PhxPinJoint_Copy( PhxPinJoint* pPhxPinJoint, const PhxPinJoint* pSourc
 /** @class PhxPinJoint
  * @extends PhxJoint
  */
+struct tagPhxPinJoint{
 #define PhxPinJoint_CLASS                                                                       \
     PhxJoint_CLASS                                                                              \
     float* m_distance;                                                                                                      \
     PhxJoint* m_next0;                                          \
 
-typedef struct tagPhxPinJoint{
     PhxPinJoint_CLASS    
-}PhxPinJoint;
+};
 #endif//__PhxPinJoint_INTERNAL__

@@ -23,11 +23,11 @@ const TCHAR* ClawMachineEvent_toString( ClawMachine_EVENT value );
  */
 typedef struct tagState0_Region1 {
     HdStateMachine base;
-#define State0_Region1_State0_Dmy               ( 1ULL <<  0 )
-#define State0_Region1_State0                   ( State0_Region1_State0_Dmy | State0_Region1_State0_Regtion1_Init | State0_Region1_CoutingDown )
+#define State0_Region1_State0                   ( State0_Region1_State0_Regtion1_Init | State0_Region1_CoutingDown )
 #define State0_Region1_State0_Regtion1_Init     ( 1ULL <<  1 )
 #define State0_Region1_CoutingDown              ( 1ULL <<  2 )
 }State0_Region1;
+BOOL State0_Region1_Reset( ClawMachine* pState0, State0_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 #define State0_Region1_Init() {\
     .base = { HdStateMachine_Init( State0_Region1_State0, State0_Region1_State0 ) },\
 }
@@ -37,8 +37,7 @@ typedef struct tagState0_Region1 {
 typedef struct tagClawMachineStm {
     HdStateMachine base;
     State0_Region1 State0State0_Region1;                        
-#define ClawMachineStm_ClawMachineTop_Dmy       ( 1ULL <<  3 )
-#define ClawMachineStm_ClawMachineTop           ( ClawMachineStm_ClawMachineTop_Dmy | ClawMachineStm_InitialPseudostate0 | ClawMachineStm_GoingDown | ClawMachineStm_Clawing | ClawMachineStm_GoingUp | ClawMachineStm_GoingToGate | ClawMachineStm_GoingHome | ClawMachineStm_Releasing | ClawMachineStm_State0 )
+#define ClawMachineStm_ClawMachineTop           ( ClawMachineStm_InitialPseudostate0 | ClawMachineStm_GoingDown | ClawMachineStm_Clawing | ClawMachineStm_GoingUp | ClawMachineStm_GoingToGate | ClawMachineStm_GoingHome | ClawMachineStm_Releasing | ClawMachineStm_State0 )
 #define ClawMachineStm_InitialPseudostate0      ( 1ULL <<  4 )
 #define ClawMachineStm_GoingDown                ( 1ULL <<  5 )
 #define ClawMachineStm_Clawing                  ( 1ULL <<  6 )
@@ -51,9 +50,9 @@ typedef struct tagClawMachineStm {
 #define ClawMachineStm_GoingRight               ( 1ULL << 13 )
 #define ClawMachineStm_JunctionPoint0           ( 1ULL << 14 )
 #define ClawMachineStm_State0_Init              ( 1ULL << 15 )
-#define ClawMachineStm_State0_Dmy               ( 1ULL << 16 )
-#define ClawMachineStm_State0                   ( ClawMachineStm_State0_Dmy | ClawMachineStm_GoingLeft | ClawMachineStm_Ready | ClawMachineStm_GoingRight | ClawMachineStm_JunctionPoint0 | ClawMachineStm_State0_Init )
+#define ClawMachineStm_State0                   ( ClawMachineStm_GoingLeft | ClawMachineStm_Ready | ClawMachineStm_GoingRight | ClawMachineStm_JunctionPoint0 | ClawMachineStm_State0_Init )
 }ClawMachineStm;
+BOOL ClawMachineStm_Reset( ClawMachine* pClawMachineTop, ClawMachineStm* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 #define ClawMachineStm_Init() {\
     .base = { HdStateMachine_Init( ClawMachineStm_ClawMachineTop, ClawMachineStm_ClawMachineTop ) },\
     .State0State0_Region1 = State0_Region1_Init(),\
@@ -80,6 +79,7 @@ Sprite* ClawMachine_Copy( ClawMachine* pClawMachine, const ClawMachine* pSource 
 /** @class ClawMachine
  * @extends Sprite
  */
+struct tagClawMachine{
 #define ClawMachine_CLASS                                                                       \
     Sprite_CLASS                                                                                \
     cpFloat braking_force;                                                                                              \
@@ -88,7 +88,6 @@ Sprite* ClawMachine_Copy( ClawMachine* pClawMachine, const ClawMachine* pSource 
     int playCountDown;                                                                                                      \
     ClawMachineStm mainStm;                                     
 
-typedef struct tagClawMachine{
     ClawMachine_CLASS    
-}ClawMachine;
+};
 #endif//__ClawMachine_INTERNAL__

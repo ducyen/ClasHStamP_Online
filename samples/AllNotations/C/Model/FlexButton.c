@@ -310,7 +310,6 @@ static void Ready_Region1_BgnTrans( FlexButton *pReady, Ready_Region1* pStm, uin
 static void Ready_Region1_EndTrans( FlexButton *pReady, Ready_Region1* pStm );
 static BOOL Ready_Region1_Abort( FlexButton* pReady, Ready_Region1* pStm );
 static BOOL Ready_Region1_EventProc( FlexButton* pReady, Ready_Region1* pStm, FlexButton_EVENT nEventId, void* pEventParams );
-static BOOL Ready_Region1_RunToCompletion( FlexButton* pReady, Ready_Region1* pStm );
 static void Ready_Region1_Hold_Entry( FlexButton* pFlexButton, Ready_Region1* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, Ready_Region1_Hold ) ){
         ObjsBuilder_showEntry( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	514	280	231	304	-126	-25	1199	764" );
@@ -507,13 +506,6 @@ static BOOL Ready_Region1_StateDefaultTrans( FlexButton* pFlexButton, Ready_Regi
     }   }while( FALSE );
     return bResult;
 }
-static BOOL Ready_Region1_RunToCompletion( FlexButton* pFlexButton, Ready_Region1* pStm ){
-    BOOL bResult;
-    do{
-        bResult = Ready_Region1_StateDefaultTrans( pFlexButton, pStm );
-    } while ( bResult );
-    return bResult;
-}
 static int Ready_Region1_IsFinished(Ready_Region1* pReady_Region1){
     return pReady_Region1->base.nCurrentState == Ready_Region1_Ready && pReady_Region1->base.nCurrentState == pReady_Region1->base.nPseudostate;
 }
@@ -548,7 +540,6 @@ static BOOL Ready_Region1_EventProc( FlexButton* pFlexButton, Ready_Region1* pSt
     case Ready_Region1_Missed:                  bResult |= Ready_Region1_Missed_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
     default: break;
     }
-    Ready_Region1_RunToCompletion( pFlexButton, pStm );
     return bResult;
 }
 static BOOL Ready_Region1_IsIn( Ready_Region1* pStm, uint64_t nCompositeState ) {
@@ -565,7 +556,6 @@ static void FlexBtnStm_BgnTrans( FlexButton *pStateMachine0, FlexBtnStm* pStm, u
 static void FlexBtnStm_EndTrans( FlexButton *pStateMachine0, FlexBtnStm* pStm );
 static BOOL FlexBtnStm_Abort( FlexButton* pStateMachine0, FlexBtnStm* pStm );
 static BOOL FlexBtnStm_EventProc( FlexButton* pStateMachine0, FlexBtnStm* pStm, FlexButton_EVENT nEventId, void* pEventParams );
-static BOOL FlexBtnStm_RunToCompletion( FlexButton* pStateMachine0, FlexBtnStm* pStm );
 static void FlexBtnStm_Ready_Entry( FlexButton* pFlexButton, FlexBtnStm* pStm ){
     if( HdStateMachine_Enterable( &pStm->base, FlexBtnStm_Ready ) ){
         ObjsBuilder_showEntry( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	32	57	759	565	-126	-25	1199	764" );
@@ -774,13 +764,6 @@ static BOOL FlexBtnStm_StateDefaultTrans( FlexButton* pFlexButton, FlexBtnStm* p
     }   }while( FALSE );
     return bResult;
 }
-static BOOL FlexBtnStm_RunToCompletion( FlexButton* pFlexButton, FlexBtnStm* pStm ){
-    BOOL bResult;
-    do{
-        bResult = FlexBtnStm_StateDefaultTrans( pFlexButton, pStm );
-    } while ( bResult );
-    return bResult;
-}
 static int FlexBtnStm_IsFinished(FlexBtnStm* pFlexBtnStm){
     return pFlexBtnStm->base.nCurrentState == FlexBtnStm_StateMachine0 && pFlexBtnStm->base.nCurrentState == pFlexBtnStm->base.nPseudostate;
 }
@@ -816,7 +799,6 @@ static BOOL FlexBtnStm_EventProc( FlexButton* pFlexButton, FlexBtnStm* pStm, Fle
     case FlexBtnStm_ToggleStyle:                bResult |= FlexBtnStm_ToggleStyle_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
     default: break;
     }
-    FlexBtnStm_RunToCompletion( pFlexButton, pStm );
     return bResult;
 }
 static BOOL FlexBtnStm_IsIn( FlexBtnStm* pStm, uint64_t nCompositeState ) {
@@ -831,12 +813,15 @@ static BOOL FlexBtnStm_Abort( FlexButton* pFlexButton, FlexBtnStm* pStm ) {
     return TRUE;
 }
 BOOL FlexButton_EventProc( FlexButton* pFlexButton, FlexButton_EVENT nEventId, void* pEventParams ){
-    return FlexBtnStm_EventProc( pFlexButton, &pFlexButton->mainStm, nEventId, pEventParams );
+    BOOL bResult = FlexBtnStm_EventProc( pFlexButton, &pFlexButton->mainStm, nEventId, pEventParams );
+    do{}while( FlexBtnStm_StateDefaultTrans( pFlexButton, &pFlexButton->mainStm ) );
+    return bResult;
 }
 BOOL FlexButton_Start( FlexButton* pFlexButton ){
     FlexBtnStm_Abort( pFlexButton, &pFlexButton->mainStm );
     FlexBtnStm_Reset( pFlexButton, &pFlexButton->mainStm, NULL, STATE_UNDEF );
-    return FlexBtnStm_RunToCompletion( pFlexButton, &pFlexButton->mainStm );
+    do{}while( FlexBtnStm_StateDefaultTrans( pFlexButton, &pFlexButton->mainStm ) );
+    return TRUE;
 }
 BOOL FlexButton_Reset( FlexButton* pFlexButton, uint64_t nEntryPoint ){
     return FlexBtnStm_Reset( pFlexButton, &pFlexButton->mainStm, NULL, nEntryPoint );

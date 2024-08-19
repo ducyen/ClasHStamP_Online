@@ -23,10 +23,10 @@ PhxJoint* PhxPivotJoint_Copy( PhxPivotJoint* pPhxPivotJoint, const PhxPivotJoint
 /** @class PhxPivotJoint
  * @extends PhxJoint
  */
+struct tagPhxPivotJoint{
 #define PhxPivotJoint_CLASS                                                                     \
     PhxJoint_CLASS                                                                              \
 
-typedef struct tagPhxPivotJoint{
     PhxPivotJoint_CLASS    
-}PhxPivotJoint;
+};
 #endif//__PhxPivotJoint_INTERNAL__

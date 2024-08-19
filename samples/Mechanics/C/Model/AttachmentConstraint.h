@@ -21,10 +21,10 @@ TransformConstraint* AttachmentConstraint_Copy( AttachmentConstraint* pAttachmen
 /** @class AttachmentConstraint
  * @extends TransformConstraint
  */
+struct tagAttachmentConstraint{
 #define AttachmentConstraint_CLASS                                                              \
     TransformConstraint_CLASS                                                                   \
 
-typedef struct tagAttachmentConstraint{
     AttachmentConstraint_CLASS    
-}AttachmentConstraint;
+};
 #endif//__AttachmentConstraint_INTERNAL__

@@ -26,12 +26,12 @@ PhxJoint* PhxSimpleMotor_Copy( PhxSimpleMotor* pPhxSimpleMotor, const PhxSimpleM
 /** @class PhxSimpleMotor
  * @extends PhxJoint
  */
+struct tagPhxSimpleMotor{
 #define PhxSimpleMotor_CLASS                                                                    \
     PhxJoint_CLASS                                                                              \
     cpFloat m_rate;                                                                                                            \
     PhxJoint* m_next0;                                          \
 
-typedef struct tagPhxSimpleMotor{
     PhxSimpleMotor_CLASS    
-}PhxSimpleMotor;
+};
 #endif//__PhxSimpleMotor_INTERNAL__

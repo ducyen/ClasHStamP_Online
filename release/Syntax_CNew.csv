@@ -325,8 +325,7 @@ static BOOL [Scope]_EventProc( [tYPE]* p[tYPE], [sCOPE]* pStm, [tYPE]_EVENT nEve
 ","    case [sCOPE]_[nAME]:[->48]bResult |= [Scope]_[nAME]_EventProc( p[tYPE], pStm, nEventId, pEventParams ); break;
 ","    default: break;
     }
-","    [Scope]_RunToCompletion( p[tYPE], pStm );
-    return bResult;
+","    return bResult;
 }
 static BOOL [Scope]_IsIn( [sCOPE]* pStm, uint64_t nCompositeState ) {
 [vALUE]    if( IS_IN( pStm->base.nCurrentState, nCompositeState ) ){ return TRUE; }
@@ -415,7 +414,6 @@ statemachine,,,,"static void [nAME]_BgnTrans( [cONTAINER] *p[tYPE], [nAME]* pStm
 static void [nAME]_EndTrans( [cONTAINER] *p[tYPE], [nAME]* pStm );
 static BOOL [nAME]_Abort( [cONTAINER]* p[tYPE], [nAME]* pStm );
 static BOOL [nAME]_EventProc( [cONTAINER]* p[tYPE], [nAME]* pStm, [cONTAINER]_EVENT nEventId, void* pEventParams );
-static BOOL [nAME]_RunToCompletion( [cONTAINER]* p[tYPE], [nAME]* pStm );
 ",
 default_trans,"static BOOL [Scope]_StateDefaultTrans( [tYPE]* p[tYPE], [sCOPE]* pStm ){
     BOOL bResult = FALSE;
@@ -430,13 +428,6 @@ default_trans,"static BOOL [Scope]_StateDefaultTrans( [tYPE]* p[tYPE], [sCOPE]* 
 [->]}else{
 [->]}   }while( FALSE );
 ","    return bResult;
-}
-static BOOL [Scope]_RunToCompletion( [tYPE]* p[tYPE], [sCOPE]* pStm ){
-    BOOL bResult;
-    do{
-        bResult = [Scope]_StateDefaultTrans( p[tYPE], pStm );
-    } while ( bResult );
-    return bResult;
 }
 "
 substm_impl,"[->]if( ![sCOPE]_IsIn( &pStm->[nAME][sCOPE], [mODIFIER]_[vALUE] ) ){ break; }
@@ -471,12 +462,15 @@ junction,"[->]pStm->base.nPseudostate = [sCOPE]_[vALUE];
 ","[tYPE]_IsIn( p[tYPE], [mODIFIER]_[vALUE] )","
 [->] && [tYPE]_IsIn( p[tYPE], [mODIFIER]_[vALUE] )"
 api_call,"BOOL [tYPE]_EventProc( [tYPE]* p[tYPE], [tYPE]_EVENT nEventId, void* pEventParams ){
-    return [Scope]_EventProc( p[tYPE], &p[tYPE]->mainStm, nEventId, pEventParams );
+    BOOL bResult = [Scope]_EventProc( p[tYPE], &p[tYPE]->mainStm, nEventId, pEventParams );
+    do{}while( [Scope]_StateDefaultTrans( p[tYPE], &p[tYPE]->mainStm ) );
+    return bResult;
 }
 BOOL [tYPE]_Start( [tYPE]* p[tYPE] ){
     [Scope]_Abort( p[tYPE], &p[tYPE]->mainStm );
     [Scope]_Reset( p[tYPE], &p[tYPE]->mainStm, NULL, STATE_UNDEF );
-    return [Scope]_RunToCompletion( p[tYPE], &p[tYPE]->mainStm );
+    do{}while( [Scope]_StateDefaultTrans( p[tYPE], &p[tYPE]->mainStm ) );
+    return TRUE;
 }
 BOOL [tYPE]_Reset( [tYPE]* p[tYPE], uint64_t nEntryPoint ){
     return [Scope]_Reset( p[tYPE], &p[tYPE]->mainStm, NULL, nEntryPoint );

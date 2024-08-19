@@ -24,13 +24,13 @@ PhxJoint* PhxSlideJoint_Copy( PhxSlideJoint* pPhxSlideJoint, const PhxSlideJoint
 /** @class PhxSlideJoint
  * @extends PhxJoint
  */
+struct tagPhxSlideJoint{
 #define PhxSlideJoint_CLASS                                                                     \
     PhxJoint_CLASS                                                                              \
     cpFloat min;                                                                                                                  \
     cpFloat max;                                                                                                                  \
     PhxJoint* m_next0;                                          \
 
-typedef struct tagPhxSlideJoint{
     PhxSlideJoint_CLASS    
-}PhxSlideJoint;
+};
 #endif//__PhxSlideJoint_INTERNAL__

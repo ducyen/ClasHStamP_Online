@@ -27,13 +27,13 @@ PhxJoint* PhxRotaryLimitJoint_Copy( PhxRotaryLimitJoint* pPhxRotaryLimitJoint, c
 /** @class PhxRotaryLimitJoint
  * @extends PhxJoint
  */
+struct tagPhxRotaryLimitJoint{
 #define PhxRotaryLimitJoint_CLASS                                                               \
     PhxJoint_CLASS                                                                              \
     cpFloat min;                                                                                                                  \
     cpFloat max;                                                                                                                  \
     PhxJoint* m_next0;                                          \
 
-typedef struct tagPhxRotaryLimitJoint{
     PhxRotaryLimitJoint_CLASS    
-}PhxRotaryLimitJoint;
+};
 #endif//__PhxRotaryLimitJoint_INTERNAL__

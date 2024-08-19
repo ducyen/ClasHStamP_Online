@@ -26,6 +26,7 @@ HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdSt
 /** @class HdStateMachine
  * @extends 
  */
+struct tagHdStateMachine{
 #define HdStateMachine_CLASS                                                                    \
     size_t cbSize;                                                                              \
     HdStateMachine* pParentStm;                                 \
@@ -38,7 +39,6 @@ HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdSt
     SDL_Texture* m_stmImage;                                                                                          \
     SDL_Rect m_stmRect;                                                                                                    \
 
-typedef struct tagHdStateMachine{
     HdStateMachine_CLASS    
-}HdStateMachine;
+};
 #endif//__HdStateMachine_INTERNAL__

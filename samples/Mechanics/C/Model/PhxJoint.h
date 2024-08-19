@@ -29,6 +29,7 @@ PhxJoint* PhxJoint_Copy( PhxJoint* pPhxJoint, const PhxJoint* pSource );
 /** @class PhxJoint
  * @extends 
  */
+struct tagPhxJoint{
 #define PhxJoint_CLASS                                                                          \
     const PhxJointVtbl* const vTbl;                                                             \
     size_t cbSize;                                                                              \
@@ -39,7 +40,6 @@ PhxJoint* PhxJoint_Copy( PhxJoint* pPhxJoint, const PhxJoint* pSource );
     cpConstraint* m_cpJoint;                                                                                          \
     PhxJoint* m_next;                                           \
 
-typedef struct tagPhxJoint{
     PhxJoint_CLASS    
-}PhxJoint;
+};
 #endif//__PhxJoint_INTERNAL__

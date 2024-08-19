@@ -21,10 +21,10 @@ PhxJoint* PhxDampedRotarySpring_Copy( PhxDampedRotarySpring* pPhxDampedRotarySpr
 /** @class PhxDampedRotarySpring
  * @extends PhxJoint
  */
+struct tagPhxDampedRotarySpring{
 #define PhxDampedRotarySpring_CLASS                                                             \
     PhxJoint_CLASS                                                                              \
 
-typedef struct tagPhxDampedRotarySpring{
     PhxDampedRotarySpring_CLASS    
-}PhxDampedRotarySpring;
+};
 #endif//__PhxDampedRotarySpring_INTERNAL__

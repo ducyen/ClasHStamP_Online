@@ -21,10 +21,10 @@ PhxJoint* PhxGearJoint_Copy( PhxGearJoint* pPhxGearJoint, const PhxGearJoint* pS
 /** @class PhxGearJoint
  * @extends PhxJoint
  */
+struct tagPhxGearJoint{
 #define PhxGearJoint_CLASS                                                                      \
     PhxJoint_CLASS                                                                              \
 
-typedef struct tagPhxGearJoint{
     PhxGearJoint_CLASS    
-}PhxGearJoint;
+};
 #endif//__PhxGearJoint_INTERNAL__

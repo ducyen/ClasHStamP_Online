@@ -27,6 +27,7 @@ Sprite* Primitive_Copy( Primitive* pPrimitive, const Primitive* pSource );
 /** @class Primitive
  * @extends Sprite
  */
+struct tagPrimitive{
 #define Primitive_CLASS                                                                         \
     Sprite_CLASS                                                                                \
     STR255 primitiveType;                                       \
@@ -36,7 +37,6 @@ Sprite* Primitive_Copy( Primitive* pPrimitive, const Primitive* pSource );
     STR255 oldLabel;                                            \
     TTF_Font* font;                                                                                                            \
 
-typedef struct tagPrimitive{
     Primitive_CLASS    
-}Primitive;
+};
 #endif//__Primitive_INTERNAL__

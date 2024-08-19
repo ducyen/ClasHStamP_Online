@@ -13,8 +13,8 @@ echo Geometry: %GEOMETRY%
 :: Define sample home path
 set "SAMPLE_HOME=samples\%SAMPLE_DIR%"
 
-echo Running command: .\astah-uml\astah-command.bat -f %SAMPLE_HOME%\Design.asta -image -o %SAMPLE_HOME%\Image -t png -dpi 72
-.\astah-uml\astah-command.bat -f %SAMPLE_HOME%\Design.asta -image -o %SAMPLE_HOME%\Image -t png -dpi 72
+echo Running command: .\astah-pro\astah-command.bat -f %SAMPLE_HOME%\Design.asta -image -o %SAMPLE_HOME%\Image -t png -dpi 72
+.\astah-pro\astah-command.bat -f %SAMPLE_HOME%\Design.asta -image -o %SAMPLE_HOME%\Image -t png -dpi 72
 
 :: Navigate to the sample directory
 cd "%WORKING_DIR%\samples\%SAMPLE_DIR%\C"

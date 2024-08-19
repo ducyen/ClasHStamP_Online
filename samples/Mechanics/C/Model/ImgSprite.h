@@ -37,6 +37,7 @@ Sprite* ImgSprite_Copy( ImgSprite* pImgSprite, const ImgSprite* pSource );
 /** @class ImgSprite
  * @extends Sprite
  */
+struct tagImgSprite{
 #define ImgSprite_CLASS                                                                         \
     Sprite_CLASS                                                                                \
     SDL_Texture* m_buffer;                                                                                              \
@@ -46,7 +47,6 @@ Sprite* ImgSprite_Copy( ImgSprite* pImgSprite, const ImgSprite* pSource );
     EventListener* m_mouseListeners;                            \
     EventListener* m_onDrawListeners;                           \
 
-typedef struct tagImgSprite{
     ImgSprite_CLASS    
-}ImgSprite;
+};
 #endif//__ImgSprite_INTERNAL__

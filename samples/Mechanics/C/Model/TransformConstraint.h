@@ -20,10 +20,10 @@ Constraint* TransformConstraint_Copy( TransformConstraint* pTransformConstraint,
 /** @class TransformConstraint
  * @extends Constraint
  */
+struct tagTransformConstraint{
 #define TransformConstraint_CLASS                                                               \
     Constraint_CLASS                                                                            \
 
-typedef struct tagTransformConstraint{
     TransformConstraint_CLASS    
-}TransformConstraint;
+};
 #endif//__TransformConstraint_INTERNAL__

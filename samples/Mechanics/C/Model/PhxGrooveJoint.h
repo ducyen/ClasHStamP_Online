@@ -25,12 +25,12 @@ PhxJoint* PhxGrooveJoint_Copy( PhxGrooveJoint* pPhxGrooveJoint, const PhxGrooveJ
 /** @class PhxGrooveJoint
  * @extends PhxJoint
  */
+struct tagPhxGrooveJoint{
 #define PhxGrooveJoint_CLASS                                                                    \
     PhxJoint_CLASS                                                                              \
     Sprite** m_pivotTgt;                                        \
     PhxJoint* m_next0;                                          \
 
-typedef struct tagPhxGrooveJoint{
     PhxGrooveJoint_CLASS    
-}PhxGrooveJoint;
+};
 #endif//__PhxGrooveJoint_INTERNAL__

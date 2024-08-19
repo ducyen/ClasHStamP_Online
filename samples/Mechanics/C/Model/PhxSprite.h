@@ -36,6 +36,7 @@ Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource );
 /** @class PhxSprite
  * @extends Sprite
  */
+struct tagPhxSprite{
 #define PhxSprite_CLASS                                                                         \
     Sprite_CLASS                                                                                \
     cpVect* m_verts;                                                                                                          \
@@ -51,7 +52,6 @@ Sprite* PhxSprite_Copy( PhxSprite* pPhxSprite, const PhxSprite* pSource );
     cpPolygon* m_decomposedPolygons;                                                                          \
     SDL_Point m_sdlCenter;                                                                                              \
 
-typedef struct tagPhxSprite{
     PhxSprite_CLASS    
-}PhxSprite;
+};
 #endif//__PhxSprite_INTERNAL__

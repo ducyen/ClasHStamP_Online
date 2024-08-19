@@ -46,6 +46,7 @@ Sprite* Sprite_Copy( Sprite* pSprite, const Sprite* pSource );
 /** @class Sprite
  * @extends 
  */
+struct tagSprite{
 #define Sprite_CLASS                                                                            \
     const SpriteVtbl* const vTbl;                                                               \
     size_t cbSize;                                                                              \
@@ -62,7 +63,6 @@ Sprite* Sprite_Copy( Sprite* pSprite, const Sprite* pSource );
     SDL_Window* m_stmWindow;                                                                                          \
     bool m_stmShow;                                                                                                            \
 
-typedef struct tagSprite{
     Sprite_CLASS    
-}Sprite;
+};
 #endif//__Sprite_INTERNAL__
