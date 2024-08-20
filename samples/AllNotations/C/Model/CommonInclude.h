@@ -113,9 +113,6 @@ typedef enum{
     MDD_EVENT_TYPE_MAX
 }MDD_EventType;
 
-int InputValue(char* pMsg);
-void DisplayMsg(char* pMsg);
-
 #ifdef _MSC_VER
 # define strtok_r strtok_s
 #endif

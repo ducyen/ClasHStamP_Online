@@ -144,10 +144,13 @@ static void Primitive_draw1(
         strncpy(copy, text, sizeof(copy));
         copy[sizeof(copy) - 1] = '\0';
         char* line = strtok_r(copy, "\n", &next_line);
-        pPrimitive->m_rect.h = 0;
-        pPrimitive->m_rect.w = 0;
+        BOOL isChanged = strcmp( pPrimitive->textLabel, pPrimitive->oldLabel ) != 0;
+        if( isChanged ){
+            pPrimitive->m_rect.h = 0;
+            pPrimitive->m_rect.w = 0;
+        }
         while (line != NULL) {
-            if( strcmp( pPrimitive->textLabel, pPrimitive->oldLabel ) != 0 ){
+            if( isChanged ){
                 SDL_Surface* surface = TTF_RenderText_Solid(pPrimitive->font, line, textColor);
                 if (surface != NULL) {
                     if( pPrimitive->m_rect.w < surface->w ){

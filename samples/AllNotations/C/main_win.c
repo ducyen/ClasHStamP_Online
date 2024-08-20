@@ -13,27 +13,8 @@ const char* getInputDir( void ) { return g_sInputDir; }
 static char* g_sOutputDir = "../TransImg/Design";
 const char* getOutputDir( void ) { return g_sOutputDir; }
 
-int InputValue(char* pMsg);
-void DisplayMsg(char* pMsg);
-
 #include "CommonInclude.h"
 #include "ObjsBuilder.h";
-
-int InputValue(char* pMsg) {
-    char n;
-    printf( "%s", pMsg );
-    scanf( "%c", &n );
-    char c = 0;
-    while( c != '\n' ){
-        scanf( "%c", &c );
-    }
-    return n - '0';
-}
-
-void DisplayMsg(char* pMsg) {
-    printf( "%s\n", pMsg );
-}
-
 #define FONT_CHAR_HEIGHT    ( 7 )
 #define FONT_CHAR_WIDTH     ( 5 )
 #define TEXT_ALIGN_LEFT     ( 0 )

@@ -135,6 +135,7 @@ typedef struct tagMainStm {
     SharedStm S9SharedStm;                                      
     uint64_t nS4History;
     uint64_t nS7History;
+    uint64_t nS10History;
 #define MainStm_MainTop_0                       ( MainStm_MainStmInit | MainStm_S1 | MainStm_S2 | MainStm_S3 | MainStm_S4 | MainStm_Junction | MainStm_S6 | MainStm_S8 | MainStm_S7 | MainStm_S10 | MainStm_S5 | MainStm_S9 )
 #define MainStm_MainStmInit                     ( 1ULL << 27 )
 #define MainStm_S1                              ( 1ULL << 28 )
@@ -156,14 +157,16 @@ typedef struct tagMainStm {
 #define MainStm_S712                            ( 1ULL << 44 )
 #define MainStm_S71Init                         ( 1ULL << 45 )
 #define MainStm_S7Init                          ( 1ULL << 46 )
-#define MainStm_S10                             ( 1ULL << 47 )
-#define MainStm_S5                              ( 1ULL << 48 )
-#define MainStm_S9                              ( 1ULL << 49 )
+#define MainStm_S101                            ( 1ULL << 47 )
+#define MainStm_S102                            ( 1ULL << 48 )
+#define MainStm_S5                              ( 1ULL << 49 )
+#define MainStm_S9                              ( 1ULL << 50 )
 #define MainStm_S2                              ( MainStm_S2Init | MainStm_S22 | MainStm_S21 )
 #define MainStm_S4                              ( MainStm_S4Init | MainStm_S42 | MainStm_S41 )
 #define MainStm_S8                              ( MainStm_S812 | MainStm_S813 | MainStm_S811 | MainStm_S8Init )
 #define MainStm_S71                             ( MainStm_S711 | MainStm_S712 | MainStm_S71Init )
 #define MainStm_S7                              ( MainStm_S72 | MainStm_S71 | MainStm_S7Init )
+#define MainStm_S10                             ( MainStm_S101 | MainStm_S102 )
 }MainStm;
 BOOL MainStm_Reset( CarBody* pMainTop_0, MainStm* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 #define MainStm_Init() {\
