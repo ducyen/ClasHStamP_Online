@@ -3,6 +3,6 @@
 #include "CommonInclude.h"
 #include "UsedDependency.h"
 UsedDependency* UsedDependency_Copy( UsedDependency* pUsedDependency, const UsedDependency* pSource ){
-    pUsedDependency->attribute1 = pSource->attribute1;
+    pUsedDependency->attribute6 = pSource->attribute6;
     return ( UsedDependency* )pUsedDependency;
 }

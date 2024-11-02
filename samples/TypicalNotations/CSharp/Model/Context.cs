@@ -2,46 +2,82 @@
 using System;                                                   
 using System.Collections.Generic;
 using boolean = System.Boolean;
-using Model;
+using Abstracts;
 using Interfaces;
+using Model;
 namespace Model {
     public  class Context: BaseClass, Interface2, Interface1
     {
-        public override void virtualFunc(
-            int param0
+        private static int classOrStaticAttribute;              
+        private static int[] initializedStaticArray = { 1, 2, 3 };
+        private const int finalConstantAttribute = 5;           
+        public  static void classOrStaticMethod(
         ){
-            Console.WriteLine("Hi, How are you");
-            Console.WriteLine("One more line");                
-        } /* Context.virtualFunc */
+            
+        } /* Context.classOrStaticMethod */
+        public override void publicMethod(
+        ){
+            
+        } /* Context.publicMethod */
 
-        public  static void staticFunc(
+        private void privateLeafMethod(
         ){
-                    
-        } /* Context.staticFunc */
-        public void leafFunc(
-        ){
-        } /* Context.leafFunc */
-        public void operation1(
-        ){
-            
-        } /* Context.operation1 */
-        public void operation2(
-        ){
-            
-        } /* Context.operation2 */
+        } /* Context.privateLeafMethod */
         public  Context(
-            int _attribute0,
-            Composition _aComposition
-        ):  base(  )
+        ): base(3){
+        } /* Context.Context */
+        public void methodWithParams(
+            String parm1,
+            out float parm2
+        ){
+            parm2 = 3f;
+        } /* Context.methodWithParams */
+        public UsedDependency methodReturnsSomething(
+        ){
+            return null;
+        } /* Context.methodReturnsSomething */
+        public void methodThrowsException(
+        ){
+        } /* Context.methodThrowsException */
+        public void finalMethod(
+        ){
+        } /* Context.finalMethod */
+        public override int derivableAttribute {
+            set{ privateAttribute = value; }
+
+        }
+        protected override void protectedMethod(
+        ){
+        } /* Context.protectedMethod */
+
+        protected override void packageVisibleMethod(
+        ){
+        } /* Context.packageVisibleMethod */
+
+        public  Context(
+            int _derivableAttribute,
+            String _publicAttribute,
+            int _privateAttribute,
+            int _internalAttribute,
+            int _readOnlyAttribute,
+            List<Aggregration> _anAggregation,
+            List<Composition> _aProtectedComposition
+        ):  base( _derivableAttribute )
         {
-            attribute1 = 345;
-            attribute0 = _attribute0;
-            anAggregation = null;
-            aComposition = _aComposition;
+            publicAttribute = _publicAttribute;
+            privateAttribute = _privateAttribute;
+            internalAttribute = _internalAttribute;
+            isInitializedAttribute = true;
+            readOnlyAttribute = _readOnlyAttribute;
+            anAggregation = _anAggregation;
+            aProtectedComposition = _aProtectedComposition;
         }                                                                                       
-        private int attribute1;                                 
-        private int attribute0;                                 
-        private   Aggregration anAggregation;                   
-        private Composition aComposition;                       
+        public String publicAttribute;                          
+        private int privateAttribute;                           
+        internal int internalAttribute;                         
+        private boolean isInitializedAttribute;                 
+        private readonly int readOnlyAttribute;                 
+        private   List<Aggregration> anAggregation;             
+        protected   List<Composition> aProtectedComposition;    
     }
 }

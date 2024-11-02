@@ -5,7 +5,9 @@ using boolean = System.Boolean;
 namespace Interfaces {
     public  interface Interface2
     {
-        void operation2(
+        void methodWithParams(
+            String parm1,
+            out float parm2
         );
     }
 }

@@ -5,6 +5,15 @@
 #include "Generic/Statemachine.h"
 
 class ContextImpl: public Context{
+    public:  enum AnEnum {
+        One,                                                    
+        Two,                                                    
+        Three,                                                  
+        AnEnum_NUM
+    };
+    public:  struct E1Params: public EventParams{
+        AnEnum x;                                               
+    };
     public: enum _EventId {
         E0,
         E1,
@@ -17,40 +26,22 @@ class ContextImpl: public Context{
     const std::string EventId_toString( _EventId value );
     friend class AFriend;
     friend class Main;
-    class S111Stm: public Statemachine {
+    protected: virtual void protectedMethod(
+    ){
+    } /* ContextImpl.protectedMethod */
+
+    protected:  static boolean checkE1Params(
+        EventParams* e
+    ){
+        return ( ( E1Params* )e )->x == Two;
+    } /* ContextImpl.checkE1Params */
+    class S8_Region1: public Statemachine {
     public:
-        class S111Top: public TopState{ using TThisState = S111Top;
+        class S8_Top: public TopState{ using TThisState = S8_Top;
             public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
         };
-        class Entry1: public Pseudostate<Entry1>{};
-        class InitPt: public Pseudostate<InitPt>{};
-        class S14: public S111Top { using TThisState = S14; using TSuperState = S111Top;
-            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
-            virtual void Entry( Context* pContext, Statemachine* pStm ){
-                if( pStm->IsEnterable<TThisState>() ){
-                    std::cout << typeid(this).name() << " entry\n";
-                }
-            }
-            virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
-                bool bResult = false;
-                pStm->m_pSourceState = TThisState::GetInstance();
-                switch( nEventId ){
-                case E2:{
-                    pStm->BgnTrans( pContext, S15::GetInstance() );
-                    pStm->EndTrans( pContext );
-                    bResult = true;
-                } break;
-                default: break;
-                }
-                return bResult;
-            }
-            virtual void Exit(Context* pContext, Statemachine* pStm) {
-                if (pStm->IsExitable<TThisState>()) {
-                    std::cout << typeid(this).name() << " exit\n";
-                }
-            }
-        };
-        class S15: public S111Top { using TThisState = S15; using TSuperState = S111Top;
+        class InitialPseudostate0: public Pseudostate<InitialPseudostate0>{};
+        class S821: public S8_Top { using TThisState = S821; using TSuperState = S8_Top;
             public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
             virtual void Entry( Context* pContext, Statemachine* pStm ){
                 if( pStm->IsEnterable<TThisState>() ){
@@ -68,327 +59,7 @@ class ContextImpl: public Context{
                 }
             }
         };
-        virtual bool DefaultTrans( Context* pContext ){
-            bool bResult = false;
-            Statemachine* pStm = this;
-            do {
-                if (m_pPseudostate == S111Stm::Entry1::GetInstance()) {
-                    pStm->BgnTrans( pContext, S14::GetInstance() );
-                    pStm->EndTrans( pContext );
-                    bResult = true;
-                } else if (m_pCurrentState == S111Top::GetInstance() && m_pPseudostate == S111Stm::InitPt::GetInstance()) {
-                    pStm->BgnTrans( pContext, S15::GetInstance() );
-                    pStm->EndTrans( pContext );
-                    bResult = true;
-                } else if (m_pCurrentState != m_pPseudostate && dynamic_cast<S111Top*>(m_pPseudostate) != NULL) {
-                    pStm->BgnTrans( pContext, dynamic_cast<TopState*>(m_pPseudostate) );
-                    pStm->EndTrans( pContext );
-                    bResult = true;
-                } else {
-                }
-            } while (false);
-            return bResult;
-        }
-        virtual bool Reset(Context* pContext, Statemachine* pParentStm, StateBase* pEntryPoint) {
-            m_pParentStm = pParentStm;
-            if (pEntryPoint == null) {
-                if (IsFinished()) {
-                    m_pPseudostate = InitPt::GetInstance();
-                }
-            } else {
-                if (IsFinished()) {
-                    m_pPseudostate = pEntryPoint;
-                    return false;
-                } else {
-                    m_pPseudostate = pEntryPoint;
-                }                    
-            }
-            if (pEntryPoint != null) {
-            }
-            return RunToCompletion(pContext);
-        }
-        virtual bool EventProc(Context* pContext, int nEventId, EventParams* pParams){
-            bool bResult = false;
-            m_pLCAState = TopState::GetInstance();
-            bResult = m_pCurrentState->EventProc(pContext, this, nEventId, pParams);
-            RunToCompletion(pContext);
-            return bResult;
-        }
-        template<class TCompositeState = TopState>
-        bool IsInRecur() {
-            if (IsIn<TCompositeState>()) { return true; }
-            return false;
-        }
-        virtual bool Abort(Context* pContext) {
-            m_pSourceState = S111Top::GetInstance();
-            BgnTrans(pContext, S111Top::GetInstance());
-            EndTrans(pContext);
-            return true;
-        }
-        virtual bool IsFinished() {
-            return m_pCurrentState == S111Top::GetInstance() && m_pCurrentState == m_pPseudostate;
-        }
-        S111Stm(): Statemachine(S111Top::GetInstance(), S111Top::GetInstance()) {}
-    };
-    class S112Stm: public Statemachine {
-    public:
-        class S112Top: public TopState{ using TThisState = S112Top;
-            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
-        };
-        class Entry1: public Pseudostate<Entry1>{};
-        class InitPt: public Pseudostate<InitPt>{};
-        class Entry2: public Pseudostate<Entry2>{};
-        class S16: public S112Top { using TThisState = S16; using TSuperState = S112Top;
-            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
-            virtual void Entry( Context* pContext, Statemachine* pStm ){
-                if( pStm->IsEnterable<TThisState>() ){
-                    std::cout << typeid(this).name() << " entry\n";
-                }
-            }
-            virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
-                bool bResult = false;
-                pStm->m_pSourceState = TThisState::GetInstance();
-                switch( nEventId ){
-                case E3:{
-                    pStm->BgnTrans( pContext, S17::GetInstance() );
-                    pStm->EndTrans( pContext );
-                    bResult = true;
-                } break;
-                default: break;
-                }
-                return bResult;
-            }
-            virtual void Exit(Context* pContext, Statemachine* pStm) {
-                if (pStm->IsExitable<TThisState>()) {
-                    std::cout << typeid(this).name() << " exit\n";
-                }
-            }
-        };
-        class S17: public S112Top { using TThisState = S17; using TSuperState = S112Top;
-            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
-            virtual void Entry( Context* pContext, Statemachine* pStm ){
-                if( pStm->IsEnterable<TThisState>() ){
-                    std::cout << typeid(this).name() << " entry\n";
-                }
-            }
-            virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
-                bool bResult = false;
-                pStm->m_pSourceState = TThisState::GetInstance();
-                return bResult;
-            }
-            virtual void Exit(Context* pContext, Statemachine* pStm) {
-                if (pStm->IsExitable<TThisState>()) {
-                    std::cout << typeid(this).name() << " exit\n";
-                }
-            }
-        };
-        virtual bool DefaultTrans( Context* pContext ){
-            bool bResult = false;
-            Statemachine* pStm = this;
-            do {
-                if (m_pPseudostate == S112Stm::Entry1::GetInstance()) {
-                    pStm->BgnTrans( pContext, S16::GetInstance() );
-                    pStm->EndTrans( pContext );
-                    bResult = true;
-                } else if (m_pCurrentState == S112Top::GetInstance() && m_pPseudostate == S112Stm::InitPt::GetInstance()) {
-                    pStm->BgnTrans( pContext, S16::GetInstance() );
-                    pStm->EndTrans( pContext );
-                    bResult = true;
-                } else if (m_pPseudostate == S112Stm::Entry2::GetInstance()) {
-                    pStm->BgnTrans( pContext, S17::GetInstance() );
-                    pStm->EndTrans( pContext );
-                    bResult = true;
-                } else if (m_pCurrentState != m_pPseudostate && dynamic_cast<S112Top*>(m_pPseudostate) != NULL) {
-                    pStm->BgnTrans( pContext, dynamic_cast<TopState*>(m_pPseudostate) );
-                    pStm->EndTrans( pContext );
-                    bResult = true;
-                } else {
-                }
-            } while (false);
-            return bResult;
-        }
-        virtual bool Reset(Context* pContext, Statemachine* pParentStm, StateBase* pEntryPoint) {
-            m_pParentStm = pParentStm;
-            if (pEntryPoint == null) {
-                if (IsFinished()) {
-                    m_pPseudostate = InitPt::GetInstance();
-                }
-            } else {
-                if (IsFinished()) {
-                    m_pPseudostate = pEntryPoint;
-                    return false;
-                } else {
-                    m_pPseudostate = pEntryPoint;
-                }                    
-            }
-            if (pEntryPoint != null) {
-            }
-            return RunToCompletion(pContext);
-        }
-        virtual bool EventProc(Context* pContext, int nEventId, EventParams* pParams){
-            bool bResult = false;
-            m_pLCAState = TopState::GetInstance();
-            bResult = m_pCurrentState->EventProc(pContext, this, nEventId, pParams);
-            RunToCompletion(pContext);
-            return bResult;
-        }
-        template<class TCompositeState = TopState>
-        bool IsInRecur() {
-            if (IsIn<TCompositeState>()) { return true; }
-            return false;
-        }
-        virtual bool Abort(Context* pContext) {
-            m_pSourceState = S112Top::GetInstance();
-            BgnTrans(pContext, S112Top::GetInstance());
-            EndTrans(pContext);
-            return true;
-        }
-        virtual bool IsFinished() {
-            return m_pCurrentState == S112Top::GetInstance() && m_pCurrentState == m_pPseudostate;
-        }
-        S112Stm(): Statemachine(S112Top::GetInstance(), S112Top::GetInstance()) {}
-    };
-    class S18Stm: public Statemachine {
-    public:
-        class S18Top: public TopState{ using TThisState = S18Top;
-            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
-        };
-        class Entry1: public Pseudostate<Entry1>{};
-        class Exit1: public Pseudostate<Exit1>{};
-        class InitPt: public Pseudostate<InitPt>{};
-        class S181: public S18Top { using TThisState = S181; using TSuperState = S18Top;
-            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
-            virtual void Entry( Context* pContext, Statemachine* pStm ){
-                if( pStm->IsEnterable<TThisState>() ){
-                    std::cout << typeid(this).name() << " entry\n";
-                }
-            }
-            virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
-                bool bResult = false;
-                pStm->m_pSourceState = TThisState::GetInstance();
-                switch( nEventId ){
-                case E0:{
-                    pStm->BgnTrans( pContext, S182::GetInstance() );
-                    pStm->EndTrans( pContext );
-                    bResult = true;
-                } break;
-                default: break;
-                }
-                return bResult;
-            }
-            virtual void Exit(Context* pContext, Statemachine* pStm) {
-                if (pStm->IsExitable<TThisState>()) {
-                    std::cout << typeid(this).name() << " exit\n";
-                }
-            }
-        };
-        class S182: public S18Top { using TThisState = S182; using TSuperState = S18Top;
-            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
-            virtual void Entry( Context* pContext, Statemachine* pStm ){
-                if( pStm->IsEnterable<TThisState>() ){
-                    std::cout << typeid(this).name() << " entry\n";
-                }
-            }
-            virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
-                bool bResult = false;
-                pStm->m_pSourceState = TThisState::GetInstance();
-                switch( nEventId ){
-                case E2:{
-                    pStm->BgnTrans( pContext, S18Top::GetInstance() );
-                    pStm->EndTrans( pContext );
-                    bResult = true;
-                } break;
-                case E3:{
-                    pStm->BgnTrans( pContext, S18Top::GetInstance() );
-                    pStm->m_pParentStm->m_pPseudostate = S18Stm::Exit1::GetInstance();
-                    pStm->EndTrans( pContext );
-                    bResult = true;
-                } break;
-                default: break;
-                }
-                return bResult;
-            }
-            virtual void Exit(Context* pContext, Statemachine* pStm) {
-                if (pStm->IsExitable<TThisState>()) {
-                    std::cout << typeid(this).name() << " exit\n";
-                }
-            }
-        };
-        virtual bool DefaultTrans( Context* pContext ){
-            bool bResult = false;
-            Statemachine* pStm = this;
-            do {
-                if (m_pPseudostate == S18Stm::Entry1::GetInstance()) {
-                    pStm->BgnTrans( pContext, S181::GetInstance() );
-                    pStm->EndTrans( pContext );
-                    bResult = true;
-                } else if (m_pCurrentState == S18Top::GetInstance() && m_pPseudostate == S18Stm::InitPt::GetInstance()) {
-                    pStm->BgnTrans( pContext, S181::GetInstance() );
-                    pStm->EndTrans( pContext );
-                    bResult = true;
-                } else if (m_pCurrentState != m_pPseudostate && dynamic_cast<S18Top*>(m_pPseudostate) != NULL) {
-                    pStm->BgnTrans( pContext, dynamic_cast<TopState*>(m_pPseudostate) );
-                    pStm->EndTrans( pContext );
-                    bResult = true;
-                } else {
-                }
-            } while (false);
-            return bResult;
-        }
-        virtual bool Reset(Context* pContext, Statemachine* pParentStm, StateBase* pEntryPoint) {
-            m_pParentStm = pParentStm;
-            if (pEntryPoint == null) {
-                if (IsFinished()) {
-                    m_pPseudostate = InitPt::GetInstance();
-                }
-            } else {
-                if (IsFinished()) {
-                    m_pPseudostate = pEntryPoint;
-                    return false;
-                } else {
-                    m_pPseudostate = pEntryPoint;
-                }                    
-            }
-            if (pEntryPoint != null) {
-            }
-            return RunToCompletion(pContext);
-        }
-        virtual bool EventProc(Context* pContext, int nEventId, EventParams* pParams){
-            bool bResult = false;
-            m_pLCAState = TopState::GetInstance();
-            bResult = m_pCurrentState->EventProc(pContext, this, nEventId, pParams);
-            RunToCompletion(pContext);
-            return bResult;
-        }
-        template<class TCompositeState = TopState>
-        bool IsInRecur() {
-            if (IsIn<TCompositeState>()) { return true; }
-            return false;
-        }
-        virtual bool Abort(Context* pContext) {
-            m_pSourceState = S18Top::GetInstance();
-            BgnTrans(pContext, S18Top::GetInstance());
-            EndTrans(pContext);
-            return true;
-        }
-        virtual bool IsFinished() {
-            return m_pCurrentState == S18Top::GetInstance() && m_pCurrentState == m_pPseudostate;
-        }
-        S18Stm(): Statemachine(S18Top::GetInstance(), S18Top::GetInstance()) {}
-    };
-    class MainStm: public Statemachine {
-    public:
-        class StmTop: public TopState{ using TThisState = StmTop;
-            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
-        };
-        S18Stm m_S18S18Stm;                                     
-        S111Stm m_S111S111Stm;                                  
-        S112Stm m_S112S112Stm;                                  
-        TopState* m_pS6History;
-        TopState* m_pS9History;
-        class InitPt: public Pseudostate<InitPt>{};
-        class Junction: public Pseudostate<Junction>{};
-        class S1: public StmTop { using TThisState = S1; using TSuperState = StmTop;
+        class S822: public S8_Top { using TThisState = S822; using TSuperState = S8_Top;
             public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
             virtual void Entry( Context* pContext, Statemachine* pStm ){
                 if( pStm->IsEnterable<TThisState>() ){
@@ -400,6 +71,341 @@ class ContextImpl: public Context{
                 pStm->m_pSourceState = TThisState::GetInstance();
                 switch( nEventId ){
                 case E1:{
+                    E1Params* e = ( E1Params* )pParams;
+                    pStm->BgnTrans( pContext, S821::GetInstance() );
+                    pStm->EndTrans( pContext );
+                    bResult = true;
+                } break;
+                default: break;
+                }
+                return bResult;
+            }
+            virtual void Exit(Context* pContext, Statemachine* pStm) {
+                if (pStm->IsExitable<TThisState>()) {
+                    std::cout << typeid(this).name() << " exit\n";
+                }
+            }
+        };
+        virtual bool DefaultTrans( Context* pContext ){
+            bool bResult = false;
+            Statemachine* pStm = this;
+            do {
+                if (m_pCurrentState == S8_Top::GetInstance() && m_pPseudostate == S8_Region1::InitialPseudostate0::GetInstance()) {
+                    pStm->BgnTrans( pContext, S822::GetInstance() );
+                    pStm->EndTrans( pContext );
+                    bResult = true;
+                } else if (m_pCurrentState != m_pPseudostate && dynamic_cast<S8_Top*>(m_pPseudostate) != NULL) {
+                    pStm->BgnTrans( pContext, dynamic_cast<TopState*>(m_pPseudostate) );
+                    pStm->EndTrans( pContext );
+                    bResult = true;
+                } else {
+                }
+            } while (false);
+            return bResult;
+        }
+        virtual bool Reset(Context* pContext, Statemachine* pParentStm, StateBase* pEntryPoint) {
+            m_pParentStm = pParentStm;
+            if (pEntryPoint == null) {
+                if (IsFinished()) {
+                    m_pPseudostate = InitialPseudostate0::GetInstance();
+                }
+            } else {
+                if (IsFinished()) {
+                    m_pPseudostate = pEntryPoint;
+                    return false;
+                } else {
+                    m_pPseudostate = pEntryPoint;
+                }                    
+            }
+            return RunToCompletion(pContext);
+        }
+        virtual bool EventProc(Context* pContext, int nEventId, EventParams* pParams){
+            bool bResult = false;
+            m_pLCAState = TopState::GetInstance();
+            bResult = m_pCurrentState->EventProc(pContext, this, nEventId, pParams);
+            RunToCompletion(pContext);
+            return bResult;
+        }
+        template<class TCompositeState = TopState>
+        bool IsInRecur() {
+            if (IsIn<TCompositeState>()) { return true; }
+            return false;
+        }
+        virtual bool Abort(Context* pContext) {
+            m_pSourceState = S8_Top::GetInstance();
+            BgnTrans(pContext, S8_Top::GetInstance());
+            EndTrans(pContext);
+            return true;
+        }
+        virtual bool IsFinished() {
+            return m_pCurrentState == S8_Top::GetInstance() && m_pCurrentState == m_pPseudostate;
+        }
+        S8_Region1(): Statemachine(S8_Top::GetInstance(), S8_Top::GetInstance()) {}
+    };
+    class S8_Region2: public Statemachine {
+    public:
+        class S8_Top: public TopState{ using TThisState = S8_Top;
+            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
+        };
+        class ForkPseudostate2: public Pseudostate<ForkPseudostate2>{};
+        class InitialPseudostate1: public Pseudostate<InitialPseudostate1>{};
+        class S831: public S8_Top { using TThisState = S831; using TSuperState = S8_Top;
+            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
+            virtual void Entry( Context* pContext, Statemachine* pStm ){
+                if( pStm->IsEnterable<TThisState>() ){
+                    std::cout << typeid(this).name() << " entry\n";
+                }
+            }
+            virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
+                bool bResult = false;
+                pStm->m_pSourceState = TThisState::GetInstance();
+                switch( nEventId ){
+                case E3:{
+                    if (((ContextImpl*)pContext)->IsIn<S8_Region1::S821>()
+                 && ((ContextImpl*)pContext)->IsIn<MainStm::S811>()) {
+                        pStm->BgnTrans( pContext, S8_Top::GetInstance() );
+                        pStm->m_pParentStm->m_pPseudostate = S8_Region2::ForkPseudostate2::GetInstance();
+                        pStm->EndTrans( pContext );
+                        bResult = true;
+                    }
+                } break;
+                default: break;
+                }
+                return bResult;
+            }
+            virtual void Exit(Context* pContext, Statemachine* pStm) {
+                if (pStm->IsExitable<TThisState>()) {
+                    std::cout << typeid(this).name() << " exit\n";
+                }
+            }
+        };
+        class S832: public S8_Top { using TThisState = S832; using TSuperState = S8_Top;
+            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
+            virtual void Entry( Context* pContext, Statemachine* pStm ){
+                if( pStm->IsEnterable<TThisState>() ){
+                    std::cout << typeid(this).name() << " entry\n";
+                }
+            }
+            virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
+                bool bResult = false;
+                pStm->m_pSourceState = TThisState::GetInstance();
+                return bResult;
+            }
+            virtual void Exit(Context* pContext, Statemachine* pStm) {
+                if (pStm->IsExitable<TThisState>()) {
+                    std::cout << typeid(this).name() << " exit\n";
+                }
+            }
+        };
+        virtual bool DefaultTrans( Context* pContext ){
+            bool bResult = false;
+            Statemachine* pStm = this;
+            do {
+                if (m_pCurrentState == S8_Top::GetInstance() && m_pPseudostate == S8_Region2::InitialPseudostate1::GetInstance()) {
+                    pStm->BgnTrans( pContext, S831::GetInstance() );
+                    pStm->EndTrans( pContext );
+                    bResult = true;
+                } else if (m_pCurrentState != m_pPseudostate && dynamic_cast<S8_Top*>(m_pPseudostate) != NULL) {
+                    pStm->BgnTrans( pContext, dynamic_cast<TopState*>(m_pPseudostate) );
+                    pStm->EndTrans( pContext );
+                    bResult = true;
+                } else {
+                }
+            } while (false);
+            return bResult;
+        }
+        virtual bool Reset(Context* pContext, Statemachine* pParentStm, StateBase* pEntryPoint) {
+            m_pParentStm = pParentStm;
+            if (pEntryPoint == null) {
+                if (IsFinished()) {
+                    m_pPseudostate = InitialPseudostate1::GetInstance();
+                }
+            } else {
+                if (IsFinished()) {
+                    m_pPseudostate = pEntryPoint;
+                    return false;
+                } else {
+                    m_pPseudostate = pEntryPoint;
+                }                    
+            }
+            return RunToCompletion(pContext);
+        }
+        virtual bool EventProc(Context* pContext, int nEventId, EventParams* pParams){
+            bool bResult = false;
+            m_pLCAState = TopState::GetInstance();
+            bResult = m_pCurrentState->EventProc(pContext, this, nEventId, pParams);
+            RunToCompletion(pContext);
+            return bResult;
+        }
+        template<class TCompositeState = TopState>
+        bool IsInRecur() {
+            if (IsIn<TCompositeState>()) { return true; }
+            return false;
+        }
+        virtual bool Abort(Context* pContext) {
+            m_pSourceState = S8_Top::GetInstance();
+            BgnTrans(pContext, S8_Top::GetInstance());
+            EndTrans(pContext);
+            return true;
+        }
+        virtual bool IsFinished() {
+            return m_pCurrentState == S8_Top::GetInstance() && m_pCurrentState == m_pPseudostate;
+        }
+        S8_Region2(): Statemachine(S8_Top::GetInstance(), S8_Top::GetInstance()) {}
+    };
+    class SharedStm: public Statemachine {
+    public:
+        class SharedTop: public TopState{ using TThisState = SharedTop;
+            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
+        };
+        class Entry1: public Pseudostate<Entry1>{};
+        class Exit1: public Pseudostate<Exit1>{};
+        class InitPt: public Pseudostate<InitPt>{};
+        class Shared1: public SharedTop { using TThisState = Shared1; using TSuperState = SharedTop;
+            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
+            virtual void Entry( Context* pContext, Statemachine* pStm ){
+                if( pStm->IsEnterable<TThisState>() ){
+                    std::cout << typeid(this).name() << " entry\n";
+                }
+            }
+            virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
+                bool bResult = false;
+                pStm->m_pSourceState = TThisState::GetInstance();
+                switch( nEventId ){
+                case E0:{
+                    pStm->BgnTrans( pContext, Shared2::GetInstance() );
+                    pStm->EndTrans( pContext );
+                    bResult = true;
+                } break;
+                default: break;
+                }
+                return bResult;
+            }
+            virtual void Exit(Context* pContext, Statemachine* pStm) {
+                if (pStm->IsExitable<TThisState>()) {
+                    std::cout << typeid(this).name() << " exit\n";
+                }
+            }
+        };
+        class Shared2: public SharedTop { using TThisState = Shared2; using TSuperState = SharedTop;
+            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
+            virtual void Entry( Context* pContext, Statemachine* pStm ){
+                if( pStm->IsEnterable<TThisState>() ){
+                    std::cout << typeid(this).name() << " entry\n";
+                }
+            }
+            virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
+                bool bResult = false;
+                pStm->m_pSourceState = TThisState::GetInstance();
+                switch( nEventId ){
+                case E2:{
+                    pStm->BgnTrans( pContext, SharedTop::GetInstance() );
+                    pStm->EndTrans( pContext );
+                    bResult = true;
+                } break;
+                case E3:{
+                    pStm->BgnTrans( pContext, SharedTop::GetInstance() );
+                    pStm->m_pParentStm->m_pPseudostate = SharedStm::Exit1::GetInstance();
+                    pStm->EndTrans( pContext );
+                    bResult = true;
+                } break;
+                default: break;
+                }
+                return bResult;
+            }
+            virtual void Exit(Context* pContext, Statemachine* pStm) {
+                if (pStm->IsExitable<TThisState>()) {
+                    std::cout << typeid(this).name() << " exit\n";
+                }
+            }
+        };
+        virtual bool DefaultTrans( Context* pContext ){
+            bool bResult = false;
+            Statemachine* pStm = this;
+            do {
+                if (m_pPseudostate == SharedStm::Entry1::GetInstance()) {
+                    pStm->BgnTrans( pContext, Shared1::GetInstance() );
+                    pStm->EndTrans( pContext );
+                    bResult = true;
+                } else if (m_pCurrentState == SharedTop::GetInstance() && m_pPseudostate == SharedStm::InitPt::GetInstance()) {
+                    pStm->BgnTrans( pContext, Shared1::GetInstance() );
+                    pStm->EndTrans( pContext );
+                    bResult = true;
+                } else if (m_pCurrentState != m_pPseudostate && dynamic_cast<SharedTop*>(m_pPseudostate) != NULL) {
+                    pStm->BgnTrans( pContext, dynamic_cast<TopState*>(m_pPseudostate) );
+                    pStm->EndTrans( pContext );
+                    bResult = true;
+                } else {
+                }
+            } while (false);
+            return bResult;
+        }
+        virtual bool Reset(Context* pContext, Statemachine* pParentStm, StateBase* pEntryPoint) {
+            m_pParentStm = pParentStm;
+            if (pEntryPoint == null) {
+                if (IsFinished()) {
+                    m_pPseudostate = InitPt::GetInstance();
+                }
+            } else {
+                if (IsFinished()) {
+                    m_pPseudostate = pEntryPoint;
+                    return false;
+                } else {
+                    m_pPseudostate = pEntryPoint;
+                }                    
+            }
+            return RunToCompletion(pContext);
+        }
+        virtual bool EventProc(Context* pContext, int nEventId, EventParams* pParams){
+            bool bResult = false;
+            m_pLCAState = TopState::GetInstance();
+            bResult = m_pCurrentState->EventProc(pContext, this, nEventId, pParams);
+            RunToCompletion(pContext);
+            return bResult;
+        }
+        template<class TCompositeState = TopState>
+        bool IsInRecur() {
+            if (IsIn<TCompositeState>()) { return true; }
+            return false;
+        }
+        virtual bool Abort(Context* pContext) {
+            m_pSourceState = SharedTop::GetInstance();
+            BgnTrans(pContext, SharedTop::GetInstance());
+            EndTrans(pContext);
+            return true;
+        }
+        virtual bool IsFinished() {
+            return m_pCurrentState == SharedTop::GetInstance() && m_pCurrentState == m_pPseudostate;
+        }
+        SharedStm(): Statemachine(SharedTop::GetInstance(), SharedTop::GetInstance()) {}
+    };
+    class MainStm: public Statemachine {
+    public:
+        class MainTop: public TopState{ using TThisState = MainTop;
+            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
+        };
+        SharedStm m_S6SharedStm;                                
+        S8_Region1 m_S8_TopS8_Region1;                          
+        S8_Region2 m_S8_TopS8_Region2;                          
+        SharedStm m_S9SharedStm;                                
+        TopState* m_pS4History;
+        TopState* m_pS7History;
+        class InitPt: public Pseudostate<InitPt>{};
+        class Junction: public Pseudostate<Junction>{};
+        class Initpseudostate0: public Pseudostate<Initpseudostate0>{};
+        class S1: public MainTop { using TThisState = S1; using TSuperState = MainTop;
+            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
+            virtual void Entry( Context* pContext, Statemachine* pStm ){
+                if( pStm->IsEnterable<TThisState>() ){
+                    std::cout << typeid(this).name() << " entry\n";
+                }
+            }
+            virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
+                bool bResult = false;
+                pStm->m_pSourceState = TThisState::GetInstance();
+                switch( nEventId ){
+                case E1:{
+                    E1Params* e = ( E1Params* )pParams;
                     pStm->BgnTrans( pContext, S2::GetInstance(), InitPt::GetInstance() );
                     pStm->EndTrans( pContext );
                     bResult = true;
@@ -407,21 +413,27 @@ class ContextImpl: public Context{
                 case E2:{
                     int n = InputValue("Enter condition1: ");
                     if (n == 0) {
-                        if (( ( MainStm* )pStm )->m_pS6History) {
-                            pStm->BgnTrans( pContext, ( ( MainStm* )pStm )->m_pS6History );
+                        if (((MainStm*)pStm)->m_pS4History && ((MainStm*)pStm)->m_pS4History != S4::GetInstance()) {
+                            pStm->BgnTrans( pContext, ( ( MainStm* )pStm )->m_pS4History );
                             pStm->EndTrans( pContext );
                             bResult = true;
                             break;
                         }
-                        pStm->BgnTrans( pContext, S6::GetInstance(), InitPt::GetInstance() );
+                        pStm->BgnTrans( pContext, S4::GetInstance(), InitPt::GetInstance() );
                         pStm->EndTrans( pContext );
                         bResult = true;
                     } else if (InputValue("Enter condition2: ") == 1) {
-                        pStm->BgnTrans( pContext, S10::GetInstance() );
+                        pStm->BgnTrans( pContext, S5::GetInstance() );
                         pStm->EndTrans( pContext );
                         bResult = true;
                     } else {
-                        pStm->BgnTrans( pContext, S9::GetInstance(), InitPt::GetInstance() );
+                        if (((MainStm*)pStm)->m_pS7History && ((MainStm*)pStm)->m_pS7History != S7::GetInstance()) {
+                            pStm->BgnTrans( pContext, ( ( MainStm* )pStm )->m_pS7History );
+                            pStm->EndTrans( pContext );
+                            bResult = true;
+                            break;
+                        }
+                        pStm->BgnTrans( pContext, S7::GetInstance(), InitPt::GetInstance() );
                         pStm->EndTrans( pContext );
                         bResult = true;
                     }
@@ -436,11 +448,12 @@ class ContextImpl: public Context{
                 }
             }
         };
-        class S2: public StmTop { using TThisState = S2; using TSuperState = StmTop;
+        class S2: public MainTop { using TThisState = S2; using TSuperState = MainTop;
             public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
             virtual void Entry( Context* pContext, Statemachine* pStm ){
                 if( pStm->IsEnterable<TThisState>() ){
                     std::cout << typeid(this).name() << " entry\n";
+                    DisplayMsg("Do something");
                 }
             }
             virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
@@ -448,18 +461,18 @@ class ContextImpl: public Context{
                 pStm->m_pSourceState = TThisState::GetInstance();
                 switch( nEventId ){
                 case E2:{
-                    pStm->BgnTrans( pContext, S5::GetInstance() );
+                    pStm->BgnTrans( pContext, S3::GetInstance() );
                     pStm->EndTrans( pContext );
                     bResult = true;
                 } break;
                 case E3:{
-                    if (( ( MainStm* )pStm )->m_pS6History) {
-                        pStm->BgnTrans( pContext, ( ( MainStm* )pStm )->m_pS6History );
+                    if (((MainStm*)pStm)->m_pS4History && ((MainStm*)pStm)->m_pS4History != S4::GetInstance()) {
+                        pStm->BgnTrans( pContext, ( ( MainStm* )pStm )->m_pS4History );
                         pStm->EndTrans( pContext );
                         bResult = true;
                         break;
                     }
-                    pStm->BgnTrans( pContext, S6::GetInstance(), InitPt::GetInstance() );
+                    pStm->BgnTrans( pContext, S4::GetInstance(), InitPt::GetInstance() );
                     pStm->EndTrans( pContext );
                     bResult = true;
                 } break;
@@ -469,44 +482,12 @@ class ContextImpl: public Context{
             }
             virtual void Exit(Context* pContext, Statemachine* pStm) {
                 if (pStm->IsExitable<TThisState>()) {
+                    DisplayMsg("Do another thing");
                     std::cout << typeid(this).name() << " exit\n";
                 }
             }
         };
-        class S3: public S2 { using TThisState = S3; using TSuperState = S2;
-            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
-            virtual void Entry( Context* pContext, Statemachine* pStm ){
-                if( pStm->IsEnterable<TThisState>() ){
-                    TSuperState::Entry( pContext, pStm );
-                    std::cout << typeid(this).name() << " entry\n";
-                }
-            }
-            virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
-                bool bResult = false;
-                pStm->m_pSourceState = TThisState::GetInstance();
-                switch( nEventId ){
-                case E0:{
-                    pStm->BgnTrans( pContext, S4::GetInstance() );
-                    pStm->EndTrans( pContext );
-                    bResult = true;
-                } break;
-                case E1:{
-                    pStm->BgnTrans( pContext, S5::GetInstance() );
-                    pStm->EndTrans( pContext );
-                    bResult = true;
-                } break;
-                default: break;
-                }
-                return bResult ? bResult : TSuperState::EventProc( pContext, pStm, nEventId, pParams );
-            }
-            virtual void Exit(Context* pContext, Statemachine* pStm) {
-                if (pStm->IsExitable<TThisState>()) {
-                    std::cout << typeid(this).name() << " exit\n";
-                    TSuperState::Exit(pContext, pStm);
-                }
-            }
-        };
-        class S4: public S2 { using TThisState = S4; using TSuperState = S2;
+        class S22: public S2 { using TThisState = S22; using TSuperState = S2;
             public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
             virtual void Entry( Context* pContext, Statemachine* pStm ){
                 if( pStm->IsEnterable<TThisState>() ){
@@ -534,7 +515,41 @@ class ContextImpl: public Context{
                 }
             }
         };
-        class S5: public StmTop { using TThisState = S5; using TSuperState = StmTop;
+        class S21: public S2 { using TThisState = S21; using TSuperState = S2;
+            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
+            virtual void Entry( Context* pContext, Statemachine* pStm ){
+                if( pStm->IsEnterable<TThisState>() ){
+                    TSuperState::Entry( pContext, pStm );
+                    std::cout << typeid(this).name() << " entry\n";
+                }
+            }
+            virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
+                bool bResult = false;
+                pStm->m_pSourceState = TThisState::GetInstance();
+                switch( nEventId ){
+                case E0:{
+                    pStm->BgnTrans( pContext, S22::GetInstance() );
+                    pStm->EndTrans( pContext );
+                    bResult = true;
+                } break;
+                case E1:{
+                    E1Params* e = ( E1Params* )pParams;
+                    pStm->BgnTrans( pContext, S3::GetInstance() );
+                    pStm->EndTrans( pContext );
+                    bResult = true;
+                } break;
+                default: break;
+                }
+                return bResult ? bResult : TSuperState::EventProc( pContext, pStm, nEventId, pParams );
+            }
+            virtual void Exit(Context* pContext, Statemachine* pStm) {
+                if (pStm->IsExitable<TThisState>()) {
+                    std::cout << typeid(this).name() << " exit\n";
+                    TSuperState::Exit(pContext, pStm);
+                }
+            }
+        };
+        class S3: public MainTop { using TThisState = S3; using TSuperState = MainTop;
             public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
             virtual void Entry( Context* pContext, Statemachine* pStm ){
                 if( pStm->IsEnterable<TThisState>() ){
@@ -546,8 +561,7 @@ class ContextImpl: public Context{
                 pStm->m_pSourceState = TThisState::GetInstance();
                 switch( nEventId ){
                 case E0:{
-                    pStm->BgnTrans( pContext, StmTop::GetInstance() );
-                    pStm->m_pPseudostate = MainStm::Junction::GetInstance();
+                    pStm->BgnTrans( pContext, Junction::GetInstance() );
                     pStm->EndTrans( pContext );
                     bResult = true;
                 } break;
@@ -561,7 +575,7 @@ class ContextImpl: public Context{
                 }
             }
         };
-        class S6: public StmTop { using TThisState = S6; using TSuperState = StmTop;
+        class S4: public MainTop { using TThisState = S4; using TSuperState = MainTop;
             public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
             virtual void Entry( Context* pContext, Statemachine* pStm ){
                 if( pStm->IsEnterable<TThisState>() ){
@@ -572,15 +586,9 @@ class ContextImpl: public Context{
                 bool bResult = false;
                 pStm->m_pSourceState = TThisState::GetInstance();
                 switch( nEventId ){
-                case E1:{
-                    pStm->BgnTrans( pContext, StmTop::GetInstance() );
-                    pStm->m_pPseudostate = MainStm::Junction::GetInstance();
-                    pStm->EndTrans( pContext );
-                    bResult = true;
-                } break;
                 case E2:{
                     pStm->m_bIsExternTrans = true;
-                    pStm->BgnTrans( pContext, S8::GetInstance() );
+                    pStm->BgnTrans( pContext, S42::GetInstance() );
                     pStm->EndTrans( pContext );
                     bResult = true;
                 } break;
@@ -594,13 +602,13 @@ class ContextImpl: public Context{
                 }
             }
         };
-        class S7: public S6 { using TThisState = S7; using TSuperState = S6;
+        class S42: public S4 { using TThisState = S42; using TSuperState = S4;
             public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
             virtual void Entry( Context* pContext, Statemachine* pStm ){
                 if( pStm->IsEnterable<TThisState>() ){
                     TSuperState::Entry( pContext, pStm );
                     std::cout << typeid(this).name() << " entry\n";
-                    ((MainStm*)pStm)->m_pS6History = S7::GetInstance();
+                    ((MainStm*)pStm)->m_pS4History = S42::GetInstance();
                 }
             }
             virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
@@ -608,7 +616,8 @@ class ContextImpl: public Context{
                 pStm->m_pSourceState = TThisState::GetInstance();
                 switch( nEventId ){
                 case E1:{
-                    pStm->BgnTrans( pContext, S8::GetInstance() );
+                    E1Params* e = ( E1Params* )pParams;
+                    pStm->BgnTrans( pContext, S4::GetInstance() );
                     pStm->EndTrans( pContext );
                     bResult = true;
                 } break;
@@ -623,18 +632,27 @@ class ContextImpl: public Context{
                 }
             }
         };
-        class S8: public S6 { using TThisState = S8; using TSuperState = S6;
+        class S41: public S4 { using TThisState = S41; using TSuperState = S4;
             public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
             virtual void Entry( Context* pContext, Statemachine* pStm ){
                 if( pStm->IsEnterable<TThisState>() ){
                     TSuperState::Entry( pContext, pStm );
                     std::cout << typeid(this).name() << " entry\n";
-                    ((MainStm*)pStm)->m_pS6History = S8::GetInstance();
+                    ((MainStm*)pStm)->m_pS4History = S41::GetInstance();
                 }
             }
             virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
                 bool bResult = false;
                 pStm->m_pSourceState = TThisState::GetInstance();
+                switch( nEventId ){
+                case E1:{
+                    E1Params* e = ( E1Params* )pParams;
+                    pStm->BgnTrans( pContext, S42::GetInstance() );
+                    pStm->EndTrans( pContext );
+                    bResult = true;
+                } break;
+                default: break;
+                }
                 return bResult ? bResult : TSuperState::EventProc( pContext, pStm, nEventId, pParams );
             }
             virtual void Exit(Context* pContext, Statemachine* pStm) {
@@ -644,12 +662,12 @@ class ContextImpl: public Context{
                 }
             }
         };
-        class S18: public StmTop { using TThisState = S18; using TSuperState = StmTop;
+        class S6: public MainTop { using TThisState = S6; using TSuperState = MainTop;
             public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
             virtual void Entry( Context* pContext, Statemachine* pStm ){
                 if( pStm->IsEnterable<TThisState>() ){
                     std::cout << typeid(this).name() << " entry\n";
-                    ((MainStm*)pStm)->m_S18S18Stm.Reset( pContext, pStm, nullptr );
+                    ((MainStm*)pStm)->m_S6SharedStm.Reset( pContext, pStm, nullptr );
                 }
             }
             virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
@@ -657,18 +675,18 @@ class ContextImpl: public Context{
                 pStm->m_pSourceState = TThisState::GetInstance();
                 switch( nEventId ){
                 case E3:{
-                    pStm->BgnTrans( pContext, S19::GetInstance() );
+                    pStm->BgnTrans( pContext, S9::GetInstance() );
                     pStm->EndTrans( pContext );
                     bResult = true;
                 } break;
                 case E4:{
-                    if (( ( MainStm* )pStm )->m_pS6History) {
-                        pStm->BgnTrans( pContext, ( ( MainStm* )pStm )->m_pS6History );
+                    if (((MainStm*)pStm)->m_pS4History && ((MainStm*)pStm)->m_pS4History != S4::GetInstance()) {
+                        pStm->BgnTrans( pContext, ( ( MainStm* )pStm )->m_pS4History );
                         pStm->EndTrans( pContext );
                         bResult = true;
                         break;
                     }
-                    pStm->BgnTrans( pContext, S6::GetInstance(), InitPt::GetInstance() );
+                    pStm->BgnTrans( pContext, S4::GetInstance(), InitPt::GetInstance() );
                     pStm->EndTrans( pContext );
                     bResult = true;
                 } break;
@@ -678,18 +696,18 @@ class ContextImpl: public Context{
             }
             virtual void Exit(Context* pContext, Statemachine* pStm) {
                 if (pStm->IsExitable<TThisState>()) {
-                    ((MainStm*)pStm)->m_S18S18Stm.Abort( pContext );
+                    ((MainStm*)pStm)->m_S6SharedStm.Abort( pContext );
                     std::cout << typeid(this).name() << " exit\n";
                 }
             }
         };
-        class S11: public StmTop { using TThisState = S11; using TSuperState = StmTop;
+        class S8: public MainTop { using TThisState = S8; using TSuperState = MainTop;
             public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
             virtual void Entry( Context* pContext, Statemachine* pStm ){
                 if( pStm->IsEnterable<TThisState>() ){
                     std::cout << typeid(this).name() << " entry\n";
-                    ((MainStm*)pStm)->m_S111S111Stm.Reset( pContext, pStm, nullptr );
-                    ((MainStm*)pStm)->m_S112S112Stm.Reset( pContext, pStm, nullptr );
+                    ((MainStm*)pStm)->m_S8_TopS8_Region1.Reset( pContext, pStm, nullptr );
+                    ((MainStm*)pStm)->m_S8_TopS8_Region2.Reset( pContext, pStm, nullptr );
                 }
             }
             virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
@@ -697,17 +715,20 @@ class ContextImpl: public Context{
                 pStm->m_pSourceState = TThisState::GetInstance();
                 switch( nEventId ){
                 case E4:{
-                    pStm->BgnTrans( pContext, StmTop::GetInstance() );
+                    pStm->BgnTrans( pContext, MainTop::GetInstance() );
                     pStm->EndTrans( pContext );
                     bResult = true;
                 } break;
                 case E5:{
-                    if (( ( MainStm* )pStm )->m_pS9History) {
-                        pStm->BgnTrans( pContext, ( ( MainStm* )pStm )->m_pS9History );
+                    if (((MainStm*)pStm)->m_pS7History && ((MainStm*)pStm)->m_pS7History != S7::GetInstance()) {
+                        pStm->BgnTrans( pContext, ( ( MainStm* )pStm )->m_pS7History );
                         pStm->EndTrans( pContext );
                         bResult = true;
                         break;
                     }
+                    pStm->BgnTrans( pContext, S7::GetInstance(), InitPt::GetInstance() );
+                    pStm->EndTrans( pContext );
+                    bResult = true;
                 } break;
                 default: break;
                 }
@@ -715,13 +736,13 @@ class ContextImpl: public Context{
             }
             virtual void Exit(Context* pContext, Statemachine* pStm) {
                 if (pStm->IsExitable<TThisState>()) {
-                    ((MainStm*)pStm)->m_S111S111Stm.Abort( pContext );
-                    ((MainStm*)pStm)->m_S112S112Stm.Abort( pContext );
+                    ((MainStm*)pStm)->m_S8_TopS8_Region1.Abort( pContext );
+                    ((MainStm*)pStm)->m_S8_TopS8_Region2.Abort( pContext );
                     std::cout << typeid(this).name() << " exit\n";
                 }
             }
         };
-        class S12: public S11 { using TThisState = S12; using TSuperState = S11;
+        class S812: public S8 { using TThisState = S812; using TSuperState = S8;
             public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
             virtual void Entry( Context* pContext, Statemachine* pStm ){
                 if( pStm->IsEnterable<TThisState>() ){
@@ -734,36 +755,10 @@ class ContextImpl: public Context{
                 pStm->m_pSourceState = TThisState::GetInstance();
                 switch( nEventId ){
                 case E1:{
-                    pStm->BgnTrans( pContext, S13::GetInstance() );
-                    pStm->EndTrans( pContext );
-                    bResult = true;
-                } break;
-                default: break;
-                }
-                return bResult ? bResult : TSuperState::EventProc( pContext, pStm, nEventId, pParams );
-            }
-            virtual void Exit(Context* pContext, Statemachine* pStm) {
-                if (pStm->IsExitable<TThisState>()) {
-                    std::cout << typeid(this).name() << " exit\n";
-                    TSuperState::Exit(pContext, pStm);
-                }
-            }
-        };
-        class S13: public S11 { using TThisState = S13; using TSuperState = S11;
-            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
-            virtual void Entry( Context* pContext, Statemachine* pStm ){
-                if( pStm->IsEnterable<TThisState>() ){
-                    TSuperState::Entry( pContext, pStm );
-                    std::cout << typeid(this).name() << " entry\n";
-                }
-            }
-            virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
-                bool bResult = false;
-                pStm->m_pSourceState = TThisState::GetInstance();
-                switch( nEventId ){
-                case E5:{
-                    if (((ContextImpl*)pContext)->IsIn<S111Stm::S15>()) {
-                        pStm->BgnTrans( pContext, S20::GetInstance() );
+                    E1Params* e = ( E1Params* )pParams;
+                    if (((ContextImpl*)pContext)->IsIn<S8_Region1::S821>()) {
+                        pStm->BgnTrans( pContext, S813::GetInstance() );
+                        ((MainStm*)pStm)->m_S8_TopS8_Region1.Reset(pContext, pStm, S8_Region1::S822::GetInstance());
                         pStm->EndTrans( pContext );
                         bResult = true;
                     }
@@ -779,7 +774,66 @@ class ContextImpl: public Context{
                 }
             }
         };
-        class S9: public StmTop { using TThisState = S9; using TSuperState = StmTop;
+        class S813: public S8 { using TThisState = S813; using TSuperState = S8;
+            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
+            virtual void Entry( Context* pContext, Statemachine* pStm ){
+                if( pStm->IsEnterable<TThisState>() ){
+                    TSuperState::Entry( pContext, pStm );
+                    std::cout << typeid(this).name() << " entry\n";
+                }
+            }
+            virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
+                bool bResult = false;
+                pStm->m_pSourceState = TThisState::GetInstance();
+                switch( nEventId ){
+                case E5:{
+                    if (((ContextImpl*)pContext)->IsIn<S8_Region1::S822>()) {
+                        pStm->BgnTrans( pContext, S10::GetInstance() );
+                        pStm->EndTrans( pContext );
+                        bResult = true;
+                    }
+                } break;
+                default: break;
+                }
+                return bResult ? bResult : TSuperState::EventProc( pContext, pStm, nEventId, pParams );
+            }
+            virtual void Exit(Context* pContext, Statemachine* pStm) {
+                if (pStm->IsExitable<TThisState>()) {
+                    std::cout << typeid(this).name() << " exit\n";
+                    TSuperState::Exit(pContext, pStm);
+                }
+            }
+        };
+        class S811: public S8 { using TThisState = S811; using TSuperState = S8;
+            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
+            virtual void Entry( Context* pContext, Statemachine* pStm ){
+                if( pStm->IsEnterable<TThisState>() ){
+                    TSuperState::Entry( pContext, pStm );
+                    std::cout << typeid(this).name() << " entry\n";
+                }
+            }
+            virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
+                bool bResult = false;
+                pStm->m_pSourceState = TThisState::GetInstance();
+                switch( nEventId ){
+                case E1:{
+                    E1Params* e = ( E1Params* )pParams;
+                    pStm->BgnTrans( pContext, S812::GetInstance() );
+                    pStm->EndTrans( pContext );
+                    bResult = true;
+                } break;
+                default: break;
+                }
+                return bResult ? bResult : TSuperState::EventProc( pContext, pStm, nEventId, pParams );
+            }
+            virtual void Exit(Context* pContext, Statemachine* pStm) {
+                if (pStm->IsExitable<TThisState>()) {
+                    std::cout << typeid(this).name() << " exit\n";
+                    TSuperState::Exit(pContext, pStm);
+                }
+            }
+        };
+        class S7: public MainTop { using TThisState = S7; using TSuperState = MainTop;
             public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
             virtual void Entry( Context* pContext, Statemachine* pStm ){
                 if( pStm->IsEnterable<TThisState>() ){
@@ -791,20 +845,21 @@ class ContextImpl: public Context{
                 pStm->m_pSourceState = TThisState::GetInstance();
                 switch( nEventId ){
                 case E1:{
+                    E1Params* e = ( E1Params* )pParams;
                     pStm->m_bIsExternTrans = true;
-                    pStm->BgnTrans( pContext, S91::GetInstance() );
+                    pStm->BgnTrans( pContext, S71::GetInstance(), Initpseudostate0::GetInstance() );
                     pStm->EndTrans( pContext );
                     bResult = true;
                 } break;
                 case E2:{
-                    pStm->BgnTrans( pContext, S92::GetInstance() );
+                    pStm->BgnTrans( pContext, S72::GetInstance() );
                     pStm->EndTrans( pContext );
                     bResult = true;
                 } break;
                 case E3:{
-                    pStm->BgnTrans( pContext, S11::GetInstance(), InitPt::GetInstance() );
-                    ((MainStm*)pStm)->m_S111S111Stm.Reset(pContext, pStm, S111Stm::Entry1::GetInstance());
-                    ((MainStm*)pStm)->m_S112S112Stm.Reset(pContext, pStm, S112Stm::Entry1::GetInstance());
+                    pStm->BgnTrans( pContext, S8::GetInstance(), InitPt::GetInstance() );
+                    ((MainStm*)pStm)->m_S8_TopS8_Region1.Reset(pContext, pStm, S8_Region1::S821::GetInstance());
+                    ((MainStm*)pStm)->m_S8_TopS8_Region2.Reset(pContext, pStm, S8_Region2::S831::GetInstance());
                     pStm->EndTrans( pContext );
                     bResult = true;
                 } break;
@@ -818,13 +873,13 @@ class ContextImpl: public Context{
                 }
             }
         };
-        class S91: public S9 { using TThisState = S91; using TSuperState = S9;
+        class S72: public S7 { using TThisState = S72; using TSuperState = S7;
             public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
             virtual void Entry( Context* pContext, Statemachine* pStm ){
                 if( pStm->IsEnterable<TThisState>() ){
                     TSuperState::Entry( pContext, pStm );
                     std::cout << typeid(this).name() << " entry\n";
-                    ((MainStm*)pStm)->m_pS9History = S91::GetInstance();
+                    ((MainStm*)pStm)->m_pS7History = S72::GetInstance();
                 }
             }
             virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
@@ -839,13 +894,13 @@ class ContextImpl: public Context{
                 }
             }
         };
-        class S92: public S9 { using TThisState = S92; using TSuperState = S9;
+        class S71: public S7 { using TThisState = S71; using TSuperState = S7;
             public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
             virtual void Entry( Context* pContext, Statemachine* pStm ){
                 if( pStm->IsEnterable<TThisState>() ){
                     TSuperState::Entry( pContext, pStm );
                     std::cout << typeid(this).name() << " entry\n";
-                    ((MainStm*)pStm)->m_pS9History = S92::GetInstance();
+                    ((MainStm*)pStm)->m_pS7History = S71::GetInstance();
                 }
             }
             virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
@@ -860,11 +915,13 @@ class ContextImpl: public Context{
                 }
             }
         };
-        class S19: public StmTop { using TThisState = S19; using TSuperState = StmTop;
+        class S711: public S71 { using TThisState = S711; using TSuperState = S71;
             public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
             virtual void Entry( Context* pContext, Statemachine* pStm ){
                 if( pStm->IsEnterable<TThisState>() ){
+                    TSuperState::Entry( pContext, pStm );
                     std::cout << typeid(this).name() << " entry\n";
+                    ((MainStm*)pStm)->m_pS7History = S711::GetInstance();
                 }
             }
             virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
@@ -872,21 +929,43 @@ class ContextImpl: public Context{
                 pStm->m_pSourceState = TThisState::GetInstance();
                 switch( nEventId ){
                 case E0:{
-                    pStm->BgnTrans( pContext, S20::GetInstance() );
+                    pStm->BgnTrans( pContext, S712::GetInstance() );
                     pStm->EndTrans( pContext );
                     bResult = true;
                 } break;
                 default: break;
                 }
-                return bResult;
+                return bResult ? bResult : TSuperState::EventProc( pContext, pStm, nEventId, pParams );
             }
             virtual void Exit(Context* pContext, Statemachine* pStm) {
                 if (pStm->IsExitable<TThisState>()) {
                     std::cout << typeid(this).name() << " exit\n";
+                    TSuperState::Exit(pContext, pStm);
                 }
             }
         };
-        class S20: public StmTop { using TThisState = S20; using TSuperState = StmTop;
+        class S712: public S71 { using TThisState = S712; using TSuperState = S71;
+            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
+            virtual void Entry( Context* pContext, Statemachine* pStm ){
+                if( pStm->IsEnterable<TThisState>() ){
+                    TSuperState::Entry( pContext, pStm );
+                    std::cout << typeid(this).name() << " entry\n";
+                    ((MainStm*)pStm)->m_pS7History = S712::GetInstance();
+                }
+            }
+            virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
+                bool bResult = false;
+                pStm->m_pSourceState = TThisState::GetInstance();
+                return bResult ? bResult : TSuperState::EventProc( pContext, pStm, nEventId, pParams );
+            }
+            virtual void Exit(Context* pContext, Statemachine* pStm) {
+                if (pStm->IsExitable<TThisState>()) {
+                    std::cout << typeid(this).name() << " exit\n";
+                    TSuperState::Exit(pContext, pStm);
+                }
+            }
+        };
+        class S10: public MainTop { using TThisState = S10; using TSuperState = MainTop;
             public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
             virtual void Entry( Context* pContext, Statemachine* pStm ){
                 if( pStm->IsEnterable<TThisState>() ){
@@ -898,13 +977,14 @@ class ContextImpl: public Context{
                 pStm->m_pSourceState = TThisState::GetInstance();
                 switch( nEventId ){
                 case E1:{
-                    pStm->BgnTrans( pContext, StmTop::GetInstance() );
+                    E1Params* e = ( E1Params* )pParams;
+                    pStm->BgnTrans( pContext, MainTop::GetInstance() );
                     pStm->EndTrans( pContext );
                     bResult = true;
                 } break;
                 case E2:{
-                    pStm->BgnTrans( pContext, S11::GetInstance(), InitPt::GetInstance() );
-                    ((MainStm*)pStm)->m_S112S112Stm.Reset(pContext, pStm, S112Stm::Entry2::GetInstance());
+                    pStm->BgnTrans( pContext, S8::GetInstance(), InitPt::GetInstance() );
+                    ((MainStm*)pStm)->m_S8_TopS8_Region2.Reset(pContext, pStm, S8_Region2::S832::GetInstance());
                     pStm->EndTrans( pContext );
                     bResult = true;
                 } break;
@@ -918,7 +998,7 @@ class ContextImpl: public Context{
                 }
             }
         };
-        class S10: public StmTop { using TThisState = S10; using TSuperState = StmTop;
+        class S5: public MainTop { using TThisState = S5; using TSuperState = MainTop;
             public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
             virtual void Entry( Context* pContext, Statemachine* pStm ){
                 if( pStm->IsEnterable<TThisState>() ){
@@ -930,24 +1010,25 @@ class ContextImpl: public Context{
                 pStm->m_pSourceState = TThisState::GetInstance();
                 switch( nEventId ){
                 case E1:{
+                    E1Params* e = ( E1Params* )pParams;
                     pStm->m_bIsExternTrans = true;
-                    pStm->BgnTrans( pContext, S10::GetInstance() );
+                    pStm->BgnTrans( pContext, S5::GetInstance() );
                     pStm->EndTrans( pContext );
                     bResult = true;
                 } break;
                 case E2:{
                     int n = InputValue("Enter condition1: ");
                     if (n == 0) {
-                        pStm->BgnTrans( pContext, S7::GetInstance() );
+                        pStm->BgnTrans( pContext, S41::GetInstance() );
                         pStm->EndTrans( pContext );
                         bResult = true;
                     } else if (n == 1) {
-                        pStm->BgnTrans( pContext, S11::GetInstance(), InitPt::GetInstance() );
+                        pStm->BgnTrans( pContext, S8::GetInstance(), InitPt::GetInstance() );
                         pStm->EndTrans( pContext );
                         bResult = true;
                     } else {
-                        pStm->BgnTrans( pContext, S18::GetInstance() );
-                        ((MainStm*)pStm)->m_S18S18Stm.Reset(pContext, pStm, S18Stm::Entry1::GetInstance());
+                        pStm->BgnTrans( pContext, S6::GetInstance() );
+                        ((MainStm*)pStm)->m_S6SharedStm.Reset(pContext, pStm, SharedStm::Entry1::GetInstance());
                         pStm->EndTrans( pContext );
                         bResult = true;
                     }
@@ -958,6 +1039,26 @@ class ContextImpl: public Context{
             }
             virtual void Exit(Context* pContext, Statemachine* pStm) {
                 if (pStm->IsExitable<TThisState>()) {
+                    std::cout << typeid(this).name() << " exit\n";
+                }
+            }
+        };
+        class S9: public MainTop { using TThisState = S9; using TSuperState = MainTop;
+            public: static TopState* GetInstance() { static TThisState singleInstance; return &singleInstance; }
+            virtual void Entry( Context* pContext, Statemachine* pStm ){
+                if( pStm->IsEnterable<TThisState>() ){
+                    std::cout << typeid(this).name() << " entry\n";
+                    ((MainStm*)pStm)->m_S9SharedStm.Reset( pContext, pStm, nullptr );
+                }
+            }
+            virtual bool EventProc( Context* pContext, Statemachine* pStm, EventId nEventId, EventParams* pParams ){
+                bool bResult = false;
+                pStm->m_pSourceState = TThisState::GetInstance();
+                return bResult;
+            }
+            virtual void Exit(Context* pContext, Statemachine* pStm) {
+                if (pStm->IsExitable<TThisState>()) {
+                    ((MainStm*)pStm)->m_S9SharedStm.Abort( pContext );
                     std::cout << typeid(this).name() << " exit\n";
                 }
             }
@@ -965,39 +1066,58 @@ class ContextImpl: public Context{
         virtual bool DefaultTrans( Context* pContext ){
             bool bResult = false;
             Statemachine* pStm = this;
-            bResult |= m_S18S18Stm.DefaultTrans( pContext );
-            bResult |= m_S111S111Stm.DefaultTrans( pContext );
-            bResult |= m_S112S112Stm.DefaultTrans( pContext );
+            bResult |= m_S6SharedStm.DefaultTrans( pContext );
+            bResult |= m_S8_TopS8_Region1.DefaultTrans( pContext );
+            bResult |= m_S8_TopS8_Region2.DefaultTrans( pContext );
+            bResult |= m_S9SharedStm.DefaultTrans( pContext );
             do {
-                if (m_pCurrentState == StmTop::GetInstance() && m_pPseudostate == MainStm::InitPt::GetInstance()) {
+                if (m_pCurrentState == MainTop::GetInstance() && m_pPseudostate == MainStm::InitPt::GetInstance()) {
                     pStm->BgnTrans( pContext, S1::GetInstance() );
                     pStm->EndTrans( pContext );
                     bResult = true;
                 } else if (m_pCurrentState == S2::GetInstance() && m_pPseudostate == MainStm::InitPt::GetInstance()) {
-                    pStm->BgnTrans( pContext, S3::GetInstance() );
+                    pStm->BgnTrans( pContext, S21::GetInstance() );
                     pStm->EndTrans( pContext );
                     bResult = true;
-                } else if (m_pCurrentState == S6::GetInstance() && m_pPseudostate == MainStm::InitPt::GetInstance()) {
-                    pStm->BgnTrans( pContext, S7::GetInstance() );
+                } else if (m_pPseudostate == MainStm::S4::GetInstance()) {
+                    pStm->BgnTrans( pContext, Junction::GetInstance() );
+                    pStm->EndTrans( pContext );
+                    bResult = true;
+                } else if (m_pCurrentState == S4::GetInstance() && m_pPseudostate == MainStm::InitPt::GetInstance()) {
+                    pStm->BgnTrans( pContext, S41::GetInstance() );
                     pStm->EndTrans( pContext );
                     bResult = true;
                 } else if (m_pPseudostate == MainStm::Junction::GetInstance()) {
-                    pStm->BgnTrans( pContext, S18::GetInstance() );
+                    pStm->BgnTrans( pContext, S6::GetInstance() );
                     pStm->EndTrans( pContext );
                     bResult = true;
-                } else if (m_pCurrentState == S18::GetInstance() && m_pPseudostate == S18Stm::Exit1::GetInstance()) {
-                    pStm->BgnTrans( pContext, S19::GetInstance() );
+                } else if (m_pCurrentState == S6::GetInstance() && m_pPseudostate == SharedStm::Exit1::GetInstance()) {
+                    pStm->BgnTrans( pContext, S9::GetInstance() );
                     pStm->EndTrans( pContext );
                     bResult = true;
-                } else if (m_pCurrentState == S11::GetInstance() && m_pPseudostate == MainStm::InitPt::GetInstance()) {
-                    pStm->BgnTrans( pContext, S12::GetInstance() );
+                } else if (m_pPseudostate == S8_Region2::ForkPseudostate2::GetInstance()) {
+                    pStm->BgnTrans( pContext, S812::GetInstance() );
+                    ((MainStm*)pStm)->m_S8_TopS8_Region2.Reset(pContext, pStm, S8_Region2::S832::GetInstance());
                     pStm->EndTrans( pContext );
                     bResult = true;
-                } else if (m_pCurrentState == S9::GetInstance() && m_pPseudostate == MainStm::InitPt::GetInstance()) {
-                    pStm->BgnTrans( pContext, S91::GetInstance() );
+                } else if (m_pCurrentState == S8::GetInstance() && m_pPseudostate == MainStm::InitPt::GetInstance()) {
+                    pStm->BgnTrans( pContext, S811::GetInstance() );
                     pStm->EndTrans( pContext );
                     bResult = true;
-                } else if (m_pCurrentState != m_pPseudostate && dynamic_cast<StmTop*>(m_pPseudostate) != NULL) {
+                } else if (m_pCurrentState == S71::GetInstance() && m_pPseudostate == MainStm::Initpseudostate0::GetInstance()) {
+                    pStm->BgnTrans( pContext, S711::GetInstance() );
+                    pStm->EndTrans( pContext );
+                    bResult = true;
+                } else if (m_pCurrentState == S7::GetInstance() && m_pPseudostate == MainStm::InitPt::GetInstance()) {
+                    pStm->BgnTrans( pContext, S71::GetInstance(), Initpseudostate0::GetInstance() );
+                    pStm->EndTrans( pContext );
+                    bResult = true;
+                } else if (m_pPseudostate == MainStm::S9::GetInstance()) {
+                    if( !m_S9SharedStm.IsFinished() ){ break; }
+                    pStm->BgnTrans( pContext, S10::GetInstance() );
+                    pStm->EndTrans( pContext );
+                    bResult = true;
+                } else if (m_pCurrentState != m_pPseudostate && dynamic_cast<MainTop*>(m_pPseudostate) != NULL) {
                     pStm->BgnTrans( pContext, dynamic_cast<TopState*>(m_pPseudostate) );
                     pStm->EndTrans( pContext );
                     bResult = true;
@@ -1020,53 +1140,39 @@ class ContextImpl: public Context{
                     m_pPseudostate = pEntryPoint;
                 }                    
             }
-            if (pEntryPoint != null) {
-                m_S18S18Stm.Reset( pContext, this, pEntryPoint );
-                m_S111S111Stm.Reset( pContext, this, pEntryPoint );
-                m_S112S112Stm.Reset( pContext, this, pEntryPoint );
-            }
             return RunToCompletion(pContext);
         }
         virtual bool EventProc(Context* pContext, int nEventId, EventParams* pParams){
             bool bResult = false;
             m_pLCAState = TopState::GetInstance();
-            bResult |= m_S18S18Stm.EventProc( pContext, nEventId, pParams );
-            bResult |= m_S111S111Stm.EventProc( pContext, nEventId, pParams );
-            bResult |= m_S112S112Stm.EventProc( pContext, nEventId, pParams );
+            bResult |= m_S6SharedStm.EventProc( pContext, nEventId, pParams );
+            bResult |= m_S8_TopS8_Region1.EventProc( pContext, nEventId, pParams );
+            bResult |= m_S8_TopS8_Region2.EventProc( pContext, nEventId, pParams );
+            bResult |= m_S9SharedStm.EventProc( pContext, nEventId, pParams );
             bResult = m_pCurrentState->EventProc(pContext, this, nEventId, pParams);
             RunToCompletion(pContext);
             return bResult;
         }
         template<class TCompositeState = TopState>
         bool IsInRecur() {
-            if (m_S18S18Stm.IsInRecur<TCompositeState>()) { return true; }
-            if (m_S111S111Stm.IsInRecur<TCompositeState>()) { return true; }
-            if (m_S112S112Stm.IsInRecur<TCompositeState>()) { return true; }
+            if (m_S6SharedStm.IsInRecur<TCompositeState>()) { return true; }
+            if (m_S8_TopS8_Region1.IsInRecur<TCompositeState>()) { return true; }
+            if (m_S8_TopS8_Region2.IsInRecur<TCompositeState>()) { return true; }
+            if (m_S9SharedStm.IsInRecur<TCompositeState>()) { return true; }
             if (IsIn<TCompositeState>()) { return true; }
             return false;
         }
         virtual bool Abort(Context* pContext) {
-            m_pSourceState = StmTop::GetInstance();
-            BgnTrans(pContext, StmTop::GetInstance());
+            m_pSourceState = MainTop::GetInstance();
+            BgnTrans(pContext, MainTop::GetInstance());
             EndTrans(pContext);
             return true;
         }
         virtual bool IsFinished() {
-            return m_pCurrentState == StmTop::GetInstance() && m_pCurrentState == m_pPseudostate;
+            return m_pCurrentState == MainTop::GetInstance() && m_pCurrentState == m_pPseudostate;
         }
-        MainStm(): Statemachine(StmTop::GetInstance(), StmTop::GetInstance()) {}
+        MainStm(): Statemachine(MainTop::GetInstance(), MainTop::GetInstance()) {}
     };
-    public:  ContextImpl(
-        int _attribute0,
-        Composition _aComposition
-    ):  Context( _attribute0, _aComposition ),
-        attribute2( 123 ),
-        attribute3( 789 )
-    {
-    }                                                                                           
-    private: int attribute2;                                    
-    private: int attribute3;                                    
-    MainStm mainStm;                                            
 public:
     bool Start() {
         mainStm.Abort(this);
@@ -1079,4 +1185,15 @@ public:
     bool IsIn() {
         return mainStm.IsInRecur<TState>();
     }
+    public:  ContextImpl(
+        int _derivableAttribute,
+        String _publicAttribute,
+        int _privateAttribute,
+        int _internalAttribute,
+        int _readOnlyAttribute,
+        std::vector<Composition*> &_aProtectedComposition
+    ):  Context( _derivableAttribute, _publicAttribute, _privateAttribute, _internalAttribute, _readOnlyAttribute, _aProtectedComposition )
+    {
+    }                                                                                           
+    MainStm mainStm;                                            
 };

@@ -7,9 +7,9 @@ import java.util.*;
 public  class UsedDependency
 {
     public  UsedDependency(
-        int _attribute1
+        int _attribute6
     ){
-        attribute1 = _attribute1;
+        attribute6 = _attribute6;
     }                                                                                           
-    private int attribute1;                                     
+    private int attribute6;                                     
 }

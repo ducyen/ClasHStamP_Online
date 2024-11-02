@@ -3,41 +3,81 @@ package model;
 
 import java.io.*;
 import java.util.*;
-import model.*;
+import abstracts.*;
 import interfaces.*;
+import model.*;
 
 public  class Context extends BaseClass implements Interface2, Interface1
 {
-    public void virtualFunc(
-        int param0
+    private static int classOrStaticAttribute;                  
+    private static int[] initializedStaticArray = { 1, 2, 3 };  
+    private static final int finalConstantAttribute = 5;        
+    public static void classOrStaticMethod(
     ){
-    } /* Context.virtualFunc */
+    } /* Context.classOrStaticMethod */
+    public void publicMethod(
+    ){
+    } /* Context.publicMethod */
 
-    public static void staticFunc(
+    private void privateLeafMethod(
     ){
-    } /* Context.staticFunc */
-    public void leafFunc(
-    ){
-    } /* Context.leafFunc */
-    public void operation1(
-    ){
-    } /* Context.operation1 */
-    public void operation2(
-    ){
-    } /* Context.operation2 */
+    } /* Context.privateLeafMethod */
     public  Context(
-        int _attribute0,
-        Composition _aComposition
-    ) {
-        super(  );
+    ){
+    	super(3);
+    	readOnlyAttribute = 7;
+    } /* Context.Context */
+    public void methodWithParams(
+        String parm1,
+        float parm2
+    ){
+    } /* Context.methodWithParams */
+    public UsedDependency methodReturnsSomething(
+    ){
+    	return null;
+    } /* Context.methodReturnsSomething */
+    public void methodThrowsException(
+    )throws IOException{
+    } /* Context.methodThrowsException */
+    public void finalMethod(
+    ){
+    } /* Context.finalMethod */
+    void setDerivableAttribute(int value){
+        privateAttribute = value;
 
-        attribute1 = 345;
-        attribute0 = _attribute0;
-        anAggregation = null;
-        aComposition = _aComposition;
+    }
+    protected void protectedMethod(
+    ){
+    } /* Context.protectedMethod */
+
+    protected void packageVisibleMethod(
+    ){
+    } /* Context.packageVisibleMethod */
+
+    public  Context(
+        int _derivableAttribute,
+        String _publicAttribute,
+        int _privateAttribute,
+        int _internalAttribute,
+        int _readOnlyAttribute,
+        ArrayList<Aggregration> _anAggregation,
+        ArrayList<Composition> _aProtectedComposition
+    ) {
+        super( _derivableAttribute );
+
+        publicAttribute = _publicAttribute;
+        privateAttribute = _privateAttribute;
+        internalAttribute = _internalAttribute;
+        isInitializedAttribute = true;
+        readOnlyAttribute = _readOnlyAttribute;
+        anAggregation = _anAggregation;
+        aProtectedComposition = _aProtectedComposition;
     }                                                                                           
-    private int attribute1;                                     
-    private int attribute0;                                     
-    private Aggregration anAggregation;                           
-    private Composition aComposition;                            
+    public String publicAttribute;                              
+    private int privateAttribute;                               
+    int internalAttribute;                                      
+    private boolean isInitializedAttribute;                     
+    private final int readOnlyAttribute;                        
+    private ArrayList<Aggregration> anAggregation;                 
+    protected ArrayList<Composition> aProtectedComposition;        
 }

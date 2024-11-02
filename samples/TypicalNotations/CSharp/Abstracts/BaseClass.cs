@@ -7,7 +7,8 @@ namespace Abstracts {
     {
         public abstract void publicMethod(
         );
-        public abstract int derivableAttribute {
+        public virtual int derivableAttribute {
+            get;
             set;
         }
         protected abstract void protectedMethod(

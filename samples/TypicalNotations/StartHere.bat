@@ -3,7 +3,7 @@ rem Batch file to run a sample of Astah API on Windows
 
 setlocal
 
-set ASTAH_HOME=C:\Program Files\astah-professional
+set ASTAH_HOME=..\..\astah-com
 rem set PATH=%ASTAH_HOME%\jre\bin;%PATH%;
 SET TOOL_DIR=..\..\release
 SET PROJECT=Design.asta
@@ -15,7 +15,7 @@ pushd "..\..\"
 
 rem pushd %~dp0
 set BAT_DIR=%CD%
-set BIN_DIR="%BAT_DIR%\bin"
+set BIN_DIR="%BAT_DIR%\release\ClasHStamP.jar"
 set RES_DIR=%BAT_DIR%\samples\AllSymbols
 set LIB_DIR=%BAT_DIR%\lib
 rem popd
@@ -23,8 +23,8 @@ rem popd
 if exist "%ASTAH_HOME%\jre\bin\javaw.exe" set PATH=%ASTAH_HOME%\jre\bin;%PATH%
 
 rem Remove "rem" from following two lines, if you'd like to use j2sdk.
-rem set JAVA_HOME=C:\jdk1.7.0_45
-rem set PATH=%JAVA_HOME%\bin;%PATH%
+set JAVA_HOME=D:\Workspace\Applications\astah-professional\jre
+set PATH=%JAVA_HOME%\bin;%PATH%
 
 set ASTAH_COM_JAR="%ASTAH_HOME%\astah-community.jar"
 set ASTAH_UML_JAR="%ASTAH_HOME%\astah-uml.jar"

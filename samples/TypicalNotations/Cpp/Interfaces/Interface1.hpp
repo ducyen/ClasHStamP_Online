@@ -3,8 +3,9 @@
 #include "Generic/CommonInclude.h"
 
 class Interface1{
-    public: virtual void operation1(
-    ) = 0;
+    public: void finalMethod(
+    ){
+    } /* Interface1.finalMethod */
     public:  Interface1(
     )
     {

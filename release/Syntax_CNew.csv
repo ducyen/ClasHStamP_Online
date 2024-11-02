@@ -438,7 +438,7 @@ substm_impl,"[->]if( ![sCOPE]_IsIn( &pStm->[nAME][sCOPE], [mODIFIER]_[vALUE] ) )
 "
 substm_decl,,,"[->]bResult |= [tYPE]_StateDefaultTrans( p[cONTAINER], &pStm->[nAME][tYPE] );
 ","[->][Scope]_Reset( p[tYPE], pStm->base.pParentStm, NULL, [mODIFIER]_[vALUE] );
-","[->][Scope]_Reset( p[tYPE], &pStm->[nAME][sCOPE], &pStm->base, [mODIFIER]_[vALUE] );
+","[->][tYPE]_Reset( p[tYPE], [sCOPE]_[vALUE] );
 "
 history,,,"[->]pStm->n[nAME]History &= ~[sCOPE]_[cONTAINER];
 [->]pStm->n[nAME]History |= [sCOPE]_[vALUE];
@@ -480,7 +480,7 @@ BOOL [tYPE]_IsIn( [tYPE]* p[tYPE], uint64_t nState ){
 }
 ","[->]pStm->base.bIsExternTrans = TRUE;
 ","[->]if( [tYPE]_IsIn( &pStm->[nAME][tYPE], nCompositeState ) ){ return TRUE; }
-","[->][Scope]_Reset( p[tYPE], &(([cONTAINER]*)pStm->base.pParentStm)->[nAME][sCOPE], &pStm->base, [mODIFIER]_[vALUE] );
+","[->]if( [sCOPE]_Reset( p[cONTAINER], &pStm->[nAME][sCOPE], &pStm->base, nEntryPoint ) ){ return TRUE; }
 ",
 friend,,,,,
 visibility,,,,,

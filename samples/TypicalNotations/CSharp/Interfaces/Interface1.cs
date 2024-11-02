@@ -5,7 +5,7 @@ using boolean = System.Boolean;
 namespace Interfaces {
     public  interface Interface1
     {
-        void operation1(
+        void finalMethod(
         );
     }
 }
