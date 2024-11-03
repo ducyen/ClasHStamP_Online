@@ -348,7 +348,7 @@ static BOOL State0_Region1_CoutingDown_EventProc( ClawMachine* pClawMachine, Sta
     switch( nEventId ){
     case ClawMachine_TICK:{
         if (pClawMachine->playCountDown < 0) {
-            ClawMachineStm_Reset( pClawMachine, pStm->base.pParentStm, NULL, ClawMachineStm_GoingDown );
+            ClawMachine_Reset( pClawMachine, ClawMachineStm_GoingDown );
         }
         else {
             pClawMachine->playCountDown -= 1;
@@ -798,6 +798,7 @@ BOOL ClawMachineStm_Reset( ClawMachine* pClawMachine, ClawMachineStm* pStm, HdSt
         }
         return FALSE;
     }else{
+    if( State0_Region1_Reset( pClawMachine, &pStm->State0State0_Region1, &pStm->base, nEntryPoint ) ){ return TRUE; }
     if( !IS_IN( nEntryPoint, ClawMachineStm_ClawMachineTop ) ){ return FALSE; }
         if( ClawMachineStm_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = nEntryPoint;

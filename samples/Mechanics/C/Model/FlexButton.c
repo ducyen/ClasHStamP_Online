@@ -761,6 +761,7 @@ BOOL FlexBtnStm_Reset( FlexButton* pFlexButton, FlexBtnStm* pStm, HdStateMachine
         }
         return FALSE;
     }else{
+    if( Ready_Region1_Reset( pFlexButton, &pStm->ReadyReady_Region1, &pStm->base, nEntryPoint ) ){ return TRUE; }
     if( !IS_IN( nEntryPoint, FlexBtnStm_StateMachine0 ) ){ return FALSE; }
         if( FlexBtnStm_IsFinished( &pStm->base ) ){
             pStm->base.nPseudostate = nEntryPoint;
