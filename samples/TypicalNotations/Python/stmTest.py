@@ -17,6 +17,7 @@ class Statemachine:
         self.pseudoState = 0
         self.isExternalTrans = 0
         self.regionMask = 0
+        self.lastEnteredStateRecovering = False
         self.stateBitShift = _stateBitShift     # Should be moved to Parallel State Machine
         self.parent = _parent                   # Should be moved to Parallel State Machine
         self.lastEnteredState = 0               # Should be moved to Parallel State Machine
@@ -57,7 +58,6 @@ def get_next(fix = None):
     return curCount
 
 gVar = 1
-lastEnteredStateRecovering = False
 
 # class MainTop extends Statemachine
 #   ...
@@ -142,8 +142,7 @@ class SharedTop(Statemachine):
                 print('SharedStm enter')
                 if self.targetState == self.main.SharedStm:
                     self.pseudoState = self.main.InitialPseudostate2
-                global lastEnteredStateRecovering
-                if lastEnteredStateRecovering:
+                if self.lastEnteredStateRecovering:
                     self.pseudoState = self.main.lastEnteredState & self.main.SharedStm
                 self.RecordState()
         # end def
@@ -169,6 +168,8 @@ class SharedTop(Statemachine):
             elif self.currentState != 0 and self.currentState != self.pseudoState:
                 self.BgnTrans(self.pseudoState)
                 self.EndTrans()
+                return True
+            self.lastEnteredStateRecovering = False
             return False
         # end def
         def BgnTrans(self, targetState):
@@ -229,6 +230,7 @@ class SharedTop(Statemachine):
             return
         if self.SharedStmHsm.pseudoState == 0:
             self.SharedStmHsm.pseudoState = self.SharedStm
+        self.SharedStmHsm.lastEnteredStateRecovering = self.parent.lastEnteredStateRecovering
         self.SharedStmHsm.regionMask = self.SharedStm
         self.SharedStmHsm.BgnTrans(self.SharedStmHsm.pseudoState)
         self.SharedStmHsm.EndTrans()
@@ -304,6 +306,8 @@ class MainTop(Statemachine):
             elif self.currentState != 0 and self.currentState != self.pseudoState:
                 self.BgnTrans(self.pseudoState)
                 self.EndTrans()
+                return True
+            self.lastEnteredStateRecovering = False
             return False
         # end def
         def BgnTrans(self, targetState):
@@ -571,8 +575,7 @@ class MainTop(Statemachine):
             elif self.pseudoState == self.main.S0_Rgn2_Init:
                 if self.main.DeepHistoryPseudostate0 != 0:
                     self.BgnTrans(self.main.DeepHistoryPseudostate0 & self.main.S0Rgn2)
-                    global lastEnteredStateRecovering
-                    lastEnteredStateRecovering = True
+                    self.lastEnteredStateRecovering = True
                     self.EndTrans()
                 else:
                     self.BgnTrans(self.main.SubmachineState0)
@@ -581,6 +584,8 @@ class MainTop(Statemachine):
             elif self.currentState != 0 and self.currentState != self.pseudoState:
                 self.BgnTrans(self.pseudoState)
                 self.EndTrans()
+                return True
+            self.lastEnteredStateRecovering = False
             return False
         # end def
         def BgnTrans(self, targetState):
@@ -971,7 +976,7 @@ class MainTop(Statemachine):
 
 stm = MainTop(None, 0, None)
 def main():
-    global lastEnteredStateRecovering
+
     stm.Initiate()
     stm.DefaultTrans()
 
@@ -979,16 +984,13 @@ def main():
     print("-------------1--------------")
     stm.EventHandle(Events.E10, any)
     stm.DefaultTrans()
-    lastEnteredStateRecovering = False
 
     print("-------------2--------------")
     stm.EventHandle(Events.E3, any)
     stm.DefaultTrans()
-    lastEnteredStateRecovering = False
 
     print("-------------3--------------")
     stm.EventHandle(Events.E2, any)
-    lastEnteredStateRecovering = False
     stm.DefaultTrans()
 
 
