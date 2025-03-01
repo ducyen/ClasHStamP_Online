@@ -7,6 +7,15 @@ def IsIn( leaf, composite ):
 def MakeMask(bitShift, bitCount):
     return (1 << bitCount) - 1 << bitShift
 
+class ParallelStatemachine:
+    def __init__(self, _main, _stateBitShift, _parent):
+        self.stateBitShift = _stateBitShift     # Should be moved to Parallel State Machine
+        self.parent = _parent                   # Should be moved to Parallel State Machine
+        self.lastEnteredState = 0               # Should be moved to Parallel State Machine
+        self.stateCount = 0                     # Should be moved to Parallel State Machine
+    def MakeState(self, stateBit):
+        return 1 << (stateBit + self.stateBitShift)
+
 class Statemachine:
     def __init__(self, _main, _stateBitShift, _parent):
         self.main = _main
@@ -18,12 +27,6 @@ class Statemachine:
         self.isExternalTrans = 0
         self.regionMask = 0
         self.lastEnteredStateRecovering = False
-        self.stateBitShift = _stateBitShift     # Should be moved to Parallel State Machine
-        self.parent = _parent                   # Should be moved to Parallel State Machine
-        self.lastEnteredState = 0               # Should be moved to Parallel State Machine
-        self.stateCount = 0                     # Should be moved to Parallel State Machine
-    def MakeState(self, stateBit):
-        return 1 << (stateBit + self.stateBitShift)
     def CommitTrans(self):
         self.currentState = self.targetState
         self.isExternalTrans = False
@@ -87,7 +90,7 @@ class Events(Enum):
     eLocal = auto()
 # Statemachine sub-class
 gCount = 0
-class SharedTop(Statemachine):
+class SharedTop(ParallelStatemachine):
     # States enumeration
     Bit_InitialPseudostate2 = get_next()
     Bit_State1 = get_next()
@@ -224,13 +227,13 @@ class SharedTop(Statemachine):
                 break
         # end loop
     # end def
-    def Initiate(self, entryPoint = 0):
+    def Initiate(self, _lastEnteredStateRecovering, entryPoint = 0):
         if entryPoint != 0:
             self.SharedStmHsm.pseudoState = entryPoint
             return
         if self.SharedStmHsm.pseudoState == 0:
             self.SharedStmHsm.pseudoState = self.SharedStm
-        self.SharedStmHsm.lastEnteredStateRecovering = self.parent.lastEnteredStateRecovering
+        self.SharedStmHsm.lastEnteredStateRecovering = _lastEnteredStateRecovering
         self.SharedStmHsm.regionMask = self.SharedStm
         self.SharedStmHsm.BgnTrans(self.SharedStmHsm.pseudoState)
         self.SharedStmHsm.EndTrans()
@@ -241,7 +244,7 @@ class SharedTop(Statemachine):
     # end def
 # Statemachine sub-class
 gCount = 0
-class MainTop(Statemachine):
+class MainTop(ParallelStatemachine):
     # States enumeration
     Bit_MainStm_Init = get_next()
     Bit_SubmachineState1 = get_next()
@@ -535,7 +538,7 @@ class MainTop(Statemachine):
             if self.Enterable(self.main.SubmachineState0):
                 self.S0Rgn2_Enter()
                 print('SubmachineState0 enter')
-                self.main.SubmachineState0Hsm.Initiate()
+                self.main.SubmachineState0Hsm.Initiate(self.lastEnteredStateRecovering)
                 self.RecordState()
         # end def
         def SubmachineState0_EventHandle(self, e, params):
@@ -616,7 +619,7 @@ class MainTop(Statemachine):
             if self.Enterable(self.main.SubmachineState1):
                 self.MainStm_Enter()
                 print('SubmachineState1 enter')
-                self.main.SubmachineState1Hsm.Initiate()
+                self.main.SubmachineState1Hsm.Initiate(self.lastEnteredStateRecovering)
                 self.RecordState()
         # end def
         def SubmachineState1_EventHandle(self, e, params):
@@ -765,7 +768,7 @@ class MainTop(Statemachine):
                 # end joining
                 else:
                     self.main.S0Rgn2Hsm.BgnTrans(self.main.SubmachineState0)
-                    self.main.SubmachineState0Hsm.Initiate(self.main.SubmachineState0Hsm.EntryPt0)
+                    self.main.SubmachineState0Hsm.Initiate(self.lastEnteredStateRecovering, self.main.SubmachineState0Hsm.EntryPt0)
                     self.main.S0Rgn2Hsm.EndTrans()
                 # end if
                 return True
@@ -953,7 +956,7 @@ class MainTop(Statemachine):
                 break
         # end loop
     # end def
-    def Initiate(self, entryPoint = 0):
+    def Initiate(self, _lastEnteredStateRecovering = False, entryPoint = 0):
         if entryPoint != 0:
             self.MainStmHsm.pseudoState = entryPoint
             return
