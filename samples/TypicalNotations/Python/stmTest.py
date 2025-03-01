@@ -30,12 +30,15 @@ class Statemachine:
     def CommitTrans(self):
         self.currentState = self.targetState
         self.isExternalTrans = False
-    def RecordState(self):
+    def DefaultEntryAction(self, text):
+        print(text + ' enter')
         self.main.lastEnteredState = self.main.lastEnteredState & ~self.regionMask | self.currentState
         #parent = self.parent
         #while parent != None:
         #    parent.lastEnteredState = parent.lastEnteredState & ~self.regionMask | self.currentState
         #    parent = parent.parent        
+    def DefaultExitAction(self, text):
+        print(text + ' exit')
     def Enterable(self, thisState):
         isThisLca = IsIn(self.lcaState, thisState)
         if not isThisLca or self.lcaState == 0:           
@@ -104,8 +107,7 @@ class SharedTop(ParallelStatemachine):
         def State1_Enter(self):
             if self.Enterable(self.main.State1):
                 self.SharedStm_Enter()
-                print('State1 enter')
-                self.RecordState()
+                self.DefaultEntryAction('State1')
         # end def
         def State1_EventHandle(self, e, params):
             self.sourceState = self.main.State1
@@ -117,14 +119,13 @@ class SharedTop(ParallelStatemachine):
         # end def
         def State1_Exit(self):
             if self.Exitable(self.main.State1):
-                print('State1 exit')
+                self.DefaultExitAction('State1')
                 self.SharedStm_Exit()
         # end def
         def State0_Enter(self):
             if self.Enterable(self.main.State0):
                 self.SharedStm_Enter()
-                print('State0 enter')
-                self.RecordState()
+                self.DefaultEntryAction('State0')
         # end def
         def State0_EventHandle(self, e, params):
             self.sourceState = self.main.State0
@@ -137,17 +138,16 @@ class SharedTop(ParallelStatemachine):
         # end def
         def State0_Exit(self):
             if self.Exitable(self.main.State0):
-                print('State0 exit')
+                self.DefaultExitAction('State0')
                 self.SharedStm_Exit()
         # end def
         def SharedStm_Enter(self):
             if self.Enterable(self.main.SharedStm):
-                print('SharedStm enter')
                 if self.targetState == self.main.SharedStm:
                     self.pseudoState = self.main.InitialPseudostate2
                 if self.lastEnteredStateRecovering:
                     self.pseudoState = self.main.lastEnteredState & self.main.SharedStm
-                self.RecordState()
+                self.DefaultEntryAction('SharedStm')
         # end def
         def SharedStm_EventHandle(self, e, params):
             self.sourceState = self.main.SharedStm
@@ -155,7 +155,7 @@ class SharedTop(ParallelStatemachine):
         # end def
         def SharedStm_Exit(self):
             if self.Exitable(self.main.SharedStm):
-                print('SharedStm exit')
+                self.DefaultExitAction('SharedStm')
         # end def
         def DefaultTrans(self):
             self.sourceState = self.currentState
@@ -194,7 +194,8 @@ class SharedTop(ParallelStatemachine):
                 return self.State0_EventHandle(e, params)
         # end def
         def EndTrans(self):
-            self.CommitTrans()
+            self.currentState = self.targetState
+            self.isExternalTrans = False
             if self.currentState == self.main.SharedStm:
                 self.SharedStm_Enter()
             elif self.currentState == self.main.State1:
@@ -272,8 +273,7 @@ class MainTop(ParallelStatemachine):
         def S012_Enter(self):
             if self.Enterable(self.main.S012):
                 self.S01Rgn1_Enter()
-                print('S012 enter')
-                self.RecordState()
+                self.DefaultEntryAction('S012')
         # end def
         def S012_EventHandle(self, e, params):
             self.sourceState = self.main.S012
@@ -281,17 +281,16 @@ class MainTop(ParallelStatemachine):
         # end def
         def S012_Exit(self):
             if self.Exitable(self.main.S012):
-                print('S012 exit')
+                self.DefaultExitAction('S012')
                 self.S01Rgn1_Exit()
         # end def
         def S01Rgn1_Enter(self):
             if self.Enterable(self.main.S01Rgn1):
-                print('S01Rgn1 enter')
                 if self.targetState == self.main.S01Rgn1:
                     self.pseudoState = self.main.InitialPseudostate1
                 if self.lastEnteredStateRecovering:
                     self.pseudoState = self.main.lastEnteredState & self.main.S01Rgn1
-                self.RecordState()
+                self.DefaultEntryAction('S01Rgn1')
         # end def
         def S01Rgn1_EventHandle(self, e, params):
             self.sourceState = self.main.S01Rgn1
@@ -299,7 +298,7 @@ class MainTop(ParallelStatemachine):
         # end def
         def S01Rgn1_Exit(self):
             if self.Exitable(self.main.S01Rgn1):
-                print('S01Rgn1 exit')
+                self.DefaultExitAction('S01Rgn1')
         # end def
         def DefaultTrans(self):
             self.sourceState = self.currentState
@@ -330,7 +329,8 @@ class MainTop(ParallelStatemachine):
                 return self.S012_EventHandle(e, params)
         # end def
         def EndTrans(self):
-            self.CommitTrans()
+            self.currentState = self.targetState
+            self.isExternalTrans = False
             if self.currentState == self.main.S01Rgn1:
                 self.S01Rgn1_Enter()
             elif self.currentState == self.main.S012:
@@ -342,8 +342,7 @@ class MainTop(ParallelStatemachine):
         def S022_Enter(self):
             if self.Enterable(self.main.S022):
                 self.S02Rgn1_Enter()
-                print('S022 enter')
-                self.RecordState()
+                self.DefaultEntryAction('S022')
         # end def
         def S022_EventHandle(self, e, params):
             self.sourceState = self.main.S022
@@ -351,17 +350,16 @@ class MainTop(ParallelStatemachine):
         # end def
         def S022_Exit(self):
             if self.Exitable(self.main.S022):
-                print('S022 exit')
+                self.DefaultExitAction('S022')
                 self.S02Rgn1_Exit()
         # end def
         def S02Rgn1_Enter(self):
             if self.Enterable(self.main.S02Rgn1):
-                print('S02Rgn1 enter')
                 if self.targetState == self.main.S02Rgn1:
                     self.pseudoState = self.main.InitialPseudostate3
                 if self.lastEnteredStateRecovering:
                     self.pseudoState = self.main.lastEnteredState & self.main.S02Rgn1
-                self.RecordState()
+                self.DefaultEntryAction('S02Rgn1')
         # end def
         def S02Rgn1_EventHandle(self, e, params):
             self.sourceState = self.main.S02Rgn1
@@ -369,7 +367,7 @@ class MainTop(ParallelStatemachine):
         # end def
         def S02Rgn1_Exit(self):
             if self.Exitable(self.main.S02Rgn1):
-                print('S02Rgn1 exit')
+                self.DefaultExitAction('S02Rgn1')
         # end def
         def DefaultTrans(self):
             self.sourceState = self.currentState
@@ -400,7 +398,8 @@ class MainTop(ParallelStatemachine):
                 return self.S022_EventHandle(e, params)
         # end def
         def EndTrans(self):
-            self.CommitTrans()
+            self.currentState = self.targetState
+            self.isExternalTrans = False
             if self.currentState == self.main.S02Rgn1:
                 self.S02Rgn1_Enter()
             elif self.currentState == self.main.S022:
@@ -412,8 +411,7 @@ class MainTop(ParallelStatemachine):
         def S021_Enter(self):
             if self.Enterable(self.main.S021):
                 self.S02_Enter()
-                print('S021 enter')
-                self.RecordState()
+                self.DefaultEntryAction('S021')
         # end def
         def S021_EventHandle(self, e, params):
             self.sourceState = self.main.S021
@@ -421,13 +419,12 @@ class MainTop(ParallelStatemachine):
         # end def
         def S021_Exit(self):
             if self.Exitable(self.main.S021):
-                print('S021 exit')
+                self.DefaultExitAction('S021')
                 self.S02_Exit()
         # end def
         def S02_Enter(self):
             if self.Enterable(self.main.S02):
                 self.S0Rgn1_Enter()
-                print('S02 enter')
                 if self.targetState == self.main.S02:
                     self.pseudoState = self.main.InitialPseudostate2
                 self.main.ShallowHistoryPseudostate1 = (self.main.ShallowHistoryPseudostate1 & ~self.main.S0Rgn1) | self.main.S02
@@ -437,7 +434,7 @@ class MainTop(ParallelStatemachine):
                 self.main.S02Rgn1Hsm.regionMask = self.main.S02Rgn1
                 self.main.S02Rgn1Hsm.BgnTrans(self.main.S02Rgn1Hsm.pseudoState)
                 self.main.S02Rgn1Hsm.EndTrans()
-                self.RecordState()
+                self.DefaultEntryAction('S02')
         # end def
         def S02_EventHandle(self, e, params):
             self.sourceState = self.main.S02
@@ -451,15 +448,14 @@ class MainTop(ParallelStatemachine):
             if self.Exitable(self.main.S02):
                 self.main.S02Rgn1Hsm.BgnTrans(0)
                 self.main.S02Rgn1Hsm.EndTrans()
-                print('S02 exit')
+                self.DefaultExitAction('S02')
                 self.S0Rgn1_Exit()
         # end def
         def S04_Enter(self):
             if self.Enterable(self.main.S04):
                 self.S0Rgn1_Enter()
-                print('S04 enter')
                 self.main.ShallowHistoryPseudostate1 = (self.main.ShallowHistoryPseudostate1 & ~self.main.S0Rgn1) | self.main.S04
-                self.RecordState()
+                self.DefaultEntryAction('S04')
         # end def
         def S04_EventHandle(self, e, params):
             self.sourceState = self.main.S04
@@ -467,17 +463,16 @@ class MainTop(ParallelStatemachine):
         # end def
         def S04_Exit(self):
             if self.Exitable(self.main.S04):
-                print('S04 exit')
+                self.DefaultExitAction('S04')
                 self.S0Rgn1_Exit()
         # end def
         def S0Rgn1_Enter(self):
             if self.Enterable(self.main.S0Rgn1):
-                print('S0Rgn1 enter')
                 if self.targetState == self.main.S0Rgn1:
                     self.pseudoState = self.main.S0_Rgn1_Init
                 if self.lastEnteredStateRecovering:
                     self.pseudoState = self.main.lastEnteredState & self.main.S0Rgn1
-                self.RecordState()
+                self.DefaultEntryAction('S0Rgn1')
         # end def
         def S0Rgn1_EventHandle(self, e, params):
             self.sourceState = self.main.S0Rgn1
@@ -485,7 +480,7 @@ class MainTop(ParallelStatemachine):
         # end def
         def S0Rgn1_Exit(self):
             if self.Exitable(self.main.S0Rgn1):
-                print('S0Rgn1 exit')
+                self.DefaultExitAction('S0Rgn1')
         # end def
         def DefaultTrans(self):
             self.sourceState = self.currentState
@@ -533,7 +528,8 @@ class MainTop(ParallelStatemachine):
                 return self.S04_EventHandle(e, params)
         # end def
         def EndTrans(self):
-            self.CommitTrans()
+            self.currentState = self.targetState
+            self.isExternalTrans = False
             if self.currentState == self.main.S0Rgn1:
                 self.S0Rgn1_Enter()
             elif self.currentState == self.main.S021:
@@ -549,9 +545,8 @@ class MainTop(ParallelStatemachine):
         def SubmachineState0_Enter(self):
             if self.Enterable(self.main.SubmachineState0):
                 self.S0Rgn2_Enter()
-                print('SubmachineState0 enter')
                 self.main.SubmachineState0Hsm.Initiate(self.lastEnteredStateRecovering)
-                self.RecordState()
+                self.DefaultEntryAction('SubmachineState0')
         # end def
         def SubmachineState0_EventHandle(self, e, params):
             self.sourceState = self.main.SubmachineState0
@@ -560,17 +555,16 @@ class MainTop(ParallelStatemachine):
         def SubmachineState0_Exit(self):
             if self.Exitable(self.main.SubmachineState0):
                 self.main.SubmachineState0Hsm.Terminate()
-                print('SubmachineState0 exit')
+                self.DefaultExitAction('SubmachineState0')
                 self.S0Rgn2_Exit()
         # end def
         def S0Rgn2_Enter(self):
             if self.Enterable(self.main.S0Rgn2):
-                print('S0Rgn2 enter')
                 if self.targetState == self.main.S0Rgn2:
                     self.pseudoState = self.main.S0_Rgn2_Init
                 if self.lastEnteredStateRecovering:
                     self.pseudoState = self.main.lastEnteredState & self.main.S0Rgn2
-                self.RecordState()
+                self.DefaultEntryAction('S0Rgn2')
         # end def
         def S0Rgn2_EventHandle(self, e, params):
             self.sourceState = self.main.S0Rgn2
@@ -579,7 +573,7 @@ class MainTop(ParallelStatemachine):
         def S0Rgn2_Exit(self):
             if self.Exitable(self.main.S0Rgn2):
                 self.main.DeepHistoryPseudostate0 = self.main.lastEnteredState
-                print('S0Rgn2 exit')
+                self.DefaultExitAction('S0Rgn2')
         # end def
         def DefaultTrans(self):
             self.sourceState = self.currentState
@@ -620,7 +614,8 @@ class MainTop(ParallelStatemachine):
                 return self.SubmachineState0_EventHandle(e, params)
         # end def
         def EndTrans(self):
-            self.CommitTrans()
+            self.currentState = self.targetState
+            self.isExternalTrans = False
             if self.currentState == self.main.S0Rgn2:
                 self.S0Rgn2_Enter()
             elif self.currentState == self.main.SubmachineState0:
@@ -632,9 +627,8 @@ class MainTop(ParallelStatemachine):
         def SubmachineState1_Enter(self):
             if self.Enterable(self.main.SubmachineState1):
                 self.MainStm_Enter()
-                print('SubmachineState1 enter')
                 self.main.SubmachineState1Hsm.Initiate(self.lastEnteredStateRecovering)
-                self.RecordState()
+                self.DefaultEntryAction('SubmachineState1')
         # end def
         def SubmachineState1_EventHandle(self, e, params):
             self.sourceState = self.main.SubmachineState1
@@ -643,14 +637,13 @@ class MainTop(ParallelStatemachine):
         def SubmachineState1_Exit(self):
             if self.Exitable(self.main.SubmachineState1):
                 self.main.SubmachineState1Hsm.Terminate()
-                print('SubmachineState1 exit')
+                self.DefaultExitAction('SubmachineState1')
                 self.MainStm_Exit()
         # end def
         def S011_Enter(self):
             if self.Enterable(self.main.S011):
                 self.S01_Enter()
-                print('S011 enter')
-                self.RecordState()
+                self.DefaultEntryAction('S011')
         # end def
         def S011_EventHandle(self, e, params):
             self.sourceState = self.main.S011
@@ -658,13 +651,12 @@ class MainTop(ParallelStatemachine):
         # end def
         def S011_Exit(self):
             if self.Exitable(self.main.S011):
-                print('S011 exit')
+                self.DefaultExitAction('S011')
                 self.S01_Exit()
         # end def
         def S01_Enter(self):
             if self.Enterable(self.main.S01):
                 self.S0_Enter()
-                print('S01 enter')
                 if self.targetState == self.main.S01:
                     self.pseudoState = self.main.InitialPseudostate0
                 self.main.ShallowHistoryPseudostate0 = (self.main.ShallowHistoryPseudostate0 & ~self.main.MainStm) | self.main.S01
@@ -674,7 +666,7 @@ class MainTop(ParallelStatemachine):
                 self.main.S01Rgn1Hsm.regionMask = self.main.S01Rgn1
                 self.main.S01Rgn1Hsm.BgnTrans(self.main.S01Rgn1Hsm.pseudoState)
                 self.main.S01Rgn1Hsm.EndTrans()
-                self.RecordState()
+                self.DefaultEntryAction('S01')
         # end def
         def S01_EventHandle(self, e, params):
             self.sourceState = self.main.S01
@@ -692,15 +684,14 @@ class MainTop(ParallelStatemachine):
             if self.Exitable(self.main.S01):
                 self.main.S01Rgn1Hsm.BgnTrans(0)
                 self.main.S01Rgn1Hsm.EndTrans()
-                print('S01 exit')
+                self.DefaultExitAction('S01')
                 self.S0_Exit()
         # end def
         def S03_Enter(self):
             if self.Enterable(self.main.S03):
                 self.S0_Enter()
-                print('S03 enter')
                 self.main.ShallowHistoryPseudostate0 = (self.main.ShallowHistoryPseudostate0 & ~self.main.MainStm) | self.main.S03
-                self.RecordState()
+                self.DefaultEntryAction('S03')
         # end def
         def S03_EventHandle(self, e, params):
             self.sourceState = self.main.S03
@@ -708,13 +699,12 @@ class MainTop(ParallelStatemachine):
         # end def
         def S03_Exit(self):
             if self.Exitable(self.main.S03):
-                print('S03 exit')
+                self.DefaultExitAction('S03')
                 self.S0_Exit()
         # end def
         def S0_Enter(self):
             if self.Enterable(self.main.S0):
                 self.State2_Enter()
-                print('S0 enter')
                 if self.targetState == self.main.S0:
                     self.pseudoState = self.main.S0_Init
                 if self.main.S0Rgn1Hsm.pseudoState == 0:
@@ -729,7 +719,7 @@ class MainTop(ParallelStatemachine):
                 self.main.S0Rgn2Hsm.regionMask = self.main.S0Rgn2
                 self.main.S0Rgn2Hsm.BgnTrans(self.main.S0Rgn2Hsm.pseudoState)
                 self.main.S0Rgn2Hsm.EndTrans()
-                self.RecordState()
+                self.DefaultEntryAction('S0')
         # end def
         def S0_EventHandle(self, e, params):
             self.sourceState = self.main.S0
@@ -741,16 +731,15 @@ class MainTop(ParallelStatemachine):
                 self.main.S0Rgn1Hsm.EndTrans()
                 self.main.S0Rgn2Hsm.BgnTrans(0)
                 self.main.S0Rgn2Hsm.EndTrans()
-                print('S0 exit')
+                self.DefaultExitAction('S0')
                 self.State2_Exit()
         # end def
         def State2_Enter(self):
             if self.Enterable(self.main.State2):
                 self.MainStm_Enter()
-                print('State2 enter')
                 if self.targetState == self.main.State2:
                     self.pseudoState = self.main.State2_Init
-                self.RecordState()
+                self.DefaultEntryAction('State2')
         # end def
         def State2_EventHandle(self, e, params):
             self.sourceState = self.main.State2
@@ -802,17 +791,16 @@ class MainTop(ParallelStatemachine):
         # end def
         def State2_Exit(self):
             if self.Exitable(self.main.State2):
-                print('State2 exit')
+                self.DefaultExitAction('State2')
                 self.MainStm_Exit()
         # end def
         def MainStm_Enter(self):
             if self.Enterable(self.main.MainStm):
-                print('MainStm enter')
                 if self.targetState == self.main.MainStm:
                     self.pseudoState = self.main.MainStm_Init
                 if self.lastEnteredStateRecovering:
                     self.pseudoState = self.main.lastEnteredState & self.main.MainStm
-                self.RecordState()
+                self.DefaultEntryAction('MainStm')
         # end def
         def MainStm_EventHandle(self, e, params):
             self.sourceState = self.main.MainStm
@@ -820,7 +808,7 @@ class MainTop(ParallelStatemachine):
         # end def
         def MainStm_Exit(self):
             if self.Exitable(self.main.MainStm):
-                print('MainStm exit')
+                self.DefaultExitAction('MainStm')
         # end def
         def DefaultTrans(self):
             self.sourceState = self.currentState
@@ -900,7 +888,8 @@ class MainTop(ParallelStatemachine):
                 return self.State2_EventHandle(e, params)
         # end def
         def EndTrans(self):
-            self.CommitTrans()
+            self.currentState = self.targetState
+            self.isExternalTrans = False
             if self.currentState == self.main.MainStm:
                 self.MainStm_Enter()
             elif self.currentState == self.main.SubmachineState1:
