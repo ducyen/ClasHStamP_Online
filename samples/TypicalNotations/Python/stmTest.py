@@ -227,13 +227,13 @@ class SharedTop(ParallelStatemachine):
                 break
         # end loop
     # end def
-    def Initiate(self, _lastEnteredStateRecovering, entryPoint = 0):
+    def Initiate(self, lastEnteredStateRecovering, entryPoint = 0):
         if entryPoint != 0:
             self.SharedStmHsm.pseudoState = entryPoint
             return
         if self.SharedStmHsm.pseudoState == 0:
             self.SharedStmHsm.pseudoState = self.SharedStm
-        self.SharedStmHsm.lastEnteredStateRecovering = _lastEnteredStateRecovering
+        self.SharedStmHsm.lastEnteredStateRecovering = lastEnteredStateRecovering
         self.SharedStmHsm.regionMask = self.SharedStm
         self.SharedStmHsm.BgnTrans(self.SharedStmHsm.pseudoState)
         self.SharedStmHsm.EndTrans()
@@ -289,6 +289,8 @@ class MainTop(ParallelStatemachine):
                 print('S01Rgn1 enter')
                 if self.targetState == self.main.S01Rgn1:
                     self.pseudoState = self.main.InitialPseudostate1
+                if self.lastEnteredStateRecovering:
+                    self.pseudoState = self.main.lastEnteredState & self.main.S01Rgn1
                 self.RecordState()
         # end def
         def S01Rgn1_EventHandle(self, e, params):
@@ -357,6 +359,8 @@ class MainTop(ParallelStatemachine):
                 print('S02Rgn1 enter')
                 if self.targetState == self.main.S02Rgn1:
                     self.pseudoState = self.main.InitialPseudostate3
+                if self.lastEnteredStateRecovering:
+                    self.pseudoState = self.main.lastEnteredState & self.main.S02Rgn1
                 self.RecordState()
         # end def
         def S02Rgn1_EventHandle(self, e, params):
@@ -377,6 +381,8 @@ class MainTop(ParallelStatemachine):
             elif self.currentState != 0 and self.currentState != self.pseudoState:
                 self.BgnTrans(self.pseudoState)
                 self.EndTrans()
+                return True
+            self.lastEnteredStateRecovering = False
             return False
         # end def
         def BgnTrans(self, targetState):
@@ -427,6 +433,7 @@ class MainTop(ParallelStatemachine):
                 self.main.ShallowHistoryPseudostate1 = (self.main.ShallowHistoryPseudostate1 & ~self.main.S0Rgn1) | self.main.S02
                 if self.main.S02Rgn1Hsm.pseudoState == 0:
                     self.main.S02Rgn1Hsm.pseudoState = self.main.S02Rgn1
+                self.main.S02Rgn1Hsm.lastEnteredStateRecovering = self.lastEnteredStateRecovering
                 self.main.S02Rgn1Hsm.regionMask = self.main.S02Rgn1
                 self.main.S02Rgn1Hsm.BgnTrans(self.main.S02Rgn1Hsm.pseudoState)
                 self.main.S02Rgn1Hsm.EndTrans()
@@ -468,6 +475,8 @@ class MainTop(ParallelStatemachine):
                 print('S0Rgn1 enter')
                 if self.targetState == self.main.S0Rgn1:
                     self.pseudoState = self.main.S0_Rgn1_Init
+                if self.lastEnteredStateRecovering:
+                    self.pseudoState = self.main.lastEnteredState & self.main.S0Rgn1
                 self.RecordState()
         # end def
         def S0Rgn1_EventHandle(self, e, params):
@@ -487,6 +496,7 @@ class MainTop(ParallelStatemachine):
                 return True
             elif self.pseudoState == self.main.S0_Rgn1_Init:
                 if self.main.ShallowHistoryPseudostate1 != 0:
+                    self.lastEnteredStateRecovering = True
                     self.BgnTrans(self.main.ShallowHistoryPseudostate1 & self.main.S0Rgn1)
                     self.EndTrans()
                 else:
@@ -496,6 +506,8 @@ class MainTop(ParallelStatemachine):
             elif self.currentState != 0 and self.currentState != self.pseudoState:
                 self.BgnTrans(self.pseudoState)
                 self.EndTrans()
+                return True
+            self.lastEnteredStateRecovering = False
             return False
         # end def
         def BgnTrans(self, targetState):
@@ -556,6 +568,8 @@ class MainTop(ParallelStatemachine):
                 print('S0Rgn2 enter')
                 if self.targetState == self.main.S0Rgn2:
                     self.pseudoState = self.main.S0_Rgn2_Init
+                if self.lastEnteredStateRecovering:
+                    self.pseudoState = self.main.lastEnteredState & self.main.S0Rgn2
                 self.RecordState()
         # end def
         def S0Rgn2_EventHandle(self, e, params):
@@ -577,8 +591,8 @@ class MainTop(ParallelStatemachine):
                 return True
             elif self.pseudoState == self.main.S0_Rgn2_Init:
                 if self.main.DeepHistoryPseudostate0 != 0:
-                    self.BgnTrans(self.main.DeepHistoryPseudostate0 & self.main.S0Rgn2)
                     self.lastEnteredStateRecovering = True
+                    self.BgnTrans(self.main.DeepHistoryPseudostate0 & self.main.S0Rgn2)
                     self.EndTrans()
                 else:
                     self.BgnTrans(self.main.SubmachineState0)
@@ -656,6 +670,7 @@ class MainTop(ParallelStatemachine):
                 self.main.ShallowHistoryPseudostate0 = (self.main.ShallowHistoryPseudostate0 & ~self.main.MainStm) | self.main.S01
                 if self.main.S01Rgn1Hsm.pseudoState == 0:
                     self.main.S01Rgn1Hsm.pseudoState = self.main.S01Rgn1
+                self.main.S01Rgn1Hsm.lastEnteredStateRecovering = self.lastEnteredStateRecovering
                 self.main.S01Rgn1Hsm.regionMask = self.main.S01Rgn1
                 self.main.S01Rgn1Hsm.BgnTrans(self.main.S01Rgn1Hsm.pseudoState)
                 self.main.S01Rgn1Hsm.EndTrans()
@@ -704,11 +719,13 @@ class MainTop(ParallelStatemachine):
                     self.pseudoState = self.main.S0_Init
                 if self.main.S0Rgn1Hsm.pseudoState == 0:
                     self.main.S0Rgn1Hsm.pseudoState = self.main.S0Rgn1
+                self.main.S0Rgn1Hsm.lastEnteredStateRecovering = self.lastEnteredStateRecovering
                 self.main.S0Rgn1Hsm.regionMask = self.main.S0Rgn1
                 self.main.S0Rgn1Hsm.BgnTrans(self.main.S0Rgn1Hsm.pseudoState)
                 self.main.S0Rgn1Hsm.EndTrans()
                 if self.main.S0Rgn2Hsm.pseudoState == 0:
                     self.main.S0Rgn2Hsm.pseudoState = self.main.S0Rgn2
+                self.main.S0Rgn2Hsm.lastEnteredStateRecovering = self.lastEnteredStateRecovering
                 self.main.S0Rgn2Hsm.regionMask = self.main.S0Rgn2
                 self.main.S0Rgn2Hsm.BgnTrans(self.main.S0Rgn2Hsm.pseudoState)
                 self.main.S0Rgn2Hsm.EndTrans()
@@ -793,6 +810,8 @@ class MainTop(ParallelStatemachine):
                 print('MainStm enter')
                 if self.targetState == self.main.MainStm:
                     self.pseudoState = self.main.MainStm_Init
+                if self.lastEnteredStateRecovering:
+                    self.pseudoState = self.main.lastEnteredState & self.main.MainStm
                 self.RecordState()
         # end def
         def MainStm_EventHandle(self, e, params):
@@ -808,6 +827,7 @@ class MainTop(ParallelStatemachine):
             self.lcaState = 0
             if self.pseudoState == self.main.S0_Init:
                 if self.main.ShallowHistoryPseudostate0 != 0:
+                    self.lastEnteredStateRecovering = True
                     self.BgnTrans(self.main.ShallowHistoryPseudostate0 & self.main.MainStm)
                     self.EndTrans()
                 else:
@@ -841,6 +861,8 @@ class MainTop(ParallelStatemachine):
             elif self.currentState != 0 and self.currentState != self.pseudoState:
                 self.BgnTrans(self.pseudoState)
                 self.EndTrans()
+                return True
+            self.lastEnteredStateRecovering = False
             return False
         # end def
         def BgnTrans(self, targetState):
@@ -956,12 +978,13 @@ class MainTop(ParallelStatemachine):
                 break
         # end loop
     # end def
-    def Initiate(self, _lastEnteredStateRecovering = False, entryPoint = 0):
+    def Initiate(self, lastEnteredStateRecovering, entryPoint = 0):
         if entryPoint != 0:
             self.MainStmHsm.pseudoState = entryPoint
             return
         if self.MainStmHsm.pseudoState == 0:
             self.MainStmHsm.pseudoState = self.MainStm
+        self.MainStmHsm.lastEnteredStateRecovering = lastEnteredStateRecovering
         self.MainStmHsm.regionMask = self.MainStm
         self.MainStmHsm.BgnTrans(self.MainStmHsm.pseudoState)
         self.MainStmHsm.EndTrans()
@@ -980,7 +1003,7 @@ class MainTop(ParallelStatemachine):
 stm = MainTop(None, 0, None)
 def main():
 
-    stm.Initiate()
+    stm.Initiate(False)
     stm.DefaultTrans()
 
 
