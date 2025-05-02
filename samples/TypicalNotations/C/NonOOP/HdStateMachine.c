@@ -29,6 +29,16 @@ int HdStateMachine_Exitable(
     return FALSE;
 } /* HdStateMachine_Exitable */
 
+void HdStatemachine_DefaultEntryAction(void* pObj, void* pStm_, char* pMsg) {
+
+}
+void HdStatemachine_DefaultDoingAction(void* pObj, void* pStm_, char* pMsg) {
+
+}
+void HdStatemachine_DefaultExitAction(void* pObj, void* pStm_, char* pMsg) {
+
+}
+
 HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdStateMachine* pSource ){
     pHdStateMachine->pParentStm = pSource->pParentStm;
     pHdStateMachine->nCurrentState = pSource->nCurrentState;
@@ -39,6 +49,6 @@ HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdSt
     pHdStateMachine->bIsExternTrans = pSource->bIsExternTrans;
     pHdStateMachine->m_stmImage = pSource->m_stmImage;
     pHdStateMachine->m_stmRect = pSource->m_stmRect;
-    pHdStateMachine->pOwner = pSource->pOwner;
+    //pHdStateMachine->pOwner = pSource->pOwner;
     return ( HdStateMachine* )pHdStateMachine;
 }

@@ -3,6 +3,7 @@
 typedef struct tagUsedDependency UsedDependency;
 #endif//__UsedDependency_H__
 #if !defined( UsedDependency_Init ) && ( defined( __UsedDependency_INTERNAL__ )  )
+
 /** @memberof UsedDependency
  * @brief UsedDependency auto-generated constructor
  */

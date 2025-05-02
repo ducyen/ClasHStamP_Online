@@ -3,6 +3,7 @@
 typedef struct tagComposition Composition;
 #endif//__Composition_H__
 #if !defined( Composition_Init ) && ( defined( __Composition_INTERNAL__ )  )
+
 /** @memberof Composition
  * @brief Composition auto-generated constructor
  */

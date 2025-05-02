@@ -3,6 +3,7 @@
 typedef struct tagAggregration Aggregration;
 #endif//__Aggregration_H__
 #if !defined( Aggregration_Init ) && ( defined( __Aggregration_INTERNAL__ )  )
+
 /** @memberof Aggregration
  * @brief Aggregration auto-generated constructor
  */

@@ -36,7 +36,8 @@ c_struct,"typedef struct tag[nAME] {
 ","}[nAME];
 "
 i_struct,,,,,
-constructor,"/** @memberof [nAME]
+constructor,"
+/** @memberof [nAME]
  * @brief [nAME] auto-generated constructor
  */
 #define [nAME]_Init(",,"    .vTbl = &g[nAME]Vtbl,\
@@ -195,26 +196,33 @@ statemachine,"#define __HdStateMachine_INTERNAL__
  * @extends HdStateMachine
  */
 typedef struct tag[nAME] {
-    HdStateMachine base;
 ","}[nAME];
-BOOL [nAME]_Reset( [cONTAINER]* p[tYPE], [nAME]* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
 #define [nAME]_Init() {\
-    .base = { HdStateMachine_Init( [nAME]_[tYPE], [nAME]_[tYPE] ) },\
 [vALUE]}
 "
 default_trans,,,,,
 substm_impl,,,,,
 substm_decl,"    .[nAME][tYPE] = [tYPE]_Init(),\
-","    [tYPE][mODIFIER] [nAME][tYPE];[->64][dESC]
+","    HdStateMachine [nAME];[->64][dESC]
+","    [cONTAINER] [nAME];[->64][dESC]
+",,
+substm,"    [cONTAINER] [nAME];[->64][dESC]
+","    .[nAME] = [cONTAINER]_Init(),\
 ",,,
-history,"    uint64_t n[nAME]History;
-","    .n[nAME]History = 0,\
+region,"    HdStateMachine [nAME];[->64][dESC]
+","    .[nAME] = HdStateMachine_Init(),\
 ",,,
-deep_hist,"    uint64_t n[nAME]History;
-","    .n[nAME]History = 0,\
+state_action,,,,,
+trans_action,,,,,
+history,"    uint64_t [nAME];
+","    .[nAME] = STATE_UNDEF,\
+",,,
+deep_hist,"    uint64_t [nAME];
+","    .[nAME] = STATE_UNDEF,\
 ",,,
 junction,"#error junction@name;
 ",,,#error junction@begin,#error junction@end
+stm_api,,,,,
 api_call,"BOOL [tYPE]_EventProc( [tYPE]* p[tYPE], [tYPE]_EVENT nEventId, void* pEventParams );
 BOOL [tYPE]_Start( [tYPE]* p[tYPE] );
 BOOL [tYPE]_Reset( [tYPE]* p[tYPE], uint64_t nEntryPoint );

@@ -3,6 +3,7 @@
 typedef struct tagCalledDependency CalledDependency;
 #endif//__CalledDependency_H__
 #if !defined( CalledDependency_Init ) && ( defined( __CalledDependency_INTERNAL__ )  )
+
 /** @memberof CalledDependency
  * @brief CalledDependency auto-generated constructor
  */

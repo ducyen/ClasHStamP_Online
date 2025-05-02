@@ -3,18 +3,21 @@
 typedef struct tagHdStateMachine HdStateMachine;
 int HdStateMachine_Enterable( HdStateMachine* pHdStateMachine, uint64_t nThisState );
 int HdStateMachine_Exitable( HdStateMachine* pHdStateMachine, uint64_t nThisState );
+void HdStatemachine_DefaultEntryAction(void* pObj, void* pStm_, char* pMsg);
+void HdStatemachine_DefaultDoingAction(void* pObj, void* pStm_, char* pMsg);
+void HdStatemachine_DefaultExitAction(void* pObj, void* pStm_, char* pMsg);
 #endif//__HdStateMachine_H__
 #if !defined( HdStateMachine_Init ) && ( defined( __HdStateMachine_INTERNAL__ )  )
 /** @memberof HdStateMachine
  * @brief HdStateMachine auto-generated constructor
  */
-#define HdStateMachine_Init(_nCurrentState, _nPseudostate)\
+#define HdStateMachine_Init(_nCurrentState )\
     .pParentStm = NULL,\
     .nCurrentState = _nCurrentState,\
     .nLCAState = STATE_UNDEF,\
     .nTargetState = STATE_UNDEF,\
     .nSourceState = STATE_UNDEF,\
-    .nPseudostate = _nPseudostate,\
+    .nPseudostate = STATE_UNDEF,\
     .bIsExternTrans = false,\
     .m_stmImage = null,\
     .m_stmRect = null,\
@@ -39,7 +42,9 @@ struct tagHdStateMachine{
     bool bIsExternTrans;                                                                                                  \
     SDL_Texture* m_stmImage;                                                                                          \
     SDL_Rect m_stmRect;                                                                                                    \
-    HdStateMachine* pOwner;                                     \
+    HdStateMachine* pMain;                                     \
+    BOOL lastEnteredStateRecovering;                            \
+    uint64_t lastEnteredState;                                                \
 
     HdStateMachine_CLASS    
 };
