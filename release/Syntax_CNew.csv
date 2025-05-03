@@ -269,6 +269,12 @@ event_decl,"const TCHAR* [nAME]Event_toString( [nAME]_EVENT value ){
 ","    default: return _T( ""[nAME]_UNKNOWN"" );
     }
 }
+BOOL [tYPE]_Start( [tYPE]* p[tYPE] ){
+    return TRUE;
+}
+BOOL [tYPE]_EventProc( [tYPE]* p[tYPE], [tYPE]_EVENT nEventId, void* pEventParams ){
+    return TRUE;
+}
 "
 state_decl,,,,,
 state_entry,"static void [cONTAINER]_EndTrans( [tYPE] *p[tYPE], HdStateMachine* pStm ){

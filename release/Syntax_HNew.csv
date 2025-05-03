@@ -169,6 +169,8 @@ event_decl,"typedef enum tag[nAME]Event {
 ",,"    [nAME]_EVENT_NUM
 }[nAME]_EVENT;
 const TCHAR* [nAME]Event_toString( [nAME]_EVENT value );
+BOOL [tYPE]_Start( [tYPE]* p[tYPE] );
+BOOL [tYPE]_EventProc( [tYPE]* p[tYPE], [tYPE]_EVENT nEventId, void* pEventParams );
 "
 state_decl,"#define [sCOPE]_[nAME] [->48]( 1ULL << [vALUE] )
 ",#define [sCOPE]_[nAME] [->48]( [sCOPE]_[vALUE], | [sCOPE]_[vALUE],," )
@@ -205,7 +207,7 @@ substm,"    [cONTAINER] [nAME];[->64][dESC]
 ","    .[nAME] = [cONTAINER]_Init(),\
 ",,,
 region,"    HdStateMachine [nAME];[->64][dESC]
-","    .[nAME] = HdStateMachine_Init(),\
+","    .[nAME] = { HdStateMachine_Init() },\
 ",,,
 state_action,,,,,
 trans_action,,,,,
