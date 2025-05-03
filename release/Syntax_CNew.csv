@@ -291,7 +291,7 @@ state_exit,"static void [cONTAINER]_BgnTrans( [tYPE] *p[tYPE], HdStateMachine* p
     }
 ","}
 "
-state_impl,"static BOOL [cONTAINER]_Reset( [tYPE]* p[tYPE], HdStateMachine* pStm, uint64_t nEntryPoint ) {
+state_impl,"static BOOL [cONTAINER]_Reset( [tYPE]* p[tYPE], HdStateMachine* pStm, BOOL bUnused, uint64_t nEntryPoint ) {
     if( nEntryPoint != STATE_UNDEF ){
         pStm->nPseudostate = nEntryPoint;
         return FALSE;
@@ -323,13 +323,13 @@ static BOOL [cONTAINER]_Abort( [tYPE]* p[tYPE], HdStateMachine* pStm ) {
 transition,"static void [Scope]_[nAME]_Entry( [tYPE]* p[tYPE], HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, [sCOPE]_[nAME] ) ){
         [Scope]_[cONTAINER]_Entry( p[tYPE], pStm );
-[vALUE]        HdStatemachine_DefaultEntryAction( p[tYPE], pStm, ""[dESC]"" );
+[vALUE]        HdStateMachine_DefaultEntryAction( p[tYPE], pStm, ""[dESC]"" );
     }
 [mODIFIER]}
 static BOOL [Scope]_[nAME]_EventProc( [tYPE]* p[tYPE], HdStateMachine* pStm, [tYPE]_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->nSourceState = [sCOPE]_[nAME];
-    HdStatemachine_DefaultDoingAction( p[tYPE], pStm, ""[dESC]"" );
+    HdStateMachine_DefaultDoingAction( p[tYPE], pStm, ""[dESC]"" );
 ","    switch( nEventId ){
     case [tYPE]_[nAME]:{
 ","    } break;
@@ -341,20 +341,20 @@ static BOOL [Scope]_[nAME]_EventProc( [tYPE]* p[tYPE], HdStateMachine* pStm, [tY
 }
 static void [Scope]_[nAME]_Exit( [tYPE]* p[tYPE], HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, [sCOPE]_[nAME] ) ){ 
-        HdStatemachine_DefaultExitAction( p[tYPE], pStm, ""[dESC]"" );
+        HdStateMachine_DefaultExitAction( p[tYPE], pStm, ""[dESC]"" );
 [vALUE]        [Scope]_[cONTAINER]_Exit( p[tYPE], pStm );
     }
 }
 "
 trans_top,"static void [Scope]_[nAME]_Entry( [tYPE]* p[tYPE], HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, [sCOPE]_[nAME] ) ){
-[vALUE]        HdStatemachine_DefaultEntryAction( p[tYPE], pStm, ""[dESC]"" );
+[vALUE]        HdStateMachine_DefaultEntryAction( p[tYPE], pStm, ""[dESC]"" );
     }
 [mODIFIER]}
 static BOOL [Scope]_[nAME]_EventProc( [tYPE]* p[tYPE], HdStateMachine* pStm, [tYPE]_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->nSourceState = [sCOPE]_[nAME];
-    HdStatemachine_DefaultDoingAction( p[tYPE], pStm, ""[dESC]"" );
+    HdStateMachine_DefaultDoingAction( p[tYPE], pStm, ""[dESC]"" );
 ","    switch( nEventId ){
     case [tYPE]_[nAME]:{
 ","    } break;
@@ -366,7 +366,7 @@ static BOOL [Scope]_[nAME]_EventProc( [tYPE]* p[tYPE], HdStateMachine* pStm, [tY
 }
 static void [Scope]_[nAME]_Exit( [tYPE]* p[tYPE], HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, [sCOPE]_[nAME] ) ){ 
-        HdStatemachine_DefaultExitAction( p[tYPE], pStm, ""[dESC]"" );
+        HdStateMachine_DefaultExitAction( p[tYPE], pStm, ""[dESC]"" );
 [vALUE]    }
 }
 "
@@ -381,6 +381,10 @@ comment,/**< [nAME] [->32]*/," * [nAME]
 ","/**
 "," */
 "
+action,"[->][nAME]Params* e = ( [nAME]Params* )pEventParams;
+","[->][nAME]
+","[->][nAME]
+",,
 param_dir,,,,-3,
 inheritance,,,,,
 template,,,,,
@@ -404,21 +408,21 @@ default_trans,"static BOOL [cONTAINER]_StateDefaultTrans( [tYPE]* p[tYPE], HdSta
 ","    return bResult;
 }
 "
-substm,,,,"[->][cONTAINER]_Reset( p[tYPE], &( ( [sCOPE]* )pStm->pMain )->[mODIFIER], pStm->lastEnteredStateRecovering, [cONTAINER]_[nAME] );
+substm,,,,"[->][cONTAINER]_Reset( p[tYPE], &( ( [sCOPE]* )pStm->pMain )->[mODIFIER], pStm->lastEnteredStateRecovering,  [cONTAINER]_[nAME] );
 ","[->]pStm->pParentStm->nPseudostate = [sCOPE]_[nAME];
 "
 region,"static void [cONTAINER]_BgnTrans( [tYPE] *p[tYPE], HdStateMachine* pStm, uint64_t targetState );
 static void [cONTAINER]_EndTrans( [tYPE] *p[tYPE], HdStateMachine* pStm );
 static BOOL [cONTAINER]_Abort( [tYPE]* p[tYPE], HdStateMachine* pStm );
-static BOOL [cONTAINER]_Reset( [tYPE]* p[tYPE], HdStateMachine* pStm, uint64_t nEntryPoint );
+static BOOL [cONTAINER]_Reset( [tYPE]* p[tYPE], HdStateMachine* pStm, BOOL bUnused, uint64_t nEntryPoint );
 static BOOL [cONTAINER]_EventProc( [tYPE]* p[tYPE], HdStateMachine* pStm, [tYPE]_EVENT nEventId, void* pEventParams );
 ",,"
-[->] && ( ( [sCOPE]* )pStm->pMain )->[cONTAINER].nPseudostate == [sCOPE]_[vALUE]","[->][cONTAINER]_Reset( p[tYPE], &( ( [sCOPE]* )pStm->pMain )->[mODIFIER], [sCOPE]_[nAME] );
+[->] && ( ( [sCOPE]* )pStm->pMain )->[cONTAINER].nPseudostate == [sCOPE]_[vALUE]","[->][cONTAINER]_Reset( p[tYPE], &( ( [sCOPE]* )pStm->pMain )->[mODIFIER], FALSE, [sCOPE]_[nAME] );
 ",
 state_action,"[->]if( pStm->nTargetState == [sCOPE]_[nAME] ){
 [->]    pStm->nPseudostate = [sCOPE]_[mODIFIER];
 [->]}
-",,,"[->][cONTAINER]_Reset( p[tYPE], &( ( [sCOPE]* )pStm->pMain )->[mODIFIER], STATE_UNDEF );
+",,,"[->][cONTAINER]_Reset( p[tYPE], &( ( [sCOPE]* )pStm->pMain )->[mODIFIER], FALSE, STATE_UNDEF );
 ","[->][cONTAINER]_Abort( p[tYPE], &( ( [sCOPE]* )pStm->pMain )->[mODIFIER] );
 "
 trans_action,,"HdStateMachine_IsIn( &( ( [sCOPE]* )pStm->pMain )->[mODIFIER], [sCOPE]_[vALUE] )","
@@ -451,7 +455,7 @@ stm_api,"BOOL [sCOPE]_EventProc( [tYPE]* p[tYPE], [sCOPE]* pUsm, [tYPE]_EVENT nE
     BOOL bResult = FALSE;
 [vALUE]    return bResult;
 }
-BOOL [sCOPE]_RunToCompletion( [tYPE]* p[tYPE], [sCOPE]* pUsm ){
+BOOL [sCOPE]_StateDefaultTrans( [tYPE]* p[tYPE], [sCOPE]* pUsm ){
     BOOL bResult = FALSE;
     while( TRUE ){
 [mODIFIER]        if( bResult == FALSE ){
@@ -460,9 +464,15 @@ BOOL [sCOPE]_RunToCompletion( [tYPE]* p[tYPE], [sCOPE]* pUsm ){
     }
     return bResult;
 }
+BOOL [sCOPE]_Reset( [tYPE]* p[tYPE], [sCOPE]* pUsm, BOOL lastEnteredStateRecovering, uint64_t entryPt ){
+    return TRUE;
+}
+BOOL [sCOPE]_Abort( [tYPE]* p[tYPE], [sCOPE]* pUsm ){
+    return TRUE;
+}
 ","    bResult |= [mODIFIER][cONTAINER]_EventProc( p[tYPE], &pUsm->[cONTAINER], nEventId, pEventParams );
-","[cONTAINER]_EventProc( p[tYPE], &pUsm->[cONTAINER], nEventId, pEventParams ) || ","        bResult |= [mODIFIER][cONTAINER]_StateDefaultTrans( p[tYPE], &pUsm->[cONTAINER] );
-","[cONTAINER]_StateDefaultTrans( p[tYPE], &pUsm->[cONTAINER] ) || "
+","[cONTAINER]_EventProc( p[tYPE], &pUsm->[mODIFIER], nEventId, pEventParams ) || ","        bResult |= [mODIFIER][cONTAINER]_StateDefaultTrans( p[tYPE], &pUsm->[cONTAINER] );
+","[cONTAINER]_StateDefaultTrans( p[tYPE], &pUsm->[mODIFIER] ) || "
 api_call,,,,,
 friend,,,,,
 visibility,,,,,

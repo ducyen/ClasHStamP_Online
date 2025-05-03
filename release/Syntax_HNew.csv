@@ -201,11 +201,6 @@ typedef struct tag[nAME] {
 [vALUE]}
 "
 default_trans,,,,,
-substm_impl,,,,,
-substm_decl,"    .[nAME][tYPE] = [tYPE]_Init(),\
-","    HdStateMachine [nAME];[->64][dESC]
-","    [cONTAINER] [nAME];[->64][dESC]
-",,
 substm,"    [cONTAINER] [nAME];[->64][dESC]
 ","    .[nAME] = [cONTAINER]_Init(),\
 ",,,
@@ -220,8 +215,6 @@ history,"    uint64_t [nAME];
 deep_hist,"    uint64_t [nAME];
 ","    .[nAME] = STATE_UNDEF,\
 ",,,
-junction,"#error junction@name;
-",,,#error junction@begin,#error junction@end
 stm_api,,,,,
 api_call,"BOOL [tYPE]_EventProc( [tYPE]* p[tYPE], [tYPE]_EVENT nEventId, void* pEventParams );
 BOOL [tYPE]_Start( [tYPE]* p[tYPE] );
