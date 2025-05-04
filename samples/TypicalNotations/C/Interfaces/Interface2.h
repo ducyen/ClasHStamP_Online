@@ -4,6 +4,7 @@ typedef struct tagInterface2 Interface2;
 void Interface2_methodWithParams( Interface2* pInterface2, String parm1, float parm2 );
 #endif//__Interface2_H__
 #if !defined( Interface2_Init ) && ( defined( __Interface2_INTERNAL__ )  )
+
 /** @memberof Interface2
  * @brief Interface2 auto-generated constructor
  */

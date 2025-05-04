@@ -3,17 +3,19 @@
 typedef struct tagHdStateMachine HdStateMachine;
 int HdStateMachine_Enterable( HdStateMachine* pHdStateMachine, uint64_t nThisState );
 int HdStateMachine_Exitable( HdStateMachine* pHdStateMachine, uint64_t nThisState );
-void HdStatemachine_DefaultEntryAction(void* pObj, void* pStm_, char* pMsg);
-void HdStatemachine_DefaultDoingAction(void* pObj, void* pStm_, char* pMsg);
-void HdStatemachine_DefaultExitAction(void* pObj, void* pStm_, char* pMsg);
+void HdStateMachine_DefaultEntryAction( HdStateMachine* pHdStateMachine, void* pObj, char* pMsg );
+void HdStateMachine_DefaultDoingAction( HdStateMachine* pHdStateMachine, void* pObj, char* pMsg );
+void HdStateMachine_DefaultExitAction( HdStateMachine* pHdStateMachine, void* pObj, char* pMsg );
+bool HdStateMachine_IsIn( HdStateMachine* pHdStateMachine, uint64_t targetState );
 #endif//__HdStateMachine_H__
 #if !defined( HdStateMachine_Init ) && ( defined( __HdStateMachine_INTERNAL__ )  )
+
 /** @memberof HdStateMachine
  * @brief HdStateMachine auto-generated constructor
  */
-#define HdStateMachine_Init(_nCurrentState )\
+#define HdStateMachine_Init()\
     .pParentStm = NULL,\
-    .nCurrentState = _nCurrentState,\
+    .nCurrentState = STATE_UNDEF,\
     .nLCAState = STATE_UNDEF,\
     .nTargetState = STATE_UNDEF,\
     .nSourceState = STATE_UNDEF,\
@@ -21,10 +23,12 @@ void HdStatemachine_DefaultExitAction(void* pObj, void* pStm_, char* pMsg);
     .bIsExternTrans = false,\
     .m_stmImage = null,\
     .m_stmRect = null,\
-    .pOwner = NULL,\
+    .pMain = NULL,\
+    .lastEnteredStateRecovering = false,\
+    .lastEnteredState = STATE_UNDEF,\
 
-#define HdStateMachine_Ctor( _nCurrentState, _nPseudostate )    ( HdStateMachine ){ \
-    HdStateMachine_Init( P( _nCurrentState ), P( _nPseudostate ) ) \
+#define HdStateMachine_Ctor(  )    ( HdStateMachine ){ \
+    HdStateMachine_Init(  ) \
 }
 HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdStateMachine* pSource );
 /** @class HdStateMachine
@@ -42,9 +46,9 @@ struct tagHdStateMachine{
     bool bIsExternTrans;                                                                                                  \
     SDL_Texture* m_stmImage;                                                                                          \
     SDL_Rect m_stmRect;                                                                                                    \
-    HdStateMachine* pMain;                                     \
-    BOOL lastEnteredStateRecovering;                            \
-    uint64_t lastEnteredState;                                                \
+    HdStateMachine* pMain;                                      \
+    bool lastEnteredStateRecovering;                                                                          \
+    uint64_t lastEnteredState;                                                                                      \
 
     HdStateMachine_CLASS    
 };

@@ -122,7 +122,10 @@
     <ClCompile Include="main.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="main_win.c" />
+    <ClCompile Include="main_win.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Model\AttachmentConstraint.c" />
     <ClCompile Include="Model\CarBody.c" />
     <ClCompile Include="Model\Constraint.c" />
@@ -136,7 +139,10 @@
     <ClCompile Include="Model\TransformConstraint.c" />
     <ClCompile Include="Model\TranslationConstraint.c" />
     <ClCompile Include="NonOOP\HdStateMachine.c" />
-    <ClCompile Include="ObjsBuilder.c" />
+    <ClCompile Include="ObjsBuilder.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model\AttachmentConstraint.h" />

@@ -33,7 +33,7 @@ void Context_finalMethod( Context* pContext );
     .publicAttribute = _publicAttribute,\
     .privateAttribute = _privateAttribute,\
     .internalAttribute = _internalAttribute,\
-    .isInitializedAttribute = TRUE,\
+    .isInitializedAttribute = true,\
     .readOnlyAttribute = _readOnlyAttribute,\
     .anAggregation = P( _anAggregation ),\
     .aProtectedComposition = P( _aProtectedComposition ),\

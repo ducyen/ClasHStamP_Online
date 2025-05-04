@@ -29,15 +29,40 @@ int HdStateMachine_Exitable(
     return FALSE;
 } /* HdStateMachine_Exitable */
 
-void HdStatemachine_DefaultEntryAction(void* pObj, void* pStm_, char* pMsg) {
+/** @public @memberof HdStateMachine */
+void HdStateMachine_DefaultEntryAction(
+    HdStateMachine* pHdStateMachine,
+    void* pObj,
+    char* pMsg
+){
+    ObjsBuilder_showEntry( pObj, pHdStateMachine, pMsg );
+} /* HdStateMachine_DefaultEntryAction */
 
-}
-void HdStatemachine_DefaultDoingAction(void* pObj, void* pStm_, char* pMsg) {
+/** @public @memberof HdStateMachine */
+void HdStateMachine_DefaultDoingAction(
+    HdStateMachine* pHdStateMachine,
+    void* pObj,
+    char* pMsg
+){
+    ObjsBuilder_showDoing( pObj, pHdStateMachine, pMsg );
+} /* HdStateMachine_DefaultDoingAction */
 
-}
-void HdStatemachine_DefaultExitAction(void* pObj, void* pStm_, char* pMsg) {
+/** @public @memberof HdStateMachine */
+void HdStateMachine_DefaultExitAction(
+    HdStateMachine* pHdStateMachine,
+    void* pObj,
+    char* pMsg
+){
+    ObjsBuilder_showExit( pObj, pHdStateMachine, pMsg );
+} /* HdStateMachine_DefaultExitAction */
 
-}
+/** @public @memberof HdStateMachine */
+bool HdStateMachine_IsIn(
+    HdStateMachine* pHdStateMachine,
+    uint64_t targetState
+){
+    return IS_IN( pHdStateMachine->nCurrentState, targetState );
+} /* HdStateMachine_IsIn */
 
 HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdStateMachine* pSource ){
     pHdStateMachine->pParentStm = pSource->pParentStm;
@@ -49,6 +74,8 @@ HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdSt
     pHdStateMachine->bIsExternTrans = pSource->bIsExternTrans;
     pHdStateMachine->m_stmImage = pSource->m_stmImage;
     pHdStateMachine->m_stmRect = pSource->m_stmRect;
-    //pHdStateMachine->pOwner = pSource->pOwner;
+    pHdStateMachine->pMain = pSource->pMain;
+    pHdStateMachine->lastEnteredStateRecovering = pSource->lastEnteredStateRecovering;
+    pHdStateMachine->lastEnteredState = pSource->lastEnteredState;
     return ( HdStateMachine* )pHdStateMachine;
 }
