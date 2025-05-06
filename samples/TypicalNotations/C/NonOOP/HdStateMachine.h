@@ -14,7 +14,6 @@ bool HdStateMachine_IsIn( HdStateMachine* pHdStateMachine, uint64_t targetState 
  * @brief HdStateMachine auto-generated constructor
  */
 #define HdStateMachine_Init()\
-    .pParentStm = NULL,\
     .nCurrentState = STATE_UNDEF,\
     .nLCAState = STATE_UNDEF,\
     .nTargetState = STATE_UNDEF,\
@@ -37,7 +36,6 @@ HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdSt
 struct tagHdStateMachine{
 #define HdStateMachine_CLASS                                                                    \
     size_t cbSize;                                                                              \
-    HdStateMachine* pParentStm;                                 \
     uint64_t nCurrentState;                                                                                            \
     uint64_t nLCAState;                                                                                                    \
     uint64_t nTargetState;                                                                                              \
@@ -46,7 +44,7 @@ struct tagHdStateMachine{
     bool bIsExternTrans;                                                                                                  \
     SDL_Texture* m_stmImage;                                                                                          \
     SDL_Rect m_stmRect;                                                                                                    \
-    HdStateMachine* pMain;                                      \
+    void* pMain;                                                                                                                  \
     bool lastEnteredStateRecovering;                                                                          \
     uint64_t lastEnteredState;                                                                                      \
 

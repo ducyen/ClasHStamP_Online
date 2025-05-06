@@ -65,7 +65,6 @@ bool HdStateMachine_IsIn(
 } /* HdStateMachine_IsIn */
 
 HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdStateMachine* pSource ){
-    pHdStateMachine->pParentStm = pSource->pParentStm;
     pHdStateMachine->nCurrentState = pSource->nCurrentState;
     pHdStateMachine->nLCAState = pSource->nLCAState;
     pHdStateMachine->nTargetState = pSource->nTargetState;

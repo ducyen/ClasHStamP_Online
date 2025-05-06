@@ -1,0 +1,43 @@
+#ifndef __Primitive_H__
+#define __Primitive_H__
+#include "Sprite.h"
+typedef struct tagPrimitive Primitive;
+#endif//__Primitive_H__
+#if !defined( Primitive_Init ) && ( defined( __Primitive_INTERNAL__ )  || defined( __ObjsBuilder_INTERNAL__ )  )
+#define __Sprite_INTERNAL__
+#include "Sprite.h"
+
+/** @memberof Primitive
+ * @brief Primitive auto-generated constructor
+ */
+#define Primitive_Init(_m_iniRect, _m_name, _m_imgPath)\
+    Sprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ) )\
+    .vTbl = &gPrimitiveVtbl,\
+    .primitiveType = P( "" ),\
+    .fontFace = P( "" ),\
+    .fontSize = 12,\
+    .textLabel = P( "" ),\
+    .oldLabel = P( "" ),\
+    .font = null,\
+
+#define Primitive_Ctor( _m_iniRect, _m_name, _m_imgPath )    ( Primitive ){ \
+    Primitive_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ) ) \
+}
+extern const SpriteVtbl gPrimitiveVtbl;
+Sprite* Primitive_Copy( Primitive* pPrimitive, const Primitive* pSource );
+/** @class Primitive
+ * @extends Sprite
+ */
+struct tagPrimitive{
+#define Primitive_CLASS                                                                         \
+    Sprite_CLASS                                                                                \
+    STR255 primitiveType;                                       \
+    STR255 fontFace;                                            \
+    int fontSize;                                                                                                                \
+    STR255 textLabel;                                           \
+    STR255 oldLabel;                                            \
+    TTF_Font* font;                                                                                                            \
+
+    Primitive_CLASS    
+};
+#endif//__Primitive_INTERNAL__
