@@ -388,8 +388,8 @@ static void FlexBtnTop_Missed_Exit( FlexButton* pFlexButton, HdStateMachine* pSt
 static void FlexBtnTop_Idle_Entry( FlexButton* pFlexButton, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, FlexBtnTop_Idle ) ){
         FlexBtnTop_ReadyRgn1_Entry( pFlexButton, pStm );
-        pFlexButton->m_knobPos.x = pFlexButton->m_rect.x + pFlexButton->m_rect.w / 2;
-        pFlexButton->m_knobPos.y = pFlexButton->m_rect.y + pFlexButton->m_rect.h / 2;
+                pFlexButton->m_knobPos.x = pFlexButton->m_rect.x + pFlexButton->m_rect.w/2;
+                pFlexButton->m_knobPos.y = pFlexButton->m_rect.y + pFlexButton->m_rect.h/2;
         HdStateMachine_DefaultEntryAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	803	185	231	106	282	39	848	673" );
     }
 }
@@ -399,7 +399,7 @@ static BOOL FlexBtnTop_Idle_EventProc( FlexButton* pFlexButton, HdStateMachine* 
     HdStateMachine_DefaultDoingAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	803	185	231	106	282	39	848	673" );
     switch( nEventId ){
     case FlexButton_MOUSE_DOWN:{
-            if (FlexButton_IsInRect( pFlexButton, pEventParams )) {
+                        if (FlexButton_IsInRect( pFlexButton, pEventParams )) {
                 ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_Pressed );
                 ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
                 bResult = TRUE;
@@ -436,15 +436,15 @@ static BOOL FlexBtnTop_Hold_EventProc( FlexButton* pFlexButton, HdStateMachine* 
             bResult = TRUE;
     } break;
     case FlexButton_MOUSE_MOVE:{
-        MouseEventParams* pParams = (MouseEventParams*)pEventParams;
-        pFlexButton->m_knobPos = pParams->pos;
-            if (HdStateMachine_IsIn( &( ( FlexBtnTop* )pStm->pMain )->FlexBtnStmHsm, FlexBtnTop_SlideStyle )) {
+                                    MouseEventParams* pParams = ( MouseEventParams* )pEventParams;
+                        pFlexButton->m_knobPos = pParams->pos;
+                        if (HdStateMachine_IsIn( &( ( FlexBtnTop* )pStm->pMain )->FlexBtnStmHsm, FlexBtnTop_SlideStyle )) {
                 ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_Pressed );
                                 pFlexButton->m_value = pFlexButton->m_valueTmp;
                 ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
                 bResult = TRUE;
             } else {
-                if (FlexButton_IsInRect( pFlexButton, pEventParams )) {
+                                if (FlexButton_IsInRect( pFlexButton, pEventParams )) {
                     ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_Pressed );
                     ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
                     bResult = TRUE;
@@ -534,8 +534,7 @@ static BOOL ReadyRgn1Hsm_Reset( FlexButton* pFlexButton, HdStateMachine* pStm, B
     if( nEntryPoint != STATE_UNDEF ){
         pStm->nPseudostate = nEntryPoint;
         return FALSE;
-    }
-    if( pStm->nPseudostate == STATE_UNDEF ){
+    }else{
         pStm->nPseudostate = FlexBtnTop_ReadyRgn1;
     }
     ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, pStm->nPseudostate );
@@ -579,7 +578,7 @@ static BOOL ReadyRgn1Hsm_StateDefaultTrans( FlexButton* pFlexButton, HdStateMach
     BOOL bResult = FALSE;
     pStm->nSourceState = pStm->nCurrentState;
     pStm->nLCAState = STATE_UNDEF;
-        if( pStm->nCurrentState == FlexBtnTop_Ready && pStm->nPseudostate == FlexBtnTop_InitialReadyRegion1  ){
+        if( pStm->nCurrentState == FlexBtnTop_ReadyRgn1 && pStm->nPseudostate == FlexBtnTop_InitialReadyRegion1  ){
             ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_Idle );
             ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
             bResult = TRUE;
@@ -784,8 +783,7 @@ static BOOL FlexBtnStmHsm_Reset( FlexButton* pFlexButton, HdStateMachine* pStm, 
     if( nEntryPoint != STATE_UNDEF ){
         pStm->nPseudostate = nEntryPoint;
         return FALSE;
-    }
-    if( pStm->nPseudostate == STATE_UNDEF ){
+    }else{
         pStm->nPseudostate = FlexBtnTop_FlexBtnStm;
     }
     FlexBtnStmHsm_BgnTrans( pFlexButton, pStm, pStm->nPseudostate );
@@ -830,7 +828,7 @@ static BOOL FlexBtnStmHsm_StateDefaultTrans( FlexButton* pFlexButton, HdStateMac
     pStm->nSourceState = pStm->nCurrentState;
     pStm->nLCAState = STATE_UNDEF;
         if( pStm->nCurrentState == FlexBtnTop_Ready && pStm->nPseudostate == FlexBtnTop_InitialReady  ){
-            if( ( ( FlexBtnTop* )pStm->pMain )->nReadyHistory != STATE_UNDEF ){
+                        if( ( ( FlexBtnTop* )pStm->pMain )->nReadyHistory != STATE_UNDEF ){
                 FlexBtnStmHsm_BgnTrans( pFlexButton, pStm, ( ( FlexBtnTop* )pStm->pMain )->nReadyHistory );
                 FlexBtnStmHsm_EndTrans( pFlexButton, pStm );
                 bResult = TRUE;

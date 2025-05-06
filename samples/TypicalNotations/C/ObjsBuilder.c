@@ -239,8 +239,8 @@ STATIC SDL_Texture* ObjsBuilder_ResizeTexture(
 int ObjsBuilder_startSim(
     void  
 ){
-    //carBody->m_stmShow = true;
-    selectBtn->m_stmShow = true;
+    carBody->m_stmShow = true;
+    //selectBtn->m_stmShow = true;
 
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
