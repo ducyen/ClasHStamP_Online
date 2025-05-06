@@ -169,7 +169,7 @@ static BOOL SharedStmHsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, Car
 }
 static BOOL SharedStmHsm_Abort( CarBody* pCarBody, HdStateMachine* pStm ) {
     pStm->nSourceState = SharedTop_SharedStm;
-    SharedStmHsm_BgnTrans( pCarBody, pStm, SharedTop_SharedStm );
+    SharedStmHsm_BgnTrans( pCarBody, pStm, STATE_UNDEF );
     SharedStmHsm_EndTrans( pCarBody, pStm );
     return TRUE;
 }
@@ -433,7 +433,7 @@ static BOOL S02Rgn1Hsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBo
 }
 static BOOL S02Rgn1Hsm_Abort( CarBody* pCarBody, HdStateMachine* pStm ) {
     pStm->nSourceState = MainTop_S02Rgn1;
-    S02Rgn1Hsm_BgnTrans( pCarBody, pStm, MainTop_S02Rgn1 );
+    S02Rgn1Hsm_BgnTrans( pCarBody, pStm, STATE_UNDEF );
     S02Rgn1Hsm_EndTrans( pCarBody, pStm );
     return TRUE;
 }
@@ -589,7 +589,7 @@ static BOOL S0Rgn1Hsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBod
 }
 static BOOL S0Rgn1Hsm_Abort( CarBody* pCarBody, HdStateMachine* pStm ) {
     pStm->nSourceState = MainTop_S0Rgn1;
-    S0Rgn1Hsm_BgnTrans( pCarBody, pStm, MainTop_S0Rgn1 );
+    S0Rgn1Hsm_BgnTrans( pCarBody, pStm, STATE_UNDEF );
     S0Rgn1Hsm_EndTrans( pCarBody, pStm );
     return TRUE;
 }
@@ -704,7 +704,7 @@ static BOOL S0Rgn2Hsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBod
 }
 static BOOL S0Rgn2Hsm_Abort( CarBody* pCarBody, HdStateMachine* pStm ) {
     pStm->nSourceState = MainTop_S0Rgn2;
-    S0Rgn2Hsm_BgnTrans( pCarBody, pStm, MainTop_S0Rgn2 );
+    S0Rgn2Hsm_BgnTrans( pCarBody, pStm, STATE_UNDEF );
     S0Rgn2Hsm_EndTrans( pCarBody, pStm );
     return TRUE;
 }
@@ -999,7 +999,7 @@ static BOOL MainStmHsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBo
 }
 static BOOL MainStmHsm_Abort( CarBody* pCarBody, HdStateMachine* pStm ) {
     pStm->nSourceState = MainTop_MainStm;
-    MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_MainStm );
+    MainStmHsm_BgnTrans( pCarBody, pStm, STATE_UNDEF );
     MainStmHsm_EndTrans( pCarBody, pStm );
     return TRUE;
 }

@@ -309,8 +309,7 @@ state_impl,"static BOOL [cONTAINER]_Reset( [tYPE]* p[tYPE], HdStateMachine* pStm
     if( nEntryPoint != STATE_UNDEF ){
         pStm->nPseudostate = nEntryPoint;
         return FALSE;
-    }
-    if( pStm->nPseudostate == STATE_UNDEF ){
+    }else{
         pStm->nPseudostate = [sCOPE]_[nAME];
     }
     [cONTAINER]_BgnTrans( p[tYPE], pStm, pStm->nPseudostate );
@@ -329,7 +328,7 @@ static BOOL [cONTAINER]_EventProc( [tYPE]* p[tYPE], HdStateMachine* pStm, [tYPE]
 }
 static BOOL [cONTAINER]_Abort( [tYPE]* p[tYPE], HdStateMachine* pStm ) {
     pStm->nSourceState = [sCOPE]_[nAME];
-    [cONTAINER]_BgnTrans( p[tYPE], pStm, [sCOPE]_[nAME] );
+    [cONTAINER]_BgnTrans( p[tYPE], pStm, STATE_UNDEF );
     [cONTAINER]_EndTrans( p[tYPE], pStm );
     return TRUE;
 }
@@ -442,9 +441,8 @@ static BOOL [cONTAINER]_EventProc( [tYPE]* p[tYPE], HdStateMachine* pStm, [tYPE]
 state_action,"[->]if( pStm->nTargetState == [sCOPE]_[nAME] ){
 [->]    pStm->nPseudostate = [sCOPE]_[mODIFIER];
 [->]}
-",pStm->bIsExternTrans = FALSE;      // Not implemented ★,"[->][nAME]              // Need merge from ""action"" ★
-
-","[->][cONTAINER]_Reset( p[tYPE], &( ( [sCOPE]* )pStm->pMain )->[mODIFIER], FALSE, STATE_UNDEF );
+","[->]pStm->bIsExternTrans = TRUE;
+",[->][nAME],"[->][cONTAINER]_Reset( p[tYPE], &( ( [sCOPE]* )pStm->pMain )->[mODIFIER], FALSE, STATE_UNDEF );
 ","[->][cONTAINER]_Abort( p[tYPE], &( ( [sCOPE]* )pStm->pMain )->[mODIFIER] );
 "
 trans_action,"[->][nAME]Params* e = ( [nAME]Params* )pEventParams; // need merge from ""action"" ★

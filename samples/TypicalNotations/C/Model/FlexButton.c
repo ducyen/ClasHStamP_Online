@@ -557,7 +557,7 @@ static BOOL ReadyRgn1Hsm_EventProc( FlexButton* pFlexButton, HdStateMachine* pSt
 }
 static BOOL ReadyRgn1Hsm_Abort( FlexButton* pFlexButton, HdStateMachine* pStm ) {
     pStm->nSourceState = FlexBtnTop_ReadyRgn1;
-    ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_ReadyRgn1 );
+    ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, STATE_UNDEF );
     ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
     return TRUE;
 }
@@ -806,7 +806,7 @@ static BOOL FlexBtnStmHsm_EventProc( FlexButton* pFlexButton, HdStateMachine* pS
 }
 static BOOL FlexBtnStmHsm_Abort( FlexButton* pFlexButton, HdStateMachine* pStm ) {
     pStm->nSourceState = FlexBtnTop_FlexBtnStm;
-    FlexBtnStmHsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_FlexBtnStm );
+    FlexBtnStmHsm_BgnTrans( pFlexButton, pStm, STATE_UNDEF );
     FlexBtnStmHsm_EndTrans( pFlexButton, pStm );
     return TRUE;
 }
