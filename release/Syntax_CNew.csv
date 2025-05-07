@@ -319,6 +319,7 @@ state_impl,"static BOOL [cONTAINER]_Reset( [tYPE]* p[tYPE], HdStateMachine* pStm
 static BOOL [cONTAINER]_EventProc( [tYPE]* p[tYPE], HdStateMachine* pStm, [tYPE]_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     pStm->nLCAState = STATE_UNDEF;
+    ( ( [sCOPE]* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
 ","    switch( pStm->nCurrentState ){
     case [sCOPE]_[nAME]:[->48]bResult |= [Scope]_[nAME]_EventProc( p[tYPE], pStm, nEventId, pEventParams ); break;
 ","    case [sCOPE]_[nAME]:[->48]bResult |= [Scope]_[nAME]_EventProc( p[tYPE], pStm, nEventId, pEventParams ); break;
@@ -426,7 +427,8 @@ default_trans,"static BOOL [cONTAINER]_StateDefaultTrans( [tYPE]* p[tYPE], HdSta
 }
 "
 substm,,"    [cONTAINER]_Prepare( &pUsm->[nAME], &pUsm->[mODIFIER] );
-",,"[->][cONTAINER]_Reset( p[tYPE], &( ( [sCOPE]* )pStm->pMain )->[mODIFIER], pStm->lastEnteredStateRecovering,  [cONTAINER]_[nAME] );
+","
+[->] && [cONTAINER]_IsFinished( &( ( [sCOPE]* )pStm->pMain )->[mODIFIER] )","[->][cONTAINER]_Reset( p[tYPE], &( ( [sCOPE]* )pStm->pMain )->[mODIFIER], ( ( [sCOPE]* )pStm->pMain )->lastEnteredStateRecovering,  [cONTAINER]_[nAME] );
 ","[->]( ( [sCOPE]* )pStm->pMain )->pParentStm->nPseudostate = [sCOPE]_[nAME];
 "
 region,"static void [cONTAINER]_BgnTrans( [tYPE] *p[tYPE], HdStateMachine* pStm, uint64_t targetState );
@@ -438,7 +440,7 @@ static BOOL [cONTAINER]_EventProc( [tYPE]* p[tYPE], HdStateMachine* pStm, [tYPE]
 ","
 [->] && ( ( [sCOPE]* )pStm->pMain )->[cONTAINER].nPseudostate == [sCOPE]_[vALUE]","[->][cONTAINER]_Reset( p[tYPE], &( ( [sCOPE]* )pStm->pMain )->[mODIFIER], FALSE, [sCOPE]_[nAME] );
 ",
-state_action,"[->]if( pStm->nTargetState == [sCOPE]_[nAME] ){
+state_action,"[->]if( !( ( [sCOPE]* )pStm->pMain )->lastEnteredStateRecovering && pStm->nTargetState == [sCOPE]_[nAME] ){
 [->]    pStm->nPseudostate = [sCOPE]_[mODIFIER];
 [->]}
 ","[->]pStm->bIsExternTrans = TRUE;
@@ -463,12 +465,12 @@ history,,,"[->]( ( [sCOPE]* )pStm->pMain )->[nAME] = [sCOPE]_[vALUE];
 "
 deep_hist,,,[->]( ( [sCOPE]* )pStm->pMain )->[nAME] = pStm->lastEnteredState;,"[->]if( ( ( [sCOPE]* )pStm->pMain )->[nAME] != STATE_UNDEF ){
 [->]    [cONTAINER]_BgnTrans( p[tYPE], pStm, ( ( [sCOPE]* )pStm->pMain )->[nAME] );
-[->]    pStm->lastEnteredStateRecovering = TRUE;
+[->]    ( ( [sCOPE]* )pStm->pMain )->lastEnteredStateRecovering = TRUE;
 [mODIFIER][->]    [cONTAINER]_EndTrans( p[tYPE], pStm );
 [->]    bResult = TRUE;
 [->]}else{
 [vALUE][->]}
-","[->]if ( pStm->lastEnteredStateRecovering ) {
+","[->]if ( ( ( [sCOPE]* )pStm->pMain )->lastEnteredStateRecovering ) {
 [->]    pStm->nPseudostate = pStm->lastEnteredState;
 [->]}
 "
@@ -488,14 +490,20 @@ static BOOL [sCOPE]_StateDefaultTrans( [tYPE]* p[tYPE], [sCOPE]* pUsm ){
 }
 static BOOL [sCOPE]_Reset( [tYPE]* p[tYPE], [sCOPE]* pUsm, BOOL lastEnteredStateRecovering, uint64_t entryPt ){
     pUsm->lastEnteredStateRecovering = lastEnteredStateRecovering;
+    [cONTAINER]_Abort( p[tYPE], &pUsm->[cONTAINER] );
     return [cONTAINER]_Reset( p[tYPE], &pUsm->[cONTAINER], FALSE, entryPt );
 }
 static BOOL [sCOPE]_Abort( [tYPE]* p[tYPE], [sCOPE]* pUsm ){
     return [cONTAINER]_Abort( p[tYPE], &pUsm->[cONTAINER] );
 }
+static BOOL [sCOPE]_IsFinished( [sCOPE]* pUsm ){
+    return pUsm->[cONTAINER].nPseudostate == [sCOPE]_[nAME];
+}
 ","    bResult |= [mODIFIER][cONTAINER]_EventProc( p[tYPE], &pUsm->[cONTAINER], nEventId, pEventParams );
-","[cONTAINER]_EventProc( p[tYPE], &pUsm->[mODIFIER], nEventId, pEventParams ) || ","        bResult |= [mODIFIER][cONTAINER]_StateDefaultTrans( p[tYPE], &pUsm->[cONTAINER] );
-","[cONTAINER]_StateDefaultTrans( p[tYPE], &pUsm->[mODIFIER] ) || "
+","[cONTAINER]_EventProc( p[tYPE], &pUsm->[mODIFIER], nEventId, pEventParams )
+[->]        || ","        bResult |= [mODIFIER][cONTAINER]_StateDefaultTrans( p[tYPE], &pUsm->[cONTAINER] );
+","[cONTAINER]_StateDefaultTrans( p[tYPE], &pUsm->[mODIFIER] )
+[->]        || "
 api_call,,,,,
 friend,,,,,
 visibility,,,,,
