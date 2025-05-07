@@ -388,8 +388,8 @@ static void FlexBtnTop_Missed_Exit( FlexButton* pFlexButton, HdStateMachine* pSt
 static void FlexBtnTop_Idle_Entry( FlexButton* pFlexButton, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, FlexBtnTop_Idle ) ){
         FlexBtnTop_ReadyRgn1_Entry( pFlexButton, pStm );
-                pFlexButton->m_knobPos.x = pFlexButton->m_rect.x + pFlexButton->m_rect.w/2;
-                pFlexButton->m_knobPos.y = pFlexButton->m_rect.y + pFlexButton->m_rect.h/2;
+        pFlexButton->m_knobPos.x = pFlexButton->m_rect.x + pFlexButton->m_rect.w/2;
+        pFlexButton->m_knobPos.y = pFlexButton->m_rect.y + pFlexButton->m_rect.h/2;
         HdStateMachine_DefaultEntryAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	803	185	231	106	282	39	848	673" );
     }
 }
@@ -399,7 +399,7 @@ static BOOL FlexBtnTop_Idle_EventProc( FlexButton* pFlexButton, HdStateMachine* 
     HdStateMachine_DefaultDoingAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	803	185	231	106	282	39	848	673" );
     switch( nEventId ){
     case FlexButton_MOUSE_DOWN:{
-                        if (FlexButton_IsInRect( pFlexButton, pEventParams )) {
+            if (FlexButton_IsInRect( pFlexButton, pEventParams )) {
                 ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_Pressed );
                 ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
                 bResult = TRUE;
@@ -436,15 +436,15 @@ static BOOL FlexBtnTop_Hold_EventProc( FlexButton* pFlexButton, HdStateMachine* 
             bResult = TRUE;
     } break;
     case FlexButton_MOUSE_MOVE:{
-                                    MouseEventParams* pParams = ( MouseEventParams* )pEventParams;
-                        pFlexButton->m_knobPos = pParams->pos;
-                        if (HdStateMachine_IsIn( &( ( FlexBtnTop* )pStm->pMain )->FlexBtnStmHsm, FlexBtnTop_SlideStyle )) {
+            MouseEventParams* pParams = ( MouseEventParams* )pEventParams;
+            pFlexButton->m_knobPos = pParams->pos;
+            if (HdStateMachine_IsIn( &( ( FlexBtnTop* )pStm->pMain )->FlexBtnStmHsm, FlexBtnTop_SlideStyle )) {
                 ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_Pressed );
-                                pFlexButton->m_value = pFlexButton->m_valueTmp;
+                pFlexButton->m_value = pFlexButton->m_valueTmp;
                 ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
                 bResult = TRUE;
             } else {
-                                if (FlexButton_IsInRect( pFlexButton, pEventParams )) {
+                if (FlexButton_IsInRect( pFlexButton, pEventParams )) {
                     ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_Pressed );
                     ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
                     bResult = TRUE;
@@ -495,15 +495,15 @@ static BOOL FlexBtnTop_Pressed_EventProc( FlexButton* pFlexButton, HdStateMachin
     HdStateMachine_DefaultDoingAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	830	370	181	86	282	39	848	673" );
     switch( nEventId ){
     case FlexButton_DRAW1:{
-                        FlexButton_DrawPressed(
-                            pFlexButton,
-                            ( SDL_Renderer* )pEventParams
-                        );
+            FlexButton_DrawPressed(
+                pFlexButton,
+                ( SDL_Renderer* )pEventParams
+            );
             bResult = TRUE; // internal transition
     } break;
     case FlexButton_MOUSE_UP:{
             ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_Idle );
-                        FlexButton_OnPushBtnPressed( pFlexButton );
+            FlexButton_OnPushBtnPressed( pFlexButton );
             ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
             bResult = TRUE;
     } break;
@@ -628,10 +628,10 @@ static BOOL FlexBtnTop_Ready_EventProc( FlexButton* pFlexButton, HdStateMachine*
     HdStateMachine_DefaultDoingAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	322	122	759	565	282	39	848	673" );
     switch( nEventId ){
     case FlexButton_DRAW1:{
-                        FlexButton_DrawKnob(
-                            pFlexButton,
-                            ( SDL_Renderer* )pEventParams
-                        );
+            FlexButton_DrawKnob(
+                pFlexButton,
+                ( SDL_Renderer* )pEventParams
+            );
             bResult = TRUE; // internal transition
     } break;
     default: break;
@@ -658,10 +658,10 @@ static BOOL FlexBtnTop_ToggleStyle_EventProc( FlexButton* pFlexButton, HdStateMa
     HdStateMachine_DefaultDoingAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	353	434	200	84	282	39	848	673" );
     switch( nEventId ){
     case FlexButton_DRAW0:{
-                        FlexButton_DrawToggleStyle(
-                            pFlexButton,
-                            ( SDL_Renderer* )pEventParams
-                        );
+            FlexButton_DrawToggleStyle(
+                pFlexButton,
+                ( SDL_Renderer* )pEventParams
+            );
             bResult = TRUE; // internal transition
     } break;
     default: break;
@@ -687,10 +687,10 @@ static BOOL FlexBtnTop_SelectStyle_EventProc( FlexButton* pFlexButton, HdStateMa
     HdStateMachine_DefaultDoingAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	353	320	200	84	282	39	848	673" );
     switch( nEventId ){
     case FlexButton_DRAW0:{
-                        FlexButton_DrawSelectStyle(
-                            pFlexButton,
-                            ( SDL_Renderer* )pEventParams
-                        );
+            FlexButton_DrawSelectStyle(
+                pFlexButton,
+                ( SDL_Renderer* )pEventParams
+            );
             bResult = TRUE; // internal transition
     } break;
     default: break;
@@ -716,10 +716,10 @@ static BOOL FlexBtnTop_SlideStyle_EventProc( FlexButton* pFlexButton, HdStateMac
     HdStateMachine_DefaultDoingAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	353	548	200	84	282	39	848	673" );
     switch( nEventId ){
     case FlexButton_DRAW0:{
-                        FlexButton_DrawSlideStyle(
-                            pFlexButton,
-                            ( SDL_Renderer* )pEventParams
-                        );
+            FlexButton_DrawSlideStyle(
+                pFlexButton,
+                ( SDL_Renderer* )pEventParams
+            );
             bResult = TRUE; // internal transition
     } break;
     default: break;
@@ -745,10 +745,10 @@ static BOOL FlexBtnTop_PushStyle_EventProc( FlexButton* pFlexButton, HdStateMach
     HdStateMachine_DefaultDoingAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	353	191	200	115	282	39	848	673" );
     switch( nEventId ){
     case FlexButton_DRAW0:{
-                        FlexButton_DrawPushStyle(
-                            pFlexButton,
-                            ( SDL_Renderer* )pEventParams
-                        );
+            FlexButton_DrawPushStyle(
+                pFlexButton,
+                ( SDL_Renderer* )pEventParams
+            );
             bResult = TRUE; // internal transition
     } break;
     case FlexButton_DRAW1:{
@@ -828,7 +828,7 @@ static BOOL FlexBtnStmHsm_StateDefaultTrans( FlexButton* pFlexButton, HdStateMac
     pStm->nSourceState = pStm->nCurrentState;
     pStm->nLCAState = STATE_UNDEF;
         if( pStm->nCurrentState == FlexBtnTop_Ready && pStm->nPseudostate == FlexBtnTop_InitialReady  ){
-                        if( ( ( FlexBtnTop* )pStm->pMain )->nReadyHistory != STATE_UNDEF ){
+            if( ( ( FlexBtnTop* )pStm->pMain )->nReadyHistory != STATE_UNDEF ){
                 FlexBtnStmHsm_BgnTrans( pFlexButton, pStm, ( ( FlexBtnTop* )pStm->pMain )->nReadyHistory );
                 FlexBtnStmHsm_EndTrans( pFlexButton, pStm );
                 bResult = TRUE;
@@ -839,7 +839,7 @@ static BOOL FlexBtnStmHsm_StateDefaultTrans( FlexButton* pFlexButton, HdStateMac
             }
         }else if( pStm->nCurrentState == FlexBtnTop_FlexBtnStm && pStm->nPseudostate == FlexBtnTop_InitialMain  ){
             FlexBtnStmHsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_Ready );
-                        ( ( FlexBtnTop* )pStm->pMain )->nReadyHistory = pFlexButton->m_style;
+            ( ( FlexBtnTop* )pStm->pMain )->nReadyHistory = pFlexButton->m_style;
             FlexBtnStmHsm_EndTrans( pFlexButton, pStm );
             bResult = TRUE;
         }else if( pStm->nCurrentState != pStm->nPseudostate ){
