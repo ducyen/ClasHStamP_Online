@@ -6,6 +6,7 @@ typedef struct tagPrimitive Primitive;
 #if !defined( Primitive_Init ) && ( defined( __Primitive_INTERNAL__ )  || defined( __ObjsBuilder_INTERNAL__ )  )
 #define __Sprite_INTERNAL__
 #include "Sprite.h"
+
 /** @memberof Primitive
  * @brief Primitive auto-generated constructor
  */

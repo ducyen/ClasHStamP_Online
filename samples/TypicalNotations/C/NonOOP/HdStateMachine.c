@@ -74,7 +74,6 @@ HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdSt
     pHdStateMachine->m_stmImage = pSource->m_stmImage;
     pHdStateMachine->m_stmRect = pSource->m_stmRect;
     pHdStateMachine->pMain = pSource->pMain;
-    pHdStateMachine->lastEnteredStateRecovering = pSource->lastEnteredStateRecovering;
     pHdStateMachine->lastEnteredState = pSource->lastEnteredState;
     return ( HdStateMachine* )pHdStateMachine;
 }

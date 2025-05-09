@@ -6,6 +6,7 @@ typedef struct tagAttachmentConstraint AttachmentConstraint;
 #if !defined( AttachmentConstraint_Init ) && ( defined( __AttachmentConstraint_INTERNAL__ )  || defined( __ObjsBuilder_INTERNAL__ )  )
 #define __TransformConstraint_INTERNAL__
 #include "TransformConstraint.h"
+
 /** @memberof AttachmentConstraint
  * @brief AttachmentConstraint auto-generated constructor
  */

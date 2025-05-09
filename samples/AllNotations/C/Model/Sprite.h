@@ -12,6 +12,7 @@ const SDL_Point* Sprite_getCenter( Sprite* pSprite );
 void Sprite_setLabel( Sprite* pSprite, char* value );
 #endif//__Sprite_H__
 #if !defined( Sprite_Init ) && ( defined( __Sprite_INTERNAL__ )  )
+
 /** @memberof Sprite
  * @brief Sprite auto-generated constructor
  */

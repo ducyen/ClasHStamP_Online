@@ -6,6 +6,7 @@ void BaseClass_publicMethod( BaseClass* pBaseClass );
 #if !defined( BaseClass_Init ) && ( defined( __BaseClass_INTERNAL__ )  )
 void BaseClass_protectedMethod( BaseClass* pBaseClass );
 void BaseClass_packageVisibleMethod( BaseClass* pBaseClass );
+
 /** @memberof BaseClass
  * @brief BaseClass auto-generated constructor
  */

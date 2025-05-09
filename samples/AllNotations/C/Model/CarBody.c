@@ -3,15 +3,12 @@
 #include "CommonInclude.h"
 #include "CarBody.h"
 #include "ObjsBuilder.h"                                        
-/* AnEnum列挙型の値から文字列に変換する関数（デバッグ用） */
-const TCHAR* AnEnum_toString( AnEnum value ){
-    switch( value ){
-    case One: return _T( "One" );
-    case Two: return _T( "Two" );
-    case Three: return _T( "Three" );
-    default: return _T( "AnEnum_UNKNOWN" );
-    }
-}
+/** @private @static @memberof CarBody */
+static int gVar = 1;                                            
+/** @private @static @memberof CarBody */
+static int x = 2;                                               
+/** @private @static @memberof CarBody */
+static int y = 3;                                               
 /** @public @memberof CarBody */
 void CarBody_moveRight(
     CarBody* pCarBody
@@ -32,1677 +29,1848 @@ const TCHAR* CarBodyEvent_toString( CarBody_EVENT value ){
     case CarBody_E3: return _T( "E3" );
     case CarBody_E4: return _T( "E4" );
     case CarBody_E5: return _T( "E5" );
+    case CarBody_UPDATE: return _T( "UPDATE" );
     default: return _T( "CarBody_UNKNOWN" );
     }
 }
-static void Shared2_Region1_BgnTrans( CarBody *pShared2, Shared2_Region1* pStm, uint64_t targetState, uint64_t initState );
-static void Shared2_Region1_EndTrans( CarBody *pShared2, Shared2_Region1* pStm );
-static BOOL Shared2_Region1_Abort( CarBody* pShared2, Shared2_Region1* pStm );
-static BOOL Shared2_Region1_EventProc( CarBody* pShared2, Shared2_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams );
-static void Shared2_Region1_State22_Entry( CarBody* pCarBody, Shared2_Region1* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, Shared2_Region1_State22 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/SharedStm	386	292	48	31	57	125	518	299" );
-    }
-}
-static BOOL Shared2_Region1_State22_EventProc( CarBody* pCarBody, Shared2_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = Shared2_Region1_State22;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/SharedStm	386	292	48	31	57	125	518	299" );
+static BOOL MainTop_Reset( CarBody* pCarBody, MainTop* pUsm, BOOL lastEnteredStateRecovering, uint64_t entryPt );
+static void MainTop_Prepare( MainTop* pUsm, HdStateMachine* pParent );
+static BOOL MainTop_EventProc( CarBody* pCarBody, MainTop* pUsm, CarBody_EVENT nEventId, void* pEventParams );
+static BOOL MainTop_StateDefaultTrans( CarBody* pCarBody, MainTop* pUsm );
+BOOL CarBody_Start( CarBody* pCarBody ){
+    MainTop_Prepare( &pCarBody->mainStm, NULL );
+    BOOL bResult = MainTop_Reset( pCarBody, &pCarBody->mainStm, FALSE, STATE_UNDEF );
+    bResult |= MainTop_StateDefaultTrans( pCarBody, &pCarBody->mainStm );
     return bResult;
-}
-static void Shared2_Region1_State22_Exit( CarBody* pCarBody, Shared2_Region1* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, Shared2_Region1_State22 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/SharedStm	386	292	48	31	57	125	518	299" );
-    }
-}
-static void Shared2_Region1_EndTrans( CarBody *pCarBody, Shared2_Region1* pStm ){
-    pStm->base.nCurrentState = pStm->base.nTargetState;
-    pStm->base.bIsExternTrans = FALSE;
-    switch( pStm->base.nCurrentState ){
-    case Shared2_Region1_State22:Shared2_Region1_State22_Entry( pCarBody, pStm ); break;
-    default: break;
-    }
-}
-static void Shared2_Region1_BgnTrans( CarBody *pCarBody, Shared2_Region1* pStm, uint64_t targetState, uint64_t initState ){
-    pStm->base.nTargetState = targetState;
-    pStm->base.nPseudostate = targetState;
-    if( initState ){
-        pStm->base.nPseudostate = initState;
-    }
-    switch( pStm->base.nCurrentState ){
-    case Shared2_Region1_State22:Shared2_Region1_State22_Exit( pCarBody, pStm ); break;
-    default: break;
-    }
-}
-static BOOL Shared2_Region1_StateDefaultTrans( CarBody* pCarBody, Shared2_Region1* pStm ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = pStm->base.nCurrentState;
-    pStm->base.nLCAState = STATE_UNDEF;
-    do{   if( pStm->base.nPseudostate == Shared2_Region1_InitialPseudostate1 ){
-        Shared2_Region1_BgnTrans( pCarBody, pStm, Shared2_Region1_State22, STATE_UNDEF );
-        Shared2_Region1_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, Shared2_Region1_Shared2) ){
-        Shared2_Region1_BgnTrans( pCarBody, pStm, pStm->base.nPseudostate, STATE_UNDEF );
-        Shared2_Region1_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else{
-    }   }while( FALSE );
-    return bResult;
-}
-static int Shared2_Region1_IsFinished(Shared2_Region1* pShared2_Region1){
-    return pShared2_Region1->base.nCurrentState == Shared2_Region1_Shared2 && pShared2_Region1->base.nCurrentState == pShared2_Region1->base.nPseudostate;
-}
-BOOL Shared2_Region1_Reset( CarBody* pCarBody, Shared2_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
-    if( pParentStm != NULL ){
-        pStm->base.pParentStm = pParentStm;
-    }
-    if( nEntryPoint == STATE_UNDEF ){
-        if( Shared2_Region1_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = Shared2_Region1_InitialPseudostate1;
-        }
-        return FALSE;
-    }else{
-    if( !IS_IN( nEntryPoint, Shared2_Region1_Shared2 ) ){ return FALSE; }
-        if( Shared2_Region1_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = nEntryPoint;
-            return FALSE;
-        }else{
-            pStm->base.nPseudostate = nEntryPoint;
-        }
-    }
-    return TRUE;
-}
-static BOOL Shared2_Region1_EventProc( CarBody* pCarBody, Shared2_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nLCAState = STATE_UNDEF;
-    switch( pStm->base.nCurrentState ){
-    case Shared2_Region1_State22:               bResult |= Shared2_Region1_State22_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    default: break;
-    }
-    return bResult;
-}
-static BOOL Shared2_Region1_IsIn( Shared2_Region1* pStm, uint64_t nCompositeState ) {
-    if( IS_IN( pStm->base.nCurrentState, nCompositeState ) ){ return TRUE; }
-    return FALSE;
-}
-static BOOL Shared2_Region1_Abort( CarBody* pCarBody, Shared2_Region1* pStm ) {
-    pStm->base.nSourceState = Shared2_Region1_Shared2;
-    Shared2_Region1_BgnTrans( pCarBody, pStm, Shared2_Region1_Shared2, STATE_UNDEF );
-    Shared2_Region1_EndTrans( pCarBody, pStm );
-    return TRUE;
-}
-static void SharedStm_BgnTrans( CarBody *pSharedTop, SharedStm* pStm, uint64_t targetState, uint64_t initState );
-static void SharedStm_EndTrans( CarBody *pSharedTop, SharedStm* pStm );
-static BOOL SharedStm_Abort( CarBody* pSharedTop, SharedStm* pStm );
-static BOOL SharedStm_EventProc( CarBody* pSharedTop, SharedStm* pStm, CarBody_EVENT nEventId, void* pEventParams );
-static void SharedStm_Shared1_Entry( CarBody* pCarBody, SharedStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, SharedStm_Shared1 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/SharedStm	131	225	114	72	57	125	518	299" );
-    }
-}
-static BOOL SharedStm_Shared1_EventProc( CarBody* pCarBody, SharedStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = SharedStm_Shared1;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/SharedStm	131	225	114	72	57	125	518	299" );
-    switch( nEventId ){
-    case CarBody_E0:{
-        SharedStm_BgnTrans( pCarBody, pStm, SharedStm_Shared2, SharedStm_InitialPseudostate0 );
-        Shared2_Region1_Reset( pCarBody, &pStm->Shared2Shared2_Region1, &pStm->base, Shared2_Region1_State22 );
-        SharedStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult;
-}
-static void SharedStm_Shared1_Exit( CarBody* pCarBody, SharedStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, SharedStm_Shared1 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/SharedStm	131	225	114	72	57	125	518	299" );
-    }
-}
-static void SharedStm_Shared2_Entry( CarBody* pCarBody, SharedStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, SharedStm_Shared2 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/SharedStm	321	170	179	183	57	125	518	299" );
-        Shared2_Region1_Reset( pCarBody, &pStm->Shared2Shared2_Region1, &pStm->base, STATE_UNDEF );
-    }
-}
-static BOOL SharedStm_Shared2_EventProc( CarBody* pCarBody, SharedStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = SharedStm_Shared2;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/SharedStm	321	170	179	183	57	125	518	299" );
-    switch( nEventId ){
-    case CarBody_E2:{
-        SharedStm_BgnTrans( pCarBody, pStm, SharedStm_SharedTop, STATE_UNDEF );
-        SharedStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    case CarBody_E3:{
-        SharedStm_BgnTrans( pCarBody, pStm, SharedStm_SharedTop, STATE_UNDEF );
-        pStm->base.pParentStm->nPseudostate = SharedStm_Exit1;
-        SharedStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult;
-}
-static void SharedStm_Shared2_Exit( CarBody* pCarBody, SharedStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, SharedStm_Shared2 ) ){ 
-        Shared2_Region1_Abort( pCarBody, &pStm->Shared2Shared2_Region1 );
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/SharedStm	321	170	179	183	57	125	518	299" );
-    }
-}
-static void SharedStm_SHared21_Entry( CarBody* pCarBody, SharedStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, SharedStm_SHared21 ) ){
-        SharedStm_Shared2_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/SharedStm	383	216	52	31	57	125	518	299" );
-    }
-}
-static BOOL SharedStm_SHared21_EventProc( CarBody* pCarBody, SharedStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = SharedStm_SHared21;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/SharedStm	383	216	52	31	57	125	518	299" );
-    return bResult ? bResult : SharedStm_Shared2_EventProc( pCarBody, pStm, nEventId, pEventParams );
-}
-static void SharedStm_SHared21_Exit( CarBody* pCarBody, SharedStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, SharedStm_SHared21 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/SharedStm	383	216	52	31	57	125	518	299" );
-        SharedStm_Shared2_Exit( pCarBody, pStm );
-    }
-}
-static void SharedStm_EndTrans( CarBody *pCarBody, SharedStm* pStm ){
-    pStm->base.nCurrentState = pStm->base.nTargetState;
-    pStm->base.bIsExternTrans = FALSE;
-    switch( pStm->base.nCurrentState ){
-    case SharedStm_Shared1:     SharedStm_Shared1_Entry( pCarBody, pStm ); break;
-    case SharedStm_Shared2:     SharedStm_Shared2_Entry( pCarBody, pStm ); break;
-    case SharedStm_SHared21:    SharedStm_SHared21_Entry( pCarBody, pStm ); break;
-    default: break;
-    }
-}
-static void SharedStm_BgnTrans( CarBody *pCarBody, SharedStm* pStm, uint64_t targetState, uint64_t initState ){
-    pStm->base.nTargetState = targetState;
-    pStm->base.nPseudostate = targetState;
-    if( initState ){
-        pStm->base.nPseudostate = initState;
-    }
-    switch( pStm->base.nCurrentState ){
-    case SharedStm_Shared1:     SharedStm_Shared1_Exit( pCarBody, pStm ); break;
-    case SharedStm_Shared2:     SharedStm_Shared2_Exit( pCarBody, pStm ); break;
-    case SharedStm_SHared21:    SharedStm_SHared21_Exit( pCarBody, pStm ); break;
-    default: break;
-    }
-}
-static BOOL SharedStm_StateDefaultTrans( CarBody* pCarBody, SharedStm* pStm ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = pStm->base.nCurrentState;
-    pStm->base.nLCAState = STATE_UNDEF;
-    bResult |= Shared2_Region1_StateDefaultTrans( pCarBody, &pStm->Shared2Shared2_Region1 );
-    do{   if( pStm->base.nPseudostate == SharedStm_Entry1 ){
-        SharedStm_BgnTrans( pCarBody, pStm, SharedStm_Shared1, STATE_UNDEF );
-        SharedStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nPseudostate == SharedStm_InitPt ){
-        SharedStm_BgnTrans( pCarBody, pStm, SharedStm_Shared1, STATE_UNDEF );
-        SharedStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nPseudostate == SharedStm_InitialPseudostate0 ){
-        SharedStm_BgnTrans( pCarBody, pStm, SharedStm_SHared21, STATE_UNDEF );
-        SharedStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, SharedStm_SharedTop) ){
-        SharedStm_BgnTrans( pCarBody, pStm, pStm->base.nPseudostate, STATE_UNDEF );
-        SharedStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else{
-    }   }while( FALSE );
-    return bResult;
-}
-static int SharedStm_IsFinished(SharedStm* pSharedStm){
-    return pSharedStm->base.nCurrentState == SharedStm_SharedTop && pSharedStm->base.nCurrentState == pSharedStm->base.nPseudostate;
-}
-BOOL SharedStm_Reset( CarBody* pCarBody, SharedStm* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
-    if( pParentStm != NULL ){
-        pStm->base.pParentStm = pParentStm;
-    }
-    if( nEntryPoint == STATE_UNDEF ){
-        if( SharedStm_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = SharedStm_InitPt;
-        }
-        return FALSE;
-    }else{
-    if( !IS_IN( nEntryPoint, SharedStm_SharedTop ) ){ return FALSE; }
-        if( SharedStm_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = nEntryPoint;
-            return FALSE;
-        }else{
-            pStm->base.nPseudostate = nEntryPoint;
-        }
-    }
-    return TRUE;
-}
-static BOOL SharedStm_EventProc( CarBody* pCarBody, SharedStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nLCAState = STATE_UNDEF;
-    bResult |= Shared2_Region1_EventProc( pCarBody, &pStm->Shared2Shared2_Region1, nEventId, pEventParams );
-    switch( pStm->base.nCurrentState ){
-    case SharedStm_Shared1:                     bResult |= SharedStm_Shared1_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case SharedStm_Shared2:                     bResult |= SharedStm_Shared2_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case SharedStm_SHared21:                    bResult |= SharedStm_SHared21_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    default: break;
-    }
-    return bResult;
-}
-static BOOL SharedStm_IsIn( SharedStm* pStm, uint64_t nCompositeState ) {
-if( Shared2_Region1_IsIn( &pStm->Shared2Shared2_Region1, nCompositeState ) ){ return TRUE; }
-    if( IS_IN( pStm->base.nCurrentState, nCompositeState ) ){ return TRUE; }
-    return FALSE;
-}
-static BOOL SharedStm_Abort( CarBody* pCarBody, SharedStm* pStm ) {
-    pStm->base.nSourceState = SharedStm_SharedTop;
-    SharedStm_BgnTrans( pCarBody, pStm, SharedStm_SharedTop, STATE_UNDEF );
-    SharedStm_EndTrans( pCarBody, pStm );
-    return TRUE;
-}
-static void S8_Region1_BgnTrans( CarBody *pS8, S8_Region1* pStm, uint64_t targetState, uint64_t initState );
-static void S8_Region1_EndTrans( CarBody *pS8, S8_Region1* pStm );
-static BOOL S8_Region1_Abort( CarBody* pS8, S8_Region1* pStm );
-static BOOL S8_Region1_EventProc( CarBody* pS8, S8_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams );
-static void S8_Region1_S821_Entry( CarBody* pCarBody, S8_Region1* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, S8_Region1_S821 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	427	456	61	53	10	-24	1235	686" );
-    }
-}
-static BOOL S8_Region1_S821_EventProc( CarBody* pCarBody, S8_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = S8_Region1_S821;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	427	456	61	53	10	-24	1235	686" );
-    return bResult;
-}
-static void S8_Region1_S821_Exit( CarBody* pCarBody, S8_Region1* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, S8_Region1_S821 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	427	456	61	53	10	-24	1235	686" );
-    }
-}
-static void S8_Region1_S822_Entry( CarBody* pCarBody, S8_Region1* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, S8_Region1_S822 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	748	456	61	53	10	-24	1235	686" );
-    }
-}
-static BOOL S8_Region1_S822_EventProc( CarBody* pCarBody, S8_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = S8_Region1_S822;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	748	456	61	53	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E4:{
-        S8_Region1_BgnTrans( pCarBody, pStm, S8_Region1_S821, STATE_UNDEF );
-        S8_Region1_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult;
-}
-static void S8_Region1_S822_Exit( CarBody* pCarBody, S8_Region1* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, S8_Region1_S822 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	748	456	61	53	10	-24	1235	686" );
-    }
-}
-static void S8_Region1_EndTrans( CarBody *pCarBody, S8_Region1* pStm ){
-    pStm->base.nCurrentState = pStm->base.nTargetState;
-    pStm->base.bIsExternTrans = FALSE;
-    switch( pStm->base.nCurrentState ){
-    case S8_Region1_S821:       S8_Region1_S821_Entry( pCarBody, pStm ); break;
-    case S8_Region1_S822:       S8_Region1_S822_Entry( pCarBody, pStm ); break;
-    default: break;
-    }
-}
-static void S8_Region1_BgnTrans( CarBody *pCarBody, S8_Region1* pStm, uint64_t targetState, uint64_t initState ){
-    pStm->base.nTargetState = targetState;
-    pStm->base.nPseudostate = targetState;
-    if( initState ){
-        pStm->base.nPseudostate = initState;
-    }
-    switch( pStm->base.nCurrentState ){
-    case S8_Region1_S821:       S8_Region1_S821_Exit( pCarBody, pStm ); break;
-    case S8_Region1_S822:       S8_Region1_S822_Exit( pCarBody, pStm ); break;
-    default: break;
-    }
-}
-static BOOL S8_Region1_StateDefaultTrans( CarBody* pCarBody, S8_Region1* pStm ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = pStm->base.nCurrentState;
-    pStm->base.nLCAState = STATE_UNDEF;
-    do{   if( pStm->base.nPseudostate == S8_Region1_S82Init ){
-        S8_Region1_BgnTrans( pCarBody, pStm, S8_Region1_S822, STATE_UNDEF );
-        S8_Region1_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, S8_Region1_S8) ){
-        S8_Region1_BgnTrans( pCarBody, pStm, pStm->base.nPseudostate, STATE_UNDEF );
-        S8_Region1_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else{
-    }   }while( FALSE );
-    return bResult;
-}
-static int S8_Region1_IsFinished(S8_Region1* pS8_Region1){
-    return pS8_Region1->base.nCurrentState == S8_Region1_S8 && pS8_Region1->base.nCurrentState == pS8_Region1->base.nPseudostate;
-}
-BOOL S8_Region1_Reset( CarBody* pCarBody, S8_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
-    if( pParentStm != NULL ){
-        pStm->base.pParentStm = pParentStm;
-    }
-    if( nEntryPoint == STATE_UNDEF ){
-        if( S8_Region1_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = S8_Region1_S82Init;
-        }
-        return FALSE;
-    }else{
-    if( !IS_IN( nEntryPoint, S8_Region1_S8 ) ){ return FALSE; }
-        if( S8_Region1_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = nEntryPoint;
-            return FALSE;
-        }else{
-            pStm->base.nPseudostate = nEntryPoint;
-        }
-    }
-    return TRUE;
-}
-static BOOL S8_Region1_EventProc( CarBody* pCarBody, S8_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nLCAState = STATE_UNDEF;
-    switch( pStm->base.nCurrentState ){
-    case S8_Region1_S821:                       bResult |= S8_Region1_S821_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case S8_Region1_S822:                       bResult |= S8_Region1_S822_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    default: break;
-    }
-    return bResult;
-}
-static BOOL S8_Region1_IsIn( S8_Region1* pStm, uint64_t nCompositeState ) {
-    if( IS_IN( pStm->base.nCurrentState, nCompositeState ) ){ return TRUE; }
-    return FALSE;
-}
-static BOOL S8_Region1_Abort( CarBody* pCarBody, S8_Region1* pStm ) {
-    pStm->base.nSourceState = S8_Region1_S8;
-    S8_Region1_BgnTrans( pCarBody, pStm, S8_Region1_S8, STATE_UNDEF );
-    S8_Region1_EndTrans( pCarBody, pStm );
-    return TRUE;
-}
-static void S832_Region1_BgnTrans( CarBody *pS832, S832_Region1* pStm, uint64_t targetState, uint64_t initState );
-static void S832_Region1_EndTrans( CarBody *pS832, S832_Region1* pStm );
-static BOOL S832_Region1_Abort( CarBody* pS832, S832_Region1* pStm );
-static BOOL S832_Region1_EventProc( CarBody* pS832, S832_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams );
-static void S832_Region1_S8322_Entry( CarBody* pCarBody, S832_Region1* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, S832_Region1_S8322 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	767	586	40	31	10	-24	1235	686" );
-    }
-}
-static BOOL S832_Region1_S8322_EventProc( CarBody* pCarBody, S832_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = S832_Region1_S8322;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	767	586	40	31	10	-24	1235	686" );
-    return bResult;
-}
-static void S832_Region1_S8322_Exit( CarBody* pCarBody, S832_Region1* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, S832_Region1_S8322 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	767	586	40	31	10	-24	1235	686" );
-    }
-}
-static void S832_Region1_EndTrans( CarBody *pCarBody, S832_Region1* pStm ){
-    pStm->base.nCurrentState = pStm->base.nTargetState;
-    pStm->base.bIsExternTrans = FALSE;
-    switch( pStm->base.nCurrentState ){
-    case S832_Region1_S8322:    S832_Region1_S8322_Entry( pCarBody, pStm ); break;
-    default: break;
-    }
-}
-static void S832_Region1_BgnTrans( CarBody *pCarBody, S832_Region1* pStm, uint64_t targetState, uint64_t initState ){
-    pStm->base.nTargetState = targetState;
-    pStm->base.nPseudostate = targetState;
-    if( initState ){
-        pStm->base.nPseudostate = initState;
-    }
-    switch( pStm->base.nCurrentState ){
-    case S832_Region1_S8322:    S832_Region1_S8322_Exit( pCarBody, pStm ); break;
-    default: break;
-    }
-}
-static BOOL S832_Region1_StateDefaultTrans( CarBody* pCarBody, S832_Region1* pStm ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = pStm->base.nCurrentState;
-    pStm->base.nLCAState = STATE_UNDEF;
-    do{   if( pStm->base.nPseudostate == S832_Region1_InitialPseudostate1 ){
-        S832_Region1_BgnTrans( pCarBody, pStm, S832_Region1_S8322, STATE_UNDEF );
-        S832_Region1_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, S832_Region1_S832) ){
-        S832_Region1_BgnTrans( pCarBody, pStm, pStm->base.nPseudostate, STATE_UNDEF );
-        S832_Region1_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else{
-    }   }while( FALSE );
-    return bResult;
-}
-static int S832_Region1_IsFinished(S832_Region1* pS832_Region1){
-    return pS832_Region1->base.nCurrentState == S832_Region1_S832 && pS832_Region1->base.nCurrentState == pS832_Region1->base.nPseudostate;
-}
-BOOL S832_Region1_Reset( CarBody* pCarBody, S832_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
-    if( pParentStm != NULL ){
-        pStm->base.pParentStm = pParentStm;
-    }
-    if( nEntryPoint == STATE_UNDEF ){
-        if( S832_Region1_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = S832_Region1_InitialPseudostate1;
-        }
-        return FALSE;
-    }else{
-    if( !IS_IN( nEntryPoint, S832_Region1_S832 ) ){ return FALSE; }
-        if( S832_Region1_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = nEntryPoint;
-            return FALSE;
-        }else{
-            pStm->base.nPseudostate = nEntryPoint;
-        }
-    }
-    return TRUE;
-}
-static BOOL S832_Region1_EventProc( CarBody* pCarBody, S832_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nLCAState = STATE_UNDEF;
-    switch( pStm->base.nCurrentState ){
-    case S832_Region1_S8322:                    bResult |= S832_Region1_S8322_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    default: break;
-    }
-    return bResult;
-}
-static BOOL S832_Region1_IsIn( S832_Region1* pStm, uint64_t nCompositeState ) {
-    if( IS_IN( pStm->base.nCurrentState, nCompositeState ) ){ return TRUE; }
-    return FALSE;
-}
-static BOOL S832_Region1_Abort( CarBody* pCarBody, S832_Region1* pStm ) {
-    pStm->base.nSourceState = S832_Region1_S832;
-    S832_Region1_BgnTrans( pCarBody, pStm, S832_Region1_S832, STATE_UNDEF );
-    S832_Region1_EndTrans( pCarBody, pStm );
-    return TRUE;
-}
-static void S8_Region2_BgnTrans( CarBody *pS8, S8_Region2* pStm, uint64_t targetState, uint64_t initState );
-static void S8_Region2_EndTrans( CarBody *pS8, S8_Region2* pStm );
-static BOOL S8_Region2_Abort( CarBody* pS8, S8_Region2* pStm );
-static BOOL S8_Region2_EventProc( CarBody* pS8, S8_Region2* pStm, CarBody_EVENT nEventId, void* pEventParams );
-static void S8_Region2_S831_Entry( CarBody* pCarBody, S8_Region2* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, S8_Region2_S831 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	427	563	61	53	10	-24	1235	686" );
-    }
-}
-static BOOL S8_Region2_S831_EventProc( CarBody* pCarBody, S8_Region2* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = S8_Region2_S831;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	427	563	61	53	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E3:{
-        if (CarBody_IsIn( pCarBody, S8_Region1_S821 )
-         && CarBody_IsIn( pCarBody, MainStm_S811 )) {
-            S8_Region2_BgnTrans( pCarBody, pStm, S8_Region2_S832, S8_Region2_InitialPseudostate0 );
-            MainStm_Reset( pCarBody, pStm->base.pParentStm, NULL, MainStm_S812 );
-            S8_Region1_Reset( pCarBody, &((MainStm*)pStm->base.pParentStm)->S8S8_Region1, &pStm->base, S8_Region1_S822 );
-            S8_Region2_EndTrans( pCarBody, pStm );
-            bResult = TRUE;
-        }
-    } break;
-    default: break;
-    }
-    return bResult;
-}
-static void S8_Region2_S831_Exit( CarBody* pCarBody, S8_Region2* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, S8_Region2_S831 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	427	563	61	53	10	-24	1235	686" );
-    }
-}
-static void S8_Region2_S832_Entry( CarBody* pCarBody, S8_Region2* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, S8_Region2_S832 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	627	536	211	91	10	-24	1235	686" );
-        S832_Region1_Reset( pCarBody, &pStm->S832S832_Region1, &pStm->base, STATE_UNDEF );
-    }
-}
-static BOOL S8_Region2_S832_EventProc( CarBody* pCarBody, S8_Region2* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = S8_Region2_S832;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	627	536	211	91	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E0:{
-        MainStm_Reset( pCarBody, pStm->base.pParentStm, NULL, MainStm_S10 );
-    } break;
-    default: break;
-    }
-    return bResult;
-}
-static void S8_Region2_S832_Exit( CarBody* pCarBody, S8_Region2* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, S8_Region2_S832 ) ){ 
-        S832_Region1_Abort( pCarBody, &pStm->S832S832_Region1 );
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	627	536	211	91	10	-24	1235	686" );
-    }
-}
-static void S8_Region2_S8321_Entry( CarBody* pCarBody, S8_Region2* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, S8_Region2_S8321 ) ){
-        S8_Region2_S832_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	656	584	40	31	10	-24	1235	686" );
-    }
-}
-static BOOL S8_Region2_S8321_EventProc( CarBody* pCarBody, S8_Region2* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = S8_Region2_S8321;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	656	584	40	31	10	-24	1235	686" );
-    return bResult ? bResult : S8_Region2_S832_EventProc( pCarBody, pStm, nEventId, pEventParams );
-}
-static void S8_Region2_S8321_Exit( CarBody* pCarBody, S8_Region2* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, S8_Region2_S8321 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	656	584	40	31	10	-24	1235	686" );
-        S8_Region2_S832_Exit( pCarBody, pStm );
-    }
-}
-static void S8_Region2_EndTrans( CarBody *pCarBody, S8_Region2* pStm ){
-    pStm->base.nCurrentState = pStm->base.nTargetState;
-    pStm->base.bIsExternTrans = FALSE;
-    switch( pStm->base.nCurrentState ){
-    case S8_Region2_S831:       S8_Region2_S831_Entry( pCarBody, pStm ); break;
-    case S8_Region2_S832:       S8_Region2_S832_Entry( pCarBody, pStm ); break;
-    case S8_Region2_S8321:      S8_Region2_S8321_Entry( pCarBody, pStm ); break;
-    default: break;
-    }
-}
-static void S8_Region2_BgnTrans( CarBody *pCarBody, S8_Region2* pStm, uint64_t targetState, uint64_t initState ){
-    pStm->base.nTargetState = targetState;
-    pStm->base.nPseudostate = targetState;
-    if( initState ){
-        pStm->base.nPseudostate = initState;
-    }
-    switch( pStm->base.nCurrentState ){
-    case S8_Region2_S831:       S8_Region2_S831_Exit( pCarBody, pStm ); break;
-    case S8_Region2_S832:       S8_Region2_S832_Exit( pCarBody, pStm ); break;
-    case S8_Region2_S8321:      S8_Region2_S8321_Exit( pCarBody, pStm ); break;
-    default: break;
-    }
-}
-static BOOL S8_Region2_StateDefaultTrans( CarBody* pCarBody, S8_Region2* pStm ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = pStm->base.nCurrentState;
-    pStm->base.nLCAState = STATE_UNDEF;
-    bResult |= S832_Region1_StateDefaultTrans( pCarBody, &pStm->S832S832_Region1 );
-    do{   if( pStm->base.nPseudostate == S8_Region2_S83Init ){
-        S8_Region2_BgnTrans( pCarBody, pStm, S8_Region2_S831, STATE_UNDEF );
-        S8_Region2_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nPseudostate == S8_Region2_InitialPseudostate0 ){
-        S8_Region2_BgnTrans( pCarBody, pStm, S8_Region2_S8321, STATE_UNDEF );
-        S8_Region2_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, S8_Region2_S8) ){
-        S8_Region2_BgnTrans( pCarBody, pStm, pStm->base.nPseudostate, STATE_UNDEF );
-        S8_Region2_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else{
-    }   }while( FALSE );
-    return bResult;
-}
-static int S8_Region2_IsFinished(S8_Region2* pS8_Region2){
-    return pS8_Region2->base.nCurrentState == S8_Region2_S8 && pS8_Region2->base.nCurrentState == pS8_Region2->base.nPseudostate;
-}
-BOOL S8_Region2_Reset( CarBody* pCarBody, S8_Region2* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
-    if( pParentStm != NULL ){
-        pStm->base.pParentStm = pParentStm;
-    }
-    if( nEntryPoint == STATE_UNDEF ){
-        if( S8_Region2_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = S8_Region2_S83Init;
-        }
-        return FALSE;
-    }else{
-    if( !IS_IN( nEntryPoint, S8_Region2_S8 ) ){ return FALSE; }
-        if( S8_Region2_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = nEntryPoint;
-            return FALSE;
-        }else{
-            pStm->base.nPseudostate = nEntryPoint;
-        }
-    }
-    return TRUE;
-}
-static BOOL S8_Region2_EventProc( CarBody* pCarBody, S8_Region2* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nLCAState = STATE_UNDEF;
-    bResult |= S832_Region1_EventProc( pCarBody, &pStm->S832S832_Region1, nEventId, pEventParams );
-    switch( pStm->base.nCurrentState ){
-    case S8_Region2_S831:                       bResult |= S8_Region2_S831_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case S8_Region2_S832:                       bResult |= S8_Region2_S832_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case S8_Region2_S8321:                      bResult |= S8_Region2_S8321_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    default: break;
-    }
-    return bResult;
-}
-static BOOL S8_Region2_IsIn( S8_Region2* pStm, uint64_t nCompositeState ) {
-if( S832_Region1_IsIn( &pStm->S832S832_Region1, nCompositeState ) ){ return TRUE; }
-    if( IS_IN( pStm->base.nCurrentState, nCompositeState ) ){ return TRUE; }
-    return FALSE;
-}
-static BOOL S8_Region2_Abort( CarBody* pCarBody, S8_Region2* pStm ) {
-    pStm->base.nSourceState = S8_Region2_S8;
-    S8_Region2_BgnTrans( pCarBody, pStm, S8_Region2_S8, STATE_UNDEF );
-    S8_Region2_EndTrans( pCarBody, pStm );
-    return TRUE;
-}
-static void S71_Region1_BgnTrans( CarBody *pS71, S71_Region1* pStm, uint64_t targetState, uint64_t initState );
-static void S71_Region1_EndTrans( CarBody *pS71, S71_Region1* pStm );
-static BOOL S71_Region1_Abort( CarBody* pS71, S71_Region1* pStm );
-static BOOL S71_Region1_EventProc( CarBody* pS71, S71_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams );
-static void S71_Region1_S722_Entry( CarBody* pCarBody, S71_Region1* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, S71_Region1_S722 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	194	509	40	31	10	-24	1235	686" );
-        ((MainStm*)pStm->base.pParentStm)->nS7History &= ~S71_Region1_S71;
-        ((MainStm*)pStm->base.pParentStm)->nS7History |= S71_Region1_S722;
-    }
-}
-static BOOL S71_Region1_S722_EventProc( CarBody* pCarBody, S71_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = S71_Region1_S722;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	194	509	40	31	10	-24	1235	686" );
-    return bResult;
-}
-static void S71_Region1_S722_Exit( CarBody* pCarBody, S71_Region1* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, S71_Region1_S722 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	194	509	40	31	10	-24	1235	686" );
-    }
-}
-static void S71_Region1_S721_Entry( CarBody* pCarBody, S71_Region1* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, S71_Region1_S721 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	194	461	40	31	10	-24	1235	686" );
-        ((MainStm*)pStm->base.pParentStm)->nS7History &= ~S71_Region1_S71;
-        ((MainStm*)pStm->base.pParentStm)->nS7History |= S71_Region1_S721;
-    }
-}
-static BOOL S71_Region1_S721_EventProc( CarBody* pCarBody, S71_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = S71_Region1_S721;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	194	461	40	31	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E5:{
-        S71_Region1_BgnTrans( pCarBody, pStm, S71_Region1_S722, STATE_UNDEF );
-        S71_Region1_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult;
-}
-static void S71_Region1_S721_Exit( CarBody* pCarBody, S71_Region1* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, S71_Region1_S721 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	194	461	40	31	10	-24	1235	686" );
-    }
-}
-static void S71_Region1_EndTrans( CarBody *pCarBody, S71_Region1* pStm ){
-    pStm->base.nCurrentState = pStm->base.nTargetState;
-    pStm->base.bIsExternTrans = FALSE;
-    switch( pStm->base.nCurrentState ){
-    case S71_Region1_S722:      S71_Region1_S722_Entry( pCarBody, pStm ); break;
-    case S71_Region1_S721:      S71_Region1_S721_Entry( pCarBody, pStm ); break;
-    default: break;
-    }
-}
-static void S71_Region1_BgnTrans( CarBody *pCarBody, S71_Region1* pStm, uint64_t targetState, uint64_t initState ){
-    pStm->base.nTargetState = targetState;
-    pStm->base.nPseudostate = targetState;
-    if( initState ){
-        pStm->base.nPseudostate = initState;
-    }
-    switch( pStm->base.nCurrentState ){
-    case S71_Region1_S722:      S71_Region1_S722_Exit( pCarBody, pStm ); break;
-    case S71_Region1_S721:      S71_Region1_S721_Exit( pCarBody, pStm ); break;
-    default: break;
-    }
-}
-static BOOL S71_Region1_StateDefaultTrans( CarBody* pCarBody, S71_Region1* pStm ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = pStm->base.nCurrentState;
-    pStm->base.nLCAState = STATE_UNDEF;
-    do{   if( pStm->base.nPseudostate == S71_Region1_S72Init ){
-        S71_Region1_BgnTrans( pCarBody, pStm, S71_Region1_S721, STATE_UNDEF );
-        S71_Region1_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, S71_Region1_S71) ){
-        S71_Region1_BgnTrans( pCarBody, pStm, pStm->base.nPseudostate, STATE_UNDEF );
-        S71_Region1_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else{
-    }   }while( FALSE );
-    return bResult;
-}
-static int S71_Region1_IsFinished(S71_Region1* pS71_Region1){
-    return pS71_Region1->base.nCurrentState == S71_Region1_S71 && pS71_Region1->base.nCurrentState == pS71_Region1->base.nPseudostate;
-}
-BOOL S71_Region1_Reset( CarBody* pCarBody, S71_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
-    if( pParentStm != NULL ){
-        pStm->base.pParentStm = pParentStm;
-    }
-    if( nEntryPoint == STATE_UNDEF ){
-        if( S71_Region1_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = S71_Region1_S72Init;
-        }
-        return FALSE;
-    }else{
-    if( !IS_IN( nEntryPoint, S71_Region1_S71 ) ){ return FALSE; }
-        if( S71_Region1_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = nEntryPoint;
-            return FALSE;
-        }else{
-            pStm->base.nPseudostate = nEntryPoint;
-        }
-    }
-    return TRUE;
-}
-static BOOL S71_Region1_EventProc( CarBody* pCarBody, S71_Region1* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nLCAState = STATE_UNDEF;
-    switch( pStm->base.nCurrentState ){
-    case S71_Region1_S722:                      bResult |= S71_Region1_S722_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case S71_Region1_S721:                      bResult |= S71_Region1_S721_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    default: break;
-    }
-    return bResult;
-}
-static BOOL S71_Region1_IsIn( S71_Region1* pStm, uint64_t nCompositeState ) {
-    if( IS_IN( pStm->base.nCurrentState, nCompositeState ) ){ return TRUE; }
-    return FALSE;
-}
-static BOOL S71_Region1_Abort( CarBody* pCarBody, S71_Region1* pStm ) {
-    pStm->base.nSourceState = S71_Region1_S71;
-    S71_Region1_BgnTrans( pCarBody, pStm, S71_Region1_S71, STATE_UNDEF );
-    S71_Region1_EndTrans( pCarBody, pStm );
-    return TRUE;
-}
-static void MainStm_BgnTrans( CarBody *pMainTop_0, MainStm* pStm, uint64_t targetState, uint64_t initState );
-static void MainStm_EndTrans( CarBody *pMainTop_0, MainStm* pStm );
-static BOOL MainStm_Abort( CarBody* pMainTop_0, MainStm* pStm );
-static BOOL MainStm_EventProc( CarBody* pMainTop_0, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams );
-static void MainStm_S1_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S1 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	151	52	61	53	10	-24	1235	686" );
-    }
-}
-static BOOL MainStm_S1_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S1;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	151	52	61	53	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E1:{
-        E1Params* e = ( E1Params* )pEventParams;
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S2, MainStm_S2Init );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    case CarBody_E2:{
-        int n = FlexButton_GetValue(selectBtn);
-        if (n == 0) {
-            MainStm_BgnTrans( pCarBody, pStm, MainStm_S4, MainStm_S4Init );
-            MainStm_EndTrans( pCarBody, pStm );
-            bResult = TRUE;
-        } else if (FlexButton_GetValue(toggleBtn) == 1) {
-            MainStm_BgnTrans( pCarBody, pStm, MainStm_S5, STATE_UNDEF );
-            MainStm_EndTrans( pCarBody, pStm );
-            bResult = TRUE;
-        } else {
-            MainStm_BgnTrans( pCarBody, pStm, MainStm_S7, MainStm_S7Init );
-            MainStm_EndTrans( pCarBody, pStm );
-            bResult = TRUE;
-        }
-    } break;
-    default: break;
-    }
-    return bResult;
-}
-static void MainStm_S1_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S1 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	151	52	61	53	10	-24	1235	686" );
-    }
-}
-static void MainStm_S2_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S2 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	300	33	599	90	10	-24	1235	686" );
-        Sprite_setLabel(Text_1sh, "Do something");
-    }
-}
-static BOOL MainStm_S2_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S2;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	300	33	599	90	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E2:{
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S3, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    case CarBody_E3:{
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S4, MainStm_S4Init );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult;
-}
-static void MainStm_S2_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S2 ) ){ 
-        Sprite_setLabel(Text_1sh, "Do another something");
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	300	33	599	90	10	-24	1235	686" );
-    }
-}
-static void MainStm_S22_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S22 ) ){
-        MainStm_S2_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	747	55	61	53	10	-24	1235	686" );
-    }
-}
-static BOOL MainStm_S22_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S22;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	747	55	61	53	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E0:{
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S2, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult ? bResult : MainStm_S2_EventProc( pCarBody, pStm, nEventId, pEventParams );
-}
-static void MainStm_S22_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S22 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	747	55	61	53	10	-24	1235	686" );
-        MainStm_S2_Exit( pCarBody, pStm );
-    }
-}
-static void MainStm_S21_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S21 ) ){
-        MainStm_S2_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	540	55	61	53	10	-24	1235	686" );
-    }
-}
-static BOOL MainStm_S21_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S21;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	540	55	61	53	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E0:{
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S22, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    case CarBody_E1:{
-        E1Params* e = ( E1Params* )pEventParams;
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S3, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult ? bResult : MainStm_S2_EventProc( pCarBody, pStm, nEventId, pEventParams );
-}
-static void MainStm_S21_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S21 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	540	55	61	53	10	-24	1235	686" );
-        MainStm_S2_Exit( pCarBody, pStm );
-    }
-}
-static void MainStm_S3_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S3 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	988	52	61	53	10	-24	1235	686" );
-    }
-}
-static BOOL MainStm_S3_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S3;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	988	52	61	53	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E0:{
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_Junction, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult;
-}
-static void MainStm_S3_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S3 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	988	52	61	53	10	-24	1235	686" );
-    }
-}
-static void MainStm_S4_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S4 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	363	160	537	90	10	-24	1235	686" );
-    }
-}
-static BOOL MainStm_S4_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S4;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	363	160	537	90	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E2:{
-        pStm->base.bIsExternTrans = TRUE;
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S42, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult;
-}
-static void MainStm_S4_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S4 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	363	160	537	90	10	-24	1235	686" );
-    }
-}
-static void MainStm_S42_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S42 ) ){
-        MainStm_S4_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	669	173	61	53	10	-24	1235	686" );
-        pStm->nS4History &= ~MainStm_S4;
-        pStm->nS4History |= MainStm_S42;
-    }
-}
-static BOOL MainStm_S42_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S42;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	669	173	61	53	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E1:{
-        E1Params* e = ( E1Params* )pEventParams;
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S4, STATE_UNDEF );
-        pStm->nS4History &= ~MainStm_S4;
-        pStm->nS4History |= MainStm_S4;
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult ? bResult : MainStm_S4_EventProc( pCarBody, pStm, nEventId, pEventParams );
-}
-static void MainStm_S42_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S42 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	669	173	61	53	10	-24	1235	686" );
-        MainStm_S4_Exit( pCarBody, pStm );
-    }
-}
-static void MainStm_S41_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S41 ) ){
-        MainStm_S4_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	472	173	61	53	10	-24	1235	686" );
-        pStm->nS4History &= ~MainStm_S4;
-        pStm->nS4History |= MainStm_S41;
-    }
-}
-static BOOL MainStm_S41_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S41;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	472	173	61	53	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E1:{
-        E1Params* e = ( E1Params* )pEventParams;
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S42, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult ? bResult : MainStm_S4_EventProc( pCarBody, pStm, nEventId, pEventParams );
-}
-static void MainStm_S41_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S41 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	472	173	61	53	10	-24	1235	686" );
-        MainStm_S4_Exit( pCarBody, pStm );
-    }
-}
-static void MainStm_S6_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S6 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	953	272	130	72	10	-24	1235	686" );
-        SharedStm_Reset( pCarBody, &pStm->S6SharedStm, &pStm->base, STATE_UNDEF );
-    }
-}
-static BOOL MainStm_S6_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S6;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	953	272	130	72	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E4:{
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S4, MainStm_S4Init );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult;
-}
-static void MainStm_S6_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S6 ) ){ 
-        SharedStm_Abort( pCarBody, &pStm->S6SharedStm );
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	953	272	130	72	10	-24	1235	686" );
-    }
-}
-static void MainStm_S8_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S8 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	362	340	522	297	10	-24	1235	686" );
-        S8_Region1_Reset( pCarBody, &pStm->S8S8_Region1, &pStm->base, STATE_UNDEF );
-        S8_Region2_Reset( pCarBody, &pStm->S8S8_Region2, &pStm->base, STATE_UNDEF );
-    }
-}
-static BOOL MainStm_S8_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S8;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	362	340	522	297	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E5:{
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S7, MainStm_S7Init );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult;
-}
-static void MainStm_S8_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S8 ) ){ 
-        S8_Region1_Abort( pCarBody, &pStm->S8S8_Region1 );
-        S8_Region2_Abort( pCarBody, &pStm->S8S8_Region2 );
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	362	340	522	297	10	-24	1235	686" );
-    }
-}
-static void MainStm_S812_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S812 ) ){
-        MainStm_S8_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	569	373	61	53	10	-24	1235	686" );
-    }
-}
-static BOOL MainStm_S812_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S812;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	569	373	61	53	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E2:{
-        if (CarBody_IsIn( pCarBody, S8_Region1_S821 )) {
-            MainStm_BgnTrans( pCarBody, pStm, MainStm_S813, STATE_UNDEF );
-            S8_Region1_Reset( pCarBody, &pStm->S8S8_Region1, &pStm->base, S8_Region1_S822 );
-            MainStm_EndTrans( pCarBody, pStm );
-            bResult = TRUE;
-        }
-    } break;
-    default: break;
-    }
-    return bResult ? bResult : MainStm_S8_EventProc( pCarBody, pStm, nEventId, pEventParams );
-}
-static void MainStm_S812_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S812 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	569	373	61	53	10	-24	1235	686" );
-        MainStm_S8_Exit( pCarBody, pStm );
-    }
-}
-static void MainStm_S813_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S813 ) ){
-        MainStm_S8_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	748	373	61	53	10	-24	1235	686" );
-    }
-}
-static BOOL MainStm_S813_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S813;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	748	373	61	53	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E5:{
-        if (CarBody_IsIn( pCarBody, S8_Region1_S822 )) {
-            if( pStm->nS10History && pStm->nS10History != MainStm_S10 ){
-                MainStm_BgnTrans( pCarBody, pStm, pStm->nS10History & MainStm_MainTop_0, STATE_UNDEF );
-                MainStm_EndTrans( pCarBody, pStm );
-                bResult = TRUE;
-                break;
-            }
-        }
-    } break;
-    default: break;
-    }
-    return bResult ? bResult : MainStm_S8_EventProc( pCarBody, pStm, nEventId, pEventParams );
-}
-static void MainStm_S813_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S813 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	748	373	61	53	10	-24	1235	686" );
-        MainStm_S8_Exit( pCarBody, pStm );
-    }
-}
-static void MainStm_S811_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S811 ) ){
-        MainStm_S8_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	427	373	61	53	10	-24	1235	686" );
-    }
-}
-static BOOL MainStm_S811_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S811;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	427	373	61	53	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E1:{
-        E1Params* e = ( E1Params* )pEventParams;
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S812, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult ? bResult : MainStm_S8_EventProc( pCarBody, pStm, nEventId, pEventParams );
-}
-static void MainStm_S811_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S811 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	427	373	61	53	10	-24	1235	686" );
-        MainStm_S8_Exit( pCarBody, pStm );
-    }
-}
-static void MainStm_S7_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S7 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	108	342	151	293	10	-24	1235	686" );
-    }
-}
-static BOOL MainStm_S7_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S7;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	108	342	151	293	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E1:{
-        E1Params* e = ( E1Params* )pEventParams;
-        pStm->base.bIsExternTrans = TRUE;
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S71, MainStm_S71Init );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    case CarBody_E2:{
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S72, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    case CarBody_E3:{
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S8, MainStm_S8Init );
-        S8_Region1_Reset( pCarBody, &pStm->S8S8_Region1, &pStm->base, S8_Region1_S821 );
-        S8_Region2_Reset( pCarBody, &pStm->S8S8_Region2, &pStm->base, S8_Region2_S831 );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    case CarBody_E4:{
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_MainTop_0, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult;
-}
-static void MainStm_S7_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S7 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	108	342	151	293	10	-24	1235	686" );
-    }
-}
-static void MainStm_S72_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S72 ) ){
-        MainStm_S7_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	137	558	61	53	10	-24	1235	686" );
-        pStm->nS7History &= ~MainStm_MainTop_0;
-        pStm->nS7History |= MainStm_S72;
-    }
-}
-static BOOL MainStm_S72_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S72;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	137	558	61	53	10	-24	1235	686" );
-    return bResult ? bResult : MainStm_S7_EventProc( pCarBody, pStm, nEventId, pEventParams );
-}
-static void MainStm_S72_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S72 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	137	558	61	53	10	-24	1235	686" );
-        MainStm_S7_Exit( pCarBody, pStm );
-    }
-}
-static void MainStm_S71_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S71 ) ){
-        MainStm_S7_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	123	394	126	156	10	-24	1235	686" );
-        S71_Region1_Reset( pCarBody, &pStm->S71S71_Region1, &pStm->base, pStm->nS7History & S71_Region1_S71 );
-        pStm->nS7History &= ~MainStm_MainTop_0;
-        pStm->nS7History |= MainStm_S71;
-    }
-}
-static BOOL MainStm_S71_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S71;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	123	394	126	156	10	-24	1235	686" );
-    return bResult ? bResult : MainStm_S7_EventProc( pCarBody, pStm, nEventId, pEventParams );
-}
-static void MainStm_S71_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S71 ) ){ 
-        S71_Region1_Abort( pCarBody, &pStm->S71S71_Region1 );
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	123	394	126	156	10	-24	1235	686" );
-        MainStm_S7_Exit( pCarBody, pStm );
-    }
-}
-static void MainStm_S711_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S711 ) ){
-        MainStm_S71_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	133	461	40	31	10	-24	1235	686" );
-        pStm->nS7History &= ~MainStm_MainTop_0;
-        pStm->nS7History |= MainStm_S711;
-    }
-}
-static BOOL MainStm_S711_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S711;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	133	461	40	31	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E0:{
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S712, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult ? bResult : MainStm_S71_EventProc( pCarBody, pStm, nEventId, pEventParams );
-}
-static void MainStm_S711_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S711 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	133	461	40	31	10	-24	1235	686" );
-        MainStm_S71_Exit( pCarBody, pStm );
-    }
-}
-static void MainStm_S712_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S712 ) ){
-        MainStm_S71_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	133	509	40	31	10	-24	1235	686" );
-        pStm->nS7History &= ~MainStm_MainTop_0;
-        pStm->nS7History |= MainStm_S712;
-    }
-}
-static BOOL MainStm_S712_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S712;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	133	509	40	31	10	-24	1235	686" );
-    return bResult ? bResult : MainStm_S71_EventProc( pCarBody, pStm, nEventId, pEventParams );
-}
-static void MainStm_S712_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S712 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	133	509	40	31	10	-24	1235	686" );
-        MainStm_S71_Exit( pCarBody, pStm );
-    }
-}
-static void MainStm_S10_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S10 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	988	447	231	94	10	-24	1235	686" );
-    }
-}
-static BOOL MainStm_S10_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S10;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	988	447	231	94	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E1:{
-        E1Params* e = ( E1Params* )pEventParams;
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_MainTop_0, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    case CarBody_E2:{
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S8, MainStm_S8Init );
-        S8_Region2_Reset( pCarBody, &pStm->S8S8_Region2, &pStm->base, S8_Region2_InitialPseudostate0 );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult;
-}
-static void MainStm_S10_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S10 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	988	447	231	94	10	-24	1235	686" );
-    }
-}
-static void MainStm_S101_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S101 ) ){
-        MainStm_S10_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	1020	500	40	31	10	-24	1235	686" );
-    }
-}
-static BOOL MainStm_S101_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S101;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	1020	500	40	31	10	-24	1235	686" );
-    return bResult ? bResult : MainStm_S10_EventProc( pCarBody, pStm, nEventId, pEventParams );
-}
-static void MainStm_S101_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S101 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	1020	500	40	31	10	-24	1235	686" );
-        MainStm_S10_Exit( pCarBody, pStm );
-    }
-}
-static void MainStm_S102_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S102 ) ){
-        MainStm_S10_Entry( pCarBody, pStm );
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	1137	500	40	31	10	-24	1235	686" );
-    }
-}
-static BOOL MainStm_S102_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S102;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	1137	500	40	31	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E0:{
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S101, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult ? bResult : MainStm_S10_EventProc( pCarBody, pStm, nEventId, pEventParams );
-}
-static void MainStm_S102_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S102 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	1137	500	40	31	10	-24	1235	686" );
-        MainStm_S10_Exit( pCarBody, pStm );
-    }
-}
-static void MainStm_S5_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S5 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	301	270	130	53	10	-24	1235	686" );
-    }
-}
-static BOOL MainStm_S5_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S5;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	301	270	130	53	10	-24	1235	686" );
-    switch( nEventId ){
-    case CarBody_E1:{
-        E1Params* e = ( E1Params* )pEventParams;
-        pStm->base.bIsExternTrans = TRUE;
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S5, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    } break;
-    case CarBody_E2:{
-        int n = FlexButton_GetValue(slider);
-        if (n == 0) {
-            MainStm_BgnTrans( pCarBody, pStm, MainStm_S41, STATE_UNDEF );
-            MainStm_EndTrans( pCarBody, pStm );
-            bResult = TRUE;
-        } else if (n == 1) {
-            MainStm_BgnTrans( pCarBody, pStm, MainStm_S8, MainStm_S8Init );
-            MainStm_EndTrans( pCarBody, pStm );
-            bResult = TRUE;
-        } else {
-            MainStm_BgnTrans( pCarBody, pStm, MainStm_S6, STATE_UNDEF );
-            SharedStm_Reset( pCarBody, &pStm->S6SharedStm, &pStm->base, SharedStm_Entry1 );
-            MainStm_EndTrans( pCarBody, pStm );
-            bResult = TRUE;
-        }
-    } break;
-    default: break;
-    }
-    return bResult;
-}
-static void MainStm_S5_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S5 ) ){ 
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	301	270	130	53	10	-24	1235	686" );
-    }
-}
-static void MainStm_S9_Entry( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, MainStm_S9 ) ){
-        ObjsBuilder_showEntry( pCarBody, pStm, "Model/CarBody/MainStm	1109	347	96	50	10	-24	1235	686" );
-        SharedStm_Reset( pCarBody, &pStm->S9SharedStm, &pStm->base, STATE_UNDEF );
-    }
-}
-static BOOL MainStm_S9_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = MainStm_S9;
-    ObjsBuilder_showDoing( pCarBody, pStm, "Model/CarBody/MainStm	1109	347	96	50	10	-24	1235	686" );
-    return bResult;
-}
-static void MainStm_S9_Exit( CarBody* pCarBody, MainStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, MainStm_S9 ) ){ 
-        SharedStm_Abort( pCarBody, &pStm->S9SharedStm );
-        ObjsBuilder_showExit( pCarBody, pStm, "Model/CarBody/MainStm	1109	347	96	50	10	-24	1235	686" );
-    }
-}
-static void MainStm_EndTrans( CarBody *pCarBody, MainStm* pStm ){
-    pStm->base.nCurrentState = pStm->base.nTargetState;
-    pStm->base.bIsExternTrans = FALSE;
-    switch( pStm->base.nCurrentState ){
-    case MainStm_S1:            MainStm_S1_Entry( pCarBody, pStm ); break;
-    case MainStm_S2:            MainStm_S2_Entry( pCarBody, pStm ); break;
-    case MainStm_S22:           MainStm_S22_Entry( pCarBody, pStm ); break;
-    case MainStm_S21:           MainStm_S21_Entry( pCarBody, pStm ); break;
-    case MainStm_S3:            MainStm_S3_Entry( pCarBody, pStm ); break;
-    case MainStm_S4:            MainStm_S4_Entry( pCarBody, pStm ); break;
-    case MainStm_S42:           MainStm_S42_Entry( pCarBody, pStm ); break;
-    case MainStm_S41:           MainStm_S41_Entry( pCarBody, pStm ); break;
-    case MainStm_S6:            MainStm_S6_Entry( pCarBody, pStm ); break;
-    case MainStm_S8:            MainStm_S8_Entry( pCarBody, pStm ); break;
-    case MainStm_S812:          MainStm_S812_Entry( pCarBody, pStm ); break;
-    case MainStm_S813:          MainStm_S813_Entry( pCarBody, pStm ); break;
-    case MainStm_S811:          MainStm_S811_Entry( pCarBody, pStm ); break;
-    case MainStm_S7:            MainStm_S7_Entry( pCarBody, pStm ); break;
-    case MainStm_S72:           MainStm_S72_Entry( pCarBody, pStm ); break;
-    case MainStm_S71:           MainStm_S71_Entry( pCarBody, pStm ); break;
-    case MainStm_S711:          MainStm_S711_Entry( pCarBody, pStm ); break;
-    case MainStm_S712:          MainStm_S712_Entry( pCarBody, pStm ); break;
-    case MainStm_S10:           MainStm_S10_Entry( pCarBody, pStm ); break;
-    case MainStm_S101:          MainStm_S101_Entry( pCarBody, pStm ); break;
-    case MainStm_S102:          MainStm_S102_Entry( pCarBody, pStm ); break;
-    case MainStm_S5:            MainStm_S5_Entry( pCarBody, pStm ); break;
-    case MainStm_S9:            MainStm_S9_Entry( pCarBody, pStm ); break;
-    default: break;
-    }
-}
-static void MainStm_BgnTrans( CarBody *pCarBody, MainStm* pStm, uint64_t targetState, uint64_t initState ){
-    pStm->base.nTargetState = targetState;
-    pStm->base.nPseudostate = targetState;
-    if( initState ){
-        pStm->base.nPseudostate = initState;
-    }
-    switch( pStm->base.nCurrentState ){
-    case MainStm_S1:            MainStm_S1_Exit( pCarBody, pStm ); break;
-    case MainStm_S2:            MainStm_S2_Exit( pCarBody, pStm ); break;
-    case MainStm_S22:           MainStm_S22_Exit( pCarBody, pStm ); break;
-    case MainStm_S21:           MainStm_S21_Exit( pCarBody, pStm ); break;
-    case MainStm_S3:            MainStm_S3_Exit( pCarBody, pStm ); break;
-    case MainStm_S4:            MainStm_S4_Exit( pCarBody, pStm ); break;
-    case MainStm_S42:           MainStm_S42_Exit( pCarBody, pStm ); break;
-    case MainStm_S41:           MainStm_S41_Exit( pCarBody, pStm ); break;
-    case MainStm_S6:            MainStm_S6_Exit( pCarBody, pStm ); break;
-    case MainStm_S8:            MainStm_S8_Exit( pCarBody, pStm ); break;
-    case MainStm_S812:          MainStm_S812_Exit( pCarBody, pStm ); break;
-    case MainStm_S813:          MainStm_S813_Exit( pCarBody, pStm ); break;
-    case MainStm_S811:          MainStm_S811_Exit( pCarBody, pStm ); break;
-    case MainStm_S7:            MainStm_S7_Exit( pCarBody, pStm ); break;
-    case MainStm_S72:           MainStm_S72_Exit( pCarBody, pStm ); break;
-    case MainStm_S71:           MainStm_S71_Exit( pCarBody, pStm ); break;
-    case MainStm_S711:          MainStm_S711_Exit( pCarBody, pStm ); break;
-    case MainStm_S712:          MainStm_S712_Exit( pCarBody, pStm ); break;
-    case MainStm_S10:           MainStm_S10_Exit( pCarBody, pStm ); break;
-    case MainStm_S101:          MainStm_S101_Exit( pCarBody, pStm ); break;
-    case MainStm_S102:          MainStm_S102_Exit( pCarBody, pStm ); break;
-    case MainStm_S5:            MainStm_S5_Exit( pCarBody, pStm ); break;
-    case MainStm_S9:            MainStm_S9_Exit( pCarBody, pStm ); break;
-    default: break;
-    }
-}
-static BOOL MainStm_StateDefaultTrans( CarBody* pCarBody, MainStm* pStm ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = pStm->base.nCurrentState;
-    pStm->base.nLCAState = STATE_UNDEF;
-    bResult |= SharedStm_StateDefaultTrans( pCarBody, &pStm->S6SharedStm );
-    bResult |= S8_Region1_StateDefaultTrans( pCarBody, &pStm->S8S8_Region1 );
-    bResult |= S8_Region2_StateDefaultTrans( pCarBody, &pStm->S8S8_Region2 );
-    bResult |= S71_Region1_StateDefaultTrans( pCarBody, &pStm->S71S71_Region1 );
-    bResult |= SharedStm_StateDefaultTrans( pCarBody, &pStm->S9SharedStm );
-    do{   if( pStm->base.nPseudostate == MainStm_MainStmInit ){
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S1, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nPseudostate == MainStm_S2Init ){
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S21, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nPseudostate == MainStm_S4 ){
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_Junction, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nPseudostate == MainStm_S4Init ){
-        if( pStm->nS4History && pStm->nS4History != MainStm_S4 ){
-            MainStm_BgnTrans( pCarBody, pStm, pStm->nS4History & MainStm_MainTop_0, STATE_UNDEF );
-            MainStm_EndTrans( pCarBody, pStm );
-            bResult = TRUE;
-            break;
-        }
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S41, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nPseudostate == MainStm_Junction ){
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S6, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nPseudostate == MainStm_S6 ){
-        if( !SharedStm_IsFinished( &pStm->S6SharedStm.base ) ){ break; }
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S9, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nCurrentState == MainStm_S6 && pStm->base.nPseudostate == SharedStm_Exit1 ){
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S9, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nPseudostate == MainStm_S8Init ){
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S811, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nPseudostate == MainStm_S71Init ){
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S711, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nPseudostate == MainStm_S7Init ){
-        if( pStm->nS7History && pStm->nS7History != MainStm_S7 ){
-            MainStm_BgnTrans( pCarBody, pStm, pStm->nS7History & MainStm_MainTop_0, STATE_UNDEF );
-            MainStm_EndTrans( pCarBody, pStm );
-            bResult = TRUE;
-            break;
-        }
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S71, MainStm_S71Init );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nPseudostate == MainStm_S9 ){
-        if( !SharedStm_IsFinished( &pStm->S9SharedStm.base ) ){ break; }
-        MainStm_BgnTrans( pCarBody, pStm, MainStm_S102, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, MainStm_MainTop_0) ){
-        MainStm_BgnTrans( pCarBody, pStm, pStm->base.nPseudostate, STATE_UNDEF );
-        MainStm_EndTrans( pCarBody, pStm );
-        bResult = TRUE;
-    }else{
-    }   }while( FALSE );
-    return bResult;
-}
-static int MainStm_IsFinished(MainStm* pMainStm){
-    return pMainStm->base.nCurrentState == MainStm_MainTop_0 && pMainStm->base.nCurrentState == pMainStm->base.nPseudostate;
-}
-BOOL MainStm_Reset( CarBody* pCarBody, MainStm* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
-    if( pParentStm != NULL ){
-        pStm->base.pParentStm = pParentStm;
-    }
-    if( nEntryPoint == STATE_UNDEF ){
-        if( MainStm_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = MainStm_MainStmInit;
-        }
-        return FALSE;
-    }else{
-    if( !IS_IN( nEntryPoint, MainStm_MainTop_0 ) ){ return FALSE; }
-        if( MainStm_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = nEntryPoint;
-            return FALSE;
-        }else{
-            pStm->base.nPseudostate = nEntryPoint;
-        }
-    }
-    return TRUE;
-}
-static BOOL MainStm_EventProc( CarBody* pCarBody, MainStm* pStm, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nLCAState = STATE_UNDEF;
-    bResult |= SharedStm_EventProc( pCarBody, &pStm->S6SharedStm, nEventId, pEventParams );
-    bResult |= S8_Region1_EventProc( pCarBody, &pStm->S8S8_Region1, nEventId, pEventParams );
-    bResult |= S8_Region2_EventProc( pCarBody, &pStm->S8S8_Region2, nEventId, pEventParams );
-    bResult |= S71_Region1_EventProc( pCarBody, &pStm->S71S71_Region1, nEventId, pEventParams );
-    bResult |= SharedStm_EventProc( pCarBody, &pStm->S9SharedStm, nEventId, pEventParams );
-    switch( pStm->base.nCurrentState ){
-    case MainStm_S1:                            bResult |= MainStm_S1_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S2:                            bResult |= MainStm_S2_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S22:                           bResult |= MainStm_S22_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S21:                           bResult |= MainStm_S21_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S3:                            bResult |= MainStm_S3_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S4:                            bResult |= MainStm_S4_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S42:                           bResult |= MainStm_S42_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S41:                           bResult |= MainStm_S41_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S6:                            bResult |= MainStm_S6_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S8:                            bResult |= MainStm_S8_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S812:                          bResult |= MainStm_S812_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S813:                          bResult |= MainStm_S813_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S811:                          bResult |= MainStm_S811_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S7:                            bResult |= MainStm_S7_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S72:                           bResult |= MainStm_S72_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S71:                           bResult |= MainStm_S71_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S711:                          bResult |= MainStm_S711_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S712:                          bResult |= MainStm_S712_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S10:                           bResult |= MainStm_S10_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S101:                          bResult |= MainStm_S101_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S102:                          bResult |= MainStm_S102_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S5:                            bResult |= MainStm_S5_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    case MainStm_S9:                            bResult |= MainStm_S9_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
-    default: break;
-    }
-    return bResult;
-}
-static BOOL MainStm_IsIn( MainStm* pStm, uint64_t nCompositeState ) {
-if( SharedStm_IsIn( &pStm->S6SharedStm, nCompositeState ) ){ return TRUE; }
-if( S8_Region1_IsIn( &pStm->S8S8_Region1, nCompositeState ) ){ return TRUE; }
-if( S8_Region2_IsIn( &pStm->S8S8_Region2, nCompositeState ) ){ return TRUE; }
-if( S71_Region1_IsIn( &pStm->S71S71_Region1, nCompositeState ) ){ return TRUE; }
-if( SharedStm_IsIn( &pStm->S9SharedStm, nCompositeState ) ){ return TRUE; }
-    if( IS_IN( pStm->base.nCurrentState, nCompositeState ) ){ return TRUE; }
-    return FALSE;
-}
-static BOOL MainStm_Abort( CarBody* pCarBody, MainStm* pStm ) {
-    pStm->base.nSourceState = MainStm_MainTop_0;
-    MainStm_BgnTrans( pCarBody, pStm, MainStm_MainTop_0, STATE_UNDEF );
-    MainStm_EndTrans( pCarBody, pStm );
-    return TRUE;
 }
 BOOL CarBody_EventProc( CarBody* pCarBody, CarBody_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = MainStm_EventProc( pCarBody, &pCarBody->mainStm, nEventId, pEventParams );
-    do{}while( MainStm_StateDefaultTrans( pCarBody, &pCarBody->mainStm ) );
+    BOOL bResult = MainTop_EventProc( pCarBody, &pCarBody->mainStm, nEventId, pEventParams );
+    bResult |= MainTop_StateDefaultTrans( pCarBody, &pCarBody->mainStm );
     return bResult;
 }
-BOOL CarBody_Start( CarBody* pCarBody ){
-    MainStm_Abort( pCarBody, &pCarBody->mainStm );
-    MainStm_Reset( pCarBody, &pCarBody->mainStm, NULL, STATE_UNDEF );
-    do{}while( MainStm_StateDefaultTrans( pCarBody, &pCarBody->mainStm ) );
+
+/**
+ * Implementation for Statemachine: SharedTop
+ */
+static void SharedStmHsm_BgnTrans( CarBody *pCarBody, HdStateMachine* pStm, uint64_t targetState );
+static void SharedStmHsm_EndTrans( CarBody *pCarBody, HdStateMachine* pStm );
+static BOOL SharedStmHsm_Abort( CarBody* pCarBody, HdStateMachine* pStm );
+static BOOL SharedStmHsm_Reset( CarBody* pCarBody, HdStateMachine* pStm, BOOL bUnused, uint64_t nEntryPoint );
+static BOOL SharedStmHsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams );
+static void Shared2Rgn1Hsm_BgnTrans( CarBody *pCarBody, HdStateMachine* pStm, uint64_t targetState );
+static void Shared2Rgn1Hsm_EndTrans( CarBody *pCarBody, HdStateMachine* pStm );
+static BOOL Shared2Rgn1Hsm_Abort( CarBody* pCarBody, HdStateMachine* pStm );
+static BOOL Shared2Rgn1Hsm_Reset( CarBody* pCarBody, HdStateMachine* pStm, BOOL bUnused, uint64_t nEntryPoint );
+static BOOL Shared2Rgn1Hsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams );
+static void SharedTop_Shared2Rgn1_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, SharedTop_Shared2Rgn1 ) ){
+        if( !( ( SharedTop* )pStm->pMain )->lastEnteredStateRecovering && pStm->nTargetState == SharedTop_Shared2Rgn1 ){
+            pStm->nPseudostate = SharedTop_InitialPseudostate1;
+        }
+        if ( ( ( SharedTop* )pStm->pMain )->lastEnteredStateRecovering ) {
+            pStm->nPseudostate = pStm->lastEnteredState;
+        }
+        //HdStateMachine_DefaultEntryAction( pStm, pCarBody, "" );
+    }
+}
+static BOOL SharedTop_Shared2Rgn1_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = SharedTop_Shared2Rgn1;
+    //HdStateMachine_DefaultDoingAction( pStm, pCarBody, "" );
+    return bResult;
+}
+static void SharedTop_Shared2Rgn1_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, SharedTop_Shared2Rgn1 ) ){ 
+        //HdStateMachine_DefaultExitAction( pStm, pCarBody, "" );
+    }
+}
+static void SharedTop_State22_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, SharedTop_State22 ) ){
+        SharedTop_Shared2Rgn1_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/SharedTop	383	292	55	31	54	125	521	299" );
+    }
+}
+static BOOL SharedTop_State22_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = SharedTop_State22;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/SharedTop	383	292	55	31	54	125	521	299" );
+    return bResult ? bResult : SharedTop_Shared2Rgn1_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void SharedTop_State22_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, SharedTop_State22 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/SharedTop	383	292	55	31	54	125	521	299" );
+        SharedTop_Shared2Rgn1_Exit( pCarBody, pStm );
+    }
+}
+static void Shared2Rgn1Hsm_BgnTrans( CarBody *pCarBody, HdStateMachine* pStm, uint64_t targetState ){
+    pStm->nTargetState = targetState;
+    pStm->nPseudostate = targetState;
+    switch( pStm->nCurrentState ){
+    case SharedTop_Shared2Rgn1: SharedTop_Shared2Rgn1_Exit( pCarBody, pStm ); break;
+    case SharedTop_State22:     SharedTop_State22_Exit( pCarBody, pStm ); break;
+    default: break;
+    }
+}
+static BOOL Shared2Rgn1Hsm_Reset( CarBody* pCarBody, HdStateMachine* pStm, BOOL bUnused, uint64_t nEntryPoint ) {
+    if( nEntryPoint != STATE_UNDEF ){
+        pStm->nPseudostate = nEntryPoint;
+        return FALSE;
+    }else{
+        pStm->nPseudostate = SharedTop_Shared2Rgn1;
+    }
+    Shared2Rgn1Hsm_BgnTrans( pCarBody, pStm, pStm->nPseudostate );
+    Shared2Rgn1Hsm_EndTrans( pCarBody, pStm );
     return TRUE;
 }
-BOOL CarBody_Reset( CarBody* pCarBody, uint64_t nEntryPoint ){
-    return MainStm_Reset( pCarBody, &pCarBody->mainStm, NULL, nEntryPoint );
+static BOOL Shared2Rgn1Hsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nLCAState = STATE_UNDEF;
+    ( ( SharedTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
+    switch( pStm->nCurrentState ){
+    case SharedTop_Shared2Rgn1:                 bResult |= SharedTop_Shared2Rgn1_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case SharedTop_State22:                     bResult |= SharedTop_State22_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    default: break;
+    }
+    return bResult;
 }
-BOOL CarBody_IsIn( CarBody* pCarBody, uint64_t nState ){
-    return MainStm_IsIn( &pCarBody->mainStm, nState );
+static BOOL Shared2Rgn1Hsm_Abort( CarBody* pCarBody, HdStateMachine* pStm ) {
+    pStm->nSourceState = SharedTop_Shared2Rgn1;
+    Shared2Rgn1Hsm_BgnTrans( pCarBody, pStm, STATE_UNDEF );
+    Shared2Rgn1Hsm_EndTrans( pCarBody, pStm );
+    return TRUE;
+}
+static void Shared2Rgn1Hsm_EndTrans( CarBody *pCarBody, HdStateMachine* pStm ){
+    pStm->nCurrentState = pStm->nTargetState;
+    pStm->bIsExternTrans = FALSE;
+    switch( pStm->nCurrentState ){
+    case SharedTop_Shared2Rgn1: SharedTop_Shared2Rgn1_Entry( pCarBody, pStm ); break;
+    case SharedTop_State22:     SharedTop_State22_Entry( pCarBody, pStm ); break;
+    default: break;
+    }
+}
+static BOOL Shared2Rgn1Hsm_StateDefaultTrans( CarBody* pCarBody, HdStateMachine* pStm ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = pStm->nCurrentState;
+    pStm->nLCAState = STATE_UNDEF;
+        if( pStm->nCurrentState == SharedTop_Shared2Rgn1 && pStm->nPseudostate == SharedTop_InitialPseudostate1  ){
+            Shared2Rgn1Hsm_BgnTrans( pCarBody, pStm, SharedTop_State22 );
+            Shared2Rgn1Hsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else if( pStm->nCurrentState != pStm->nPseudostate ){
+            Shared2Rgn1Hsm_BgnTrans( pCarBody, pStm, pStm->nPseudostate );
+            Shared2Rgn1Hsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else{
+        }
+    return bResult;
+}
+static void SharedTop_SharedStm_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, SharedTop_SharedStm ) ){
+        if( !( ( SharedTop* )pStm->pMain )->lastEnteredStateRecovering && pStm->nTargetState == SharedTop_SharedStm ){
+            pStm->nPseudostate = SharedTop_InitPt;
+        }
+        if ( ( ( SharedTop* )pStm->pMain )->lastEnteredStateRecovering ) {
+            pStm->nPseudostate = pStm->lastEnteredState;
+        }
+        //HdStateMachine_DefaultEntryAction( pStm, pCarBody, "" );
+    }
+}
+static BOOL SharedTop_SharedStm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = SharedTop_SharedStm;
+    //HdStateMachine_DefaultDoingAction( pStm, pCarBody, "" );
+    return bResult;
+}
+static void SharedTop_SharedStm_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, SharedTop_SharedStm ) ){ 
+        //HdStateMachine_DefaultExitAction( pStm, pCarBody, "" );
+    }
+}
+static void SharedTop_Shared1_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, SharedTop_Shared1 ) ){
+        SharedTop_SharedStm_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/SharedTop	131	225	114	72	54	125	521	299" );
+    }
+}
+static BOOL SharedTop_Shared1_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = SharedTop_Shared1;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/SharedTop	131	225	114	72	54	125	521	299" );
+    switch( nEventId ){
+    case CarBody_E0:{
+            SharedStmHsm_BgnTrans( pCarBody, pStm, SharedTop_Shared2 );
+            Shared2Rgn1Hsm_Reset( pCarBody, &( ( SharedTop* )pStm->pMain )->Shared2Rgn1Hsm, FALSE, SharedTop_State22 );
+            SharedStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : SharedTop_SharedStm_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void SharedTop_Shared1_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, SharedTop_Shared1 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/SharedTop	131	225	114	72	54	125	521	299" );
+        SharedTop_SharedStm_Exit( pCarBody, pStm );
+    }
+}
+static void SharedTop_Shared2_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, SharedTop_Shared2 ) ){
+        SharedTop_SharedStm_Entry( pCarBody, pStm );
+        if( !( ( SharedTop* )pStm->pMain )->lastEnteredStateRecovering && pStm->nTargetState == SharedTop_Shared2 ){
+            pStm->nPseudostate = SharedTop_InitialPseudostate0;
+        }
+        Shared2Rgn1Hsm_Reset( pCarBody, &( ( SharedTop* )pStm->pMain )->Shared2Rgn1Hsm, FALSE, STATE_UNDEF );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/SharedTop	321	170	179	183	54	125	521	299" );
+    }
+}
+static BOOL SharedTop_Shared2_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = SharedTop_Shared2;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/SharedTop	321	170	179	183	54	125	521	299" );
+    switch( nEventId ){
+    case CarBody_E3:{
+            SharedStmHsm_BgnTrans( pCarBody, pStm, SharedTop_SharedStm );
+            ( ( SharedTop* )pStm->pMain )->pParentStm->nPseudostate = SharedTop_Exit1;
+            SharedStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    case CarBody_E2:{
+            SharedStmHsm_BgnTrans( pCarBody, pStm, SharedTop_SharedStm );
+            SharedStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : SharedTop_SharedStm_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void SharedTop_Shared2_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, SharedTop_Shared2 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/SharedTop	321	170	179	183	54	125	521	299" );
+        Shared2Rgn1Hsm_Abort( pCarBody, &( ( SharedTop* )pStm->pMain )->Shared2Rgn1Hsm );
+        SharedTop_SharedStm_Exit( pCarBody, pStm );
+    }
+}
+static void SharedTop_SHared21_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, SharedTop_SHared21 ) ){
+        SharedTop_Shared2_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/SharedTop	379	216	60	31	54	125	521	299" );
+    }
+}
+static BOOL SharedTop_SHared21_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = SharedTop_SHared21;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/SharedTop	379	216	60	31	54	125	521	299" );
+    return bResult ? bResult : SharedTop_Shared2_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void SharedTop_SHared21_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, SharedTop_SHared21 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/SharedTop	379	216	60	31	54	125	521	299" );
+        SharedTop_Shared2_Exit( pCarBody, pStm );
+    }
+}
+static void SharedStmHsm_BgnTrans( CarBody *pCarBody, HdStateMachine* pStm, uint64_t targetState ){
+    pStm->nTargetState = targetState;
+    pStm->nPseudostate = targetState;
+    switch( pStm->nCurrentState ){
+    case SharedTop_SharedStm:   SharedTop_SharedStm_Exit( pCarBody, pStm ); break;
+    case SharedTop_Shared1:     SharedTop_Shared1_Exit( pCarBody, pStm ); break;
+    case SharedTop_SHared21:    SharedTop_SHared21_Exit( pCarBody, pStm ); break;
+    case SharedTop_Shared2:     SharedTop_Shared2_Exit( pCarBody, pStm ); break;
+    default: break;
+    }
+}
+static BOOL SharedStmHsm_Reset( CarBody* pCarBody, HdStateMachine* pStm, BOOL bUnused, uint64_t nEntryPoint ) {
+    if( nEntryPoint != STATE_UNDEF ){
+        pStm->nPseudostate = nEntryPoint;
+        return FALSE;
+    }else{
+        pStm->nPseudostate = SharedTop_SharedStm;
+    }
+    SharedStmHsm_BgnTrans( pCarBody, pStm, pStm->nPseudostate );
+    SharedStmHsm_EndTrans( pCarBody, pStm );
+    return TRUE;
+}
+static BOOL SharedStmHsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nLCAState = STATE_UNDEF;
+    ( ( SharedTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
+    switch( pStm->nCurrentState ){
+    case SharedTop_SharedStm:                   bResult |= SharedTop_SharedStm_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case SharedTop_Shared1:                     bResult |= SharedTop_Shared1_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case SharedTop_SHared21:                    bResult |= SharedTop_SHared21_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case SharedTop_Shared2:                     bResult |= SharedTop_Shared2_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    default: break;
+    }
+    return bResult;
+}
+static BOOL SharedStmHsm_Abort( CarBody* pCarBody, HdStateMachine* pStm ) {
+    pStm->nSourceState = SharedTop_SharedStm;
+    SharedStmHsm_BgnTrans( pCarBody, pStm, STATE_UNDEF );
+    SharedStmHsm_EndTrans( pCarBody, pStm );
+    return TRUE;
+}
+static void SharedStmHsm_EndTrans( CarBody *pCarBody, HdStateMachine* pStm ){
+    pStm->nCurrentState = pStm->nTargetState;
+    pStm->bIsExternTrans = FALSE;
+    switch( pStm->nCurrentState ){
+    case SharedTop_SharedStm:   SharedTop_SharedStm_Entry( pCarBody, pStm ); break;
+    case SharedTop_Shared1:     SharedTop_Shared1_Entry( pCarBody, pStm ); break;
+    case SharedTop_SHared21:    SharedTop_SHared21_Entry( pCarBody, pStm ); break;
+    case SharedTop_Shared2:     SharedTop_Shared2_Entry( pCarBody, pStm ); break;
+    default: break;
+    }
+}
+static BOOL SharedStmHsm_StateDefaultTrans( CarBody* pCarBody, HdStateMachine* pStm ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = pStm->nCurrentState;
+    pStm->nLCAState = STATE_UNDEF;
+        if( pStm->nCurrentState == SharedTop_SharedStm && pStm->nPseudostate == SharedTop_InitPt  ){
+            SharedStmHsm_BgnTrans( pCarBody, pStm, SharedTop_Shared1 );
+            SharedStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else if( pStm->nCurrentState == SharedTop_SharedStm && pStm->nPseudostate == SharedTop_Entry1  ){
+            SharedStmHsm_BgnTrans( pCarBody, pStm, SharedTop_Shared1 );
+            SharedStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else if( pStm->nCurrentState == SharedTop_Shared2 && pStm->nPseudostate == SharedTop_InitialPseudostate0  ){
+            SharedStmHsm_BgnTrans( pCarBody, pStm, SharedTop_SHared21 );
+            SharedStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else if( pStm->nCurrentState != pStm->nPseudostate ){
+            SharedStmHsm_BgnTrans( pCarBody, pStm, pStm->nPseudostate );
+            SharedStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else{
+        }
+    return bResult;
+}
+static BOOL SharedTop_EventProc( CarBody* pCarBody, SharedTop* pUsm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    bResult |= Shared2Rgn1Hsm_EventProc( pCarBody, &pUsm->Shared2Rgn1Hsm, nEventId, pEventParams );
+    bResult |= SharedStmHsm_EventProc( pCarBody, &pUsm->SharedStmHsm, nEventId, pEventParams );
+    return bResult;
+}
+static BOOL SharedTop_StateDefaultTrans( CarBody* pCarBody, SharedTop* pUsm ){
+    BOOL bResult;
+    while( TRUE ){
+        bResult = FALSE;
+        bResult |= Shared2Rgn1Hsm_StateDefaultTrans( pCarBody, &pUsm->Shared2Rgn1Hsm );
+        bResult |= SharedStmHsm_StateDefaultTrans( pCarBody, &pUsm->SharedStmHsm );
+        if( bResult == FALSE ){
+            break;
+        }
+    }
+    return bResult;
+}
+static BOOL SharedTop_Reset( CarBody* pCarBody, SharedTop* pUsm, BOOL lastEnteredStateRecovering, uint64_t entryPt ){
+    pUsm->lastEnteredStateRecovering = lastEnteredStateRecovering;
+    SharedStmHsm_Abort( pCarBody, &pUsm->SharedStmHsm );
+    return SharedStmHsm_Reset( pCarBody, &pUsm->SharedStmHsm, FALSE, entryPt );
+}
+static BOOL SharedTop_Abort( CarBody* pCarBody, SharedTop* pUsm ){
+    return SharedStmHsm_Abort( pCarBody, &pUsm->SharedStmHsm );
+}
+static BOOL SharedTop_IsFinished( SharedTop* pUsm ){
+    return pUsm->SharedStmHsm.nPseudostate == SharedTop_SharedStm;
+}
+
+static void SharedTop_Prepare( SharedTop* pUsm, HdStateMachine* pParent ){
+    pUsm->pParentStm = pParent;
+    pUsm->SharedStmHsm.pMain = pUsm;
+    pUsm->Shared2Rgn1Hsm.pMain = pUsm;
+}
+
+/**
+ * Implementation for Statemachine: MainTop
+ */
+static void MainStmHsm_BgnTrans( CarBody *pCarBody, HdStateMachine* pStm, uint64_t targetState );
+static void MainStmHsm_EndTrans( CarBody *pCarBody, HdStateMachine* pStm );
+static BOOL MainStmHsm_Abort( CarBody* pCarBody, HdStateMachine* pStm );
+static BOOL MainStmHsm_Reset( CarBody* pCarBody, HdStateMachine* pStm, BOOL bUnused, uint64_t nEntryPoint );
+static BOOL MainStmHsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams );
+static void S8Rgn1Hsm_BgnTrans( CarBody *pCarBody, HdStateMachine* pStm, uint64_t targetState );
+static void S8Rgn1Hsm_EndTrans( CarBody *pCarBody, HdStateMachine* pStm );
+static BOOL S8Rgn1Hsm_Abort( CarBody* pCarBody, HdStateMachine* pStm );
+static BOOL S8Rgn1Hsm_Reset( CarBody* pCarBody, HdStateMachine* pStm, BOOL bUnused, uint64_t nEntryPoint );
+static BOOL S8Rgn1Hsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams );
+static void S8Rgn2Hsm_BgnTrans( CarBody *pCarBody, HdStateMachine* pStm, uint64_t targetState );
+static void S8Rgn2Hsm_EndTrans( CarBody *pCarBody, HdStateMachine* pStm );
+static BOOL S8Rgn2Hsm_Abort( CarBody* pCarBody, HdStateMachine* pStm );
+static BOOL S8Rgn2Hsm_Reset( CarBody* pCarBody, HdStateMachine* pStm, BOOL bUnused, uint64_t nEntryPoint );
+static BOOL S8Rgn2Hsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams );
+static void S832Rgn1Hsm_BgnTrans( CarBody *pCarBody, HdStateMachine* pStm, uint64_t targetState );
+static void S832Rgn1Hsm_EndTrans( CarBody *pCarBody, HdStateMachine* pStm );
+static BOOL S832Rgn1Hsm_Abort( CarBody* pCarBody, HdStateMachine* pStm );
+static BOOL S832Rgn1Hsm_Reset( CarBody* pCarBody, HdStateMachine* pStm, BOOL bUnused, uint64_t nEntryPoint );
+static BOOL S832Rgn1Hsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams );
+static void S71Rgn1Hsm_BgnTrans( CarBody *pCarBody, HdStateMachine* pStm, uint64_t targetState );
+static void S71Rgn1Hsm_EndTrans( CarBody *pCarBody, HdStateMachine* pStm );
+static BOOL S71Rgn1Hsm_Abort( CarBody* pCarBody, HdStateMachine* pStm );
+static BOOL S71Rgn1Hsm_Reset( CarBody* pCarBody, HdStateMachine* pStm, BOOL bUnused, uint64_t nEntryPoint );
+static BOOL S71Rgn1Hsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams );
+static void MainTop_S8Rgn1_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S8Rgn1 ) ){
+        if( !( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering && pStm->nTargetState == MainTop_S8Rgn1 ){
+            pStm->nPseudostate = MainTop_S82Init;
+        }
+        if ( ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering ) {
+            pStm->nPseudostate = pStm->lastEnteredState;
+        }
+        //HdStateMachine_DefaultEntryAction( pStm, pCarBody, "" );
+    }
+}
+static BOOL MainTop_S8Rgn1_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S8Rgn1;
+    //HdStateMachine_DefaultDoingAction( pStm, pCarBody, "" );
+    return bResult;
+}
+static void MainTop_S8Rgn1_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S8Rgn1 ) ){ 
+        //HdStateMachine_DefaultExitAction( pStm, pCarBody, "" );
+    }
+}
+static void MainTop_S821_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S821 ) ){
+        MainTop_S8Rgn1_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	427	456	61	53	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S821_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S821;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	427	456	61	53	10	-24	1235	686" );
+    return bResult ? bResult : MainTop_S8Rgn1_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S821_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S821 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	427	456	61	53	10	-24	1235	686" );
+        MainTop_S8Rgn1_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S822_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S822 ) ){
+        MainTop_S8Rgn1_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	748	456	61	53	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S822_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S822;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	748	456	61	53	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E4:{
+            S8Rgn1Hsm_BgnTrans( pCarBody, pStm, MainTop_S821 );
+            S8Rgn1Hsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_S8Rgn1_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S822_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S822 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	748	456	61	53	10	-24	1235	686" );
+        MainTop_S8Rgn1_Exit( pCarBody, pStm );
+    }
+}
+static void S8Rgn1Hsm_BgnTrans( CarBody *pCarBody, HdStateMachine* pStm, uint64_t targetState ){
+    pStm->nTargetState = targetState;
+    pStm->nPseudostate = targetState;
+    switch( pStm->nCurrentState ){
+    case MainTop_S8Rgn1:        MainTop_S8Rgn1_Exit( pCarBody, pStm ); break;
+    case MainTop_S821:          MainTop_S821_Exit( pCarBody, pStm ); break;
+    case MainTop_S822:          MainTop_S822_Exit( pCarBody, pStm ); break;
+    default: break;
+    }
+}
+static BOOL S8Rgn1Hsm_Reset( CarBody* pCarBody, HdStateMachine* pStm, BOOL bUnused, uint64_t nEntryPoint ) {
+    if( nEntryPoint != STATE_UNDEF ){
+        pStm->nPseudostate = nEntryPoint;
+        return FALSE;
+    }else{
+        pStm->nPseudostate = MainTop_S8Rgn1;
+    }
+    S8Rgn1Hsm_BgnTrans( pCarBody, pStm, pStm->nPseudostate );
+    S8Rgn1Hsm_EndTrans( pCarBody, pStm );
+    return TRUE;
+}
+static BOOL S8Rgn1Hsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nLCAState = STATE_UNDEF;
+    ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
+    switch( pStm->nCurrentState ){
+    case MainTop_S8Rgn1:                        bResult |= MainTop_S8Rgn1_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S821:                          bResult |= MainTop_S821_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S822:                          bResult |= MainTop_S822_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    default: break;
+    }
+    return bResult;
+}
+static BOOL S8Rgn1Hsm_Abort( CarBody* pCarBody, HdStateMachine* pStm ) {
+    pStm->nSourceState = MainTop_S8Rgn1;
+    S8Rgn1Hsm_BgnTrans( pCarBody, pStm, STATE_UNDEF );
+    S8Rgn1Hsm_EndTrans( pCarBody, pStm );
+    return TRUE;
+}
+static void S8Rgn1Hsm_EndTrans( CarBody *pCarBody, HdStateMachine* pStm ){
+    pStm->nCurrentState = pStm->nTargetState;
+    pStm->bIsExternTrans = FALSE;
+    switch( pStm->nCurrentState ){
+    case MainTop_S8Rgn1:        MainTop_S8Rgn1_Entry( pCarBody, pStm ); break;
+    case MainTop_S821:          MainTop_S821_Entry( pCarBody, pStm ); break;
+    case MainTop_S822:          MainTop_S822_Entry( pCarBody, pStm ); break;
+    default: break;
+    }
+}
+static BOOL S8Rgn1Hsm_StateDefaultTrans( CarBody* pCarBody, HdStateMachine* pStm ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = pStm->nCurrentState;
+    pStm->nLCAState = STATE_UNDEF;
+        if( pStm->nCurrentState == MainTop_S8Rgn1 && pStm->nPseudostate == MainTop_S82Init  ){
+            S8Rgn1Hsm_BgnTrans( pCarBody, pStm, MainTop_S822 );
+            S8Rgn1Hsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else if( pStm->nCurrentState != pStm->nPseudostate ){
+            S8Rgn1Hsm_BgnTrans( pCarBody, pStm, pStm->nPseudostate );
+            S8Rgn1Hsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else{
+        }
+    return bResult;
+}
+static void MainTop_S832Rgn1_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S832Rgn1 ) ){
+        if( !( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering && pStm->nTargetState == MainTop_S832Rgn1 ){
+            pStm->nPseudostate = MainTop_InitialPseudostate1;
+        }
+        if ( ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering ) {
+            pStm->nPseudostate = pStm->lastEnteredState;
+        }
+        //HdStateMachine_DefaultEntryAction( pStm, pCarBody, "" );
+    }
+}
+static BOOL MainTop_S832Rgn1_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S832Rgn1;
+    //HdStateMachine_DefaultDoingAction( pStm, pCarBody, "" );
+    return bResult;
+}
+static void MainTop_S832Rgn1_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S832Rgn1 ) ){ 
+        //HdStateMachine_DefaultExitAction( pStm, pCarBody, "" );
+    }
+}
+static void MainTop_S8322_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S8322 ) ){
+        MainTop_S832Rgn1_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	764	586	45	31	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S8322_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S8322;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	764	586	45	31	10	-24	1235	686" );
+    return bResult ? bResult : MainTop_S832Rgn1_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S8322_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S8322 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	764	586	45	31	10	-24	1235	686" );
+        MainTop_S832Rgn1_Exit( pCarBody, pStm );
+    }
+}
+static void S832Rgn1Hsm_BgnTrans( CarBody *pCarBody, HdStateMachine* pStm, uint64_t targetState ){
+    pStm->nTargetState = targetState;
+    pStm->nPseudostate = targetState;
+    switch( pStm->nCurrentState ){
+    case MainTop_S832Rgn1:      MainTop_S832Rgn1_Exit( pCarBody, pStm ); break;
+    case MainTop_S8322:         MainTop_S8322_Exit( pCarBody, pStm ); break;
+    default: break;
+    }
+}
+static BOOL S832Rgn1Hsm_Reset( CarBody* pCarBody, HdStateMachine* pStm, BOOL bUnused, uint64_t nEntryPoint ) {
+    if( nEntryPoint != STATE_UNDEF ){
+        pStm->nPseudostate = nEntryPoint;
+        return FALSE;
+    }else{
+        pStm->nPseudostate = MainTop_S832Rgn1;
+    }
+    S832Rgn1Hsm_BgnTrans( pCarBody, pStm, pStm->nPseudostate );
+    S832Rgn1Hsm_EndTrans( pCarBody, pStm );
+    return TRUE;
+}
+static BOOL S832Rgn1Hsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nLCAState = STATE_UNDEF;
+    ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
+    switch( pStm->nCurrentState ){
+    case MainTop_S832Rgn1:                      bResult |= MainTop_S832Rgn1_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S8322:                         bResult |= MainTop_S8322_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    default: break;
+    }
+    return bResult;
+}
+static BOOL S832Rgn1Hsm_Abort( CarBody* pCarBody, HdStateMachine* pStm ) {
+    pStm->nSourceState = MainTop_S832Rgn1;
+    S832Rgn1Hsm_BgnTrans( pCarBody, pStm, STATE_UNDEF );
+    S832Rgn1Hsm_EndTrans( pCarBody, pStm );
+    return TRUE;
+}
+static void S832Rgn1Hsm_EndTrans( CarBody *pCarBody, HdStateMachine* pStm ){
+    pStm->nCurrentState = pStm->nTargetState;
+    pStm->bIsExternTrans = FALSE;
+    switch( pStm->nCurrentState ){
+    case MainTop_S832Rgn1:      MainTop_S832Rgn1_Entry( pCarBody, pStm ); break;
+    case MainTop_S8322:         MainTop_S8322_Entry( pCarBody, pStm ); break;
+    default: break;
+    }
+}
+static BOOL S832Rgn1Hsm_StateDefaultTrans( CarBody* pCarBody, HdStateMachine* pStm ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = pStm->nCurrentState;
+    pStm->nLCAState = STATE_UNDEF;
+        if( pStm->nCurrentState == MainTop_S832Rgn1 && pStm->nPseudostate == MainTop_InitialPseudostate1  ){
+            S832Rgn1Hsm_BgnTrans( pCarBody, pStm, MainTop_S8322 );
+            S832Rgn1Hsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else if( pStm->nCurrentState != pStm->nPseudostate ){
+            S832Rgn1Hsm_BgnTrans( pCarBody, pStm, pStm->nPseudostate );
+            S832Rgn1Hsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else{
+        }
+    return bResult;
+}
+static void MainTop_S8Rgn2_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S8Rgn2 ) ){
+        if( !( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering && pStm->nTargetState == MainTop_S8Rgn2 ){
+            pStm->nPseudostate = MainTop_S83Init;
+        }
+        if ( ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering ) {
+            pStm->nPseudostate = pStm->lastEnteredState;
+        }
+        //HdStateMachine_DefaultEntryAction( pStm, pCarBody, "" );
+    }
+}
+static BOOL MainTop_S8Rgn2_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S8Rgn2;
+    //HdStateMachine_DefaultDoingAction( pStm, pCarBody, "" );
+    return bResult;
+}
+static void MainTop_S8Rgn2_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S8Rgn2 ) ){ 
+        //HdStateMachine_DefaultExitAction( pStm, pCarBody, "" );
+    }
+}
+static void MainTop_S831_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S831 ) ){
+        MainTop_S8Rgn2_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	427	563	61	53	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S831_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S831;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	427	563	61	53	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E3:{
+            if (HdStateMachine_IsIn( &( ( MainTop* )pStm->pMain )->S8Rgn1Hsm, MainTop_S821 )
+             && HdStateMachine_IsIn( &( ( MainTop* )pStm->pMain )->MainStmHsm, MainTop_S811 )) {
+                S8Rgn2Hsm_BgnTrans( pCarBody, pStm, MainTop_S832 );
+                MainStmHsm_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->MainStmHsm, FALSE, MainTop_S812 );
+                S8Rgn1Hsm_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->S8Rgn1Hsm, FALSE, MainTop_S822 );
+                S8Rgn2Hsm_EndTrans( pCarBody, pStm );
+                bResult = TRUE;
+            }
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_S8Rgn2_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S831_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S831 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	427	563	61	53	10	-24	1235	686" );
+        MainTop_S8Rgn2_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S832_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S832 ) ){
+        MainTop_S8Rgn2_Entry( pCarBody, pStm );
+        if( !( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering && pStm->nTargetState == MainTop_S832 ){
+            pStm->nPseudostate = MainTop_InitialPseudostate0;
+        }
+        S832Rgn1Hsm_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->S832Rgn1Hsm, FALSE, STATE_UNDEF );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	627	536	211	91	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S832_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S832;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	627	536	211	91	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E0:{
+            MainStmHsm_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->MainStmHsm, FALSE, MainTop_S10 );
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_S8Rgn2_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S832_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S832 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	627	536	211	91	10	-24	1235	686" );
+        S832Rgn1Hsm_Abort( pCarBody, &( ( MainTop* )pStm->pMain )->S832Rgn1Hsm );
+        MainTop_S8Rgn2_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S8321_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S8321 ) ){
+        MainTop_S832_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	653	584	45	31	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S8321_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S8321;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	653	584	45	31	10	-24	1235	686" );
+    return bResult ? bResult : MainTop_S832_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S8321_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S8321 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	653	584	45	31	10	-24	1235	686" );
+        MainTop_S832_Exit( pCarBody, pStm );
+    }
+}
+static void S8Rgn2Hsm_BgnTrans( CarBody *pCarBody, HdStateMachine* pStm, uint64_t targetState ){
+    pStm->nTargetState = targetState;
+    pStm->nPseudostate = targetState;
+    switch( pStm->nCurrentState ){
+    case MainTop_S8Rgn2:        MainTop_S8Rgn2_Exit( pCarBody, pStm ); break;
+    case MainTop_S831:          MainTop_S831_Exit( pCarBody, pStm ); break;
+    case MainTop_S8321:         MainTop_S8321_Exit( pCarBody, pStm ); break;
+    case MainTop_S832:          MainTop_S832_Exit( pCarBody, pStm ); break;
+    default: break;
+    }
+}
+static BOOL S8Rgn2Hsm_Reset( CarBody* pCarBody, HdStateMachine* pStm, BOOL bUnused, uint64_t nEntryPoint ) {
+    if( nEntryPoint != STATE_UNDEF ){
+        pStm->nPseudostate = nEntryPoint;
+        return FALSE;
+    }else{
+        pStm->nPseudostate = MainTop_S8Rgn2;
+    }
+    S8Rgn2Hsm_BgnTrans( pCarBody, pStm, pStm->nPseudostate );
+    S8Rgn2Hsm_EndTrans( pCarBody, pStm );
+    return TRUE;
+}
+static BOOL S8Rgn2Hsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nLCAState = STATE_UNDEF;
+    ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
+    switch( pStm->nCurrentState ){
+    case MainTop_S8Rgn2:                        bResult |= MainTop_S8Rgn2_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S831:                          bResult |= MainTop_S831_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S8321:                         bResult |= MainTop_S8321_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S832:                          bResult |= MainTop_S832_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    default: break;
+    }
+    return bResult;
+}
+static BOOL S8Rgn2Hsm_Abort( CarBody* pCarBody, HdStateMachine* pStm ) {
+    pStm->nSourceState = MainTop_S8Rgn2;
+    S8Rgn2Hsm_BgnTrans( pCarBody, pStm, STATE_UNDEF );
+    S8Rgn2Hsm_EndTrans( pCarBody, pStm );
+    return TRUE;
+}
+static void S8Rgn2Hsm_EndTrans( CarBody *pCarBody, HdStateMachine* pStm ){
+    pStm->nCurrentState = pStm->nTargetState;
+    pStm->bIsExternTrans = FALSE;
+    switch( pStm->nCurrentState ){
+    case MainTop_S8Rgn2:        MainTop_S8Rgn2_Entry( pCarBody, pStm ); break;
+    case MainTop_S831:          MainTop_S831_Entry( pCarBody, pStm ); break;
+    case MainTop_S8321:         MainTop_S8321_Entry( pCarBody, pStm ); break;
+    case MainTop_S832:          MainTop_S832_Entry( pCarBody, pStm ); break;
+    default: break;
+    }
+}
+static BOOL S8Rgn2Hsm_StateDefaultTrans( CarBody* pCarBody, HdStateMachine* pStm ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = pStm->nCurrentState;
+    pStm->nLCAState = STATE_UNDEF;
+        if( pStm->nCurrentState == MainTop_S8Rgn2 && pStm->nPseudostate == MainTop_S83Init  ){
+            S8Rgn2Hsm_BgnTrans( pCarBody, pStm, MainTop_S831 );
+            S8Rgn2Hsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else if( pStm->nCurrentState == MainTop_S832 && pStm->nPseudostate == MainTop_InitialPseudostate0  ){
+            S8Rgn2Hsm_BgnTrans( pCarBody, pStm, MainTop_S8321 );
+            S8Rgn2Hsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else if( pStm->nCurrentState != pStm->nPseudostate ){
+            S8Rgn2Hsm_BgnTrans( pCarBody, pStm, pStm->nPseudostate );
+            S8Rgn2Hsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else{
+        }
+    return bResult;
+}
+static void MainTop_S71Rgn1_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S71Rgn1 ) ){
+        if( !( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering && pStm->nTargetState == MainTop_S71Rgn1 ){
+            pStm->nPseudostate = MainTop_S72Init;
+        }
+        if ( ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering ) {
+            pStm->nPseudostate = pStm->lastEnteredState;
+        }
+        //HdStateMachine_DefaultEntryAction( pStm, pCarBody, "" );
+    }
+}
+static BOOL MainTop_S71Rgn1_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S71Rgn1;
+    //HdStateMachine_DefaultDoingAction( pStm, pCarBody, "" );
+    return bResult;
+}
+static void MainTop_S71Rgn1_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S71Rgn1 ) ){ 
+        //HdStateMachine_DefaultExitAction( pStm, pCarBody, "" );
+    }
+}
+static void MainTop_S722_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S722 ) ){
+        MainTop_S71Rgn1_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	194	509	40	31	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S722_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S722;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	194	509	40	31	10	-24	1235	686" );
+    return bResult ? bResult : MainTop_S71Rgn1_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S722_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S722 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	194	509	40	31	10	-24	1235	686" );
+        MainTop_S71Rgn1_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S721_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S721 ) ){
+        MainTop_S71Rgn1_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	194	461	40	31	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S721_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S721;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	194	461	40	31	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E5:{
+            S71Rgn1Hsm_BgnTrans( pCarBody, pStm, MainTop_S722 );
+            S71Rgn1Hsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_S71Rgn1_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S721_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S721 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	194	461	40	31	10	-24	1235	686" );
+        MainTop_S71Rgn1_Exit( pCarBody, pStm );
+    }
+}
+static void S71Rgn1Hsm_BgnTrans( CarBody *pCarBody, HdStateMachine* pStm, uint64_t targetState ){
+    pStm->nTargetState = targetState;
+    pStm->nPseudostate = targetState;
+    switch( pStm->nCurrentState ){
+    case MainTop_S71Rgn1:       MainTop_S71Rgn1_Exit( pCarBody, pStm ); break;
+    case MainTop_S722:          MainTop_S722_Exit( pCarBody, pStm ); break;
+    case MainTop_S721:          MainTop_S721_Exit( pCarBody, pStm ); break;
+    default: break;
+    }
+}
+static BOOL S71Rgn1Hsm_Reset( CarBody* pCarBody, HdStateMachine* pStm, BOOL bUnused, uint64_t nEntryPoint ) {
+    if( nEntryPoint != STATE_UNDEF ){
+        pStm->nPseudostate = nEntryPoint;
+        return FALSE;
+    }else{
+        pStm->nPseudostate = MainTop_S71Rgn1;
+    }
+    S71Rgn1Hsm_BgnTrans( pCarBody, pStm, pStm->nPseudostate );
+    S71Rgn1Hsm_EndTrans( pCarBody, pStm );
+    return TRUE;
+}
+static BOOL S71Rgn1Hsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nLCAState = STATE_UNDEF;
+    ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
+    switch( pStm->nCurrentState ){
+    case MainTop_S71Rgn1:                       bResult |= MainTop_S71Rgn1_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S722:                          bResult |= MainTop_S722_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S721:                          bResult |= MainTop_S721_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    default: break;
+    }
+    return bResult;
+}
+static BOOL S71Rgn1Hsm_Abort( CarBody* pCarBody, HdStateMachine* pStm ) {
+    pStm->nSourceState = MainTop_S71Rgn1;
+    S71Rgn1Hsm_BgnTrans( pCarBody, pStm, STATE_UNDEF );
+    S71Rgn1Hsm_EndTrans( pCarBody, pStm );
+    return TRUE;
+}
+static void S71Rgn1Hsm_EndTrans( CarBody *pCarBody, HdStateMachine* pStm ){
+    pStm->nCurrentState = pStm->nTargetState;
+    pStm->bIsExternTrans = FALSE;
+    switch( pStm->nCurrentState ){
+    case MainTop_S71Rgn1:       MainTop_S71Rgn1_Entry( pCarBody, pStm ); break;
+    case MainTop_S722:          MainTop_S722_Entry( pCarBody, pStm ); break;
+    case MainTop_S721:          MainTop_S721_Entry( pCarBody, pStm ); break;
+    default: break;
+    }
+}
+static BOOL S71Rgn1Hsm_StateDefaultTrans( CarBody* pCarBody, HdStateMachine* pStm ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = pStm->nCurrentState;
+    pStm->nLCAState = STATE_UNDEF;
+        if( pStm->nCurrentState == MainTop_S71Rgn1 && pStm->nPseudostate == MainTop_S72Init  ){
+            S71Rgn1Hsm_BgnTrans( pCarBody, pStm, MainTop_S721 );
+            S71Rgn1Hsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else if( pStm->nCurrentState != pStm->nPseudostate ){
+            S71Rgn1Hsm_BgnTrans( pCarBody, pStm, pStm->nPseudostate );
+            S71Rgn1Hsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else{
+        }
+    return bResult;
+}
+static void MainTop_MainStm_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_MainStm ) ){
+        if( !( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering && pStm->nTargetState == MainTop_MainStm ){
+            pStm->nPseudostate = MainTop_MainStmInit;
+        }
+        if ( ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering ) {
+            pStm->nPseudostate = pStm->lastEnteredState;
+        }
+        //HdStateMachine_DefaultEntryAction( pStm, pCarBody, "" );
+    }
+}
+static BOOL MainTop_MainStm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_MainStm;
+    //HdStateMachine_DefaultDoingAction( pStm, pCarBody, "" );
+    return bResult;
+}
+static void MainTop_MainStm_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_MainStm ) ){ 
+        //HdStateMachine_DefaultExitAction( pStm, pCarBody, "" );
+    }
+}
+static void MainTop_S1_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S1 ) ){
+        MainTop_MainStm_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	151	47	61	63	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S1_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S1;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	151	47	61	63	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E1:{
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S2 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    case CarBody_E2:{
+            int n = FlexButton_GetValue(selectBtn);
+            if (n == 0) {
+                MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S4 );
+                MainStmHsm_EndTrans( pCarBody, pStm );
+                bResult = TRUE;
+            } else {
+                if (FlexButton_GetValue(toggleBtn) == 1) {
+                    MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S5 );
+                    MainStmHsm_EndTrans( pCarBody, pStm );
+                    bResult = TRUE;
+                } else {
+                    MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S7 );
+                    MainStmHsm_EndTrans( pCarBody, pStm );
+                    bResult = TRUE;
+                }
+            }
+    } break;
+    case CarBody_UPDATE:{
+            bResult = TRUE; // internal transition
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_MainStm_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S1_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S1 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	151	47	61	63	10	-24	1235	686" );
+        MainTop_MainStm_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S2_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S2 ) ){
+        MainTop_MainStm_Entry( pCarBody, pStm );
+        if( !( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering && pStm->nTargetState == MainTop_S2 ){
+            pStm->nPseudostate = MainTop_S2Init;
+        }
+        Sprite_setLabel(Text_1sh, "Do something");
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	300	33	599	90	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S2_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S2;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	300	33	599	90	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E2:{
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S3 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    case CarBody_E3:{
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S4 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_MainStm_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S2_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S2 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	300	33	599	90	10	-24	1235	686" );
+        Sprite_setLabel(Text_1sh, "Do another something");
+        MainTop_MainStm_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S22_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S22 ) ){
+        MainTop_S2_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	747	55	61	53	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S22_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S22;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	747	55	61	53	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E0:{
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S2 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_S2_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S22_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S22 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	747	55	61	53	10	-24	1235	686" );
+        MainTop_S2_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S21_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S21 ) ){
+        MainTop_S2_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	540	55	61	53	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S21_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S21;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	540	55	61	53	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E0:{
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S22 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    case CarBody_E1:{
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S3 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_S2_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S21_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S21 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	540	55	61	53	10	-24	1235	686" );
+        MainTop_S2_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S3_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S3 ) ){
+        MainTop_MainStm_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	988	52	61	53	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S3_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S3;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	988	52	61	53	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E0:{
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S6 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_MainStm_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S3_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S3 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	988	52	61	53	10	-24	1235	686" );
+        MainTop_MainStm_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S4_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S4 ) ){
+        MainTop_MainStm_Entry( pCarBody, pStm );
+        if( !( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering && pStm->nTargetState == MainTop_S4 ){
+            pStm->nPseudostate = MainTop_S4Init;
+        }
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	363	160	537	90	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S4_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S4;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	363	160	537	90	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E2:{
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S42 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_MainStm_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S4_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S4 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	363	160	537	90	10	-24	1235	686" );
+        MainTop_MainStm_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S42_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S42 ) ){
+        MainTop_S4_Entry( pCarBody, pStm );
+        ( ( MainTop* )pStm->pMain )->ShallowHistoryPseudostate0 = MainTop_S42;
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	669	173	61	53	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S42_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S42;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	669	173	61	53	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E1:{
+            ( ( MainTop* )pStm->pMain )->ShallowHistoryPseudostate0 = STATE_UNDEF;
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S4 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_S4_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S42_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S42 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	669	173	61	53	10	-24	1235	686" );
+        MainTop_S4_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S41_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S41 ) ){
+        MainTop_S4_Entry( pCarBody, pStm );
+        ( ( MainTop* )pStm->pMain )->ShallowHistoryPseudostate0 = MainTop_S41;
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	472	173	61	53	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S41_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S41;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	472	173	61	53	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E1:{
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S42 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_S4_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S41_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S41 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	472	173	61	53	10	-24	1235	686" );
+        MainTop_S4_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S6_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S6 ) ){
+        MainTop_MainStm_Entry( pCarBody, pStm );
+        SharedTop_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->S6Hsm, FALSE, STATE_UNDEF );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	953	272	130	72	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S6_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S6;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	953	272	130	72	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E4:{
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S4 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_MainStm_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S6_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S6 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	953	272	130	72	10	-24	1235	686" );
+        SharedTop_Abort( pCarBody, &( ( MainTop* )pStm->pMain )->S6Hsm );
+        MainTop_MainStm_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S8_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S8 ) ){
+        MainTop_MainStm_Entry( pCarBody, pStm );
+        if( !( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering && pStm->nTargetState == MainTop_S8 ){
+            pStm->nPseudostate = MainTop_S8Init;
+        }
+        S8Rgn1Hsm_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->S8Rgn1Hsm, FALSE, STATE_UNDEF );
+        S8Rgn2Hsm_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->S8Rgn2Hsm, FALSE, STATE_UNDEF );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	362	340	522	297	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S8_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S8;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	362	340	522	297	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E5:{
+            if( ( ( MainTop* )pStm->pMain )->Deephistorypseudostate0 != STATE_UNDEF ){
+                MainStmHsm_BgnTrans( pCarBody, pStm, ( ( MainTop* )pStm->pMain )->Deephistorypseudostate0 );
+                ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering = TRUE;
+                MainStmHsm_EndTrans( pCarBody, pStm );
+                bResult = TRUE;
+            }else{
+                MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S7 );
+                MainStmHsm_EndTrans( pCarBody, pStm );
+                bResult = TRUE;
+            }
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_MainStm_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S8_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S8 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	362	340	522	297	10	-24	1235	686" );
+        S8Rgn1Hsm_Abort( pCarBody, &( ( MainTop* )pStm->pMain )->S8Rgn1Hsm );
+        S8Rgn2Hsm_Abort( pCarBody, &( ( MainTop* )pStm->pMain )->S8Rgn2Hsm );
+        MainTop_MainStm_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S812_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S812 ) ){
+        MainTop_S8_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	569	373	61	53	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S812_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S812;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	569	373	61	53	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E2:{
+            if (HdStateMachine_IsIn( &( ( MainTop* )pStm->pMain )->S8Rgn1Hsm, MainTop_S821 )) {
+                MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S813 );
+                S8Rgn1Hsm_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->S8Rgn1Hsm, FALSE, MainTop_S822 );
+                MainStmHsm_EndTrans( pCarBody, pStm );
+                bResult = TRUE;
+            }
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_S8_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S812_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S812 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	569	373	61	53	10	-24	1235	686" );
+        MainTop_S8_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S813_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S813 ) ){
+        MainTop_S8_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	748	373	61	53	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S813_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S813;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	748	373	61	53	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E5:{
+            if (HdStateMachine_IsIn( &( ( MainTop* )pStm->pMain )->S8Rgn1Hsm, MainTop_S822 )) {
+                if( ( ( MainTop* )pStm->pMain )->ShallowHistoryPseudostate1 != STATE_UNDEF ){
+                    MainStmHsm_BgnTrans( pCarBody, pStm, ( ( MainTop* )pStm->pMain )->ShallowHistoryPseudostate1 );
+                    MainStmHsm_EndTrans( pCarBody, pStm );
+                    bResult = TRUE;
+                }else{
+                    MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S10 );
+                    MainStmHsm_EndTrans( pCarBody, pStm );
+                    bResult = TRUE;
+                }
+            }
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_S8_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S813_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S813 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	748	373	61	53	10	-24	1235	686" );
+        MainTop_S8_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S811_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S811 ) ){
+        MainTop_S8_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	427	373	61	53	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S811_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S811;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	427	373	61	53	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E1:{
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S812 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_S8_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S811_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S811 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	427	373	61	53	10	-24	1235	686" );
+        MainTop_S8_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S7_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S7 ) ){
+        MainTop_MainStm_Entry( pCarBody, pStm );
+        if( !( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering && pStm->nTargetState == MainTop_S7 ){
+            pStm->nPseudostate = MainTop_S7Init;
+        }
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	108	342	151	293	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S7_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S7;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	108	342	151	293	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E3:{
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S8 );
+            S8Rgn1Hsm_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->S8Rgn1Hsm, FALSE, MainTop_S821 );
+            S8Rgn2Hsm_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->S8Rgn2Hsm, FALSE, MainTop_S831 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    case CarBody_E1:{
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S71 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    case CarBody_E2:{
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S72 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    case CarBody_E4:{
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_MainStm );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_MainStm_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S7_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S7 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	108	342	151	293	10	-24	1235	686" );
+        ( ( MainTop* )pStm->pMain )->Deephistorypseudostate0 = pStm->lastEnteredState;        MainTop_MainStm_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S72_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S72 ) ){
+        MainTop_S7_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	137	558	61	53	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S72_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S72;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	137	558	61	53	10	-24	1235	686" );
+    return bResult ? bResult : MainTop_S7_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S72_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S72 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	137	558	61	53	10	-24	1235	686" );
+        MainTop_S7_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S71_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S71 ) ){
+        MainTop_S7_Entry( pCarBody, pStm );
+        if( !( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering && pStm->nTargetState == MainTop_S71 ){
+            pStm->nPseudostate = MainTop_S71Init;
+        }
+        S71Rgn1Hsm_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->S71Rgn1Hsm, FALSE, STATE_UNDEF );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	123	394	126	156	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S71_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S71;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	123	394	126	156	10	-24	1235	686" );
+    return bResult ? bResult : MainTop_S7_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S71_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S71 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	123	394	126	156	10	-24	1235	686" );
+        S71Rgn1Hsm_Abort( pCarBody, &( ( MainTop* )pStm->pMain )->S71Rgn1Hsm );
+        MainTop_S7_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S711_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S711 ) ){
+        MainTop_S71_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	133	461	40	31	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S711_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S711;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	133	461	40	31	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E0:{
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S712 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_S71_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S711_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S711 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	133	461	40	31	10	-24	1235	686" );
+        MainTop_S71_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S712_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S712 ) ){
+        MainTop_S71_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	133	509	40	31	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S712_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S712;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	133	509	40	31	10	-24	1235	686" );
+    return bResult ? bResult : MainTop_S71_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S712_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S712 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	133	509	40	31	10	-24	1235	686" );
+        MainTop_S71_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S10_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S10 ) ){
+        MainTop_MainStm_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	988	447	231	94	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S10_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S10;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	988	447	231	94	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E1:{
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_MainStm );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    case CarBody_E2:{
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S8 );
+            S8Rgn2Hsm_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->S8Rgn2Hsm, FALSE, MainTop_S832 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_MainStm_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S10_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S10 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	988	447	231	94	10	-24	1235	686" );
+        MainTop_MainStm_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S101_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S101 ) ){
+        MainTop_S10_Entry( pCarBody, pStm );
+        ( ( MainTop* )pStm->pMain )->ShallowHistoryPseudostate1 = MainTop_S101;
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	1020	500	40	31	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S101_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S101;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	1020	500	40	31	10	-24	1235	686" );
+    return bResult ? bResult : MainTop_S10_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S101_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S101 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	1020	500	40	31	10	-24	1235	686" );
+        MainTop_S10_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S102_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S102 ) ){
+        MainTop_S10_Entry( pCarBody, pStm );
+        ( ( MainTop* )pStm->pMain )->ShallowHistoryPseudostate1 = MainTop_S102;
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	1137	500	40	31	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S102_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S102;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	1137	500	40	31	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E0:{
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S101 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_S10_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S102_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S102 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	1137	500	40	31	10	-24	1235	686" );
+        MainTop_S10_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S5_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S5 ) ){
+        MainTop_MainStm_Entry( pCarBody, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	301	270	130	53	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S5_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S5;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	301	270	130	53	10	-24	1235	686" );
+    switch( nEventId ){
+    case CarBody_E2:{
+            int n = FlexButton_GetValue(slider);
+            if (n == 0) {
+                MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S41 );
+                MainStmHsm_EndTrans( pCarBody, pStm );
+                bResult = TRUE;
+            } else {
+                if (n == 1) {
+                    MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S8 );
+                    MainStmHsm_EndTrans( pCarBody, pStm );
+                    bResult = TRUE;
+                } else {
+                    MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S6 );
+                    SharedTop_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->S6Hsm, ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering,  SharedTop_Entry1 );
+                    MainStmHsm_EndTrans( pCarBody, pStm );
+                    bResult = TRUE;
+                }
+            }
+    } break;
+    case CarBody_E1:{
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S5 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : MainTop_MainStm_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S5_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S5 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	301	270	130	53	10	-24	1235	686" );
+        MainTop_MainStm_Exit( pCarBody, pStm );
+    }
+}
+static void MainTop_S9_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, MainTop_S9 ) ){
+        MainTop_MainStm_Entry( pCarBody, pStm );
+        SharedTop_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->S9Hsm, FALSE, STATE_UNDEF );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	1100	347	115	50	10	-24	1235	686" );
+    }
+}
+static BOOL MainTop_S9_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = MainTop_S9;
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	1100	347	115	50	10	-24	1235	686" );
+    return bResult ? bResult : MainTop_MainStm_EventProc( pCarBody, pStm, nEventId, pEventParams );
+}
+static void MainTop_S9_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, MainTop_S9 ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	1100	347	115	50	10	-24	1235	686" );
+        SharedTop_Abort( pCarBody, &( ( MainTop* )pStm->pMain )->S9Hsm );
+        MainTop_MainStm_Exit( pCarBody, pStm );
+    }
+}
+static void MainStmHsm_BgnTrans( CarBody *pCarBody, HdStateMachine* pStm, uint64_t targetState ){
+    pStm->nTargetState = targetState;
+    pStm->nPseudostate = targetState;
+    switch( pStm->nCurrentState ){
+    case MainTop_MainStm:       MainTop_MainStm_Exit( pCarBody, pStm ); break;
+    case MainTop_S1:            MainTop_S1_Exit( pCarBody, pStm ); break;
+    case MainTop_S22:           MainTop_S22_Exit( pCarBody, pStm ); break;
+    case MainTop_S21:           MainTop_S21_Exit( pCarBody, pStm ); break;
+    case MainTop_S2:            MainTop_S2_Exit( pCarBody, pStm ); break;
+    case MainTop_S3:            MainTop_S3_Exit( pCarBody, pStm ); break;
+    case MainTop_S42:           MainTop_S42_Exit( pCarBody, pStm ); break;
+    case MainTop_S41:           MainTop_S41_Exit( pCarBody, pStm ); break;
+    case MainTop_S4:            MainTop_S4_Exit( pCarBody, pStm ); break;
+    case MainTop_S6:            MainTop_S6_Exit( pCarBody, pStm ); break;
+    case MainTop_S812:          MainTop_S812_Exit( pCarBody, pStm ); break;
+    case MainTop_S813:          MainTop_S813_Exit( pCarBody, pStm ); break;
+    case MainTop_S811:          MainTop_S811_Exit( pCarBody, pStm ); break;
+    case MainTop_S8:            MainTop_S8_Exit( pCarBody, pStm ); break;
+    case MainTop_S72:           MainTop_S72_Exit( pCarBody, pStm ); break;
+    case MainTop_S711:          MainTop_S711_Exit( pCarBody, pStm ); break;
+    case MainTop_S712:          MainTop_S712_Exit( pCarBody, pStm ); break;
+    case MainTop_S71:           MainTop_S71_Exit( pCarBody, pStm ); break;
+    case MainTop_S7:            MainTop_S7_Exit( pCarBody, pStm ); break;
+    case MainTop_S101:          MainTop_S101_Exit( pCarBody, pStm ); break;
+    case MainTop_S102:          MainTop_S102_Exit( pCarBody, pStm ); break;
+    case MainTop_S10:           MainTop_S10_Exit( pCarBody, pStm ); break;
+    case MainTop_S5:            MainTop_S5_Exit( pCarBody, pStm ); break;
+    case MainTop_S9:            MainTop_S9_Exit( pCarBody, pStm ); break;
+    default: break;
+    }
+}
+static BOOL MainStmHsm_Reset( CarBody* pCarBody, HdStateMachine* pStm, BOOL bUnused, uint64_t nEntryPoint ) {
+    if( nEntryPoint != STATE_UNDEF ){
+        pStm->nPseudostate = nEntryPoint;
+        return FALSE;
+    }else{
+        pStm->nPseudostate = MainTop_MainStm;
+    }
+    MainStmHsm_BgnTrans( pCarBody, pStm, pStm->nPseudostate );
+    MainStmHsm_EndTrans( pCarBody, pStm );
+    return TRUE;
+}
+static BOOL MainStmHsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nLCAState = STATE_UNDEF;
+    ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
+    switch( pStm->nCurrentState ){
+    case MainTop_MainStm:                       bResult |= MainTop_MainStm_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S1:                            bResult |= MainTop_S1_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S22:                           bResult |= MainTop_S22_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S21:                           bResult |= MainTop_S21_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S2:                            bResult |= MainTop_S2_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S3:                            bResult |= MainTop_S3_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S42:                           bResult |= MainTop_S42_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S41:                           bResult |= MainTop_S41_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S4:                            bResult |= MainTop_S4_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S6:                            bResult |= MainTop_S6_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S812:                          bResult |= MainTop_S812_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S813:                          bResult |= MainTop_S813_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S811:                          bResult |= MainTop_S811_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S8:                            bResult |= MainTop_S8_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S72:                           bResult |= MainTop_S72_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S711:                          bResult |= MainTop_S711_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S712:                          bResult |= MainTop_S712_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S71:                           bResult |= MainTop_S71_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S7:                            bResult |= MainTop_S7_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S101:                          bResult |= MainTop_S101_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S102:                          bResult |= MainTop_S102_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S10:                           bResult |= MainTop_S10_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S5:                            bResult |= MainTop_S5_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    case MainTop_S9:                            bResult |= MainTop_S9_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
+    default: break;
+    }
+    return bResult;
+}
+static BOOL MainStmHsm_Abort( CarBody* pCarBody, HdStateMachine* pStm ) {
+    pStm->nSourceState = MainTop_MainStm;
+    MainStmHsm_BgnTrans( pCarBody, pStm, STATE_UNDEF );
+    MainStmHsm_EndTrans( pCarBody, pStm );
+    return TRUE;
+}
+static void MainStmHsm_EndTrans( CarBody *pCarBody, HdStateMachine* pStm ){
+    pStm->nCurrentState = pStm->nTargetState;
+    pStm->bIsExternTrans = FALSE;
+    switch( pStm->nCurrentState ){
+    case MainTop_MainStm:       MainTop_MainStm_Entry( pCarBody, pStm ); break;
+    case MainTop_S1:            MainTop_S1_Entry( pCarBody, pStm ); break;
+    case MainTop_S22:           MainTop_S22_Entry( pCarBody, pStm ); break;
+    case MainTop_S21:           MainTop_S21_Entry( pCarBody, pStm ); break;
+    case MainTop_S2:            MainTop_S2_Entry( pCarBody, pStm ); break;
+    case MainTop_S3:            MainTop_S3_Entry( pCarBody, pStm ); break;
+    case MainTop_S42:           MainTop_S42_Entry( pCarBody, pStm ); break;
+    case MainTop_S41:           MainTop_S41_Entry( pCarBody, pStm ); break;
+    case MainTop_S4:            MainTop_S4_Entry( pCarBody, pStm ); break;
+    case MainTop_S6:            MainTop_S6_Entry( pCarBody, pStm ); break;
+    case MainTop_S812:          MainTop_S812_Entry( pCarBody, pStm ); break;
+    case MainTop_S813:          MainTop_S813_Entry( pCarBody, pStm ); break;
+    case MainTop_S811:          MainTop_S811_Entry( pCarBody, pStm ); break;
+    case MainTop_S8:            MainTop_S8_Entry( pCarBody, pStm ); break;
+    case MainTop_S72:           MainTop_S72_Entry( pCarBody, pStm ); break;
+    case MainTop_S711:          MainTop_S711_Entry( pCarBody, pStm ); break;
+    case MainTop_S712:          MainTop_S712_Entry( pCarBody, pStm ); break;
+    case MainTop_S71:           MainTop_S71_Entry( pCarBody, pStm ); break;
+    case MainTop_S7:            MainTop_S7_Entry( pCarBody, pStm ); break;
+    case MainTop_S101:          MainTop_S101_Entry( pCarBody, pStm ); break;
+    case MainTop_S102:          MainTop_S102_Entry( pCarBody, pStm ); break;
+    case MainTop_S10:           MainTop_S10_Entry( pCarBody, pStm ); break;
+    case MainTop_S5:            MainTop_S5_Entry( pCarBody, pStm ); break;
+    case MainTop_S9:            MainTop_S9_Entry( pCarBody, pStm ); break;
+    default: break;
+    }
+}
+static BOOL MainStmHsm_StateDefaultTrans( CarBody* pCarBody, HdStateMachine* pStm ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = pStm->nCurrentState;
+    pStm->nLCAState = STATE_UNDEF;
+        if( pStm->nCurrentState == MainTop_MainStm && pStm->nPseudostate == MainTop_MainStmInit  ){
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S1 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else if( pStm->nCurrentState == MainTop_S2 && pStm->nPseudostate == MainTop_S2Init  ){
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S21 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else if( pStm->nCurrentState == MainTop_S7 && pStm->nPseudostate == MainTop_S7Init  ){
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S71 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else if( pStm->nCurrentState == MainTop_S4 && pStm->nPseudostate == MainTop_S4  ){
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S6 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else if( pStm->nCurrentState == MainTop_S6 && pStm->nPseudostate == SharedTop_Exit1  ){
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S9 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else if( pStm->nCurrentState == MainTop_S6 && pStm->nPseudostate == MainTop_S6 
+         && SharedTop_IsFinished( &( ( MainTop* )pStm->pMain )->S6Hsm ) ){
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S9 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else if( pStm->nCurrentState == MainTop_S8 && pStm->nPseudostate == MainTop_S8Init  ){
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S811 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else if( pStm->nCurrentState == MainTop_S9 && pStm->nPseudostate == MainTop_S9 
+         && SharedTop_IsFinished( &( ( MainTop* )pStm->pMain )->S9Hsm ) ){
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S102 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else if( pStm->nCurrentState == MainTop_S4 && pStm->nPseudostate == MainTop_S4Init  ){
+            if( ( ( MainTop* )pStm->pMain )->ShallowHistoryPseudostate0 != STATE_UNDEF ){
+                MainStmHsm_BgnTrans( pCarBody, pStm, ( ( MainTop* )pStm->pMain )->ShallowHistoryPseudostate0 );
+                MainStmHsm_EndTrans( pCarBody, pStm );
+                bResult = TRUE;
+            }else{
+                MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S41 );
+                MainStmHsm_EndTrans( pCarBody, pStm );
+                bResult = TRUE;
+            }
+        }else if( pStm->nCurrentState == MainTop_S71 && pStm->nPseudostate == MainTop_S71Init  ){
+            MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_S711 );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else if( pStm->nCurrentState != pStm->nPseudostate ){
+            MainStmHsm_BgnTrans( pCarBody, pStm, pStm->nPseudostate );
+            MainStmHsm_EndTrans( pCarBody, pStm );
+            bResult = TRUE;
+        }else{
+        }
+    return bResult;
+}
+static BOOL MainTop_EventProc( CarBody* pCarBody, MainTop* pUsm, CarBody_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    bResult |= S8Rgn1Hsm_EventProc( pCarBody, &pUsm->S8Rgn1Hsm, nEventId, pEventParams );
+    bResult |= S832Rgn1Hsm_EventProc( pCarBody, &pUsm->S832Rgn1Hsm, nEventId, pEventParams );
+    bResult |= S8Rgn2Hsm_EventProc( pCarBody, &pUsm->S8Rgn2Hsm, nEventId, pEventParams );
+    bResult |= S71Rgn1Hsm_EventProc( pCarBody, &pUsm->S71Rgn1Hsm, nEventId, pEventParams );
+    bResult |= SharedTop_EventProc( pCarBody, &pUsm->S6Hsm, nEventId, pEventParams )
+            || SharedTop_EventProc( pCarBody, &pUsm->S9Hsm, nEventId, pEventParams )
+            || MainStmHsm_EventProc( pCarBody, &pUsm->MainStmHsm, nEventId, pEventParams );
+    return bResult;
+}
+static BOOL MainTop_StateDefaultTrans( CarBody* pCarBody, MainTop* pUsm ){
+    BOOL bResult;
+    while( TRUE ){
+        bResult = FALSE;
+        bResult |= S8Rgn1Hsm_StateDefaultTrans( pCarBody, &pUsm->S8Rgn1Hsm );
+        bResult |= S832Rgn1Hsm_StateDefaultTrans( pCarBody, &pUsm->S832Rgn1Hsm );
+        bResult |= S8Rgn2Hsm_StateDefaultTrans( pCarBody, &pUsm->S8Rgn2Hsm );
+        bResult |= S71Rgn1Hsm_StateDefaultTrans( pCarBody, &pUsm->S71Rgn1Hsm );
+        bResult |= SharedTop_StateDefaultTrans( pCarBody, &pUsm->S6Hsm )
+                || SharedTop_StateDefaultTrans( pCarBody, &pUsm->S9Hsm )
+                || MainStmHsm_StateDefaultTrans( pCarBody, &pUsm->MainStmHsm );
+        if( bResult == FALSE ){
+            break;
+        }
+    }
+    return bResult;
+}
+static BOOL MainTop_Reset( CarBody* pCarBody, MainTop* pUsm, BOOL lastEnteredStateRecovering, uint64_t entryPt ){
+    pUsm->lastEnteredStateRecovering = lastEnteredStateRecovering;
+    MainStmHsm_Abort( pCarBody, &pUsm->MainStmHsm );
+    return MainStmHsm_Reset( pCarBody, &pUsm->MainStmHsm, FALSE, entryPt );
+}
+static BOOL MainTop_Abort( CarBody* pCarBody, MainTop* pUsm ){
+    return MainStmHsm_Abort( pCarBody, &pUsm->MainStmHsm );
+}
+static BOOL MainTop_IsFinished( MainTop* pUsm ){
+    return pUsm->MainStmHsm.nPseudostate == MainTop_MainStm;
+}
+
+static void MainTop_Prepare( MainTop* pUsm, HdStateMachine* pParent ){
+    pUsm->pParentStm = pParent;
+    pUsm->MainStmHsm.pMain = pUsm;
+    SharedTop_Prepare( &pUsm->S6Hsm, &pUsm->MainStmHsm );
+    pUsm->S8Rgn1Hsm.pMain = pUsm;
+    pUsm->S8Rgn2Hsm.pMain = pUsm;
+    pUsm->S832Rgn1Hsm.pMain = pUsm;
+    pUsm->S71Rgn1Hsm.pMain = pUsm;
+    SharedTop_Prepare( &pUsm->S9Hsm, &pUsm->MainStmHsm );
 }
 ImgSprite* CarBody_Copy( CarBody* pCarBody, const CarBody* pSource ){
     ImgSprite_Copy( ( ImgSprite* )pCarBody, ( ImgSprite* )pSource );
-    pCarBody->x = pSource->x;
+    pCarBody->x0 = pSource->x0;
     return ( Sprite* )pCarBody;
 }

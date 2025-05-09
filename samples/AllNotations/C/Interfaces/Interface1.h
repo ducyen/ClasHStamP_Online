@@ -4,6 +4,7 @@ typedef struct tagInterface1 Interface1;
 void Interface1_finalMethod( Interface1* pInterface1 );
 #endif//__Interface1_H__
 #if !defined( Interface1_Init ) && ( defined( __Interface1_INTERNAL__ )  )
+
 /** @memberof Interface1
  * @brief Interface1 auto-generated constructor
  */

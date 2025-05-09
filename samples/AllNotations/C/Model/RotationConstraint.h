@@ -6,6 +6,7 @@ typedef struct tagRotationConstraint RotationConstraint;
 #if !defined( RotationConstraint_Init ) && ( defined( __RotationConstraint_INTERNAL__ )  || defined( __ObjsBuilder_INTERNAL__ )  )
 #define __TransformConstraint_INTERNAL__
 #include "TransformConstraint.h"
+
 /** @memberof RotationConstraint
  * @brief RotationConstraint auto-generated constructor
  */

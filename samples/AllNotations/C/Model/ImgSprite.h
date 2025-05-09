@@ -16,6 +16,7 @@ void ImgSprite_setBrightness( ImgSprite* pImgSprite, double value );
 #include "Sprite.h"
 #include "Constraint.h"
 #include "EventListener.h"
+
 /** @memberof ImgSprite
  * @brief ImgSprite auto-generated constructor
  */

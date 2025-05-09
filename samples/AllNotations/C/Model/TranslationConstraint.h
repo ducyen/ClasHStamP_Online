@@ -6,6 +6,7 @@ typedef struct tagTranslationConstraint TranslationConstraint;
 #if !defined( TranslationConstraint_Init ) && ( defined( __TranslationConstraint_INTERNAL__ )  || defined( __ObjsBuilder_INTERNAL__ )  )
 #define __TransformConstraint_INTERNAL__
 #include "TransformConstraint.h"
+
 /** @memberof TranslationConstraint
  * @brief TranslationConstraint auto-generated constructor
  */

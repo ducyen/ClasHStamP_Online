@@ -306,528 +306,584 @@ const TCHAR* FlexButtonEvent_toString( FlexButton_EVENT value ){
     default: return _T( "FlexButton_UNKNOWN" );
     }
 }
-static void Ready_Region1_BgnTrans( FlexButton *pReady, Ready_Region1* pStm, uint64_t targetState, uint64_t initState );
-static void Ready_Region1_EndTrans( FlexButton *pReady, Ready_Region1* pStm );
-static BOOL Ready_Region1_Abort( FlexButton* pReady, Ready_Region1* pStm );
-static BOOL Ready_Region1_EventProc( FlexButton* pReady, Ready_Region1* pStm, FlexButton_EVENT nEventId, void* pEventParams );
-static void Ready_Region1_Hold_Entry( FlexButton* pFlexButton, Ready_Region1* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, Ready_Region1_Hold ) ){
-        ObjsBuilder_showEntry( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	514	280	231	304	-126	-25	1199	764" );
-    }
-}
-static BOOL Ready_Region1_Hold_EventProc( FlexButton* pFlexButton, Ready_Region1* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = Ready_Region1_Hold;
-    ObjsBuilder_showDoing( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	514	280	231	304	-126	-25	1199	764" );
-    switch( nEventId ){
-    case FlexButton_MOUSE_MOVE:{
-        MouseEventParams* pParams = ( MouseEventParams* )pEventParams;
-        pFlexButton->m_knobPos = pParams->pos;
-        if (FlexButton_IsIn( pFlexButton, FlexBtnStm_SlideStyle )) {
-            pStm->base.bIsExternTrans = TRUE;
-            Ready_Region1_BgnTrans( pFlexButton, pStm, Ready_Region1_Pressed, STATE_UNDEF );
-            pFlexButton->m_value = pFlexButton->m_valueTmp;
-            Ready_Region1_EndTrans( pFlexButton, pStm );
-            bResult = TRUE;
-        } else if (FlexButton_IsInRect( pFlexButton, pEventParams )) {
-            pStm->base.bIsExternTrans = TRUE;
-            Ready_Region1_BgnTrans( pFlexButton, pStm, Ready_Region1_Pressed, STATE_UNDEF );
-            Ready_Region1_EndTrans( pFlexButton, pStm );
-            bResult = TRUE;
-        } else {
-            pStm->base.bIsExternTrans = TRUE;
-            Ready_Region1_BgnTrans( pFlexButton, pStm, Ready_Region1_UnPressed, STATE_UNDEF );
-            Ready_Region1_EndTrans( pFlexButton, pStm );
-            bResult = TRUE;
-        }
-    } break;
-    case FlexButton_MOUSE_UP:{
-        Ready_Region1_BgnTrans( pFlexButton, pStm, Ready_Region1_Idle, STATE_UNDEF );
-        Ready_Region1_EndTrans( pFlexButton, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
+static BOOL FlexBtnTop_Reset( FlexButton* pFlexButton, FlexBtnTop* pUsm, BOOL lastEnteredStateRecovering, uint64_t entryPt );
+static void FlexBtnTop_Prepare( FlexBtnTop* pUsm, HdStateMachine* pParent );
+static BOOL FlexBtnTop_EventProc( FlexButton* pFlexButton, FlexBtnTop* pUsm, FlexButton_EVENT nEventId, void* pEventParams );
+static BOOL FlexBtnTop_StateDefaultTrans( FlexButton* pFlexButton, FlexBtnTop* pUsm );
+BOOL FlexButton_Start( FlexButton* pFlexButton ){
+    FlexBtnTop_Prepare( &pFlexButton->mainStm, NULL );
+    BOOL bResult = FlexBtnTop_Reset( pFlexButton, &pFlexButton->mainStm, FALSE, STATE_UNDEF );
+    bResult |= FlexBtnTop_StateDefaultTrans( pFlexButton, &pFlexButton->mainStm );
     return bResult;
-}
-static void Ready_Region1_Hold_Exit( FlexButton* pFlexButton, Ready_Region1* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, Ready_Region1_Hold ) ){ 
-        ObjsBuilder_showExit( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	514	280	231	304	-126	-25	1199	764" );
-    }
-}
-static void Ready_Region1_UnPressed_Entry( FlexButton* pFlexButton, Ready_Region1* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, Ready_Region1_UnPressed ) ){
-        Ready_Region1_Hold_Entry( pFlexButton, pStm );
-        ObjsBuilder_showEntry( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	538	483	181	77	-126	-25	1199	764" );
-    }
-}
-static BOOL Ready_Region1_UnPressed_EventProc( FlexButton* pFlexButton, Ready_Region1* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = Ready_Region1_UnPressed;
-    ObjsBuilder_showDoing( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	538	483	181	77	-126	-25	1199	764" );
-    return bResult ? bResult : Ready_Region1_Hold_EventProc( pFlexButton, pStm, nEventId, pEventParams );
-}
-static void Ready_Region1_UnPressed_Exit( FlexButton* pFlexButton, Ready_Region1* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, Ready_Region1_UnPressed ) ){ 
-        ObjsBuilder_showExit( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	538	483	181	77	-126	-25	1199	764" );
-        Ready_Region1_Hold_Exit( pFlexButton, pStm );
-    }
-}
-static void Ready_Region1_Pressed_Entry( FlexButton* pFlexButton, Ready_Region1* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, Ready_Region1_Pressed ) ){
-        Ready_Region1_Hold_Entry( pFlexButton, pStm );
-        ObjsBuilder_showEntry( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	540	305	181	86	-126	-25	1199	764" );
-    }
-}
-static BOOL Ready_Region1_Pressed_EventProc( FlexButton* pFlexButton, Ready_Region1* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = Ready_Region1_Pressed;
-    ObjsBuilder_showDoing( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	540	305	181	86	-126	-25	1199	764" );
-    switch( nEventId ){
-    case FlexButton_DRAW1:{
-        FlexButton_DrawPressed(
-            pFlexButton,
-            ( SDL_Renderer* )pEventParams
-        );
-        bResult = TRUE;
-    } break;
-    case FlexButton_MOUSE_UP:{
-        Ready_Region1_BgnTrans( pFlexButton, pStm, Ready_Region1_Idle, STATE_UNDEF );
-        FlexButton_OnPushBtnPressed( pFlexButton );
-        Ready_Region1_EndTrans( pFlexButton, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult ? bResult : Ready_Region1_Hold_EventProc( pFlexButton, pStm, nEventId, pEventParams );
-}
-static void Ready_Region1_Pressed_Exit( FlexButton* pFlexButton, Ready_Region1* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, Ready_Region1_Pressed ) ){ 
-        ObjsBuilder_showExit( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	540	305	181	86	-126	-25	1199	764" );
-        Ready_Region1_Hold_Exit( pFlexButton, pStm );
-    }
-}
-static void Ready_Region1_Idle_Entry( FlexButton* pFlexButton, Ready_Region1* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, Ready_Region1_Idle ) ){
-        ObjsBuilder_showEntry( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	513	120	231	106	-126	-25	1199	764" );
-        pFlexButton->m_knobPos.x = pFlexButton->m_rect.x + pFlexButton->m_rect.w/2;
-        pFlexButton->m_knobPos.y = pFlexButton->m_rect.y + pFlexButton->m_rect.h/2;
-    }
-}
-static BOOL Ready_Region1_Idle_EventProc( FlexButton* pFlexButton, Ready_Region1* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = Ready_Region1_Idle;
-    ObjsBuilder_showDoing( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	513	120	231	106	-126	-25	1199	764" );
-    switch( nEventId ){
-    case FlexButton_MOUSE_DOWN:{
-        if (FlexButton_IsInRect( pFlexButton, pEventParams )) {
-            Ready_Region1_BgnTrans( pFlexButton, pStm, Ready_Region1_Pressed, STATE_UNDEF );
-            Ready_Region1_EndTrans( pFlexButton, pStm );
-            bResult = TRUE;
-        } else {
-            Ready_Region1_BgnTrans( pFlexButton, pStm, Ready_Region1_Missed, STATE_UNDEF );
-            Ready_Region1_EndTrans( pFlexButton, pStm );
-            bResult = TRUE;
-        }
-    } break;
-    default: break;
-    }
-    return bResult;
-}
-static void Ready_Region1_Idle_Exit( FlexButton* pFlexButton, Ready_Region1* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, Ready_Region1_Idle ) ){ 
-        ObjsBuilder_showExit( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	513	120	231	106	-126	-25	1199	764" );
-    }
-}
-static void Ready_Region1_Missed_Entry( FlexButton* pFlexButton, Ready_Region1* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, Ready_Region1_Missed ) ){
-        ObjsBuilder_showEntry( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	337	121	91	50	-126	-25	1199	764" );
-    }
-}
-static BOOL Ready_Region1_Missed_EventProc( FlexButton* pFlexButton, Ready_Region1* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = Ready_Region1_Missed;
-    ObjsBuilder_showDoing( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	337	121	91	50	-126	-25	1199	764" );
-    switch( nEventId ){
-    case FlexButton_MOUSE_UP:{
-        Ready_Region1_BgnTrans( pFlexButton, pStm, Ready_Region1_Idle, STATE_UNDEF );
-        Ready_Region1_EndTrans( pFlexButton, pStm );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult;
-}
-static void Ready_Region1_Missed_Exit( FlexButton* pFlexButton, Ready_Region1* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, Ready_Region1_Missed ) ){ 
-        ObjsBuilder_showExit( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	337	121	91	50	-126	-25	1199	764" );
-    }
-}
-static void Ready_Region1_EndTrans( FlexButton *pFlexButton, Ready_Region1* pStm ){
-    pStm->base.nCurrentState = pStm->base.nTargetState;
-    pStm->base.bIsExternTrans = FALSE;
-    switch( pStm->base.nCurrentState ){
-    case Ready_Region1_Hold:    Ready_Region1_Hold_Entry( pFlexButton, pStm ); break;
-    case Ready_Region1_UnPressed:Ready_Region1_UnPressed_Entry( pFlexButton, pStm ); break;
-    case Ready_Region1_Pressed: Ready_Region1_Pressed_Entry( pFlexButton, pStm ); break;
-    case Ready_Region1_Idle:    Ready_Region1_Idle_Entry( pFlexButton, pStm ); break;
-    case Ready_Region1_Missed:  Ready_Region1_Missed_Entry( pFlexButton, pStm ); break;
-    default: break;
-    }
-}
-static void Ready_Region1_BgnTrans( FlexButton *pFlexButton, Ready_Region1* pStm, uint64_t targetState, uint64_t initState ){
-    pStm->base.nTargetState = targetState;
-    pStm->base.nPseudostate = targetState;
-    if( initState ){
-        pStm->base.nPseudostate = initState;
-    }
-    switch( pStm->base.nCurrentState ){
-    case Ready_Region1_Hold:    Ready_Region1_Hold_Exit( pFlexButton, pStm ); break;
-    case Ready_Region1_UnPressed:Ready_Region1_UnPressed_Exit( pFlexButton, pStm ); break;
-    case Ready_Region1_Pressed: Ready_Region1_Pressed_Exit( pFlexButton, pStm ); break;
-    case Ready_Region1_Idle:    Ready_Region1_Idle_Exit( pFlexButton, pStm ); break;
-    case Ready_Region1_Missed:  Ready_Region1_Missed_Exit( pFlexButton, pStm ); break;
-    default: break;
-    }
-}
-static BOOL Ready_Region1_StateDefaultTrans( FlexButton* pFlexButton, Ready_Region1* pStm ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = pStm->base.nCurrentState;
-    pStm->base.nLCAState = STATE_UNDEF;
-    do{   if( pStm->base.nPseudostate == Ready_Region1_InitialReadyRegion1 ){
-        Ready_Region1_BgnTrans( pFlexButton, pStm, Ready_Region1_Idle, STATE_UNDEF );
-        Ready_Region1_EndTrans( pFlexButton, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, Ready_Region1_Ready) ){
-        Ready_Region1_BgnTrans( pFlexButton, pStm, pStm->base.nPseudostate, STATE_UNDEF );
-        Ready_Region1_EndTrans( pFlexButton, pStm );
-        bResult = TRUE;
-    }else{
-    }   }while( FALSE );
-    return bResult;
-}
-static int Ready_Region1_IsFinished(Ready_Region1* pReady_Region1){
-    return pReady_Region1->base.nCurrentState == Ready_Region1_Ready && pReady_Region1->base.nCurrentState == pReady_Region1->base.nPseudostate;
-}
-BOOL Ready_Region1_Reset( FlexButton* pFlexButton, Ready_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
-    if( pParentStm != NULL ){
-        pStm->base.pParentStm = pParentStm;
-    }
-    if( nEntryPoint == STATE_UNDEF ){
-        if( Ready_Region1_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = Ready_Region1_InitialReadyRegion1;
-        }
-        return FALSE;
-    }else{
-    if( !IS_IN( nEntryPoint, Ready_Region1_Ready ) ){ return FALSE; }
-        if( Ready_Region1_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = nEntryPoint;
-            return FALSE;
-        }else{
-            pStm->base.nPseudostate = nEntryPoint;
-        }
-    }
-    return TRUE;
-}
-static BOOL Ready_Region1_EventProc( FlexButton* pFlexButton, Ready_Region1* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nLCAState = STATE_UNDEF;
-    switch( pStm->base.nCurrentState ){
-    case Ready_Region1_Hold:                    bResult |= Ready_Region1_Hold_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
-    case Ready_Region1_UnPressed:               bResult |= Ready_Region1_UnPressed_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
-    case Ready_Region1_Pressed:                 bResult |= Ready_Region1_Pressed_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
-    case Ready_Region1_Idle:                    bResult |= Ready_Region1_Idle_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
-    case Ready_Region1_Missed:                  bResult |= Ready_Region1_Missed_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
-    default: break;
-    }
-    return bResult;
-}
-static BOOL Ready_Region1_IsIn( Ready_Region1* pStm, uint64_t nCompositeState ) {
-    if( IS_IN( pStm->base.nCurrentState, nCompositeState ) ){ return TRUE; }
-    return FALSE;
-}
-static BOOL Ready_Region1_Abort( FlexButton* pFlexButton, Ready_Region1* pStm ) {
-    pStm->base.nSourceState = Ready_Region1_Ready;
-    Ready_Region1_BgnTrans( pFlexButton, pStm, Ready_Region1_Ready, STATE_UNDEF );
-    Ready_Region1_EndTrans( pFlexButton, pStm );
-    return TRUE;
-}
-static void FlexBtnStm_BgnTrans( FlexButton *pStateMachine0, FlexBtnStm* pStm, uint64_t targetState, uint64_t initState );
-static void FlexBtnStm_EndTrans( FlexButton *pStateMachine0, FlexBtnStm* pStm );
-static BOOL FlexBtnStm_Abort( FlexButton* pStateMachine0, FlexBtnStm* pStm );
-static BOOL FlexBtnStm_EventProc( FlexButton* pStateMachine0, FlexBtnStm* pStm, FlexButton_EVENT nEventId, void* pEventParams );
-static void FlexBtnStm_Ready_Entry( FlexButton* pFlexButton, FlexBtnStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, FlexBtnStm_Ready ) ){
-        ObjsBuilder_showEntry( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	32	57	759	565	-126	-25	1199	764" );
-        Ready_Region1_Reset( pFlexButton, &pStm->ReadyReady_Region1, &pStm->base, STATE_UNDEF );
-    }
-}
-static BOOL FlexBtnStm_Ready_EventProc( FlexButton* pFlexButton, FlexBtnStm* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = FlexBtnStm_Ready;
-    ObjsBuilder_showDoing( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	32	57	759	565	-126	-25	1199	764" );
-    switch( nEventId ){
-    case FlexButton_DRAW1:{
-        FlexButton_DrawKnob(
-            pFlexButton,
-            ( SDL_Renderer* )pEventParams
-        );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult;
-}
-static void FlexBtnStm_Ready_Exit( FlexButton* pFlexButton, FlexBtnStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, FlexBtnStm_Ready ) ){ 
-        Ready_Region1_Abort( pFlexButton, &pStm->ReadyReady_Region1 );
-        ObjsBuilder_showExit( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	32	57	759	565	-126	-25	1199	764" );
-    }
-}
-static void FlexBtnStm_PushStyle_Entry( FlexButton* pFlexButton, FlexBtnStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, FlexBtnStm_PushStyle ) ){
-        FlexBtnStm_Ready_Entry( pFlexButton, pStm );
-        ObjsBuilder_showEntry( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	132	200	105	-126	-25	1199	764" );
-        pStm->nReadyHistory &= ~FlexBtnStm_Ready;
-        pStm->nReadyHistory |= FlexBtnStm_PushStyle;
-    }
-}
-static BOOL FlexBtnStm_PushStyle_EventProc( FlexButton* pFlexButton, FlexBtnStm* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = FlexBtnStm_PushStyle;
-    ObjsBuilder_showDoing( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	132	200	105	-126	-25	1199	764" );
-    switch( nEventId ){
-    case FlexButton_DRAW0:{
-        FlexButton_DrawPushStyle(
-            pFlexButton,
-            ( SDL_Renderer* )pEventParams
-        );
-        bResult = TRUE;
-    } break;
-    case FlexButton_DRAW1:{
-        if (FlexButton_IsIn(pFlexButton, Ready_Region1_Pressed)) {
-            bResult = TRUE;
-        }
-    } break;
-    default: break;
-    }
-    return bResult ? bResult : FlexBtnStm_Ready_EventProc( pFlexButton, pStm, nEventId, pEventParams );
-}
-static void FlexBtnStm_PushStyle_Exit( FlexButton* pFlexButton, FlexBtnStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, FlexBtnStm_PushStyle ) ){ 
-        ObjsBuilder_showExit( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	132	200	105	-126	-25	1199	764" );
-        FlexBtnStm_Ready_Exit( pFlexButton, pStm );
-    }
-}
-static void FlexBtnStm_SelectStyle_Entry( FlexButton* pFlexButton, FlexBtnStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, FlexBtnStm_SelectStyle ) ){
-        FlexBtnStm_Ready_Entry( pFlexButton, pStm );
-        ObjsBuilder_showEntry( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	256	200	84	-126	-25	1199	764" );
-        pStm->nReadyHistory &= ~FlexBtnStm_Ready;
-        pStm->nReadyHistory |= FlexBtnStm_SelectStyle;
-    }
-}
-static BOOL FlexBtnStm_SelectStyle_EventProc( FlexButton* pFlexButton, FlexBtnStm* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = FlexBtnStm_SelectStyle;
-    ObjsBuilder_showDoing( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	256	200	84	-126	-25	1199	764" );
-    switch( nEventId ){
-    case FlexButton_DRAW0:{
-        FlexButton_DrawSelectStyle(
-            pFlexButton,
-            ( SDL_Renderer* )pEventParams
-        );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult ? bResult : FlexBtnStm_Ready_EventProc( pFlexButton, pStm, nEventId, pEventParams );
-}
-static void FlexBtnStm_SelectStyle_Exit( FlexButton* pFlexButton, FlexBtnStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, FlexBtnStm_SelectStyle ) ){ 
-        ObjsBuilder_showExit( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	256	200	84	-126	-25	1199	764" );
-        FlexBtnStm_Ready_Exit( pFlexButton, pStm );
-    }
-}
-static void FlexBtnStm_SlideStyle_Entry( FlexButton* pFlexButton, FlexBtnStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, FlexBtnStm_SlideStyle ) ){
-        FlexBtnStm_Ready_Entry( pFlexButton, pStm );
-        ObjsBuilder_showEntry( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	484	200	84	-126	-25	1199	764" );
-        pStm->nReadyHistory &= ~FlexBtnStm_Ready;
-        pStm->nReadyHistory |= FlexBtnStm_SlideStyle;
-    }
-}
-static BOOL FlexBtnStm_SlideStyle_EventProc( FlexButton* pFlexButton, FlexBtnStm* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = FlexBtnStm_SlideStyle;
-    ObjsBuilder_showDoing( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	484	200	84	-126	-25	1199	764" );
-    switch( nEventId ){
-    case FlexButton_DRAW0:{
-        FlexButton_DrawSlideStyle(
-            pFlexButton,
-            ( SDL_Renderer* )pEventParams
-        );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult ? bResult : FlexBtnStm_Ready_EventProc( pFlexButton, pStm, nEventId, pEventParams );
-}
-static void FlexBtnStm_SlideStyle_Exit( FlexButton* pFlexButton, FlexBtnStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, FlexBtnStm_SlideStyle ) ){ 
-        ObjsBuilder_showExit( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	484	200	84	-126	-25	1199	764" );
-        FlexBtnStm_Ready_Exit( pFlexButton, pStm );
-    }
-}
-static void FlexBtnStm_ToggleStyle_Entry( FlexButton* pFlexButton, FlexBtnStm* pStm ){
-    if( HdStateMachine_Enterable( &pStm->base, FlexBtnStm_ToggleStyle ) ){
-        FlexBtnStm_Ready_Entry( pFlexButton, pStm );
-        ObjsBuilder_showEntry( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	370	200	84	-126	-25	1199	764" );
-        pStm->nReadyHistory &= ~FlexBtnStm_Ready;
-        pStm->nReadyHistory |= FlexBtnStm_ToggleStyle;
-    }
-}
-static BOOL FlexBtnStm_ToggleStyle_EventProc( FlexButton* pFlexButton, FlexBtnStm* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = FlexBtnStm_ToggleStyle;
-    ObjsBuilder_showDoing( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	370	200	84	-126	-25	1199	764" );
-    switch( nEventId ){
-    case FlexButton_DRAW0:{
-        FlexButton_DrawToggleStyle(
-            pFlexButton,
-            ( SDL_Renderer* )pEventParams
-        );
-        bResult = TRUE;
-    } break;
-    default: break;
-    }
-    return bResult ? bResult : FlexBtnStm_Ready_EventProc( pFlexButton, pStm, nEventId, pEventParams );
-}
-static void FlexBtnStm_ToggleStyle_Exit( FlexButton* pFlexButton, FlexBtnStm* pStm ){
-    if( HdStateMachine_Exitable( &pStm->base, FlexBtnStm_ToggleStyle ) ){ 
-        ObjsBuilder_showExit( pFlexButton, pStm, "Model/FlexButton/FlexBtnStm	63	370	200	84	-126	-25	1199	764" );
-        FlexBtnStm_Ready_Exit( pFlexButton, pStm );
-    }
-}
-static void FlexBtnStm_EndTrans( FlexButton *pFlexButton, FlexBtnStm* pStm ){
-    pStm->base.nCurrentState = pStm->base.nTargetState;
-    pStm->base.bIsExternTrans = FALSE;
-    switch( pStm->base.nCurrentState ){
-    case FlexBtnStm_Ready:      FlexBtnStm_Ready_Entry( pFlexButton, pStm ); break;
-    case FlexBtnStm_PushStyle:  FlexBtnStm_PushStyle_Entry( pFlexButton, pStm ); break;
-    case FlexBtnStm_SelectStyle:FlexBtnStm_SelectStyle_Entry( pFlexButton, pStm ); break;
-    case FlexBtnStm_SlideStyle: FlexBtnStm_SlideStyle_Entry( pFlexButton, pStm ); break;
-    case FlexBtnStm_ToggleStyle:FlexBtnStm_ToggleStyle_Entry( pFlexButton, pStm ); break;
-    default: break;
-    }
-}
-static void FlexBtnStm_BgnTrans( FlexButton *pFlexButton, FlexBtnStm* pStm, uint64_t targetState, uint64_t initState ){
-    pStm->base.nTargetState = targetState;
-    pStm->base.nPseudostate = targetState;
-    if( initState ){
-        pStm->base.nPseudostate = initState;
-    }
-    switch( pStm->base.nCurrentState ){
-    case FlexBtnStm_Ready:      FlexBtnStm_Ready_Exit( pFlexButton, pStm ); break;
-    case FlexBtnStm_PushStyle:  FlexBtnStm_PushStyle_Exit( pFlexButton, pStm ); break;
-    case FlexBtnStm_SelectStyle:FlexBtnStm_SelectStyle_Exit( pFlexButton, pStm ); break;
-    case FlexBtnStm_SlideStyle: FlexBtnStm_SlideStyle_Exit( pFlexButton, pStm ); break;
-    case FlexBtnStm_ToggleStyle:FlexBtnStm_ToggleStyle_Exit( pFlexButton, pStm ); break;
-    default: break;
-    }
-}
-static BOOL FlexBtnStm_StateDefaultTrans( FlexButton* pFlexButton, FlexBtnStm* pStm ){
-    BOOL bResult = FALSE;
-    pStm->base.nSourceState = pStm->base.nCurrentState;
-    pStm->base.nLCAState = STATE_UNDEF;
-    bResult |= Ready_Region1_StateDefaultTrans( pFlexButton, &pStm->ReadyReady_Region1 );
-    do{   if( pStm->base.nPseudostate == FlexBtnStm_InitialReady ){
-        if( pStm->nReadyHistory && pStm->nReadyHistory != FlexBtnStm_Ready ){
-            FlexBtnStm_BgnTrans( pFlexButton, pStm, pStm->nReadyHistory & FlexBtnStm_StateMachine0, STATE_UNDEF );
-            FlexBtnStm_EndTrans( pFlexButton, pStm );
-            bResult = TRUE;
-            break;
-        }
-        FlexBtnStm_BgnTrans( pFlexButton, pStm, FlexBtnStm_PushStyle, STATE_UNDEF );
-        FlexBtnStm_EndTrans( pFlexButton, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nPseudostate == FlexBtnStm_InitialMain ){
-        FlexBtnStm_BgnTrans( pFlexButton, pStm, FlexBtnStm_Ready, FlexBtnStm_InitialReady );
-        pStm->nReadyHistory = pFlexButton->m_style;
-        FlexBtnStm_EndTrans( pFlexButton, pStm );
-        bResult = TRUE;
-    }else if( pStm->base.nCurrentState != pStm->base.nPseudostate && IS_IN(pStm->base.nPseudostate, FlexBtnStm_StateMachine0) ){
-        FlexBtnStm_BgnTrans( pFlexButton, pStm, pStm->base.nPseudostate, STATE_UNDEF );
-        FlexBtnStm_EndTrans( pFlexButton, pStm );
-        bResult = TRUE;
-    }else{
-    }   }while( FALSE );
-    return bResult;
-}
-static int FlexBtnStm_IsFinished(FlexBtnStm* pFlexBtnStm){
-    return pFlexBtnStm->base.nCurrentState == FlexBtnStm_StateMachine0 && pFlexBtnStm->base.nCurrentState == pFlexBtnStm->base.nPseudostate;
-}
-BOOL FlexBtnStm_Reset( FlexButton* pFlexButton, FlexBtnStm* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint ) {
-    if( pParentStm != NULL ){
-        pStm->base.pParentStm = pParentStm;
-    }
-    if( nEntryPoint == STATE_UNDEF ){
-        if( FlexBtnStm_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = FlexBtnStm_InitialMain;
-        }
-        return FALSE;
-    }else{
-    if( !IS_IN( nEntryPoint, FlexBtnStm_StateMachine0 ) ){ return FALSE; }
-        if( FlexBtnStm_IsFinished( &pStm->base ) ){
-            pStm->base.nPseudostate = nEntryPoint;
-            return FALSE;
-        }else{
-            pStm->base.nPseudostate = nEntryPoint;
-        }
-    }
-    return TRUE;
-}
-static BOOL FlexBtnStm_EventProc( FlexButton* pFlexButton, FlexBtnStm* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FALSE;
-    pStm->base.nLCAState = STATE_UNDEF;
-    bResult |= Ready_Region1_EventProc( pFlexButton, &pStm->ReadyReady_Region1, nEventId, pEventParams );
-    switch( pStm->base.nCurrentState ){
-    case FlexBtnStm_Ready:                      bResult |= FlexBtnStm_Ready_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
-    case FlexBtnStm_PushStyle:                  bResult |= FlexBtnStm_PushStyle_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
-    case FlexBtnStm_SelectStyle:                bResult |= FlexBtnStm_SelectStyle_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
-    case FlexBtnStm_SlideStyle:                 bResult |= FlexBtnStm_SlideStyle_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
-    case FlexBtnStm_ToggleStyle:                bResult |= FlexBtnStm_ToggleStyle_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
-    default: break;
-    }
-    return bResult;
-}
-static BOOL FlexBtnStm_IsIn( FlexBtnStm* pStm, uint64_t nCompositeState ) {
-if( Ready_Region1_IsIn( &pStm->ReadyReady_Region1, nCompositeState ) ){ return TRUE; }
-    if( IS_IN( pStm->base.nCurrentState, nCompositeState ) ){ return TRUE; }
-    return FALSE;
-}
-static BOOL FlexBtnStm_Abort( FlexButton* pFlexButton, FlexBtnStm* pStm ) {
-    pStm->base.nSourceState = FlexBtnStm_StateMachine0;
-    FlexBtnStm_BgnTrans( pFlexButton, pStm, FlexBtnStm_StateMachine0, STATE_UNDEF );
-    FlexBtnStm_EndTrans( pFlexButton, pStm );
-    return TRUE;
 }
 BOOL FlexButton_EventProc( FlexButton* pFlexButton, FlexButton_EVENT nEventId, void* pEventParams ){
-    BOOL bResult = FlexBtnStm_EventProc( pFlexButton, &pFlexButton->mainStm, nEventId, pEventParams );
-    do{}while( FlexBtnStm_StateDefaultTrans( pFlexButton, &pFlexButton->mainStm ) );
+    BOOL bResult = FlexBtnTop_EventProc( pFlexButton, &pFlexButton->mainStm, nEventId, pEventParams );
+    bResult |= FlexBtnTop_StateDefaultTrans( pFlexButton, &pFlexButton->mainStm );
     return bResult;
 }
-BOOL FlexButton_Start( FlexButton* pFlexButton ){
-    FlexBtnStm_Abort( pFlexButton, &pFlexButton->mainStm );
-    FlexBtnStm_Reset( pFlexButton, &pFlexButton->mainStm, NULL, STATE_UNDEF );
-    do{}while( FlexBtnStm_StateDefaultTrans( pFlexButton, &pFlexButton->mainStm ) );
+
+/**
+ * Implementation for Statemachine: FlexBtnTop
+ */
+static void FlexBtnStmHsm_BgnTrans( FlexButton *pFlexButton, HdStateMachine* pStm, uint64_t targetState );
+static void FlexBtnStmHsm_EndTrans( FlexButton *pFlexButton, HdStateMachine* pStm );
+static BOOL FlexBtnStmHsm_Abort( FlexButton* pFlexButton, HdStateMachine* pStm );
+static BOOL FlexBtnStmHsm_Reset( FlexButton* pFlexButton, HdStateMachine* pStm, BOOL bUnused, uint64_t nEntryPoint );
+static BOOL FlexBtnStmHsm_EventProc( FlexButton* pFlexButton, HdStateMachine* pStm, FlexButton_EVENT nEventId, void* pEventParams );
+static void ReadyRgn1Hsm_BgnTrans( FlexButton *pFlexButton, HdStateMachine* pStm, uint64_t targetState );
+static void ReadyRgn1Hsm_EndTrans( FlexButton *pFlexButton, HdStateMachine* pStm );
+static BOOL ReadyRgn1Hsm_Abort( FlexButton* pFlexButton, HdStateMachine* pStm );
+static BOOL ReadyRgn1Hsm_Reset( FlexButton* pFlexButton, HdStateMachine* pStm, BOOL bUnused, uint64_t nEntryPoint );
+static BOOL ReadyRgn1Hsm_EventProc( FlexButton* pFlexButton, HdStateMachine* pStm, FlexButton_EVENT nEventId, void* pEventParams );
+static void FlexBtnTop_ReadyRgn1_Entry( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, FlexBtnTop_ReadyRgn1 ) ){
+        if( !( ( FlexBtnTop* )pStm->pMain )->lastEnteredStateRecovering && pStm->nTargetState == FlexBtnTop_ReadyRgn1 ){
+            pStm->nPseudostate = FlexBtnTop_InitialReadyRegion1;
+        }
+        if ( ( ( FlexBtnTop* )pStm->pMain )->lastEnteredStateRecovering ) {
+            pStm->nPseudostate = pStm->lastEnteredState;
+        }
+        //HdStateMachine_DefaultEntryAction( pStm, pFlexButton, "" );
+    }
+}
+static BOOL FlexBtnTop_ReadyRgn1_EventProc( FlexButton* pFlexButton, HdStateMachine* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = FlexBtnTop_ReadyRgn1;
+    //HdStateMachine_DefaultDoingAction( pStm, pFlexButton, "" );
+    return bResult;
+}
+static void FlexBtnTop_ReadyRgn1_Exit( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, FlexBtnTop_ReadyRgn1 ) ){ 
+        //HdStateMachine_DefaultExitAction( pStm, pFlexButton, "" );
+    }
+}
+static void FlexBtnTop_Missed_Entry( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, FlexBtnTop_Missed ) ){
+        FlexBtnTop_ReadyRgn1_Entry( pFlexButton, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	627	185	91	50	282	39	848	673" );
+    }
+}
+static BOOL FlexBtnTop_Missed_EventProc( FlexButton* pFlexButton, HdStateMachine* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = FlexBtnTop_Missed;
+    HdStateMachine_DefaultDoingAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	627	185	91	50	282	39	848	673" );
+    switch( nEventId ){
+    case FlexButton_MOUSE_UP:{
+            ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_Idle );
+            ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
+            bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : FlexBtnTop_ReadyRgn1_EventProc( pFlexButton, pStm, nEventId, pEventParams );
+}
+static void FlexBtnTop_Missed_Exit( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, FlexBtnTop_Missed ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	627	185	91	50	282	39	848	673" );
+        FlexBtnTop_ReadyRgn1_Exit( pFlexButton, pStm );
+    }
+}
+static void FlexBtnTop_Idle_Entry( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, FlexBtnTop_Idle ) ){
+        FlexBtnTop_ReadyRgn1_Entry( pFlexButton, pStm );
+        pFlexButton->m_knobPos.x = pFlexButton->m_rect.x + pFlexButton->m_rect.w/2;
+        pFlexButton->m_knobPos.y = pFlexButton->m_rect.y + pFlexButton->m_rect.h/2;
+        HdStateMachine_DefaultEntryAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	803	185	231	106	282	39	848	673" );
+    }
+}
+static BOOL FlexBtnTop_Idle_EventProc( FlexButton* pFlexButton, HdStateMachine* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = FlexBtnTop_Idle;
+    HdStateMachine_DefaultDoingAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	803	185	231	106	282	39	848	673" );
+    switch( nEventId ){
+    case FlexButton_MOUSE_DOWN:{
+            if (FlexButton_IsInRect( pFlexButton, pEventParams )) {
+                ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_Pressed );
+                ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
+                bResult = TRUE;
+            } else {
+                ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_Missed );
+                ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
+                bResult = TRUE;
+            }
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : FlexBtnTop_ReadyRgn1_EventProc( pFlexButton, pStm, nEventId, pEventParams );
+}
+static void FlexBtnTop_Idle_Exit( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, FlexBtnTop_Idle ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	803	185	231	106	282	39	848	673" );
+        FlexBtnTop_ReadyRgn1_Exit( pFlexButton, pStm );
+    }
+}
+static void FlexBtnTop_Hold_Entry( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, FlexBtnTop_Hold ) ){
+        FlexBtnTop_ReadyRgn1_Entry( pFlexButton, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	804	345	231	304	282	39	848	673" );
+    }
+}
+static BOOL FlexBtnTop_Hold_EventProc( FlexButton* pFlexButton, HdStateMachine* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = FlexBtnTop_Hold;
+    HdStateMachine_DefaultDoingAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	804	345	231	304	282	39	848	673" );
+    switch( nEventId ){
+    case FlexButton_MOUSE_UP:{
+            ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_Idle );
+            ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
+            bResult = TRUE;
+    } break;
+    case FlexButton_MOUSE_MOVE:{
+            MouseEventParams* pParams = ( MouseEventParams* )pEventParams;
+            pFlexButton->m_knobPos = pParams->pos;
+            if (HdStateMachine_IsIn( &( ( FlexBtnTop* )pStm->pMain )->FlexBtnStmHsm, FlexBtnTop_SlideStyle )) {
+                ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_Pressed );
+                pFlexButton->m_value = pFlexButton->m_valueTmp;
+                ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
+                bResult = TRUE;
+            } else {
+                if (FlexButton_IsInRect( pFlexButton, pEventParams )) {
+                    ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_Pressed );
+                    ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
+                    bResult = TRUE;
+                } else {
+                    ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_UnPressed );
+                    ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
+                    bResult = TRUE;
+                }
+            }
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : FlexBtnTop_ReadyRgn1_EventProc( pFlexButton, pStm, nEventId, pEventParams );
+}
+static void FlexBtnTop_Hold_Exit( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, FlexBtnTop_Hold ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	804	345	231	304	282	39	848	673" );
+        FlexBtnTop_ReadyRgn1_Exit( pFlexButton, pStm );
+    }
+}
+static void FlexBtnTop_UnPressed_Entry( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, FlexBtnTop_UnPressed ) ){
+        FlexBtnTop_Hold_Entry( pFlexButton, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	828	548	181	77	282	39	848	673" );
+    }
+}
+static BOOL FlexBtnTop_UnPressed_EventProc( FlexButton* pFlexButton, HdStateMachine* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = FlexBtnTop_UnPressed;
+    HdStateMachine_DefaultDoingAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	828	548	181	77	282	39	848	673" );
+    return bResult ? bResult : FlexBtnTop_Hold_EventProc( pFlexButton, pStm, nEventId, pEventParams );
+}
+static void FlexBtnTop_UnPressed_Exit( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, FlexBtnTop_UnPressed ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	828	548	181	77	282	39	848	673" );
+        FlexBtnTop_Hold_Exit( pFlexButton, pStm );
+    }
+}
+static void FlexBtnTop_Pressed_Entry( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, FlexBtnTop_Pressed ) ){
+        FlexBtnTop_Hold_Entry( pFlexButton, pStm );
+        HdStateMachine_DefaultEntryAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	830	370	181	86	282	39	848	673" );
+    }
+}
+static BOOL FlexBtnTop_Pressed_EventProc( FlexButton* pFlexButton, HdStateMachine* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = FlexBtnTop_Pressed;
+    HdStateMachine_DefaultDoingAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	830	370	181	86	282	39	848	673" );
+    switch( nEventId ){
+    case FlexButton_DRAW1:{
+            FlexButton_DrawPressed(
+                pFlexButton,
+                ( SDL_Renderer* )pEventParams
+            );
+            bResult = TRUE; // internal transition
+    } break;
+    case FlexButton_MOUSE_UP:{
+            ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_Idle );
+            FlexButton_OnPushBtnPressed( pFlexButton );
+            ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
+            bResult = TRUE;
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : FlexBtnTop_Hold_EventProc( pFlexButton, pStm, nEventId, pEventParams );
+}
+static void FlexBtnTop_Pressed_Exit( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, FlexBtnTop_Pressed ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	830	370	181	86	282	39	848	673" );
+        FlexBtnTop_Hold_Exit( pFlexButton, pStm );
+    }
+}
+static void ReadyRgn1Hsm_BgnTrans( FlexButton *pFlexButton, HdStateMachine* pStm, uint64_t targetState ){
+    pStm->nTargetState = targetState;
+    pStm->nPseudostate = targetState;
+    switch( pStm->nCurrentState ){
+    case FlexBtnTop_ReadyRgn1:  FlexBtnTop_ReadyRgn1_Exit( pFlexButton, pStm ); break;
+    case FlexBtnTop_Missed:     FlexBtnTop_Missed_Exit( pFlexButton, pStm ); break;
+    case FlexBtnTop_Idle:       FlexBtnTop_Idle_Exit( pFlexButton, pStm ); break;
+    case FlexBtnTop_UnPressed:  FlexBtnTop_UnPressed_Exit( pFlexButton, pStm ); break;
+    case FlexBtnTop_Pressed:    FlexBtnTop_Pressed_Exit( pFlexButton, pStm ); break;
+    case FlexBtnTop_Hold:       FlexBtnTop_Hold_Exit( pFlexButton, pStm ); break;
+    default: break;
+    }
+}
+static BOOL ReadyRgn1Hsm_Reset( FlexButton* pFlexButton, HdStateMachine* pStm, BOOL bUnused, uint64_t nEntryPoint ) {
+    if( nEntryPoint != STATE_UNDEF ){
+        pStm->nPseudostate = nEntryPoint;
+        return FALSE;
+    }else{
+        pStm->nPseudostate = FlexBtnTop_ReadyRgn1;
+    }
+    ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, pStm->nPseudostate );
+    ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
     return TRUE;
 }
-BOOL FlexButton_Reset( FlexButton* pFlexButton, uint64_t nEntryPoint ){
-    return FlexBtnStm_Reset( pFlexButton, &pFlexButton->mainStm, NULL, nEntryPoint );
+static BOOL ReadyRgn1Hsm_EventProc( FlexButton* pFlexButton, HdStateMachine* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nLCAState = STATE_UNDEF;
+    ( ( FlexBtnTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
+    switch( pStm->nCurrentState ){
+    case FlexBtnTop_ReadyRgn1:                  bResult |= FlexBtnTop_ReadyRgn1_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
+    case FlexBtnTop_Missed:                     bResult |= FlexBtnTop_Missed_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
+    case FlexBtnTop_Idle:                       bResult |= FlexBtnTop_Idle_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
+    case FlexBtnTop_UnPressed:                  bResult |= FlexBtnTop_UnPressed_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
+    case FlexBtnTop_Pressed:                    bResult |= FlexBtnTop_Pressed_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
+    case FlexBtnTop_Hold:                       bResult |= FlexBtnTop_Hold_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
+    default: break;
+    }
+    return bResult;
 }
-BOOL FlexButton_IsIn( FlexButton* pFlexButton, uint64_t nState ){
-    return FlexBtnStm_IsIn( &pFlexButton->mainStm, nState );
+static BOOL ReadyRgn1Hsm_Abort( FlexButton* pFlexButton, HdStateMachine* pStm ) {
+    pStm->nSourceState = FlexBtnTop_ReadyRgn1;
+    ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, STATE_UNDEF );
+    ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
+    return TRUE;
+}
+static void ReadyRgn1Hsm_EndTrans( FlexButton *pFlexButton, HdStateMachine* pStm ){
+    pStm->nCurrentState = pStm->nTargetState;
+    pStm->bIsExternTrans = FALSE;
+    switch( pStm->nCurrentState ){
+    case FlexBtnTop_ReadyRgn1:  FlexBtnTop_ReadyRgn1_Entry( pFlexButton, pStm ); break;
+    case FlexBtnTop_Missed:     FlexBtnTop_Missed_Entry( pFlexButton, pStm ); break;
+    case FlexBtnTop_Idle:       FlexBtnTop_Idle_Entry( pFlexButton, pStm ); break;
+    case FlexBtnTop_UnPressed:  FlexBtnTop_UnPressed_Entry( pFlexButton, pStm ); break;
+    case FlexBtnTop_Pressed:    FlexBtnTop_Pressed_Entry( pFlexButton, pStm ); break;
+    case FlexBtnTop_Hold:       FlexBtnTop_Hold_Entry( pFlexButton, pStm ); break;
+    default: break;
+    }
+}
+static BOOL ReadyRgn1Hsm_StateDefaultTrans( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = pStm->nCurrentState;
+    pStm->nLCAState = STATE_UNDEF;
+        if( pStm->nCurrentState == FlexBtnTop_ReadyRgn1 && pStm->nPseudostate == FlexBtnTop_InitialReadyRegion1  ){
+            ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_Idle );
+            ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
+            bResult = TRUE;
+        }else if( pStm->nCurrentState != pStm->nPseudostate ){
+            ReadyRgn1Hsm_BgnTrans( pFlexButton, pStm, pStm->nPseudostate );
+            ReadyRgn1Hsm_EndTrans( pFlexButton, pStm );
+            bResult = TRUE;
+        }else{
+        }
+    return bResult;
+}
+static void FlexBtnTop_FlexBtnStm_Entry( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, FlexBtnTop_FlexBtnStm ) ){
+        if( !( ( FlexBtnTop* )pStm->pMain )->lastEnteredStateRecovering && pStm->nTargetState == FlexBtnTop_FlexBtnStm ){
+            pStm->nPseudostate = FlexBtnTop_InitialMain;
+        }
+        if ( ( ( FlexBtnTop* )pStm->pMain )->lastEnteredStateRecovering ) {
+            pStm->nPseudostate = pStm->lastEnteredState;
+        }
+        //HdStateMachine_DefaultEntryAction( pStm, pFlexButton, "" );
+    }
+}
+static BOOL FlexBtnTop_FlexBtnStm_EventProc( FlexButton* pFlexButton, HdStateMachine* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = FlexBtnTop_FlexBtnStm;
+    //HdStateMachine_DefaultDoingAction( pStm, pFlexButton, "" );
+    return bResult;
+}
+static void FlexBtnTop_FlexBtnStm_Exit( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, FlexBtnTop_FlexBtnStm ) ){ 
+        //HdStateMachine_DefaultExitAction( pStm, pFlexButton, "" );
+    }
+}
+static void FlexBtnTop_Ready_Entry( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, FlexBtnTop_Ready ) ){
+        FlexBtnTop_FlexBtnStm_Entry( pFlexButton, pStm );
+        if( !( ( FlexBtnTop* )pStm->pMain )->lastEnteredStateRecovering && pStm->nTargetState == FlexBtnTop_Ready ){
+            pStm->nPseudostate = FlexBtnTop_InitialReady;
+        }
+        ReadyRgn1Hsm_Reset( pFlexButton, &( ( FlexBtnTop* )pStm->pMain )->ReadyRgn1Hsm, FALSE, STATE_UNDEF );
+        HdStateMachine_DefaultEntryAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	322	122	759	565	282	39	848	673" );
+    }
+}
+static BOOL FlexBtnTop_Ready_EventProc( FlexButton* pFlexButton, HdStateMachine* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = FlexBtnTop_Ready;
+    HdStateMachine_DefaultDoingAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	322	122	759	565	282	39	848	673" );
+    switch( nEventId ){
+    case FlexButton_DRAW1:{
+            FlexButton_DrawKnob(
+                pFlexButton,
+                ( SDL_Renderer* )pEventParams
+            );
+            bResult = TRUE; // internal transition
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : FlexBtnTop_FlexBtnStm_EventProc( pFlexButton, pStm, nEventId, pEventParams );
+}
+static void FlexBtnTop_Ready_Exit( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, FlexBtnTop_Ready ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	322	122	759	565	282	39	848	673" );
+        ReadyRgn1Hsm_Abort( pFlexButton, &( ( FlexBtnTop* )pStm->pMain )->ReadyRgn1Hsm );
+        FlexBtnTop_FlexBtnStm_Exit( pFlexButton, pStm );
+    }
+}
+static void FlexBtnTop_ToggleStyle_Entry( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, FlexBtnTop_ToggleStyle ) ){
+        FlexBtnTop_Ready_Entry( pFlexButton, pStm );
+        ( ( FlexBtnTop* )pStm->pMain )->nReadyHistory = FlexBtnTop_ToggleStyle;
+        HdStateMachine_DefaultEntryAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	353	434	200	84	282	39	848	673" );
+    }
+}
+static BOOL FlexBtnTop_ToggleStyle_EventProc( FlexButton* pFlexButton, HdStateMachine* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = FlexBtnTop_ToggleStyle;
+    HdStateMachine_DefaultDoingAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	353	434	200	84	282	39	848	673" );
+    switch( nEventId ){
+    case FlexButton_DRAW0:{
+            FlexButton_DrawToggleStyle(
+                pFlexButton,
+                ( SDL_Renderer* )pEventParams
+            );
+            bResult = TRUE; // internal transition
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : FlexBtnTop_Ready_EventProc( pFlexButton, pStm, nEventId, pEventParams );
+}
+static void FlexBtnTop_ToggleStyle_Exit( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, FlexBtnTop_ToggleStyle ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	353	434	200	84	282	39	848	673" );
+        FlexBtnTop_Ready_Exit( pFlexButton, pStm );
+    }
+}
+static void FlexBtnTop_SelectStyle_Entry( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, FlexBtnTop_SelectStyle ) ){
+        FlexBtnTop_Ready_Entry( pFlexButton, pStm );
+        ( ( FlexBtnTop* )pStm->pMain )->nReadyHistory = FlexBtnTop_SelectStyle;
+        HdStateMachine_DefaultEntryAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	353	320	200	84	282	39	848	673" );
+    }
+}
+static BOOL FlexBtnTop_SelectStyle_EventProc( FlexButton* pFlexButton, HdStateMachine* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = FlexBtnTop_SelectStyle;
+    HdStateMachine_DefaultDoingAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	353	320	200	84	282	39	848	673" );
+    switch( nEventId ){
+    case FlexButton_DRAW0:{
+            FlexButton_DrawSelectStyle(
+                pFlexButton,
+                ( SDL_Renderer* )pEventParams
+            );
+            bResult = TRUE; // internal transition
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : FlexBtnTop_Ready_EventProc( pFlexButton, pStm, nEventId, pEventParams );
+}
+static void FlexBtnTop_SelectStyle_Exit( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, FlexBtnTop_SelectStyle ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	353	320	200	84	282	39	848	673" );
+        FlexBtnTop_Ready_Exit( pFlexButton, pStm );
+    }
+}
+static void FlexBtnTop_SlideStyle_Entry( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, FlexBtnTop_SlideStyle ) ){
+        FlexBtnTop_Ready_Entry( pFlexButton, pStm );
+        ( ( FlexBtnTop* )pStm->pMain )->nReadyHistory = FlexBtnTop_SlideStyle;
+        HdStateMachine_DefaultEntryAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	353	548	200	84	282	39	848	673" );
+    }
+}
+static BOOL FlexBtnTop_SlideStyle_EventProc( FlexButton* pFlexButton, HdStateMachine* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = FlexBtnTop_SlideStyle;
+    HdStateMachine_DefaultDoingAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	353	548	200	84	282	39	848	673" );
+    switch( nEventId ){
+    case FlexButton_DRAW0:{
+            FlexButton_DrawSlideStyle(
+                pFlexButton,
+                ( SDL_Renderer* )pEventParams
+            );
+            bResult = TRUE; // internal transition
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : FlexBtnTop_Ready_EventProc( pFlexButton, pStm, nEventId, pEventParams );
+}
+static void FlexBtnTop_SlideStyle_Exit( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, FlexBtnTop_SlideStyle ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	353	548	200	84	282	39	848	673" );
+        FlexBtnTop_Ready_Exit( pFlexButton, pStm );
+    }
+}
+static void FlexBtnTop_PushStyle_Entry( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Enterable( pStm, FlexBtnTop_PushStyle ) ){
+        FlexBtnTop_Ready_Entry( pFlexButton, pStm );
+        ( ( FlexBtnTop* )pStm->pMain )->nReadyHistory = FlexBtnTop_PushStyle;
+        HdStateMachine_DefaultEntryAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	353	191	200	115	282	39	848	673" );
+    }
+}
+static BOOL FlexBtnTop_PushStyle_EventProc( FlexButton* pFlexButton, HdStateMachine* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = FlexBtnTop_PushStyle;
+    HdStateMachine_DefaultDoingAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	353	191	200	115	282	39	848	673" );
+    switch( nEventId ){
+    case FlexButton_DRAW0:{
+            FlexButton_DrawPushStyle(
+                pFlexButton,
+                ( SDL_Renderer* )pEventParams
+            );
+            bResult = TRUE; // internal transition
+    } break;
+    case FlexButton_DRAW1:{
+            if (HdStateMachine_IsIn( &((FlexBtnTop*)pStm->pMain)->ReadyRgn1Hsm, FlexBtnTop_Pressed)) {
+                bResult = TRUE; // internal transition
+            }
+    } break;
+    default: break;
+    }
+    return bResult ? bResult : FlexBtnTop_Ready_EventProc( pFlexButton, pStm, nEventId, pEventParams );
+}
+static void FlexBtnTop_PushStyle_Exit( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    if( HdStateMachine_Exitable( pStm, FlexBtnTop_PushStyle ) ){ 
+        HdStateMachine_DefaultExitAction( pStm, pFlexButton, "Model/FlexButton/FlexBtnTop	353	191	200	115	282	39	848	673" );
+        FlexBtnTop_Ready_Exit( pFlexButton, pStm );
+    }
+}
+static void FlexBtnStmHsm_BgnTrans( FlexButton *pFlexButton, HdStateMachine* pStm, uint64_t targetState ){
+    pStm->nTargetState = targetState;
+    pStm->nPseudostate = targetState;
+    switch( pStm->nCurrentState ){
+    case FlexBtnTop_FlexBtnStm: FlexBtnTop_FlexBtnStm_Exit( pFlexButton, pStm ); break;
+    case FlexBtnTop_ToggleStyle:FlexBtnTop_ToggleStyle_Exit( pFlexButton, pStm ); break;
+    case FlexBtnTop_SelectStyle:FlexBtnTop_SelectStyle_Exit( pFlexButton, pStm ); break;
+    case FlexBtnTop_SlideStyle: FlexBtnTop_SlideStyle_Exit( pFlexButton, pStm ); break;
+    case FlexBtnTop_PushStyle:  FlexBtnTop_PushStyle_Exit( pFlexButton, pStm ); break;
+    case FlexBtnTop_Ready:      FlexBtnTop_Ready_Exit( pFlexButton, pStm ); break;
+    default: break;
+    }
+}
+static BOOL FlexBtnStmHsm_Reset( FlexButton* pFlexButton, HdStateMachine* pStm, BOOL bUnused, uint64_t nEntryPoint ) {
+    if( nEntryPoint != STATE_UNDEF ){
+        pStm->nPseudostate = nEntryPoint;
+        return FALSE;
+    }else{
+        pStm->nPseudostate = FlexBtnTop_FlexBtnStm;
+    }
+    FlexBtnStmHsm_BgnTrans( pFlexButton, pStm, pStm->nPseudostate );
+    FlexBtnStmHsm_EndTrans( pFlexButton, pStm );
+    return TRUE;
+}
+static BOOL FlexBtnStmHsm_EventProc( FlexButton* pFlexButton, HdStateMachine* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    pStm->nLCAState = STATE_UNDEF;
+    ( ( FlexBtnTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
+    switch( pStm->nCurrentState ){
+    case FlexBtnTop_FlexBtnStm:                 bResult |= FlexBtnTop_FlexBtnStm_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
+    case FlexBtnTop_ToggleStyle:                bResult |= FlexBtnTop_ToggleStyle_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
+    case FlexBtnTop_SelectStyle:                bResult |= FlexBtnTop_SelectStyle_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
+    case FlexBtnTop_SlideStyle:                 bResult |= FlexBtnTop_SlideStyle_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
+    case FlexBtnTop_PushStyle:                  bResult |= FlexBtnTop_PushStyle_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
+    case FlexBtnTop_Ready:                      bResult |= FlexBtnTop_Ready_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
+    default: break;
+    }
+    return bResult;
+}
+static BOOL FlexBtnStmHsm_Abort( FlexButton* pFlexButton, HdStateMachine* pStm ) {
+    pStm->nSourceState = FlexBtnTop_FlexBtnStm;
+    FlexBtnStmHsm_BgnTrans( pFlexButton, pStm, STATE_UNDEF );
+    FlexBtnStmHsm_EndTrans( pFlexButton, pStm );
+    return TRUE;
+}
+static void FlexBtnStmHsm_EndTrans( FlexButton *pFlexButton, HdStateMachine* pStm ){
+    pStm->nCurrentState = pStm->nTargetState;
+    pStm->bIsExternTrans = FALSE;
+    switch( pStm->nCurrentState ){
+    case FlexBtnTop_FlexBtnStm: FlexBtnTop_FlexBtnStm_Entry( pFlexButton, pStm ); break;
+    case FlexBtnTop_ToggleStyle:FlexBtnTop_ToggleStyle_Entry( pFlexButton, pStm ); break;
+    case FlexBtnTop_SelectStyle:FlexBtnTop_SelectStyle_Entry( pFlexButton, pStm ); break;
+    case FlexBtnTop_SlideStyle: FlexBtnTop_SlideStyle_Entry( pFlexButton, pStm ); break;
+    case FlexBtnTop_PushStyle:  FlexBtnTop_PushStyle_Entry( pFlexButton, pStm ); break;
+    case FlexBtnTop_Ready:      FlexBtnTop_Ready_Entry( pFlexButton, pStm ); break;
+    default: break;
+    }
+}
+static BOOL FlexBtnStmHsm_StateDefaultTrans( FlexButton* pFlexButton, HdStateMachine* pStm ){
+    BOOL bResult = FALSE;
+    pStm->nSourceState = pStm->nCurrentState;
+    pStm->nLCAState = STATE_UNDEF;
+        if( pStm->nCurrentState == FlexBtnTop_Ready && pStm->nPseudostate == FlexBtnTop_InitialReady  ){
+            if( ( ( FlexBtnTop* )pStm->pMain )->nReadyHistory != STATE_UNDEF ){
+                FlexBtnStmHsm_BgnTrans( pFlexButton, pStm, ( ( FlexBtnTop* )pStm->pMain )->nReadyHistory );
+                FlexBtnStmHsm_EndTrans( pFlexButton, pStm );
+                bResult = TRUE;
+            }else{
+                FlexBtnStmHsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_PushStyle );
+                FlexBtnStmHsm_EndTrans( pFlexButton, pStm );
+                bResult = TRUE;
+            }
+        }else if( pStm->nCurrentState == FlexBtnTop_FlexBtnStm && pStm->nPseudostate == FlexBtnTop_InitialMain  ){
+            FlexBtnStmHsm_BgnTrans( pFlexButton, pStm, FlexBtnTop_Ready );
+            ( ( FlexBtnTop* )pStm->pMain )->nReadyHistory = pFlexButton->m_style;
+            FlexBtnStmHsm_EndTrans( pFlexButton, pStm );
+            bResult = TRUE;
+        }else if( pStm->nCurrentState != pStm->nPseudostate ){
+            FlexBtnStmHsm_BgnTrans( pFlexButton, pStm, pStm->nPseudostate );
+            FlexBtnStmHsm_EndTrans( pFlexButton, pStm );
+            bResult = TRUE;
+        }else{
+        }
+    return bResult;
+}
+static BOOL FlexBtnTop_EventProc( FlexButton* pFlexButton, FlexBtnTop* pUsm, FlexButton_EVENT nEventId, void* pEventParams ){
+    BOOL bResult = FALSE;
+    bResult |= ReadyRgn1Hsm_EventProc( pFlexButton, &pUsm->ReadyRgn1Hsm, nEventId, pEventParams );
+    bResult |= FlexBtnStmHsm_EventProc( pFlexButton, &pUsm->FlexBtnStmHsm, nEventId, pEventParams );
+    return bResult;
+}
+static BOOL FlexBtnTop_StateDefaultTrans( FlexButton* pFlexButton, FlexBtnTop* pUsm ){
+    BOOL bResult;
+    while( TRUE ){
+        bResult = FALSE;
+        bResult |= ReadyRgn1Hsm_StateDefaultTrans( pFlexButton, &pUsm->ReadyRgn1Hsm );
+        bResult |= FlexBtnStmHsm_StateDefaultTrans( pFlexButton, &pUsm->FlexBtnStmHsm );
+        if( bResult == FALSE ){
+            break;
+        }
+    }
+    return bResult;
+}
+static BOOL FlexBtnTop_Reset( FlexButton* pFlexButton, FlexBtnTop* pUsm, BOOL lastEnteredStateRecovering, uint64_t entryPt ){
+    pUsm->lastEnteredStateRecovering = lastEnteredStateRecovering;
+    FlexBtnStmHsm_Abort( pFlexButton, &pUsm->FlexBtnStmHsm );
+    return FlexBtnStmHsm_Reset( pFlexButton, &pUsm->FlexBtnStmHsm, FALSE, entryPt );
+}
+static BOOL FlexBtnTop_Abort( FlexButton* pFlexButton, FlexBtnTop* pUsm ){
+    return FlexBtnStmHsm_Abort( pFlexButton, &pUsm->FlexBtnStmHsm );
+}
+static BOOL FlexBtnTop_IsFinished( FlexBtnTop* pUsm ){
+    return pUsm->FlexBtnStmHsm.nPseudostate == FlexBtnTop_FlexBtnStm;
+}
+
+static void FlexBtnTop_Prepare( FlexBtnTop* pUsm, HdStateMachine* pParent ){
+    pUsm->pParentStm = pParent;
+    pUsm->FlexBtnStmHsm.pMain = pUsm;
+    pUsm->ReadyRgn1Hsm.pMain = pUsm;
 }
 Sprite* FlexButton_Copy( FlexButton* pFlexButton, const FlexButton* pSource ){
     Sprite_Copy( ( Sprite* )pFlexButton, ( Sprite* )pSource );

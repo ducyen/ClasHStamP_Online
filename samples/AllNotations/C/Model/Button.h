@@ -6,6 +6,7 @@ typedef struct tagButton Button;
 #if !defined( Button_Init ) && ( defined( __Button_INTERNAL__ )  || defined( __ObjsBuilder_INTERNAL__ )  )
 #define __ImgSprite_INTERNAL__
 #include "ImgSprite.h"
+
 /** @memberof Button
  * @brief Button auto-generated constructor
  */

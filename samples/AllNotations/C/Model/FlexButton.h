@@ -27,6 +27,8 @@ typedef enum tagFlexButtonEvent {
     FlexButton_EVENT_NUM
 }FlexButton_EVENT;
 const TCHAR* FlexButtonEvent_toString( FlexButton_EVENT value );
+BOOL FlexButton_Start( FlexButton* pFlexButton );
+BOOL FlexButton_EventProc( FlexButton* pFlexButton, FlexButton_EVENT nEventId, void* pEventParams );
 #endif//__FlexButton_H__
 #if !defined( FlexButton_Init ) && ( defined( __FlexButton_INTERNAL__ )  || defined( __ObjsBuilder_INTERNAL__ )  )
 #define __Sprite_INTERNAL__
@@ -34,65 +36,56 @@ const TCHAR* FlexButtonEvent_toString( FlexButton_EVENT value );
 #include "EventListener.h"
 #define __HdStateMachine_INTERNAL__
 #include "HdStateMachine.h"
-/** @class Ready_Region1
+/** @class FlexBtnTop
  * @extends HdStateMachine
  */
-typedef struct tagReady_Region1 {
-    HdStateMachine base;
-#define Ready_Region1_Ready                     ( Ready_Region1_Hold | Ready_Region1_Idle | Ready_Region1_InitialReadyRegion1 | Ready_Region1_Missed )
-#define Ready_Region1_UnPressed                 ( 1ULL <<  1 )
-#define Ready_Region1_Pressed                   ( 1ULL <<  2 )
-#define Ready_Region1_Idle                      ( 1ULL <<  3 )
-#define Ready_Region1_InitialReadyRegion1       ( 1ULL <<  4 )
-#define Ready_Region1_Missed                    ( 1ULL <<  5 )
-#define Ready_Region1_Hold                      ( Ready_Region1_UnPressed | Ready_Region1_Pressed )
-}Ready_Region1;
-BOOL Ready_Region1_Reset( FlexButton* pReady, Ready_Region1* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
-#define Ready_Region1_Init() {\
-    .base = { HdStateMachine_Init( Ready_Region1_Ready, Ready_Region1_Ready ) },\
-}
-/** @class FlexBtnStm
- * @extends HdStateMachine
- */
-typedef struct tagFlexBtnStm {
-    HdStateMachine base;
-    Ready_Region1 ReadyReady_Region1;                           
+typedef struct tagFlexBtnTop {
+#define FlexBtnTop_InitialReadyRegion1          ( 1ULL <<  0 )
+#define FlexBtnTop_Missed                       ( 1ULL <<  1 )
+#define FlexBtnTop_Idle                         ( 1ULL <<  2 )
+#define FlexBtnTop_UnPressed                    ( 1ULL <<  3 )
+#define FlexBtnTop_Pressed                      ( 1ULL <<  4 )
+#define FlexBtnTop_Hold                         ( FlexBtnTop_UnPressed | FlexBtnTop_Pressed )
+#define FlexBtnTop_ReadyRgn1                    ( FlexBtnTop_InitialReadyRegion1 | FlexBtnTop_Missed | FlexBtnTop_Idle | FlexBtnTop_Hold )
+#define FlexBtnTop_ToggleStyle                  ( 1ULL <<  0 )
+#define FlexBtnTop_SelectStyle                  ( 1ULL <<  1 )
+#define FlexBtnTop_SlideStyle                   ( 1ULL <<  2 )
+#define FlexBtnTop_InitialReady                 ( 1ULL <<  3 )
+#define FlexBtnTop_PushStyle                    ( 1ULL <<  4 )
+#define FlexBtnTop_Ready                        ( FlexBtnTop_ToggleStyle | FlexBtnTop_SelectStyle | FlexBtnTop_SlideStyle | FlexBtnTop_InitialReady | FlexBtnTop_PushStyle )
+#define FlexBtnTop_InitialMain                  ( 1ULL <<  5 )
+#define FlexBtnTop_FlexBtnStm                   ( FlexBtnTop_Ready | FlexBtnTop_InitialMain )
+    HdStateMachine FlexBtnStmHsm;                               
     uint64_t nReadyHistory;
-#define FlexBtnStm_StateMachine0                ( FlexBtnStm_Ready | FlexBtnStm_InitialMain )
-#define FlexBtnStm_PushStyle                    ( 1ULL <<  7 )
-#define FlexBtnStm_SelectStyle                  ( 1ULL <<  8 )
-#define FlexBtnStm_SlideStyle                   ( 1ULL <<  9 )
-#define FlexBtnStm_ToggleStyle                  ( 1ULL << 10 )
-#define FlexBtnStm_InitialReady                 ( 1ULL << 11 )
-#define FlexBtnStm_InitialMain                  ( 1ULL << 12 )
-#define FlexBtnStm_Ready                        ( FlexBtnStm_PushStyle | FlexBtnStm_SelectStyle | FlexBtnStm_SlideStyle | FlexBtnStm_ToggleStyle | FlexBtnStm_InitialReady )
-}FlexBtnStm;
-BOOL FlexBtnStm_Reset( FlexButton* pStateMachine0, FlexBtnStm* pStm, HdStateMachine* pParentStm, uint64_t nEntryPoint );
-#define FlexBtnStm_Init() {\
-    .base = { HdStateMachine_Init( FlexBtnStm_StateMachine0, FlexBtnStm_StateMachine0 ) },\
-    .ReadyReady_Region1 = Ready_Region1_Init(),\
+    HdStateMachine ReadyRgn1Hsm;                                
+    HdStateMachine* pParentStm;
+    BOOL lastEnteredStateRecovering;
+}FlexBtnTop;
+#define FlexBtnTop_Init() {\
+    .pParentStm = NULL,\
+    .lastEnteredStateRecovering = FALSE,\
+    .FlexBtnStmHsm = { HdStateMachine_Init() },\
+    .nReadyHistory = STATE_UNDEF,\
+    .ReadyRgn1Hsm = { HdStateMachine_Init() },\
 }
-BOOL FlexButton_EventProc( FlexButton* pFlexButton, FlexButton_EVENT nEventId, void* pEventParams );
-BOOL FlexButton_Start( FlexButton* pFlexButton );
-BOOL FlexButton_Reset( FlexButton* pFlexButton, uint64_t nEntryPoint );
-BOOL FlexButton_IsIn( FlexButton* pFlexButton, uint64_t nState );
+
 /** @memberof FlexButton
  * @brief FlexButton auto-generated constructor
  */
-#define FlexButton_Init(_m_iniRect, _m_name, _m_imgPath, _m_valueMax, _m_style, _m_mouseListeners, _m_buttonListeners)\
+#define FlexButton_Init(_m_iniRect, _m_name, _m_imgPath, _m_value, _m_valueMax, _m_style, _m_mouseListeners, _m_buttonListeners)\
     Sprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ) )\
     .vTbl = &gFlexButtonVtbl,\
-    .m_value = 0,\
+    .m_value = _m_value,\
     .m_valueMax = _m_valueMax,\
     .m_valueTmp = 0,\
     .m_style = _m_style,\
     .m_knobPos = { 0 },\
     .m_mouseListeners = _m_mouseListeners,\
     .m_buttonListeners = _m_buttonListeners,\
-    .mainStm = FlexBtnStm_Init(),\
+    .mainStm = FlexBtnTop_Init(),\
 
-#define FlexButton_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_valueMax, _m_style, _m_mouseListeners, _m_buttonListeners )    ( FlexButton ){ \
-    FlexButton_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_valueMax ), P( _m_style ), P( _m_mouseListeners ), P( _m_buttonListeners ) ) \
+#define FlexButton_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_value, _m_valueMax, _m_style, _m_mouseListeners, _m_buttonListeners )    ( FlexButton ){ \
+    FlexButton_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_value ), P( _m_valueMax ), P( _m_style ), P( _m_mouseListeners ), P( _m_buttonListeners ) ) \
 }
 extern const SpriteVtbl gFlexButtonVtbl;
 Sprite* FlexButton_Copy( FlexButton* pFlexButton, const FlexButton* pSource );
@@ -109,7 +102,7 @@ struct tagFlexButton{
     SDL_Point m_knobPos;                                                                                                  \
     EventListener* m_mouseListeners;                            \
     EventListener* m_buttonListeners;                           \
-    FlexBtnStm mainStm;                                         
+    FlexBtnTop mainStm;                                         
 
     FlexButton_CLASS    
 };

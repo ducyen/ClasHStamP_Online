@@ -25,7 +25,7 @@ Sprite* g_objects[] = {
         P( &EventListener_Ctor( 0, CarBody_Start, &carBody, 0, null ) )/* m_onDrawListeners */
     ),
     &Primitive_Ctor(                                            /* Text_1sh */
-        P( { 0.6580371732026145, 0.6495018433988764, 0.21176470588235294, 0.05181267556179775 } )/* 1sh-c8099ab49758debe3aa2523402f0bf52 */,
+        P( { 0.636468545751634, 0.6495018433988764, 0.2549019607843137, 0.05181267556179775 } )/* 1sh-c8099ab49758debe3aa2523402f0bf52 */,
         P( "Text_1sh" )                                         /* Text_1sh */,
         P( "Text 000000 line 2 null 000000 null Monospaced 8 ______________________" )/* Text_1sh */
     ),
@@ -70,27 +70,27 @@ Sprite* g_objects[] = {
         P( &EventListener_Ctor( MDD_ON_VALUE_CHANGED, CarBody_EventProc, &carBody, CarBody_UPDATE, null ) )/* m_buttonListeners */
     ),
     &Primitive_Ctor(                                            /* Text_30d */
-        P( { 0.17594635076252726, 0.2822448501872659, 0.10196078431372549, 0.05181267556179775 } )/* 30d-8d4fb42be642ae6942cda72d744e94eb */,
+        P( { 0.1681032135076253, 0.2822448501872659, 0.11764705882352941, 0.05181267556179775 } )/* 30d-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_30d" )                                         /* Text_30d */,
         P( "Text 000000 line 2 null 000000 null Monospaced 8 Value: 0" )/* Text_30d */
     ),
     &Primitive_Ctor(                                            /* Text_389 */
-        P( { 0.17610974945533767, 0.34076544943820225, 0.10196078431372549, 0.05181267556179775 } )/* 389-8d4fb42be642ae6942cda72d744e94eb */,
+        P( { 0.1682666122004357, 0.34076544943820225, 0.11764705882352941, 0.05181267556179775 } )/* 389-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_389" )                                         /* Text_389 */,
         P( "Text 000000 line 2 null 000000 null Monospaced 8 Value: 1" )/* Text_389 */
     ),
     &Primitive_Ctor(                                            /* Text_3ht */
-        P( { 0.17610974945533767, 0.39460440074906367, 0.10196078431372549, 0.05181267556179775 } )/* 3ht-8d4fb42be642ae6942cda72d744e94eb */,
+        P( { 0.1682666122004357, 0.39460440074906367, 0.11764705882352941, 0.05181267556179775 } )/* 3ht-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_3ht" )                                         /* Text_3ht */,
         P( "Text 000000 line 2 null 000000 null Monospaced 8 Value: 2" )/* Text_3ht */
     ),
     &Primitive_Ctor(                                            /* Text_3re */
-        P( { 0.1292143246187364, 0.17339653558052429, 0.09411764705882353, 0.05181267556179775 } )/* 3re-8d4fb42be642ae6942cda72d744e94eb */,
+        P( { 0.1252927559912854, 0.17339653558052429, 0.10196078431372549, 0.05181267556179775 } )/* 3re-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_3re" )                                         /* Text_3re */,
         P( "Text 000000 line 2 null 000000 null Monospaced 8 Off⇔On" )/* Text_3re */
     ),
     &Primitive_Ctor(                                            /* Text_4by */
-        P( { 0.4891816448801744, 0.11370552434456926, 0.0784313725490196, 0.05181267556179775 } )/* 4by-8d4fb42be642ae6942cda72d744e94eb */,
+        P( { 0.4842796840958607, 0.11370552434456926, 0.08823529411764706, 0.05181267556179775 } )/* 4by-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_4by" )                                         /* Text_4by */,
         P( "Text 000000 line 2 null 000000 null Monospaced 8 Reset" )/* Text_4by */
     ),

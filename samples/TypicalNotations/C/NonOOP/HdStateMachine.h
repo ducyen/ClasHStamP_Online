@@ -23,7 +23,6 @@ bool HdStateMachine_IsIn( HdStateMachine* pHdStateMachine, uint64_t targetState 
     .m_stmImage = null,\
     .m_stmRect = null,\
     .pMain = NULL,\
-    .lastEnteredStateRecovering = false,\
     .lastEnteredState = STATE_UNDEF,\
 
 #define HdStateMachine_Ctor(  )    ( HdStateMachine ){ \
@@ -45,7 +44,6 @@ struct tagHdStateMachine{
     SDL_Texture* m_stmImage;                                                                                          \
     SDL_Rect m_stmRect;                                                                                                    \
     void* pMain;                                                                                                                  \
-    bool lastEnteredStateRecovering;                                                                          \
     uint64_t lastEnteredState;                                                                                      \
 
     HdStateMachine_CLASS    

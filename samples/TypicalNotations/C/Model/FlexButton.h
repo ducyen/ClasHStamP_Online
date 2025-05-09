@@ -68,6 +68,38 @@ typedef struct tagFlexBtnTop {
     .nReadyHistory = STATE_UNDEF,\
     .ReadyRgn1Hsm = { HdStateMachine_Init() },\
 }
+/** @class FlexBtnStm
+ * @extends HdStateMachine
+ */
+typedef struct tagFlexBtnStm {
+#define FlexBtnStm_UnPressed                    ( 1ULL <<  0 )
+#define FlexBtnStm_Pressed                      ( 1ULL <<  1 )
+#define FlexBtnStm_Hold                         ( FlexBtnStm_UnPressed | FlexBtnStm_Pressed )
+#define FlexBtnStm_Idle                         ( 1ULL <<  2 )
+#define FlexBtnStm_InitialReadyRegion1          ( 1ULL <<  3 )
+#define FlexBtnStm_Missed                       ( 1ULL <<  4 )
+#define FlexBtnStm_ReadyRgn1                    ( FlexBtnStm_Hold | FlexBtnStm_Idle | FlexBtnStm_InitialReadyRegion1 | FlexBtnStm_Missed )
+#define FlexBtnStm_PushStyle                    ( 1ULL <<  0 )
+#define FlexBtnStm_SelectStyle                  ( 1ULL <<  1 )
+#define FlexBtnStm_SlideStyle                   ( 1ULL <<  2 )
+#define FlexBtnStm_ToggleStyle                  ( 1ULL <<  3 )
+#define FlexBtnStm_InitialReady                 ( 1ULL <<  4 )
+#define FlexBtnStm_Ready                        ( FlexBtnStm_PushStyle | FlexBtnStm_SelectStyle | FlexBtnStm_SlideStyle | FlexBtnStm_ToggleStyle | FlexBtnStm_InitialReady )
+#define FlexBtnStm_InitialMain                  ( 1ULL <<  5 )
+#define FlexBtnStm_StateMachine0                ( FlexBtnStm_Ready | FlexBtnStm_InitialMain )
+    HdStateMachine StateMachine0Hsm;                            
+    uint64_t ShallowHistoryPseudostate0;
+    HdStateMachine ReadyRgn1Hsm;                                
+    HdStateMachine* pParentStm;
+    BOOL lastEnteredStateRecovering;
+}FlexBtnStm;
+#define FlexBtnStm_Init() {\
+    .pParentStm = NULL,\
+    .lastEnteredStateRecovering = FALSE,\
+    .StateMachine0Hsm = { HdStateMachine_Init() },\
+    .ShallowHistoryPseudostate0 = STATE_UNDEF,\
+    .ReadyRgn1Hsm = { HdStateMachine_Init() },\
+}
 
 /** @memberof FlexButton
  * @brief FlexButton auto-generated constructor
@@ -82,7 +114,7 @@ typedef struct tagFlexBtnTop {
     .m_knobPos = { 0 },\
     .m_mouseListeners = _m_mouseListeners,\
     .m_buttonListeners = _m_buttonListeners,\
-    .mainStm = FlexBtnTop_Init(),\
+    .mainStm = FlexBtnStm_Init(),\
 
 #define FlexButton_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_value, _m_valueMax, _m_style, _m_mouseListeners, _m_buttonListeners )    ( FlexButton ){ \
     FlexButton_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_value ), P( _m_valueMax ), P( _m_style ), P( _m_mouseListeners ), P( _m_buttonListeners ) ) \
@@ -102,7 +134,7 @@ struct tagFlexButton{
     SDL_Point m_knobPos;                                                                                                  \
     EventListener* m_mouseListeners;                            \
     EventListener* m_buttonListeners;                           \
-    FlexBtnTop mainStm;                                         
+    FlexBtnStm mainStm;                                         
 
     FlexButton_CLASS    
 };

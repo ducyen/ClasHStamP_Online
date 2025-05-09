@@ -7,6 +7,7 @@ Constraint* Constraint_getNext( Constraint* pConstraint );
 #endif//__Constraint_H__
 #if !defined( Constraint_Init ) && ( defined( __Constraint_INTERNAL__ )  )
 #include "Sprite.h"
+
 /** @memberof Constraint
  * @brief Constraint auto-generated constructor
  */

@@ -7,6 +7,7 @@ typedef struct tagTransformConstraint TransformConstraint;
 #if !defined( TransformConstraint_Init ) && ( defined( __TransformConstraint_INTERNAL__ )  )
 #define __Constraint_INTERNAL__
 #include "Constraint.h"
+
 /** @memberof TransformConstraint
  * @brief TransformConstraint auto-generated constructor
  */

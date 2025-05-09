@@ -7,6 +7,7 @@ typedef struct tagContextImpl ContextImpl;
 #define __Context_INTERNAL__
 #include "Context.h"
 boolean ContextImpl_checkE1Params( EventParams* e );
+
 /** @memberof ContextImpl
  * @brief ContextImpl auto-generated constructor
  */

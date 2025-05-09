@@ -23,6 +23,7 @@ void Context_finalMethod( Context* pContext );
 #include "Aggregration.h"
 #define __Composition_INTERNAL__
 #include "Composition.h"
+
 /** @memberof Context
  * @brief Context auto-generated constructor
  */

@@ -5,6 +5,7 @@
 typedef struct tagAFriend AFriend;
 #endif//__AFriend_H__
 #if !defined( AFriend_Init ) && ( defined( __AFriend_INTERNAL__ )  )
+
 /** @memberof AFriend
  * @brief AFriend auto-generated constructor
  */
