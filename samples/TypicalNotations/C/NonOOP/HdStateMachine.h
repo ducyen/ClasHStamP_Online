@@ -24,6 +24,8 @@ bool HdStateMachine_IsIn( HdStateMachine* pHdStateMachine, uint64_t targetState 
     .m_stmRect = null,\
     .pMain = NULL,\
     .lastEnteredState = STATE_UNDEF,\
+    .bHandled = FALSE,\
+    .nDepth = 0,\
 
 #define HdStateMachine_Ctor(  )    ( HdStateMachine ){ \
     HdStateMachine_Init(  ) \
@@ -45,6 +47,8 @@ struct tagHdStateMachine{
     SDL_Rect m_stmRect;                                                                                                    \
     void* pMain;                                                                                                                  \
     uint64_t lastEnteredState;                                                                                      \
+    bool bHandled;                                                                                                              \
+    int nDepth;                                                                                                                    \
 
     HdStateMachine_CLASS    
 };

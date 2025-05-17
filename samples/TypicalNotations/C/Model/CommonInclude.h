@@ -113,6 +113,12 @@ typedef enum{
     MDD_EVENT_TYPE_MAX
 }MDD_EventType;
 
+typedef struct tagStmReset{
+    uint64_t    entryPt;
+    BOOL        lastEnteredStateRecovering;
+    int         nDepth;
+} STM_RESET;
+
 #ifdef _MSC_VER
 # define strtok_r strtok_s
 #endif

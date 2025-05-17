@@ -230,6 +230,7 @@ int ObjsBuilder_startSim(
     void  
 ){
     carBody->m_stmShow = true;
+    //resetBtn->m_stmShow = true;
 
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
@@ -388,6 +389,7 @@ int ObjsBuilder_startSim(
                     }
                     break;
                 } else if (e.type == SDL_KEYDOWN) {
+#if 0
                     if( e.key.keysym.sym == SDLK_r ){
                         CarBody_Start( carBody );
                     }else{
@@ -399,6 +401,7 @@ int ObjsBuilder_startSim(
                         }
                         CarBody_EventProc( carBody, (CarBody_EVENT)( n - SDLK_0 ), pParams);
                     }
+#endif
                 }
             }
 
@@ -469,7 +472,8 @@ void ObjsBuilder_showEntry(
     void* pStm_,
     char* pMsg
 ){
-    ObjsBuilder_showDiagram( pObj, pStm_, pMsg, 0x00, 0xFF, 0x00 );
+    HdStateMachine* pStm = (HdStateMachine*)pStm_;
+    ObjsBuilder_showDiagram( pObj, pStm_, pMsg, 0x00, 0xFF - pStm->nDepth * 32, 0x00 );
 } /* ObjsBuilder_showEntry */
 
 void ObjsBuilder_showDoing(
@@ -477,7 +481,8 @@ void ObjsBuilder_showDoing(
     void* pStm_,
     char* pMsg
 ){
-    ObjsBuilder_showDiagram( pObj, pStm_, pMsg, 0x00, 0x00, 0xFF );
+    HdStateMachine* pStm = (HdStateMachine*)pStm_;
+    ObjsBuilder_showDiagram( pObj, pStm_, pMsg, 0x00, 0x00, 0xFF - pStm->nDepth * 32 );
 } /* ObjsBuilder_showDoing */
 
 void ObjsBuilder_showExit(
@@ -485,7 +490,8 @@ void ObjsBuilder_showExit(
     void* pStm_,
     char* pMsg
 ){
-    ObjsBuilder_showDiagram( pObj, pStm_, pMsg, 0xFF, 0x00, 0x00 );
+    HdStateMachine* pStm = (HdStateMachine*)pStm_;
+    ObjsBuilder_showDiagram( pObj, pStm_, pMsg, 0xFF - pStm->nDepth * 32, 0x00, 0x00 );
 } /* ObjsBuilder_showExit */
 
 void ObjsBuilder_showDiagram(
@@ -577,8 +583,31 @@ void ObjsBuilder_showDiagram(
     int nWidth = ( float )w;
     UINT nDotSize = 3;
 
-    rectangleRGBA( stmRenderer, nLeft, nTop, nLeft + nWidth, nTop + nHeight, r, g, b, 0xFF );
-
+    int radius = 10;
+#if 1
+    int thickness = 4;  // Desired line thickness
+    for ( int i = -1; i < thickness; ++i ) {
+        roundedRectangleRGBA(
+            stmRenderer,
+            nLeft - i,
+            nTop - i,
+            nLeft + nWidth + i,
+            nTop + nHeight + i,
+            radius + i,
+            r, g, b, 0xFF
+        );
+    }
+#else
+    roundedBoxRGBA(
+        stmRenderer,
+        nLeft,
+        nTop,
+        nLeft + nWidth,
+        nTop + nHeight,
+        radius,
+        r, g, b, 32
+    );
+#endif
     pSprite->m_stmUpdated = true;     
 } /* ObjsBuilder_showDiagram */
 

@@ -539,7 +539,9 @@ int ObjsBuilder_startSim(
     SDL_Quit();
 
     // Clean up
-    cpSpaceFree(space);
+#ifndef _MSC_VER
+    cpSpaceFree(space);     // On Windows, this causes Memory Accesso Violation
+#endif
 
     return 0;
 } /* ObjsBuilder_startSim */

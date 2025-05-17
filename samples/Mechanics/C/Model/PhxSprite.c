@@ -118,7 +118,7 @@ static bool PhxSprite_load(
     // Set the render target to the buffer texture
     SDL_SetRenderTarget(renderer, pPhxSprite->m_image);
 
-    //SDL_RenderCopy( renderer, pPngImg, NULL, NULL );
+    SDL_RenderCopy( renderer, pPngImg, NULL, NULL );
 
     // Define the rotation angle in degrees and convert to radians
     double angle_degrees = -pPhxSprite->m_angle;

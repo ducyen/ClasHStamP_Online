@@ -51,13 +51,17 @@ enum {
 #define Text_hkt                ( g_objects[ _Text_hkt ] )
     _Text_hkt,
 #define batteryLife             ( g_objects[ _batteryLife ] )
-    _batteryLife
+    _batteryLife,
+#define Text_40e                ( g_objects[ _Text_40e ] )
+    _Text_40e,
+#define Text_41a                ( g_objects[ _Text_41a ] )
+    _Text_41a
 };
 int ObjsBuilder_startSim( void   );
 void ObjsBuilder_showEntry( void* pObj, void* pStm_, char* pMsg );
 void ObjsBuilder_showDoing( void* pObj, void* pStm_, char* pMsg );
 void ObjsBuilder_showExit( void* pObj, void* pStm_, char* pMsg );
-void ObjsBuilder_showDiagram( void* pObj, void* pStm_, char* pMsg, char r, char g, char b );
+void ObjsBuilder_showDiagram( void* pObj, void* pStm_, char* pMsg, char r, char g, char b, int sizeAdj );
 #endif//__ObjsBuilder_H__
 #if !defined( ObjsBuilder_Init ) && ( defined( __ObjsBuilder_INTERNAL__ )  )
 

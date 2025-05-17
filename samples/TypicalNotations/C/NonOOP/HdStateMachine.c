@@ -35,7 +35,9 @@ void HdStateMachine_DefaultEntryAction(
     void* pObj,
     char* pMsg
 ){
+    pHdStateMachine->lastEnteredState = pHdStateMachine->nCurrentState;
     ObjsBuilder_showEntry( pObj, pHdStateMachine, pMsg );
+    pHdStateMachine->nDepth++;
 } /* HdStateMachine_DefaultEntryAction */
 
 /** @public @memberof HdStateMachine */
@@ -53,6 +55,7 @@ void HdStateMachine_DefaultExitAction(
     void* pObj,
     char* pMsg
 ){
+    pHdStateMachine->nDepth--;
     ObjsBuilder_showExit( pObj, pHdStateMachine, pMsg );
 } /* HdStateMachine_DefaultExitAction */
 
@@ -75,5 +78,7 @@ HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdSt
     pHdStateMachine->m_stmRect = pSource->m_stmRect;
     pHdStateMachine->pMain = pSource->pMain;
     pHdStateMachine->lastEnteredState = pSource->lastEnteredState;
+    pHdStateMachine->bHandled = pSource->bHandled;
+    pHdStateMachine->nDepth = pSource->nDepth;
     return ( HdStateMachine* )pHdStateMachine;
 }
