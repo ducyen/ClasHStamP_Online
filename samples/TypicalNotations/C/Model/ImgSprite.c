@@ -54,12 +54,21 @@ double ImgSprite_getRotation(
 } /* ImgSprite_getRotation */
 
 /** @public @memberof ImgSprite */
+void ImgSprite_setSpriteCoords(
+    ImgSprite* pImgSprite,
+    int x,
+    int y
+){
+    pImgSprite->m_spriteCoords.x = x;
+    pImgSprite->m_spriteCoords.y = y;
+} /* ImgSprite_setSpriteCoords */
+
+/** @public @memberof ImgSprite */
 void ImgSprite_setBrightness(
     ImgSprite* pImgSprite,
     double value
 ){
     pImgSprite->m_brightness = value;
-    pImgSprite->m_updated = true;
 } /* ImgSprite_setBrightness */
 
 /** @public @memberof ImgSprite */
@@ -127,26 +136,48 @@ static void ImgSprite_draw1(
     Sprite* pSprite,
     SDL_Renderer* renderer
 ){
-    ImgSprite* pImgSprite = ( ImgSprite* )pSprite;
+    ImgSprite* pImgSprite = (ImgSprite*)pSprite;
     int width, height;
+
     // Set texture color modulation (brightness)
-    if( pImgSprite->m_image ){
+    if ( pImgSprite->m_image ) {
         SDL_SetTextureColorMod(
-            pImgSprite->m_image, 
-            pImgSprite->m_brightness * 255, 
-            pImgSprite->m_brightness * 255, 
+            pImgSprite->m_image,
+            pImgSprite->m_brightness * 255,
+            pImgSprite->m_brightness * 255,
             pImgSprite->m_brightness * 255
         );
     }
-    // Execute transformation
-    SDL_Rect rect = pImgSprite->m_rect;
-    rect.x = pImgSprite->m_rect.x + pImgSprite->m_offset.x;
-    rect.y = pImgSprite->m_rect.y + pImgSprite->m_offset.y;
 
-    // Render the texture
-    if( pImgSprite->m_image ){
-        SDL_RenderCopyEx(renderer, pImgSprite->m_image, NULL, &rect, pImgSprite->m_angle, NULL, SDL_FLIP_NONE);
+    // Execute transformation
+    SDL_Rect dstRect = pImgSprite->m_rect;
+    dstRect.x += pImgSprite->m_offset.x;
+    dstRect.y += pImgSprite->m_offset.y;
+
+    // Compute source rectangle if sprite sheet coordinates are specified
+    SDL_Rect* pSrcRect = NULL;
+    SDL_Rect srcRect;
+
+    if ( pImgSprite->m_spriteCoords.w > 0 && pImgSprite->m_spriteCoords.h > 0 ) {
+        // Get full texture size
+        SDL_QueryTexture(pImgSprite->m_image, NULL, NULL, &width, &height);
+
+        int spriteWidth = width / pImgSprite->m_spriteCoords.w;
+        int spriteHeight = height / pImgSprite->m_spriteCoords.h;
+
+        srcRect.x = spriteWidth * pImgSprite->m_spriteCoords.x;
+        srcRect.y = spriteHeight * pImgSprite->m_spriteCoords.y;
+        srcRect.w = spriteWidth;
+        srcRect.h = spriteHeight;
+
+        pSrcRect = &srcRect;
     }
+
+    // Render the texture (with or without srcRect)
+    if ( pImgSprite->m_image ) {
+        SDL_RenderCopyEx(renderer, pImgSprite->m_image, pSrcRect, &dstRect, pImgSprite->m_angle, NULL, SDL_FLIP_NONE);
+    }
+
     // Reset transformation
     pImgSprite->m_angle = 0;
     pImgSprite->m_offset.x = 0;
@@ -155,11 +186,11 @@ static void ImgSprite_draw1(
     // Event dispatch
     ImgSprite* sprite = pImgSprite;
     EventListener* pCurListener = sprite->m_onDrawListeners;
-    while( pCurListener != null ){
-        if( EventListener_getType( pCurListener ) == 1 ){
-            EventListener_actionPerformed( pCurListener, sprite, null );
+    while ( pCurListener != null ) {
+        if ( EventListener_getType(pCurListener) == 1 ) {
+            EventListener_actionPerformed(pCurListener, sprite, null);
         }
-        pCurListener = EventListener_getNext( pCurListener );
+        pCurListener = EventListener_getNext(pCurListener);
     }
 } /* ImgSprite_draw1 */
 
@@ -228,6 +259,7 @@ Sprite* ImgSprite_Copy( ImgSprite* pImgSprite, const ImgSprite* pSource ){
     pImgSprite->m_buffer = pSource->m_buffer;
     pImgSprite->m_center = pSource->m_center;
     pImgSprite->m_angle = pSource->m_angle;
+    pImgSprite->m_spriteCoords = pSource->m_spriteCoords;
     pImgSprite->m_constraints = pSource->m_constraints;
     pImgSprite->m_mouseListeners = pSource->m_mouseListeners;
     pImgSprite->m_onDrawListeners = pSource->m_onDrawListeners;

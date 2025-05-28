@@ -21,6 +21,34 @@ void CarBody_moveLeft(
 ){
 } /* CarBody_moveLeft */
 
+/** @public @memberof CarBody */
+void CarBody_turnOff(
+    CarBody* pCarBody
+){
+    ImgSprite_setBrightness(display, 0);
+    ImgSprite_setBrightness(batteryOper, 0);
+    ImgSprite_setBrightness(speedometer, 0);
+    ImgSprite_setBrightness(radar, 0);
+    ImgSprite_setBrightness(seatbelt, 0);
+    ImgSprite_setBrightness(airbag, 0);
+    ImgSprite_setBrightness(fanCtrl, 0);
+    ImgSprite_setBrightness(gear, 0);
+} /* CarBody_turnOff */
+
+/** @public @memberof CarBody */
+void CarBody_turnOn(
+    CarBody* pCarBody
+){
+    ImgSprite_setBrightness(display, 1);
+    ImgSprite_setBrightness(batteryOper, 1);
+    ImgSprite_setBrightness(speedometer, 1);
+    ImgSprite_setBrightness(radar, 1);
+    ImgSprite_setBrightness(seatbelt, 1);
+    ImgSprite_setBrightness(airbag, 1);
+    ImgSprite_setBrightness(fanCtrl, 1);
+    ImgSprite_setBrightness(gear, 1);
+} /* CarBody_turnOn */
+
 const TCHAR* CarBodyEvent_toString( CarBody_EVENT value ){
     switch( value ){
     case CarBody_E0: return _T( "E0" );
@@ -82,14 +110,15 @@ static void SharedTop_SharedStm_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
 static void SharedTop_Discharging_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, SharedTop_Discharging ) ){
         SharedTop_SharedStm_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/SharedTop	148	248	103	52	58	98	679	306" );
+        ImgSprite_setSpriteCoords(batteryOper, 0, 1);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/SharedTop	144	239	136	74	58	88	679	317" );
     }
 }
 static BOOL SharedTop_Discharging_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = SharedTop_Discharging;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/SharedTop	148	248	103	52	58	98	679	306" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/SharedTop	144	239	136	74	58	88	679	317" );
     switch( nEventId ){
     case CarBody_UPDATE:{
             if (FlexButton_GetValue(batteryLife) == 0) {
@@ -107,49 +136,51 @@ static BOOL SharedTop_Discharging_EventProc( CarBody* pCarBody, HdStateMachine* 
 }
 static void SharedTop_Discharging_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, SharedTop_Discharging ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/SharedTop	148	248	103	52	58	98	679	306" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/SharedTop	144	239	136	74	58	88	679	317" );
         SharedTop_SharedStm_Exit( pCarBody, pStm );
     }
 }
 static void SharedTop_Charging_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, SharedTop_Charging ) ){
         SharedTop_SharedStm_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/SharedTop	378	215	175	76	58	98	679	306" );
+        ImgSprite_setSpriteCoords(batteryOper, 0, 2);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/SharedTop	378	215	175	76	58	88	679	317" );
     }
 }
 static BOOL SharedTop_Charging_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = SharedTop_Charging;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/SharedTop	378	215	175	76	58	98	679	306" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/SharedTop	378	215	175	76	58	88	679	317" );
     }
     pStm->bHandled |= bResult;
     return SharedTop_SharedStm_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void SharedTop_Charging_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, SharedTop_Charging ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/SharedTop	378	215	175	76	58	98	679	306" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/SharedTop	378	215	175	76	58	88	679	317" );
         SharedTop_SharedStm_Exit( pCarBody, pStm );
     }
 }
 static void SharedTop_Idle_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, SharedTop_Idle ) ){
         SharedTop_SharedStm_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/SharedTop	232	164	103	52	58	98	679	306" );
+        ImgSprite_setSpriteCoords(batteryOper, 0, 0);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/SharedTop	180	159	159	63	58	88	679	317" );
     }
 }
 static BOOL SharedTop_Idle_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = SharedTop_Idle;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/SharedTop	232	164	103	52	58	98	679	306" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/SharedTop	180	159	159	63	58	88	679	317" );
     }
     pStm->bHandled |= bResult;
     return SharedTop_SharedStm_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void SharedTop_Idle_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, SharedTop_Idle ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/SharedTop	232	164	103	52	58	98	679	306" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/SharedTop	180	159	159	63	58	88	679	317" );
         SharedTop_SharedStm_Exit( pCarBody, pStm );
     }
 }
@@ -334,14 +365,14 @@ static void MainTop_SeatBelts_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
                 pStm->nPseudostate = MainTop_SeatBeltInit;
             }
             printf("SeatBelts monitoring on\n");
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	466	387	394	112	42	40	1413	730" );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	461	389	403	119	33	34	1422	742" );
     }
 }
 static BOOL MainTop_SeatBelts_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_SeatBelts;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	466	387	394	112	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	461	389	403	119	33	34	1422	742" );
     switch( nEventId ){
     case CarBody_UPDATE:{
                 if (FlexButton_GetValue(toggleBtn) == 0) {
@@ -362,7 +393,7 @@ static BOOL MainTop_SeatBelts_EventProc( CarBody* pCarBody, HdStateMachine* pStm
 }
 static void MainTop_SeatBelts_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_SeatBelts ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	466	387	394	112	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	461	389	403	119	33	34	1422	742" );
             printf("SeatBelts monitoring off\n");
         MainTop_DrivingRgn1_Exit( pCarBody, pStm );
     }
@@ -370,63 +401,65 @@ static void MainTop_SeatBelts_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
 static void MainTop_SeatBeltsFastened_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_SeatBeltsFastened ) ){
         MainTop_SeatBelts_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	486	444	117	45	42	40	1413	730" );
+            ImgSprite_setSpriteCoords(seatbelt, 0, 0);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	471	432	128	63	33	34	1422	742" );
     }
 }
 static BOOL MainTop_SeatBeltsFastened_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_SeatBeltsFastened;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	486	444	117	45	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	471	432	128	63	33	34	1422	742" );
     }
     pStm->bHandled |= bResult;
     return MainTop_SeatBelts_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void MainTop_SeatBeltsFastened_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_SeatBeltsFastened ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	486	444	117	45	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	471	432	128	63	33	34	1422	742" );
         MainTop_SeatBelts_Exit( pCarBody, pStm );
     }
 }
 static void MainTop_SeatBeltsUnfastened_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_SeatBeltsUnfastened ) ){
         MainTop_SeatBelts_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	731	407	117	45	42	40	1413	730" );
+            ImgSprite_setSpriteCoords(seatbelt, 1, 0);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	728	418	124	73	33	34	1422	742" );
     }
 }
 static BOOL MainTop_SeatBeltsUnfastened_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_SeatBeltsUnfastened;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	731	407	117	45	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	728	418	124	73	33	34	1422	742" );
     }
     pStm->bHandled |= bResult;
     return MainTop_SeatBelts_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void MainTop_SeatBeltsUnfastened_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_SeatBeltsUnfastened ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	731	407	117	45	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	728	418	124	73	33	34	1422	742" );
         MainTop_SeatBelts_Exit( pCarBody, pStm );
     }
 }
 static void MainTop_SeatBeltsTighten_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_SeatBeltsTighten ) ){
         MainTop_DrivingRgn1_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	317	443	117	45	42	40	1413	730" );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	317	449	117	45	33	34	1422	742" );
     }
 }
 static BOOL MainTop_SeatBeltsTighten_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_SeatBeltsTighten;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	317	443	117	45	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	317	449	117	45	33	34	1422	742" );
     }
     pStm->bHandled |= bResult;
     return MainTop_DrivingRgn1_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void MainTop_SeatBeltsTighten_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_SeatBeltsTighten ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	317	443	117	45	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	317	449	117	45	33	34	1422	742" );
         MainTop_DrivingRgn1_Exit( pCarBody, pStm );
     }
 }
@@ -538,43 +571,44 @@ static void MainTop_DrivingRgn2_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
 static void MainTop_AirbagArmed_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_AirbagArmed ) ){
         MainTop_DrivingRgn2_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	655	530	140	63	42	40	1413	730" );
+            ImgSprite_setSpriteCoords(airbag, 0, 0);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	655	536	168	63	33	34	1422	742" );
     }
 }
 static BOOL MainTop_AirbagArmed_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_AirbagArmed;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	655	530	140	63	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	655	536	168	63	33	34	1422	742" );
     }
     pStm->bHandled |= bResult;
     return MainTop_DrivingRgn2_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void MainTop_AirbagArmed_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_AirbagArmed ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	655	530	140	63	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	655	536	168	63	33	34	1422	742" );
         MainTop_DrivingRgn2_Exit( pCarBody, pStm );
     }
 }
 static void MainTop_AirbagDeployed_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_AirbagDeployed ) ){
         MainTop_DrivingRgn2_Entry( pCarBody, pStm );
-            printf("Activate inflator\n");
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	434	530	193	63	42	40	1413	730" );
+            ImgSprite_setSpriteCoords(airbag, 1, 0);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	426	537	217	63	33	34	1422	742" );
     }
 }
 static BOOL MainTop_AirbagDeployed_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_AirbagDeployed;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	434	530	193	63	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	426	537	217	63	33	34	1422	742" );
     }
     pStm->bHandled |= bResult;
     return MainTop_DrivingRgn2_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void MainTop_AirbagDeployed_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_AirbagDeployed ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	434	530	193	63	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	426	537	217	63	33	34	1422	742" );
             printf("Deflate the bag\n");
         MainTop_DrivingRgn2_Exit( pCarBody, pStm );
     }
@@ -671,35 +705,37 @@ static void MainTop_DrivingRgn3_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
 static void MainTop_CollisionDetectHit_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_CollisionDetectHit ) ){
         MainTop_DrivingRgn3_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	260	647	117	45	42	40	1413	730" );
+            ImgSprite_setSpriteCoords(radar, 2, 0);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	260	644	117	63	33	34	1422	742" );
     }
 }
 static BOOL MainTop_CollisionDetectHit_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_CollisionDetectHit;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	260	647	117	45	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	260	644	117	63	33	34	1422	742" );
     }
     pStm->bHandled |= bResult;
     return MainTop_DrivingRgn3_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void MainTop_CollisionDetectHit_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_CollisionDetectHit ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	260	647	117	45	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	260	644	117	63	33	34	1422	742" );
         MainTop_DrivingRgn3_Exit( pCarBody, pStm );
     }
 }
 static void MainTop_CollisionDetectAlert_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_CollisionDetectAlert ) ){
         MainTop_DrivingRgn3_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	491	647	117	45	42	40	1413	730" );
+            ImgSprite_setSpriteCoords(radar, 1, 0);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	471	630	168	63	33	34	1422	742" );
     }
 }
 static BOOL MainTop_CollisionDetectAlert_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_CollisionDetectAlert;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	491	647	117	45	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	471	630	168	63	33	34	1422	742" );
     switch( nEventId ){
     case CarBody_UPDATE:{
                 int n = FlexButton_GetValue(slider);
@@ -725,21 +761,22 @@ static BOOL MainTop_CollisionDetectAlert_EventProc( CarBody* pCarBody, HdStateMa
 }
 static void MainTop_CollisionDetectAlert_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_CollisionDetectAlert ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	491	647	117	45	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	471	630	168	63	33	34	1422	742" );
         MainTop_DrivingRgn3_Exit( pCarBody, pStm );
     }
 }
 static void MainTop_CollisionDetectClear_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_CollisionDetectClear ) ){
         MainTop_DrivingRgn3_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	692	647	117	45	42	40	1413	730" );
+            ImgSprite_setSpriteCoords(radar, 0, 0);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	682	644	151	63	33	34	1422	742" );
     }
 }
 static BOOL MainTop_CollisionDetectClear_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_CollisionDetectClear;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	692	647	117	45	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	682	644	151	63	33	34	1422	742" );
     switch( nEventId ){
     case CarBody_UPDATE:{
                 if (FlexButton_GetValue(slider) <= 2) {
@@ -756,7 +793,7 @@ static BOOL MainTop_CollisionDetectClear_EventProc( CarBody* pCarBody, HdStateMa
 }
 static void MainTop_CollisionDetectClear_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_CollisionDetectClear ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	692	647	117	45	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	682	644	151	63	33	34	1422	742" );
         MainTop_DrivingRgn3_Exit( pCarBody, pStm );
     }
 }
@@ -859,14 +896,14 @@ static void MainTop_EngineManagement_Entry( CarBody* pCarBody, HdStateMachine* p
                 pStm->nPseudostate = MainTop_EngineMgmtInit;
             }
             printf("Engine on\n");
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	894	203	217	464	42	40	1413	730" );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	894	203	217	519	33	34	1422	742" );
     }
 }
 static BOOL MainTop_EngineManagement_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_EngineManagement;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	894	203	217	464	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	894	203	217	519	33	34	1422	742" );
     switch( nEventId ){
     case CarBody_UPDATE:{
                 int n = FlexButton_GetValue(selectBtn);
@@ -900,7 +937,7 @@ static BOOL MainTop_EngineManagement_EventProc( CarBody* pCarBody, HdStateMachin
 }
 static void MainTop_EngineManagement_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_EngineManagement ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	894	203	217	464	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	894	203	217	519	33	34	1422	742" );
             printf("Engine off\n");
         MainTop_CarOnRgn1_Exit( pCarBody, pStm );
     }
@@ -908,63 +945,66 @@ static void MainTop_EngineManagement_Exit( CarBody* pCarBody, HdStateMachine* pS
 static void MainTop_EngineIdle_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_EngineIdle ) ){
         MainTop_EngineManagement_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	910	287	117	45	42	40	1413	730" );
+            ImgSprite_setSpriteCoords(speedometer, 1, 0);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	910	271	144	63	33	34	1422	742" );
     }
 }
 static BOOL MainTop_EngineIdle_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_EngineIdle;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	910	287	117	45	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	910	271	144	63	33	34	1422	742" );
     }
     pStm->bHandled |= bResult;
     return MainTop_EngineManagement_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void MainTop_EngineIdle_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_EngineIdle ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	910	287	117	45	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	910	271	144	63	33	34	1422	742" );
         MainTop_EngineManagement_Exit( pCarBody, pStm );
     }
 }
 static void MainTop_EngineAccel_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_EngineAccel ) ){
         MainTop_EngineManagement_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	910	497	117	45	42	40	1413	730" );
+            ImgSprite_setSpriteCoords(speedometer, 1, 1);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	910	494	117	73	33	34	1422	742" );
     }
 }
 static BOOL MainTop_EngineAccel_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_EngineAccel;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	910	497	117	45	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	910	494	117	73	33	34	1422	742" );
     }
     pStm->bHandled |= bResult;
     return MainTop_EngineManagement_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void MainTop_EngineAccel_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_EngineAccel ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	910	497	117	45	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	910	494	117	73	33	34	1422	742" );
         MainTop_EngineManagement_Exit( pCarBody, pStm );
     }
 }
 static void MainTop_EngineDeccel_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_EngineDeccel ) ){
         MainTop_EngineManagement_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	910	575	117	45	42	40	1413	730" );
+            ImgSprite_setSpriteCoords(speedometer, 0, 1);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	910	610	117	73	33	34	1422	742" );
     }
 }
 static BOOL MainTop_EngineDeccel_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_EngineDeccel;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	910	575	117	45	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	910	610	117	73	33	34	1422	742" );
     }
     pStm->bHandled |= bResult;
     return MainTop_EngineManagement_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void MainTop_EngineDeccel_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_EngineDeccel ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	910	575	117	45	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	910	610	117	73	33	34	1422	742" );
         MainTop_EngineManagement_Exit( pCarBody, pStm );
     }
 }
@@ -1071,7 +1111,7 @@ static void MainTop_MainBattery_Entry( CarBody* pCarBody, HdStateMachine* pStm )
     if( HdStateMachine_Enterable( pStm, MainTop_MainBattery ) ){
         MainTop_CarOnRgn2_Entry( pCarBody, pStm );
             SharedTop_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->MainBatteryHsm, &( STM_RESET ){ .nDepth = pStm->nDepth } );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	1134	333	96	267	42	40	1413	730" );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	1134	333	96	267	33	34	1422	742" );
     }
 }
 static BOOL MainTop_MainBattery_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
@@ -1079,14 +1119,14 @@ static BOOL MainTop_MainBattery_EventProc( CarBody* pCarBody, HdStateMachine* pS
     bResult |= SharedTop_EventProc( pCarBody, &( ( MainTop* )pStm->pMain )->MainBatteryHsm, nEventId, pEventParams );
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_MainBattery;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	1134	333	96	267	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	1134	333	96	267	33	34	1422	742" );
     }
     pStm->bHandled |= bResult;
     return MainTop_CarOnRgn2_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void MainTop_MainBattery_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_MainBattery ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	1134	333	96	267	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	1134	333	96	267	33	34	1422	742" );
             SharedTop_Abort( pCarBody, &( ( MainTop* )pStm->pMain )->MainBatteryHsm );
         MainTop_CarOnRgn2_Exit( pCarBody, pStm );
     }
@@ -1184,14 +1224,15 @@ static void MainTop_AdaptiveSystemRgn1_Exit( CarBody* pCarBody, HdStateMachine* 
 static void MainTop_InfotainmentOff_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_InfotainmentOff ) ){
         MainTop_AdaptiveSystemRgn1_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	498	117	45	42	40	1413	730" );
+            ImgSprite_setSpriteCoords(display, 0, 0);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	491	124	63	33	34	1422	742" );
     }
 }
 static BOOL MainTop_InfotainmentOff_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_InfotainmentOff;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	498	117	45	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	491	124	63	33	34	1422	742" );
     switch( nEventId ){
     case CarBody_E5:{
                 AdaptiveSystemRgn1Hsm_BgnTrans( pCarBody, pStm, MainTop_InfotainmentAV );
@@ -1206,21 +1247,22 @@ static BOOL MainTop_InfotainmentOff_EventProc( CarBody* pCarBody, HdStateMachine
 }
 static void MainTop_InfotainmentOff_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_InfotainmentOff ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	498	117	45	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	491	124	63	33	34	1422	742" );
         MainTop_AdaptiveSystemRgn1_Exit( pCarBody, pStm );
     }
 }
 static void MainTop_InfotainmentAV_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_InfotainmentAV ) ){
         MainTop_AdaptiveSystemRgn1_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	567	117	45	42	40	1413	730" );
+            ImgSprite_setSpriteCoords(display, 1, 1);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	574	124	63	33	34	1422	742" );
     }
 }
 static BOOL MainTop_InfotainmentAV_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_InfotainmentAV;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	567	117	45	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	574	124	63	33	34	1422	742" );
     switch( nEventId ){
     case CarBody_E5:{
                 AdaptiveSystemRgn1Hsm_BgnTrans( pCarBody, pStm, MainTop_InfotainmentNavi );
@@ -1235,21 +1277,22 @@ static BOOL MainTop_InfotainmentAV_EventProc( CarBody* pCarBody, HdStateMachine*
 }
 static void MainTop_InfotainmentAV_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_InfotainmentAV ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	567	117	45	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	574	124	63	33	34	1422	742" );
         MainTop_AdaptiveSystemRgn1_Exit( pCarBody, pStm );
     }
 }
 static void MainTop_InfotainmentNavi_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_InfotainmentNavi ) ){
         MainTop_AdaptiveSystemRgn1_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	1277	640	117	45	42	40	1413	730" );
+            ImgSprite_setSpriteCoords(display, 1, 0);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	654	124	63	33	34	1422	742" );
     }
 }
 static BOOL MainTop_InfotainmentNavi_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_InfotainmentNavi;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	1277	640	117	45	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	654	124	63	33	34	1422	742" );
     switch( nEventId ){
     case CarBody_E5:{
                 AdaptiveSystemRgn1Hsm_BgnTrans( pCarBody, pStm, MainTop_InfotainmentOff );
@@ -1264,7 +1307,7 @@ static BOOL MainTop_InfotainmentNavi_EventProc( CarBody* pCarBody, HdStateMachin
 }
 static void MainTop_InfotainmentNavi_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_InfotainmentNavi ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	1277	640	117	45	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	654	124	63	33	34	1422	742" );
         MainTop_AdaptiveSystemRgn1_Exit( pCarBody, pStm );
     }
 }
@@ -1368,7 +1411,7 @@ static void MainTop_AdaptiveSystem_Entry( CarBody* pCarBody, HdStateMachine* pSt
             }
             AdaptiveSystemRgn1Hsm_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->AdaptiveSystemRgn1Hsm, &( STM_RESET ){ .nDepth = pStm->nDepth } );
             printf("AdativeSystem on\n");
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	1252	187	168	508	42	40	1413	730" );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	1252	149	167	578	33	34	1422	742" );
     }
 }
 static BOOL MainTop_AdaptiveSystem_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
@@ -1376,14 +1419,14 @@ static BOOL MainTop_AdaptiveSystem_EventProc( CarBody* pCarBody, HdStateMachine*
     bResult |= AdaptiveSystemRgn1Hsm_EventProc( pCarBody, &( ( MainTop* )pStm->pMain )->AdaptiveSystemRgn1Hsm, nEventId, pEventParams );
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_AdaptiveSystem;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	1252	187	168	508	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	1252	149	167	578	33	34	1422	742" );
     }
     pStm->bHandled |= bResult;
     return MainTop_CarOnRgn3_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void MainTop_AdaptiveSystem_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_AdaptiveSystem ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	1252	187	168	508	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	1252	149	167	578	33	34	1422	742" );
             AdaptiveSystemRgn1Hsm_Abort( pCarBody, &( ( MainTop* )pStm->pMain )->AdaptiveSystemRgn1Hsm );
             printf("AdativeSystem off\n");
         MainTop_CarOnRgn3_Exit( pCarBody, pStm );
@@ -1392,14 +1435,15 @@ static void MainTop_AdaptiveSystem_Exit( CarBody* pCarBody, HdStateMachine* pStm
 static void MainTop_ClimateCtrlOff_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_ClimateCtrlOff ) ){
         MainTop_AdaptiveSystem_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	264	117	45	42	40	1413	730" );
+            ImgSprite_setSpriteCoords(fanCtrl, 0, 0);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	1273	209	124	63	33	34	1422	742" );
     }
 }
 static BOOL MainTop_ClimateCtrlOff_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_ClimateCtrlOff;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	264	117	45	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	1273	209	124	63	33	34	1422	742" );
     switch( nEventId ){
     case CarBody_E4:{
                 CarOnRgn3Hsm_BgnTrans( pCarBody, pStm, MainTop_ClimateCtrlMan );
@@ -1414,21 +1458,22 @@ static BOOL MainTop_ClimateCtrlOff_EventProc( CarBody* pCarBody, HdStateMachine*
 }
 static void MainTop_ClimateCtrlOff_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_ClimateCtrlOff ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	264	117	45	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	1273	209	124	63	33	34	1422	742" );
         MainTop_AdaptiveSystem_Exit( pCarBody, pStm );
     }
 }
 static void MainTop_ClimateCtrlMan_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_ClimateCtrlMan ) ){
         MainTop_AdaptiveSystem_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	340	117	45	42	40	1413	730" );
+            ImgSprite_setSpriteCoords(fanCtrl, 0, 1);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	1273	289	124	73	33	34	1422	742" );
     }
 }
 static BOOL MainTop_ClimateCtrlMan_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_ClimateCtrlMan;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	340	117	45	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	1273	289	124	73	33	34	1422	742" );
     switch( nEventId ){
     case CarBody_E4:{
                 CarOnRgn3Hsm_BgnTrans( pCarBody, pStm, MainTop_ClimateCtrlAuto );
@@ -1443,21 +1488,22 @@ static BOOL MainTop_ClimateCtrlMan_EventProc( CarBody* pCarBody, HdStateMachine*
 }
 static void MainTop_ClimateCtrlMan_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_ClimateCtrlMan ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	340	117	45	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	1273	289	124	73	33	34	1422	742" );
         MainTop_AdaptiveSystem_Exit( pCarBody, pStm );
     }
 }
 static void MainTop_ClimateCtrlAuto_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_ClimateCtrlAuto ) ){
         MainTop_AdaptiveSystem_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	407	117	45	42	40	1413	730" );
+            ImgSprite_setSpriteCoords(fanCtrl, 0, 2);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	1273	381	124	63	33	34	1422	742" );
     }
 }
 static BOOL MainTop_ClimateCtrlAuto_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_ClimateCtrlAuto;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	407	117	45	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	1273	381	124	63	33	34	1422	742" );
     switch( nEventId ){
     case CarBody_E4:{
                 CarOnRgn3Hsm_BgnTrans( pCarBody, pStm, MainTop_ClimateCtrlOff );
@@ -1472,7 +1518,7 @@ static BOOL MainTop_ClimateCtrlAuto_EventProc( CarBody* pCarBody, HdStateMachine
 }
 static void MainTop_ClimateCtrlAuto_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_ClimateCtrlAuto ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	1278	407	117	45	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	1273	381	124	63	33	34	1422	742" );
         MainTop_AdaptiveSystem_Exit( pCarBody, pStm );
     }
 }
@@ -1585,14 +1631,14 @@ static void MainTop_MainStm_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
 static void MainTop_CarOff_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_CarOff ) ){
         MainTop_MainStm_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	82	172	96	189	42	40	1413	730" );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	82	172	96	189	33	34	1422	742" );
     }
 }
 static BOOL MainTop_CarOff_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_CarOff;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	82	172	96	189	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	82	172	96	189	33	34	1422	742" );
     switch( nEventId ){
     case CarBody_E0:{
                 MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_CarOn );
@@ -1607,7 +1653,7 @@ static BOOL MainTop_CarOff_EventProc( CarBody* pCarBody, HdStateMachine* pStm, C
 }
 static void MainTop_CarOff_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_CarOff ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	82	172	96	189	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	82	172	96	189	33	34	1422	742" );
         MainTop_MainStm_Exit( pCarBody, pStm );
     }
 }
@@ -1620,8 +1666,8 @@ static void MainTop_CarOn_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
             CarOnRgn1Hsm_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->CarOnRgn1Hsm, &( STM_RESET ){ .nDepth = pStm->nDepth } );
             CarOnRgn2Hsm_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->CarOnRgn2Hsm, &( STM_RESET ){ .nDepth = pStm->nDepth } );
             CarOnRgn3Hsm_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->CarOnRgn3Hsm, &( STM_RESET ){ .nDepth = pStm->nDepth } );
-            printf("Power LED on\n");
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	201	80	1228	664	42	40	1413	730" );
+            CarBody_turnOn( carBody );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	201	74	1228	676	33	34	1422	742" );
     }
 }
 static BOOL MainTop_CarOn_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
@@ -1631,7 +1677,7 @@ static BOOL MainTop_CarOn_EventProc( CarBody* pCarBody, HdStateMachine* pStm, Ca
     bResult |= CarOnRgn3Hsm_EventProc( pCarBody, &( ( MainTop* )pStm->pMain )->CarOnRgn3Hsm, nEventId, pEventParams );
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_CarOn;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	201	80	1228	664	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	201	74	1228	676	33	34	1422	742" );
     switch( nEventId ){
     case CarBody_E0:{
                 if (HdStateMachine_IsIn( &( ( MainTop* )pStm->pMain )->MainStmHsm, MainTop_Parked )) {
@@ -1648,11 +1694,11 @@ static BOOL MainTop_CarOn_EventProc( CarBody* pCarBody, HdStateMachine* pStm, Ca
 }
 static void MainTop_CarOn_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_CarOn ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	201	80	1228	664	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	201	74	1228	676	33	34	1422	742" );
             CarOnRgn1Hsm_Abort( pCarBody, &( ( MainTop* )pStm->pMain )->CarOnRgn1Hsm );
             CarOnRgn2Hsm_Abort( pCarBody, &( ( MainTop* )pStm->pMain )->CarOnRgn2Hsm );
             CarOnRgn3Hsm_Abort( pCarBody, &( ( MainTop* )pStm->pMain )->CarOnRgn3Hsm );
-            printf("Power LED off\n");
+            CarBody_turnOff( carBody );
         MainTop_MainStm_Exit( pCarBody, pStm );
     }
 }
@@ -1666,7 +1712,7 @@ static void MainTop_Driving_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
             DrivingRgn2Hsm_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->DrivingRgn2Hsm, &( STM_RESET ){ .nDepth = pStm->nDepth } );
             DrivingRgn3Hsm_Reset( pCarBody, &( ( MainTop* )pStm->pMain )->DrivingRgn3Hsm, &( STM_RESET ){ .nDepth = pStm->nDepth } );
             printf("DrivingSystem on\n");
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	224	146	650	588	42	40	1413	730" );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	224	140	650	600	33	34	1422	742" );
     }
 }
 static BOOL MainTop_Driving_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
@@ -1676,14 +1722,14 @@ static BOOL MainTop_Driving_EventProc( CarBody* pCarBody, HdStateMachine* pStm, 
     bResult |= DrivingRgn3Hsm_EventProc( pCarBody, &( ( MainTop* )pStm->pMain )->DrivingRgn3Hsm, nEventId, pEventParams );
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_Driving;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	224	146	650	588	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	224	140	650	600	33	34	1422	742" );
     }
     pStm->bHandled |= bResult;
     return MainTop_CarOn_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void MainTop_Driving_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_Driving ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	224	146	650	588	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	224	140	650	600	33	34	1422	742" );
             DrivingRgn1Hsm_Abort( pCarBody, &( ( MainTop* )pStm->pMain )->DrivingRgn1Hsm );
             DrivingRgn2Hsm_Abort( pCarBody, &( ( MainTop* )pStm->pMain )->DrivingRgn2Hsm );
             DrivingRgn3Hsm_Abort( pCarBody, &( ( MainTop* )pStm->pMain )->DrivingRgn3Hsm );
@@ -1694,15 +1740,15 @@ static void MainTop_Driving_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
 static void MainTop_Parked_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_Parked ) ){
         MainTop_Driving_Entry( pCarBody, pStm );
-            printf("Show P\n");
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	302	255	117	73	42	40	1413	730" );
+            ImgSprite_setSpriteCoords(gear, 0, 0);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	302	250	117	84	33	34	1422	742" );
     }
 }
 static BOOL MainTop_Parked_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_Parked;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	302	255	117	73	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	302	250	117	84	33	34	1422	742" );
     switch( nEventId ){
     case CarBody_E2:{
                 MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_Neutral );
@@ -1717,7 +1763,7 @@ static BOOL MainTop_Parked_EventProc( CarBody* pCarBody, HdStateMachine* pStm, C
 }
 static void MainTop_Parked_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_Parked ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	302	255	117	73	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	302	250	117	84	33	34	1422	742" );
             printf("Hide P\n");
         MainTop_Driving_Exit( pCarBody, pStm );
     }
@@ -1725,15 +1771,15 @@ static void MainTop_Parked_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
 static void MainTop_Neutral_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_Neutral ) ){
         MainTop_Driving_Entry( pCarBody, pStm );
-            printf("Show N\n");
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	509	192	117	73	42	40	1413	730" );
+            ImgSprite_setSpriteCoords(gear, 1, 0);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	509	170	117	84	33	34	1422	742" );
     }
 }
 static BOOL MainTop_Neutral_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_Neutral;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	509	192	117	73	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	509	170	117	84	33	34	1422	742" );
     switch( nEventId ){
     case CarBody_E2:{
                 MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_Drive );
@@ -1758,7 +1804,7 @@ static BOOL MainTop_Neutral_EventProc( CarBody* pCarBody, HdStateMachine* pStm, 
 }
 static void MainTop_Neutral_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_Neutral ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	509	192	117	73	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	509	170	117	84	33	34	1422	742" );
             printf("Hide N\n");
         MainTop_Driving_Exit( pCarBody, pStm );
     }
@@ -1766,14 +1812,14 @@ static void MainTop_Neutral_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
 static void MainTop_Moving_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_Moving ) ){
         MainTop_Driving_Entry( pCarBody, pStm );
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	466	269	373	98	42	40	1413	730" );
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	466	263	373	110	33	34	1422	742" );
     }
 }
 static BOOL MainTop_Moving_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_Moving;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	466	269	373	98	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	466	263	373	110	33	34	1422	742" );
     switch( nEventId ){
     case CarBody_E3:{
                 MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_Neutral );
@@ -1788,29 +1834,29 @@ static BOOL MainTop_Moving_EventProc( CarBody* pCarBody, HdStateMachine* pStm, C
 }
 static void MainTop_Moving_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_Moving ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	466	269	373	98	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	466	263	373	110	33	34	1422	742" );
         MainTop_Driving_Exit( pCarBody, pStm );
     }
 }
 static void MainTop_Reversed_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_Reversed ) ){
         MainTop_Moving_Entry( pCarBody, pStm );
-            printf("Show R\n");
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	509	283	117	73	42	40	1413	730" );
+            ImgSprite_setSpriteCoords(gear, 2, 0);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	509	278	117	84	33	34	1422	742" );
     }
 }
 static BOOL MainTop_Reversed_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_Reversed;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	509	283	117	73	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	509	278	117	84	33	34	1422	742" );
     }
     pStm->bHandled |= bResult;
     return MainTop_Moving_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void MainTop_Reversed_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_Reversed ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	509	283	117	73	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	509	278	117	84	33	34	1422	742" );
             printf("Hide R\n");
         MainTop_Moving_Exit( pCarBody, pStm );
     }
@@ -1818,22 +1864,22 @@ static void MainTop_Reversed_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
 static void MainTop_Drive_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Enterable( pStm, MainTop_Drive ) ){
         MainTop_Moving_Entry( pCarBody, pStm );
-            printf("Show D\n");
-        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	706	283	117	73	42	40	1413	730" );
+            ImgSprite_setSpriteCoords(gear, 3, 0);
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, "Model/CarBody/MainTop	706	278	117	84	33	34	1422	742" );
     }
 }
 static BOOL MainTop_Drive_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
     if( !pStm->bHandled ){
     pStm->nSourceState = MainTop_Drive;
-    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	706	283	117	73	42	40	1413	730" );
+    HdStateMachine_DefaultDoingAction( pStm, pCarBody, "Model/CarBody/MainTop	706	278	117	84	33	34	1422	742" );
     }
     pStm->bHandled |= bResult;
     return MainTop_Moving_EventProc( pCarBody, pStm, nEventId, pEventParams );
 }
 static void MainTop_Drive_Exit( CarBody* pCarBody, HdStateMachine* pStm ){
     if( HdStateMachine_Exitable( pStm, MainTop_Drive ) ){ 
-        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	706	283	117	73	42	40	1413	730" );
+        HdStateMachine_DefaultExitAction( pStm, pCarBody, "Model/CarBody/MainTop	706	278	117	84	33	34	1422	742" );
             printf("Hide D\n");
         MainTop_Moving_Exit( pCarBody, pStm );
     }
@@ -1912,6 +1958,7 @@ static BOOL MainStmHsm_StateDefaultTrans( CarBody* pCarBody, HdStateMachine* pSt
     pStm->nLCAState = STATE_UNDEF;
             if ( pStm->nPseudostate == MainTop_MainInit  ) {
                 MainStmHsm_BgnTrans( pCarBody, pStm, MainTop_CarOff );
+                CarBody_turnOff( carBody );
                 MainStmHsm_EndTrans( pCarBody, pStm );
                 bResult |= TRUE;
             } else if ( pStm->nPseudostate == MainTop_GearInit  ) {

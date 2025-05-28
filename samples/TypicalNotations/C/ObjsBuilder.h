@@ -4,6 +4,8 @@
 typedef struct tagObjsBuilder ObjsBuilder;
 extern Sprite* g_objects[];
 enum {
+#define Rectangle_k8s           ( g_objects[ _Rectangle_k8s ] )
+    _Rectangle_k8s,
 #define carBody                 ( g_objects[ _carBody ] )
     _carBody,
 #define Text_1sh                ( g_objects[ _Text_1sh ] )
@@ -55,7 +57,23 @@ enum {
 #define Text_40e                ( g_objects[ _Text_40e ] )
     _Text_40e,
 #define Text_41a                ( g_objects[ _Text_41a ] )
-    _Text_41a
+    _Text_41a,
+#define gear                    ( g_objects[ _gear ] )
+    _gear,
+#define batteryOper             ( g_objects[ _batteryOper ] )
+    _batteryOper,
+#define display                 ( g_objects[ _display ] )
+    _display,
+#define airbag                  ( g_objects[ _airbag ] )
+    _airbag,
+#define seatbelt                ( g_objects[ _seatbelt ] )
+    _seatbelt,
+#define speedometer             ( g_objects[ _speedometer ] )
+    _speedometer,
+#define fanCtrl                 ( g_objects[ _fanCtrl ] )
+    _fanCtrl,
+#define radar                   ( g_objects[ _radar ] )
+    _radar
 };
 int ObjsBuilder_startSim( void   );
 void ObjsBuilder_showEntry( void* pObj, void* pStm_, char* pMsg );

@@ -14,23 +14,29 @@
 /** @private @static @memberof ObjsBuilder */
 static int hardwareAccelerationAvailable = SDL_RENDERER_SOFTWARE;
 Sprite* g_objects[] = {
+    &Primitive_Ctor(                                            /* Rectangle_k8s */
+        P( { 0.28089698893501897, 0.2485582361732043, 0.6209150326797388, 0.36080586080586086 } )/* k8s-f72ad0f79151570c445559a2aaf79bca */,
+        P( "Rectangle_k8s" )                                    /* Rectangle_k8s */,
+        P( "Rectangle 000000 line 1 true 000000 null null 0 null" )/* Rectangle_k8s */
+    ),
     &CarBody_Ctor(                                              /* carBody */
-        P( { 0.7987166043987031, 0.23032944956380727, 0.15362564030264572, 0.22153004247739125 } )/* m_iniRect */,
+        P( { 0.06535947712418301, 0.6404245741382015, 0.1302805675115574, 0.1733290002680248 } )/* m_iniRect */,
         P( "carBody" )                                          /* m_name */,
         P( "CarBody.png" )                                      /* m_imgPath */,
         P( { 0.0, 0.0 } )                                       /* m_center */,
         P( 0.0 )                                                /* m_angle */,
+        P( { 0 } )                                              /* m_spriteCoords */,
         P( null )                                               /* m_constraints */,
         P( null )                                               /* m_mouseListeners */,
         P( &EventListener_Ctor( 0, CarBody_Start, &carBody, 0, null ) )/* m_onDrawListeners */
     ),
     &Primitive_Ctor(                                            /* Text_1sh */
-        P( { 0.6744039017341039, 0.6495018433988764, 0.2504816955684008, 0.05181267556179775 } )/* 1sh-c8099ab49758debe3aa2523402f0bf52 */,
+        P( { 0.32157462244696444, 0.0888907967032967, 0.21241830065359477, 0.04053914835164835 } )/* 1sh-c8099ab49758debe3aa2523402f0bf52 */,
         P( "Text_1sh" )                                         /* Text_1sh */,
         P( "Text 000000 line 2 null 000000 null Monospaced 8 ______________________" )/* Text_1sh */
     ),
     &FlexButton_Ctor(                                           /* selectBtn */
-        P( { 0.1505399004495826, 0.28214975421348315, 0.03931840077071286, 0.16941713483146068 } )/* m_iniRect */,
+        P( { 0.7193922129563677, 0.7866273099565632, 0.032679738562091505, 0.1350356496130985 } )/* m_iniRect */,
         P( "selectBtn" )                                        /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 0 )                                                  /* m_value */,
@@ -40,7 +46,7 @@ Sprite* g_objects[] = {
         P( &EventListener_Ctor( MDD_ON_VALUE_CHANGED, CarBody_EventProc, &carBody, CarBody_UPDATE, null ) )/* m_buttonListeners */
     ),
     &FlexButton_Ctor(                                           /* resetBtn */
-        P( { 0.419757546563905, 0.11361042837078651, 0.038535645472061654, 0.056179775280898875 } )/* m_iniRect */,
+        P( { 0.1918032504515109, 0.17320899439712734, 0.032679738562091505, 0.04395604395604396 } )/* m_iniRect */,
         P( "resetBtn" )                                         /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 0 )                                                  /* m_value */,
@@ -50,7 +56,7 @@ Sprite* g_objects[] = {
         P( &EventListener_Ctor( MDD_ON_CLICK, CarBody_Start, &carBody, 0, null ) )/* m_buttonListeners */
     ),
     &FlexButton_Ctor(                                           /* toggleBtn */
-        P( { 0.15072053628773283, 0.11361042837078651, 0.07646917148362235, 0.056179775280898875 } )/* m_iniRect */,
+        P( { 0.30116528230128764, 0.8344621014091631, 0.06484885620915033, 0.04395604395604396 } )/* m_iniRect */,
         P( "toggleBtn" )                                        /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 0 )                                                  /* m_value */,
@@ -60,7 +66,7 @@ Sprite* g_objects[] = {
         P( &EventListener_Ctor( MDD_ON_VALUE_CHANGED, CarBody_EventProc, &carBody, CarBody_UPDATE, null ) )/* m_buttonListeners */
     ),
     &FlexButton_Ctor(                                           /* slider */
-        P( { 0.11274352387069157, 0.5639264396067416, 0.15362564030264572, 0.056179775280898875 } )/* m_iniRect */,
+        P( { 0.6094733771629902, 0.11326641961080262, 0.1302805675115574, 0.04395604395604396 } )/* m_iniRect */,
         P( "slider" )                                           /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 3 )                                                  /* m_value */,
@@ -70,32 +76,32 @@ Sprite* g_objects[] = {
         P( &EventListener_Ctor( MDD_ON_VALUE_CHANGED, CarBody_EventProc, &carBody, CarBody_UPDATE, null ) )/* m_buttonListeners */
     ),
     &Primitive_Ctor(                                            /* Text_30d */
-        P( { 0.20051247056304863, 0.2822448501872659, 0.10597302504816955, 0.05181267556179775 } )/* 30d-8d4fb42be642ae6942cda72d744e94eb */,
+        P( { 0.7628470263515785, 0.7929374789712803, 0.08986928104575163, 0.04053914835164835 } )/* 30d-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_30d" )                                         /* Text_30d */,
         P( "Text 000000 line 2 null 000000 null Monospaced 8 0: Rest" )/* Text_30d */
     ),
     &Primitive_Ctor(                                            /* Text_389 */
-        P( { 0.2006730357525154, 0.3413104225187266, 0.1252408477842004, 0.08115344101123595 } )/* 389-8d4fb42be642ae6942cda72d744e94eb */,
+        P( { 0.7629831919289211, 0.8362079361926301, 0.10620915032679738, 0.04053914835164835 } )/* 389-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_389" )                                         /* Text_389 */,
-        P( "Text 000000 line 2 null 000000 null Monospaced 8 1: Accel" )/* Text_389 */
+        P( "Text 000000 line 2 null 000000 null Monospaced 8 1: Brake" )/* Text_389 */
     ),
     &Primitive_Ctor(                                            /* Text_3ht */
-        P( { 0.20067303575251552, 0.3992860486891384, 0.15362564030264572, 0.05181267556179775 } )/* 3ht-8d4fb42be642ae6942cda72d744e94eb */,
+        P( { 0.7629831919289213, 0.8810785046123056, 0.1302805675115574, 0.04053914835164835 } )/* 3ht-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_3ht" )                                         /* Text_3ht */,
-        P( "Text 000000 line 2 null 000000 null Monospaced 8 2: Brake" )/* Text_3ht */
+        P( "Text 000000 line 2 null 000000 null Monospaced 8 2: Accel" )/* Text_3ht */
     ),
     &Primitive_Ctor(                                            /* Text_3re */
-        P( { 0.0784829265681867, 0.1991455992509363, 0.22157996146435452, 0.05181267556179775 } )/* 3re-8d4fb42be642ae6942cda72d744e94eb */,
+        P( { 0.2399049564116725, 0.9013863230208845, 0.18790849673202614, 0.04053914835164835 } )/* 3re-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_3re" )                                         /* Text_3re */,
         P( "Text 000000 line 2 null 000000 null Monospaced 8 SeatBelt Off <-> On" )/* Text_3re */
     ),
     &Primitive_Ctor(                                            /* Text_4by */
-        P( { 0.491938289445515, 0.11370552434456926, 0.08670520231213873, 0.05181267556179775 } )/* 4by-8d4fb42be642ae6942cda72d744e94eb */,
+        P( { 0.25301535103248407, 0.17328339915903207, 0.07352941176470588, 0.04053914835164835 } )/* 4by-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_4by" )                                         /* Text_4by */,
         P( "Text 000000 line 2 null 000000 null Monospaced 8 Reset" )/* Text_4by */
     ),
     &FlexButton_Ctor(                                           /* pushBtn0 */
-        P( { 0.4195233889959324, 0.22606507490636701, 0.038535645472061654, 0.056179775280898875 } )/* m_iniRect */,
+        P( { 0.8570730041863378, 0.6321383113377382, 0.032679738562091505, 0.04395604395604396 } )/* m_iniRect */,
         P( "pushBtn0" )                                         /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 0 )                                                  /* m_value */,
@@ -105,12 +111,12 @@ Sprite* g_objects[] = {
         P( &EventListener_Ctor( MDD_ON_CLICK, CarBody_EventProc, &carBody, CarBody_E0, null ) )/* m_buttonListeners */
     ),
     &Primitive_Ctor(                                            /* Text_76n */
-        P( { 0.5062285913080711, 0.2307467228464419, 0.1252408477842004, 0.05181267556179775 } )/* 76n-8d4fb42be642ae6942cda72d744e94eb */,
+        P( { 0.8467146941956748, 0.7069355379206791, 0.10620915032679738, 0.04053914835164835 } )/* 76n-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_76n" )                                         /* Text_76n */,
         P( "Text 000000 line 2 null 000000 null Monospaced 8 E0: Power" )/* Text_76n */
     ),
     &FlexButton_Ctor(                                           /* pushBtn1 */
-        P( { 0.4195233889959324, 0.34076544943820225, 0.038535645472061654, 0.056179775280898875 } )/* m_iniRect */,
+        P( { 0.5747725840182707, 0.6914658885224585, 0.032679738562091505, 0.04395604395604396 } )/* m_iniRect */,
         P( "pushBtn1" )                                         /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 0 )                                                  /* m_value */,
@@ -120,12 +126,12 @@ Sprite* g_objects[] = {
         P( &EventListener_Ctor( MDD_ON_CLICK, CarBody_EventProc, &carBody, CarBody_E1, null ) )/* m_buttonListeners */
     ),
     &Primitive_Ctor(                                            /* Text_7ik */
-        P( { 0.5062285913080711, 0.3454470973782771, 0.15362564030264572, 0.05181267556179775 } )/* 7ik-8d4fb42be642ae6942cda72d744e94eb */,
+        P( { 0.6110996148305956, 0.695128892185462, 0.1302805675115574, 0.04053914835164835 } )/* 7ik-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_7ik" )                                         /* Text_7ik */,
-        P( "Text 000000 line 2 null 000000 null Monospaced 8 E1: Park" )/* Text_7ik */
+        P( "Text 000000 line 2 null 000000 null Monospaced 8 E1: Reverse" )/* Text_7ik */
     ),
     &FlexButton_Ctor(                                           /* pushBtn2 */
-        P( { 0.4195233889959324, 0.4500423106116188, 0.038535645472061654, 0.056179775280898875 } )/* m_iniRect */,
+        P( { 0.5193337418147226, 0.746550013497075, 0.032679738562091505, 0.04395604395604396 } )/* m_iniRect */,
         P( "pushBtn2" )                                         /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 0 )                                                  /* m_value */,
@@ -135,12 +141,12 @@ Sprite* g_objects[] = {
         P( &EventListener_Ctor( MDD_ON_CLICK, CarBody_EventProc, &carBody, CarBody_E2, null ) )/* m_buttonListeners */
     ),
     &Primitive_Ctor(                                            /* Text_9uo */
-        P( { 0.5062285913080711, 0.4547239585516937, 0.15362564030264572, 0.05181267556179775 } )/* 9uo-8d4fb42be642ae6942cda72d744e94eb */,
+        P( { 0.5622258986774676, 0.7502130171600787, 0.1302805675115574, 0.04053914835164835 } )/* 9uo-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_9uo" )                                         /* Text_9uo */,
         P( "Text 000000 line 2 null 000000 null Monospaced 8 E2: Gear Up" )/* Text_9uo */
     ),
     &FlexButton_Ctor(                                           /* pushBtn3 */
-        P( { 0.419757546563905, 0.5639264396067416, 0.038535645472061654, 0.056179775280898875 } )/* m_iniRect */,
+        P( { 0.519532316615013, 0.6335356491190046, 0.032679738562091505, 0.04395604395604396 } )/* m_iniRect */,
         P( "pushBtn3" )                                         /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 0 )                                                  /* m_value */,
@@ -150,12 +156,12 @@ Sprite* g_objects[] = {
         P( &EventListener_Ctor( MDD_ON_CLICK, CarBody_EventProc, &carBody, CarBody_E3, null ) )/* m_buttonListeners */
     ),
     &Primitive_Ctor(                                            /* Text_c7m */
-        P( { 0.5064627488760437, 0.5686080875468165, 0.1719251766217085, 0.056179775280898875 } )/* c7m-8d4fb42be642ae6942cda72d744e94eb */,
+        P( { 0.5624244734777583, 0.6303305209138764, 0.1457992919389979, 0.04395604395604396 } )/* c7m-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_c7m" )                                         /* Text_c7m */,
         P( "Text 000000 line 2 null 000000 null Monospaced 8 E3: Gear Down" )/* Text_c7m */
     ),
     &FlexButton_Ctor(                                           /* pushBtn4 */
-        P( { 0.4195233889959324, 0.6747614117352143, 0.038535645472061654, 0.056179775280898875 } )/* m_iniRect */,
+        P( { 0.41137389120781315, 0.6339126508597124, 0.032679738562091505, 0.04395604395604396 } )/* m_iniRect */,
         P( "pushBtn4" )                                         /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 0 )                                                  /* m_value */,
@@ -165,12 +171,12 @@ Sprite* g_objects[] = {
         P( &EventListener_Ctor( MDD_ON_CLICK, CarBody_EventProc, &carBody, CarBody_E4, null ) )/* m_buttonListeners */
     ),
     &Primitive_Ctor(                                            /* Text_euz */
-        P( { 0.5062285913080711, 0.6647726769505701, 0.15362564030264572, 0.08115344101123595 } )/* euz-8d4fb42be642ae6942cda72d744e94eb */,
+        P( { 0.3754845354655162, 0.6839858291694979, 0.1302805675115574, 0.06349587912087912 } )/* euz-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_euz" )                                         /* Text_euz */,
         P( "Text 000000 line 2 null 000000 null Monospaced 8 E4: Air conditioner" )/* Text_euz */
     ),
     &FlexButton_Ctor(                                           /* pushBtn5 */
-        P( { 0.4195233889959324, 0.7871898408239701, 0.038535645472061654, 0.056179775280898875 } )/* m_iniRect */,
+        P( { 0.30195512370081035, 0.6335740779520765, 0.032679738562091505, 0.04395604395604396 } )/* m_iniRect */,
         P( "pushBtn5" )                                         /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 0 )                                                  /* m_value */,
@@ -180,12 +186,12 @@ Sprite* g_objects[] = {
         P( &EventListener_Ctor( MDD_ON_CLICK, CarBody_EventProc, &carBody, CarBody_E5, null ) )/* m_buttonListeners */
     ),
     &Primitive_Ctor(                                            /* Text_hkt */
-        P( { 0.5062285913080711, 0.7918714887640449, 0.1719251766217085, 0.05181267556179775 } )/* hkt-8d4fb42be642ae6942cda72d744e94eb */,
+        P( { 0.2609595588081866, 0.7068995619918461, 0.1457992919389979, 0.04053914835164835 } )/* hkt-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_hkt" )                                         /* Text_hkt */,
         P( "Text 000000 line 2 null 000000 null Monospaced 8 E5: IVI Mode" )/* Text_hkt */
     ),
     &FlexButton_Ctor(                                           /* batteryLife */
-        P( { 0.1128238064654251, 0.735330836454432, 0.15362564030264572, 0.056179775280898875 } )/* m_iniRect */,
+        P( { 0.11653205400997141, 0.46507638518319117, 0.1302805675115574, 0.04395604395604396 } )/* m_iniRect */,
         P( "batteryLife" )                                      /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 3 )                                                  /* m_value */,
@@ -195,14 +201,102 @@ Sprite* g_objects[] = {
         P( &EventListener_Ctor( MDD_ON_VALUE_CHANGED, CarBody_EventProc, &carBody, CarBody_UPDATE, null ) )/* m_buttonListeners */
     ),
     &Primitive_Ctor(                                            /* Text_40e */
-        P( { 0.07947976878612728, 0.8351279650436955, 0.2039177906229929, 0.05181267556179775 } )/* 40e7-388f135aa3dc291f5154473ae5009fe5 */,
+        P( { 0.0882550024486061, 0.5431594132662194, 0.17293028322440085, 0.04053914835164835 } )/* 40e7-388f135aa3dc291f5154473ae5009fe5 */,
         P( "Text_40e" )                                         /* Text_40e */,
         P( "Text 000000 line 2 null 000000 null Monospaced 8 Battery: E <-> F" )/* Text_40e */
     ),
     &Primitive_Ctor(                                            /* Text_41a */
-        P( { 0.04816955684007707, 0.6653377613920098, 0.2866088631984586, 0.05181267556179775 } )/* 41al-388f135aa3dc291f5154473ae5009fe5 */,
+        P( { 0.5547121208085966, 0.1926124208318037, 0.24305555555555555, 0.04053914835164835 } )/* 41al-388f135aa3dc291f5154473ae5009fe5 */,
         P( "Text_41a" )                                         /* Text_41a */,
         P( "Text 000000 line 2 null 000000 null Monospaced 8 Collision Detected <-> Safe" )/* Text_41a */
+    ),
+    &ImgSprite_Ctor(                                            /* gear */
+        P( { 0.5319173633105511, 0.4842826446937884, 0.04718224000355297, 0.08020965741348217 } )/* m_iniRect */,
+        P( "gear" )                                             /* m_name */,
+        P( "Gear.png" )                                         /* m_imgPath */,
+        P( { 0.0, 0.0 } )                                       /* m_center */,
+        P( 0.0 )                                                /* m_angle */,
+        P( { .w = 4, .h = 1 } )                                 /* m_spriteCoords */,
+        P( null )                                               /* m_constraints */,
+        P( null )                                               /* m_mouseListeners */,
+        P( null )                                               /* m_onDrawListeners */
+    ),
+    &ImgSprite_Ctor(                                            /* batteryOper */
+        P( { 0.5810384385496911, 0.26044878018658685, 0.1457992919389979, 0.06349587912087912 } )/* m_iniRect */,
+        P( "batteryOper" )                                      /* m_name */,
+        P( "BatteryOper.png" )                                  /* m_imgPath */,
+        P( { 0.0, 0.0 } )                                       /* m_center */,
+        P( 0.0 )                                                /* m_angle */,
+        P( { .w = 1, .h = 3 } )                                 /* m_spriteCoords */,
+        P( null )                                               /* m_constraints */,
+        P( null )                                               /* m_mouseListeners */,
+        P( null )                                               /* m_onDrawListeners */
+    ),
+    &ImgSprite_Ctor(                                            /* display */
+        P( { 0.3960249845777206, 0.260279847894816, 0.1830065359477124, 0.210989010989011 } )/* m_iniRect */,
+        P( "display" )                                          /* m_name */,
+        P( "Display.png" )                                      /* m_imgPath */,
+        P( { 0.0, 0.0 } )                                       /* m_center */,
+        P( 0.0 )                                                /* m_angle */,
+        P( { .w = 2, .h = 2 } )                                 /* m_spriteCoords */,
+        P( null )                                               /* m_constraints */,
+        P( null )                                               /* m_mouseListeners */,
+        P( null )                                               /* m_onDrawListeners */
+    ),
+    &ImgSprite_Ctor(                                            /* airbag */
+        P( { 0.6717266710282987, 0.39031141652829715, 0.04718224000355297, 0.08020965741348217 } )/* m_iniRect */,
+        P( "airbag" )                                           /* m_name */,
+        P( "Airbag.png" )                                       /* m_imgPath */,
+        P( { 0.0, 0.0 } )                                       /* m_center */,
+        P( 0.0 )                                                /* m_angle */,
+        P( { .w = 2, .h = 1 } )                                 /* m_spriteCoords */,
+        P( null )                                               /* m_constraints */,
+        P( null )                                               /* m_mouseListeners */,
+        P( null )                                               /* m_onDrawListeners */
+    ),
+    &ImgSprite_Ctor(                                            /* seatbelt */
+        P( { 0.6256682307650845, 0.390918101509982, 0.04718224000355297, 0.08020965741348217 } )/* m_iniRect */,
+        P( "seatbelt" )                                         /* m_name */,
+        P( "SeatBelt.png" )                                     /* m_imgPath */,
+        P( { 0.0, 0.0 } )                                       /* m_center */,
+        P( 0.0 )                                                /* m_angle */,
+        P( { .w = 2, .h = 1 } )                                 /* m_spriteCoords */,
+        P( null )                                               /* m_constraints */,
+        P( null )                                               /* m_mouseListeners */,
+        P( null )                                               /* m_onDrawListeners */
+    ),
+    &ImgSprite_Ctor(                                            /* speedometer */
+        P( { 0.7411877024426443, 0.26046299807796625, 0.1302805675115574, 0.15750915750915756 } )/* m_iniRect */,
+        P( "speedometer" )                                      /* m_name */,
+        P( "Speedometer.png" )                                  /* m_imgPath */,
+        P( { 0.0, 0.0 } )                                       /* m_center */,
+        P( 0.0 )                                                /* m_angle */,
+        P( { .w = 2, .h = 2 } )                                 /* m_spriteCoords */,
+        P( null )                                               /* m_constraints */,
+        P( null )                                               /* m_mouseListeners */,
+        P( null )                                               /* m_onDrawListeners */
+    ),
+    &ImgSprite_Ctor(                                            /* fanCtrl */
+        P( { 0.4509677950352369, 0.4926923689092495, 0.07352941176470588, 0.06349587912087912 } )/* m_iniRect */,
+        P( "fanCtrl" )                                          /* m_name */,
+        P( "FanCtrl.png" )                                      /* m_imgPath */,
+        P( { 0.0, 0.0 } )                                       /* m_center */,
+        P( 0.0 )                                                /* m_angle */,
+        P( { .w = 1, .h = 3 } )                                 /* m_spriteCoords */,
+        P( null )                                               /* m_constraints */,
+        P( null )                                               /* m_mouseListeners */,
+        P( null )                                               /* m_onDrawListeners */
+    ),
+    &ImgSprite_Ctor(                                            /* radar */
+        P( { 0.5806318997864688, 0.39031141652829715, 0.04718224000355297, 0.08020965741348217 } )/* m_iniRect */,
+        P( "radar" )                                            /* m_name */,
+        P( "radar.png" )                                        /* m_imgPath */,
+        P( { 0.0, 0.0 } )                                       /* m_center */,
+        P( 0.0 )                                                /* m_angle */,
+        P( { .w = 3, .h = 1 } )                                 /* m_spriteCoords */,
+        P( null )                                               /* m_constraints */,
+        P( null )                                               /* m_mouseListeners */,
+        P( null )                                               /* m_onDrawListeners */
     )
 };
 Sprite* getobj( int id ){
@@ -528,28 +622,28 @@ void ObjsBuilder_showDiagram(
         return;
     }
     HdStateMachine* pStm = ( HdStateMachine* )pStm_;
-    char s[ 256 ];
+    char stmPath[ 256 ];
     int l, t, w, h, dgrX, dgrY, dgrW, dgrH;
-    sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", s, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
+    sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", stmPath, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
     if( pSprite->m_stmWindow == null ){
         char windowName[255];
-        sprintf(windowName, "%s - %s", s, pSprite->m_name);
+        sprintf(windowName, "%s - %s", stmPath, pSprite->m_name);
         pSprite->m_stmWindow = SDL_CreateWindow(windowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1, 0, SDL_WINDOW_SHOWN);
         SDL_CreateRenderer(pSprite->m_stmWindow, -1, hardwareAccelerationAvailable);
     }
     SDL_Texture* stmImage = pStm->m_stmImage;
     SDL_Rect* stmRect = &pStm->m_stmRect;
     if( stmImage == null ){
-        stmImage = SDL_GetWindowData(pSprite->m_stmWindow, s);
+        stmImage = SDL_GetWindowData(pSprite->m_stmWindow, stmPath);
         if( stmImage != null){
             char rectKey[255];
-            snprintf(rectKey, 255, "%s-rect", s);
+            snprintf(rectKey, 255, "%s-rect", stmPath);
             stmRect = SDL_GetWindowData(pSprite->m_stmWindow, rectKey);
         }
     }
     if( stmImage == null ){
         char sRelPath[256];
-        sprintf(sRelPath, "%s/%s.png", getInputDir(), s);
+        sprintf(sRelPath, "%s/%s.png", getInputDir(), stmPath);
         SDL_Surface *imageSurface = IMG_Load(sRelPath);
         pStm->m_stmRect.w = imageSurface->w;
         pStm->m_stmRect.h = imageSurface->h;
@@ -582,9 +676,9 @@ void ObjsBuilder_showDiagram(
         SDL_SetWindowData(pSprite->m_stmWindow, key, pStm->m_stmImage);
         SDL_SetWindowData(pSprite->m_stmWindow, "textureCount", (void*)(intptr_t)textureCount);
         
-        SDL_SetWindowData(pSprite->m_stmWindow, s, pStm->m_stmImage);
+        SDL_SetWindowData(pSprite->m_stmWindow, stmPath, pStm->m_stmImage);
         char rectKey[255];
-        snprintf(rectKey, 255, "%s-rect", s);
+        snprintf(rectKey, 255, "%s-rect", stmPath);
         SDL_SetWindowData(pSprite->m_stmWindow, rectKey, &pStm->m_stmRect);
 
         stmImage = pStm->m_stmImage;

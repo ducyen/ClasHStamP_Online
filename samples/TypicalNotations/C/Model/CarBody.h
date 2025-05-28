@@ -8,6 +8,8 @@ typedef struct tagE1Params {
 }E1Params;
 void CarBody_moveRight( CarBody* pCarBody );
 void CarBody_moveLeft( CarBody* pCarBody );
+void CarBody_turnOff( CarBody* pCarBody );
+void CarBody_turnOn( CarBody* pCarBody );
 typedef enum tagCarBodyEvent {
     CarBody_E0,                                                 
     CarBody_E1,                                                 
@@ -133,13 +135,13 @@ typedef struct tagMainTop {
 /** @memberof CarBody
  * @brief CarBody auto-generated constructor
  */
-#define CarBody_Init(_m_iniRect, _m_name, _m_imgPath, _m_center, _m_angle, _m_constraints, _m_mouseListeners, _m_onDrawListeners)\
-    ImgSprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_center ), P( _m_angle ), P( _m_constraints ), P( _m_mouseListeners ), P( _m_onDrawListeners ) )\
+#define CarBody_Init(_m_iniRect, _m_name, _m_imgPath, _m_center, _m_angle, _m_spriteCoords, _m_constraints, _m_mouseListeners, _m_onDrawListeners)\
+    ImgSprite_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_center ), P( _m_angle ), P( _m_spriteCoords ), P( _m_constraints ), P( _m_mouseListeners ), P( _m_onDrawListeners ) )\
     .x0 = 0,\
     .mainStm = MainTop_Init(),\
 
-#define CarBody_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_center, _m_angle, _m_constraints, _m_mouseListeners, _m_onDrawListeners )    ( CarBody ){ \
-    CarBody_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_center ), P( _m_angle ), P( _m_constraints ), P( _m_mouseListeners ), P( _m_onDrawListeners ) ) \
+#define CarBody_Ctor( _m_iniRect, _m_name, _m_imgPath, _m_center, _m_angle, _m_spriteCoords, _m_constraints, _m_mouseListeners, _m_onDrawListeners )    ( CarBody ){ \
+    CarBody_Init( P( _m_iniRect ), P( _m_name ), P( _m_imgPath ), P( _m_center ), P( _m_angle ), P( _m_spriteCoords ), P( _m_constraints ), P( _m_mouseListeners ), P( _m_onDrawListeners ) ) \
 }
 ImgSprite* CarBody_Copy( CarBody* pCarBody, const CarBody* pSource );
 /** @class CarBody
