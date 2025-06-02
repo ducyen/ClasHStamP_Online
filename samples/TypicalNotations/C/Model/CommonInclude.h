@@ -10,6 +10,9 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <assert.h>
+#include <string.h>
+#include <stdio.h>
+
 #if defined( _MSC_VER )
 #include <windows.h>
 #else
@@ -20,22 +23,26 @@
 #if !defined( _MSC_VER )
 typedef int             boolean;
 #endif
-#if !defined( bool )
+
+#ifndef __cplusplus
+#ifndef bool
 typedef int             bool;
 #endif
-
-#ifndef STATIC
-#define STATIC  static
-#endif
-
 #ifndef false
 #define false   ( 0 )
 #endif
 #ifndef true
 #define true    ( 1 )
 #endif
+#endif
 
+#ifndef STATIC
+#define STATIC  static
+#endif
+
+#if !defined(__cplusplus)
 typedef unsigned long   UINT32;
+#endif
 typedef unsigned short  UINT16;
 typedef unsigned char   UINT8;
 typedef int             BOOL;
@@ -118,6 +125,15 @@ typedef struct tagStmReset{
     BOOL        lastEnteredStateRecovering;
     int         nDepth;
 } STM_RESET;
+
+typedef struct tagHdStateMachine HdStateMachine;
+typedef struct {
+    BOOL( *pEventProc )( void*, HdStateMachine*, int, void* );
+    HdStateMachine* pHsm;
+    uint64_t* arrStates;
+    uint64_t currentState;
+    BOOL wasQueried;
+} HsmStates;
 
 #ifdef _MSC_VER
 # define strtok_r strtok_s

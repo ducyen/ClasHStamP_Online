@@ -445,6 +445,13 @@ int ObjsBuilder_startSim(
     }
     
     if (nResult == S_OK) {
+
+#if 1
+        for( int eventId = 0; eventId < CarBody_EVENT_NUM; eventId++ ){
+            printf( "Input Event: %s\n", CarBodyEvent_toString( eventId ) );
+            CarBody_printTestCases( carBody, eventId, NULL );
+        }
+#endif
         bool quit = false;
         SDL_Event e;
 
@@ -595,8 +602,8 @@ void ObjsBuilder_showDoing(
     void* pStm_,
     char* pMsg
 ){
-    HdStateMachine* pStm = (HdStateMachine*)pStm_;
-    ObjsBuilder_showDiagram( pObj, pStm_, pMsg, 0x00, 0x00, 0xFF - pStm->nDepth * 32, 0 );
+    //HdStateMachine* pStm = (HdStateMachine*)pStm_;
+    //ObjsBuilder_showDiagram( pObj, pStm_, pMsg, 0x00, 0x00, 0xFF - pStm->nDepth * 32, 0 );
 } /* ObjsBuilder_showDoing */
 
 void ObjsBuilder_showExit(

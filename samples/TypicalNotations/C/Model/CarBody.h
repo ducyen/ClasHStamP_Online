@@ -23,16 +23,14 @@ typedef enum tagCarBodyEvent {
 const TCHAR* CarBodyEvent_toString( CarBody_EVENT value );
 BOOL CarBody_Start( CarBody* pCarBody );
 BOOL CarBody_EventProc( CarBody* pCarBody, CarBody_EVENT nEventId, void* pEventParams );
+void CarBody_printTestCases( CarBody* pCarBody, int eventId, void* pParams );
 #endif//__CarBody_H__
 #if !defined( CarBody_Init ) && ( defined( __CarBody_INTERNAL__ )  || defined( __ObjsBuilder_INTERNAL__ )  )
 #define __ImgSprite_INTERNAL__
 #include "ImgSprite.h"
 #define __HdStateMachine_INTERNAL__
 #include "HdStateMachine.h"
-/** @class SharedTop
- * @extends HdStateMachine
- */
-typedef struct tagSharedTop {
+/* states' declaration */
 #define SharedTop_Charge                        ( 1ULL <<  0 )
 #define SharedTop_Drain                         ( 1ULL <<  1 )
 #define SharedTop_InitPt                        ( 1ULL <<  2 )
@@ -41,6 +39,10 @@ typedef struct tagSharedTop {
 #define SharedTop_Idle                          ( 1ULL <<  5 )
 #define SharedTop_Discharge                     ( 1ULL <<  6 )
 #define SharedTop_SharedStm                     ( SharedTop_Charge | SharedTop_Drain | SharedTop_InitPt | SharedTop_Discharging | SharedTop_Charging | SharedTop_Idle | SharedTop_Discharge )
+/** @class SharedTop
+ * @extends HdStateMachine
+ */
+typedef struct tagSharedTop {
     HdStateMachine SharedStmHsm;                                
     HdStateMachine* pParentStm;
     BOOL lastEnteredStateRecovering;
@@ -50,10 +52,7 @@ typedef struct tagSharedTop {
     .lastEnteredStateRecovering = FALSE,\
     .SharedStmHsm = { HdStateMachine_Init() },\
 }
-/** @class MainTop
- * @extends HdStateMachine
- */
-typedef struct tagMainTop {
+/* states' declaration */
 #define MainTop_DrivingRgn1Init                 ( 1ULL <<  0 )
 #define MainTop_SeatBeltsFastened               ( 1ULL <<  1 )
 #define MainTop_SeatBeltsUnfastened             ( 1ULL <<  2 )
@@ -61,15 +60,18 @@ typedef struct tagMainTop {
 #define MainTop_SeatBelts                       ( MainTop_SeatBeltsFastened | MainTop_SeatBeltsUnfastened | MainTop_SeatBeltInit )
 #define MainTop_SeatBeltsTighten                ( 1ULL <<  4 )
 #define MainTop_DrivingRgn1                     ( MainTop_DrivingRgn1Init | MainTop_SeatBelts | MainTop_SeatBeltsTighten )
+/* states' declaration */
 #define MainTop_AirbagArmed                     ( 1ULL <<  0 )
 #define MainTop_AirbagDeployed                  ( 1ULL <<  1 )
 #define MainTop_AirbagInit                      ( 1ULL <<  2 )
 #define MainTop_DrivingRgn2                     ( MainTop_AirbagArmed | MainTop_AirbagDeployed | MainTop_AirbagInit )
+/* states' declaration */
 #define MainTop_CollisionDetectHit              ( 1ULL <<  0 )
 #define MainTop_CollisionDetectAlert            ( 1ULL <<  1 )
 #define MainTop_CollisionDetectClear            ( 1ULL <<  2 )
 #define MainTop_CollisionDetectInit             ( 1ULL <<  3 )
 #define MainTop_DrivingRgn3                     ( MainTop_CollisionDetectHit | MainTop_CollisionDetectAlert | MainTop_CollisionDetectClear | MainTop_CollisionDetectInit )
+/* states' declaration */
 #define MainTop_EngineIdle                      ( 1ULL <<  0 )
 #define MainTop_EngineAccel                     ( 1ULL <<  1 )
 #define MainTop_EngineDeccel                    ( 1ULL <<  2 )
@@ -77,14 +79,17 @@ typedef struct tagMainTop {
 #define MainTop_EngineManagement                ( MainTop_EngineIdle | MainTop_EngineAccel | MainTop_EngineDeccel | MainTop_EngineMgmtInit )
 #define MainTop_CarOnRgn1Init                   ( 1ULL <<  4 )
 #define MainTop_CarOnRgn1                       ( MainTop_EngineManagement | MainTop_CarOnRgn1Init )
+/* states' declaration */
 #define MainTop_MainBattery                     ( 1ULL <<  0 )
 #define MainTop_BatteryMgmtInit                 ( 1ULL <<  1 )
 #define MainTop_CarOnRgn2                       ( MainTop_MainBattery | MainTop_BatteryMgmtInit )
+/* states' declaration */
 #define MainTop_InfotainmentOff                 ( 1ULL <<  0 )
 #define MainTop_InfotainmentAV                  ( 1ULL <<  1 )
 #define MainTop_InfotainmentNavi                ( 1ULL <<  2 )
 #define MainTop_InfotainmentInit                ( 1ULL <<  3 )
 #define MainTop_AdaptiveSystemRgn1              ( MainTop_InfotainmentOff | MainTop_InfotainmentAV | MainTop_InfotainmentNavi | MainTop_InfotainmentInit )
+/* states' declaration */
 #define MainTop_ClimateCtrlOff                  ( 1ULL <<  0 )
 #define MainTop_ClimateCtrlMan                  ( 1ULL <<  1 )
 #define MainTop_ClimateCtrlAuto                 ( 1ULL <<  2 )
@@ -92,6 +97,7 @@ typedef struct tagMainTop {
 #define MainTop_AdaptiveSystem                  ( MainTop_ClimateCtrlOff | MainTop_ClimateCtrlMan | MainTop_ClimateCtrlAuto | MainTop_ClimateCtrlInit )
 #define MainTop_AdaptiveSystemInit              ( 1ULL <<  4 )
 #define MainTop_CarOnRgn3                       ( MainTop_AdaptiveSystem | MainTop_AdaptiveSystemInit )
+/* states' declaration */
 #define MainTop_CarOff                          ( 1ULL <<  0 )
 #define MainTop_MainInit                        ( 1ULL <<  1 )
 #define MainTop_Parked                          ( 1ULL <<  2 )
@@ -104,6 +110,10 @@ typedef struct tagMainTop {
 #define MainTop_CarOnInit                       ( 1ULL <<  7 )
 #define MainTop_CarOn                           ( MainTop_Driving | MainTop_CarOnInit )
 #define MainTop_MainStm                         ( MainTop_CarOff | MainTop_MainInit | MainTop_CarOn )
+/** @class MainTop
+ * @extends HdStateMachine
+ */
+typedef struct tagMainTop {
     HdStateMachine MainStmHsm;                                  
     HdStateMachine DrivingRgn1Hsm;                              
     HdStateMachine DrivingRgn2Hsm;                              

@@ -343,6 +343,7 @@ static void FlexBtnTop_ReadyRgn1_Entry( FlexButton* pFlexButton, HdStateMachine*
                 if ( ( ( FlexBtnTop* )pStm->pMain )->lastEnteredStateRecovering ) {
                     pStm->nPseudostate = pStm->lastEnteredState;
                 }
+        HdStateMachine_DefaultEntryAction( pStm, pFlexButton, " top: ReadyRgn1" );
     }
 }
 static BOOL FlexBtnTop_ReadyRgn1_EventProc( FlexButton* pFlexButton, HdStateMachine* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
@@ -562,7 +563,6 @@ static BOOL ReadyRgn1Hsm_EventProc( FlexButton* pFlexButton, HdStateMachine* pSt
     BOOL bResult = FALSE;
     pStm->nLCAState = STATE_UNDEF;
     pStm->bHandled = FALSE;
-    ( ( FlexBtnTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
     switch( pStm->nCurrentState ){
     case FlexBtnTop_ReadyRgn1:                  bResult |= FlexBtnTop_ReadyRgn1_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
     case FlexBtnTop_Missed:                     bResult |= FlexBtnTop_Missed_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
@@ -607,6 +607,7 @@ static BOOL ReadyRgn1Hsm_StateDefaultTrans( FlexButton* pFlexButton, HdStateMach
                     bResult = TRUE;
                 }else{
                 }
+    ( ( FlexBtnTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
     return bResult;
 }
 static void FlexBtnTop_FlexBtnStm_Entry( FlexButton* pFlexButton, HdStateMachine* pStm ){
@@ -617,6 +618,7 @@ static void FlexBtnTop_FlexBtnStm_Entry( FlexButton* pFlexButton, HdStateMachine
                 if ( ( ( FlexBtnTop* )pStm->pMain )->lastEnteredStateRecovering ) {
                     pStm->nPseudostate = pStm->lastEnteredState;
                 }
+        HdStateMachine_DefaultEntryAction( pStm, pFlexButton, " top: FlexBtnStm" );
     }
 }
 static BOOL FlexBtnTop_FlexBtnStm_EventProc( FlexButton* pFlexButton, HdStateMachine* pStm, FlexButton_EVENT nEventId, void* pEventParams ){
@@ -855,7 +857,6 @@ static BOOL FlexBtnStmHsm_EventProc( FlexButton* pFlexButton, HdStateMachine* pS
     BOOL bResult = FALSE;
     pStm->nLCAState = STATE_UNDEF;
     pStm->bHandled = FALSE;
-    ( ( FlexBtnTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
     switch( pStm->nCurrentState ){
     case FlexBtnTop_FlexBtnStm:                 bResult |= FlexBtnTop_FlexBtnStm_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
     case FlexBtnTop_ToggleStyle:                bResult |= FlexBtnTop_ToggleStyle_EventProc( pFlexButton, pStm, nEventId, pEventParams ); break;
@@ -917,6 +918,7 @@ static BOOL FlexBtnStmHsm_StateDefaultTrans( FlexButton* pFlexButton, HdStateMac
                     bResult = TRUE;
                 }else{
                 }
+    ( ( FlexBtnTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
     return bResult;
 }
 static BOOL FlexBtnTop_EventProc( FlexButton* pFlexButton, FlexBtnTop* pUsm, FlexButton_EVENT nEventId, void* pEventParams ){
@@ -936,6 +938,7 @@ static BOOL FlexBtnTop_StateDefaultTrans( FlexButton* pFlexButton, FlexBtnTop* p
 }
 static BOOL FlexBtnTop_Reset( FlexButton* pFlexButton, FlexBtnTop* pUsm, STM_RESET* pResetParams ){
     pUsm->lastEnteredStateRecovering = ( pResetParams != NULL ? pResetParams->lastEnteredStateRecovering : FALSE );
+    FlexBtnStmHsm_Abort( pFlexButton, &pUsm->FlexBtnStmHsm );
     return FlexBtnStmHsm_Reset( pFlexButton, &pUsm->FlexBtnStmHsm, pResetParams );
 }
 static BOOL FlexBtnTop_Abort( FlexButton* pFlexButton, FlexBtnTop* pUsm ){

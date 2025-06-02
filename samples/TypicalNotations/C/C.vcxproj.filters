@@ -60,6 +60,9 @@
     <ClInclude Include="Model\TranslationConstraint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="csv_writer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NonOOP\HdStateMachine.c">
@@ -108,6 +111,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Model\TranslationConstraint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="csv_writer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\CarBody_Test.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

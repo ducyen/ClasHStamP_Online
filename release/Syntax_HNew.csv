@@ -171,9 +171,11 @@ event_decl,"typedef enum tag[nAME]Event {
 const TCHAR* [nAME]Event_toString( [nAME]_EVENT value );
 BOOL [tYPE]_Start( [tYPE]* p[tYPE] );
 BOOL [tYPE]_EventProc( [tYPE]* p[tYPE], [tYPE]_EVENT nEventId, void* pEventParams );
+void [tYPE]_printTestCases( [tYPE]* p[tYPE], int eventId, void* pParams );
 "
 state_decl,"#define [sCOPE]_[nAME] [->48]( 1ULL << [vALUE] )
-",#define [sCOPE]_[nAME] [->48]( [sCOPE]_[vALUE], | [sCOPE]_[vALUE],," )
+",#define [sCOPE]_[nAME] [->48]( [sCOPE]_[vALUE], | [sCOPE]_[vALUE],"/* states' declaration */
+[vALUE]"," )
 "
 state_entry,,,,,
 state_exit,,,,,
@@ -194,7 +196,7 @@ statemachine,"#define __HdStateMachine_INTERNAL__
 #include ""HdStateMachine.h""
 ","    [tYPE][mODIFIER] mainStm;[->64][dESC]
 ","    .mainStm = [tYPE]_Init(),\
-","/** @class [nAME]
+","[vALUE]/** @class [nAME]
  * @extends HdStateMachine
  */
 typedef struct tag[nAME] {

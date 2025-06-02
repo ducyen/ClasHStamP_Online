@@ -275,16 +275,26 @@ static BOOL [cONTAINER]_StateDefaultTrans( [tYPE]* p[tYPE], [cONTAINER]* pUsm );
 BOOL [tYPE]_Start( [tYPE]* p[tYPE] ){
     [cONTAINER]_Prepare( &p[tYPE]->mainStm, NULL );
     BOOL bResult = [cONTAINER]_Reset( p[tYPE], &p[tYPE]->mainStm, NULL );
-    bResult |= [cONTAINER]_StateDefaultTrans( p[tYPE], &p[tYPE]->mainStm );
+    if( bResult ){
+        [cONTAINER]_StateDefaultTrans( p[tYPE], &p[tYPE]->mainStm );
+    }
     return bResult;
 }
 BOOL [tYPE]_EventProc( [tYPE]* p[tYPE], [tYPE]_EVENT nEventId, void* pEventParams ){
     BOOL bResult = [cONTAINER]_EventProc( p[tYPE], &p[tYPE]->mainStm, nEventId, pEventParams );
-    bResult |= [cONTAINER]_StateDefaultTrans( p[tYPE], &p[tYPE]->mainStm );
+    if( bResult ){
+        [cONTAINER]_StateDefaultTrans( p[tYPE], &p[tYPE]->mainStm );
+    }
     return bResult;
 }
 "
-state_decl,,,,,
+state_decl,"        case [sCOPE]_[nAME] [->48]: sState = ""[nAME]""; break;
+","        case [sCOPE]_[nAME] [->48]: sState = ""[nAME]""; break;
+",,"if( pHsm == &pUsm->[cONTAINER] ){
+        switch( nState ){
+[vALUE]        default[->48]: sState = ""UnknownState""; break;
+        }
+    }else ",
 state_entry,"static void [cONTAINER]_EndTrans( [tYPE] *p[tYPE], HdStateMachine* pStm ){
     pStm->nCurrentState = pStm->nTargetState;
     pStm->bIsExternTrans = FALSE;
@@ -344,15 +354,15 @@ transition,"static void [Scope]_[nAME]_Entry( [tYPE]* p[tYPE], HdStateMachine* p
 static BOOL [Scope]_[nAME]_EventProc( [tYPE]* p[tYPE], HdStateMachine* pStm, [tYPE]_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
 [mODIFIER]    if( !pStm->bHandled ){
-    pStm->nSourceState = [sCOPE]_[nAME];
-    HdStateMachine_DefaultDoingAction( pStm, p[tYPE], ""[dESC]"" );
-","    switch( nEventId ){
-    case [tYPE]_[nAME]:{
-","    } break;
-    case [tYPE]_[nAME]:{
-","    } break;
-    default: break;
-    }
+        pStm->nSourceState = [sCOPE]_[nAME];
+        HdStateMachine_DefaultDoingAction( pStm, p[tYPE], ""[dESC]"" );
+","        switch( nEventId ){
+        case [tYPE]_[nAME]:{
+","        } break;
+        case [tYPE]_[nAME]:{
+","        } break;
+        default: break;
+        }
 ","    }
     pStm->bHandled |= bResult;
     return [Scope]_[cONTAINER]_EventProc( p[tYPE], pStm, nEventId, pEventParams );
@@ -371,14 +381,14 @@ trans_top,"static void [Scope]_[nAME]_Entry( [tYPE]* p[tYPE], HdStateMachine* pS
 static BOOL [Scope]_[nAME]_EventProc( [tYPE]* p[tYPE], HdStateMachine* pStm, [tYPE]_EVENT nEventId, void* pEventParams ){
     BOOL bResult = FALSE;
 [mODIFIER]    if( !pStm->bHandled ){
-    pStm->nSourceState = [sCOPE]_[nAME];
-","    switch( nEventId ){
-    case [tYPE]_[nAME]:{
-","    } break;
-    case [tYPE]_[nAME]:{
-","    } break;
-    default: break;
-    }
+        pStm->nSourceState = [sCOPE]_[nAME];
+","        switch( nEventId ){
+        case [tYPE]_[nAME]:{
+","        } break;
+        case [tYPE]_[nAME]:{
+","        } break;
+        default: break;
+        }
 ","    }
     pStm->bHandled |= bResult;
     return pStm->bHandled;
@@ -410,6 +420,13 @@ statemachine,,,,"
 /**
  * Implementation for Statemachine: [nAME]
  */
+const TCHAR* [sCOPE]_State_toString( [sCOPE]* pUsm, HdStateMachine* pHsm, uint64_t nState ){
+    TCHAR* sState;
+    [vALUE]{ 
+        sState = ""UnknownState"";
+    }
+    return sState;
+}
 ","
 static void [sCOPE]_Prepare( [sCOPE]* pUsm, HdStateMachine* pParent ){
     pUsm->pParentStm = pParent;

@@ -29,6 +29,7 @@ typedef enum tagFlexButtonEvent {
 const TCHAR* FlexButtonEvent_toString( FlexButton_EVENT value );
 BOOL FlexButton_Start( FlexButton* pFlexButton );
 BOOL FlexButton_EventProc( FlexButton* pFlexButton, FlexButton_EVENT nEventId, void* pEventParams );
+void FlexButton_printTestCases( FlexButton* pFlexButton, int eventId, void* pParams );
 #endif//__FlexButton_H__
 #if !defined( FlexButton_Init ) && ( defined( __FlexButton_INTERNAL__ )  || defined( __ObjsBuilder_INTERNAL__ )  )
 #define __Sprite_INTERNAL__
@@ -36,10 +37,7 @@ BOOL FlexButton_EventProc( FlexButton* pFlexButton, FlexButton_EVENT nEventId, v
 #include "EventListener.h"
 #define __HdStateMachine_INTERNAL__
 #include "HdStateMachine.h"
-/** @class FlexBtnTop
- * @extends HdStateMachine
- */
-typedef struct tagFlexBtnTop {
+/* states' declaration */
 #define FlexBtnTop_InitialReadyRegion1          ( 1ULL <<  0 )
 #define FlexBtnTop_Missed                       ( 1ULL <<  1 )
 #define FlexBtnTop_Idle                         ( 1ULL <<  2 )
@@ -47,6 +45,7 @@ typedef struct tagFlexBtnTop {
 #define FlexBtnTop_Pressed                      ( 1ULL <<  4 )
 #define FlexBtnTop_Hold                         ( FlexBtnTop_UnPressed | FlexBtnTop_Pressed )
 #define FlexBtnTop_ReadyRgn1                    ( FlexBtnTop_InitialReadyRegion1 | FlexBtnTop_Missed | FlexBtnTop_Idle | FlexBtnTop_Hold )
+/* states' declaration */
 #define FlexBtnTop_ToggleStyle                  ( 1ULL <<  0 )
 #define FlexBtnTop_SelectStyle                  ( 1ULL <<  1 )
 #define FlexBtnTop_SlideStyle                   ( 1ULL <<  2 )
@@ -55,6 +54,10 @@ typedef struct tagFlexBtnTop {
 #define FlexBtnTop_Ready                        ( FlexBtnTop_ToggleStyle | FlexBtnTop_SelectStyle | FlexBtnTop_SlideStyle | FlexBtnTop_InitialReady | FlexBtnTop_PushStyle )
 #define FlexBtnTop_InitialMain                  ( 1ULL <<  5 )
 #define FlexBtnTop_FlexBtnStm                   ( FlexBtnTop_Ready | FlexBtnTop_InitialMain )
+/** @class FlexBtnTop
+ * @extends HdStateMachine
+ */
+typedef struct tagFlexBtnTop {
     HdStateMachine FlexBtnStmHsm;                               
     uint64_t nReadyHistory;
     HdStateMachine ReadyRgn1Hsm;                                

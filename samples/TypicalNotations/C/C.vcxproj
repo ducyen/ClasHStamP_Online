@@ -119,6 +119,7 @@
     <None Include="..\GenCode_C.bat" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="csv_writer.c" />
     <ClCompile Include="main.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -127,7 +128,10 @@
       </ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Model\AttachmentConstraint.c" />
-    <ClCompile Include="Model\CarBody.c" />
+    <ClCompile Include="Model\CarBody.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Model\CarBody_Test.c" />
     <ClCompile Include="Model\Constraint.c" />
     <ClCompile Include="Model\EventListener.c" />
     <ClCompile Include="Model\FlexButton.c" />
@@ -145,6 +149,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="csv_writer.h" />
     <ClInclude Include="Model\AttachmentConstraint.h" />
     <ClInclude Include="Model\CarBody.h" />
     <ClInclude Include="Model\CommonInclude.h" />

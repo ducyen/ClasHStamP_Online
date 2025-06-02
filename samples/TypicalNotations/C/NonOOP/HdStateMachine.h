@@ -26,6 +26,7 @@ bool HdStateMachine_IsIn( HdStateMachine* pHdStateMachine, uint64_t targetState 
     .lastEnteredState = STATE_UNDEF,\
     .bHandled = FALSE,\
     .nDepth = 0,\
+    .nStateIterIdx = 0,\
 
 #define HdStateMachine_Ctor(  )    ( HdStateMachine ){ \
     HdStateMachine_Init(  ) \
@@ -49,6 +50,7 @@ struct tagHdStateMachine{
     uint64_t lastEnteredState;                                                                                      \
     bool bHandled;                                                                                                              \
     int nDepth;                                                                                                                    \
+    int nStateIterIdx;                                                                                                      \
 
     HdStateMachine_CLASS    
 };

@@ -70,6 +70,7 @@ static void SharedTop_Shared2Rgn1_Entry( CarBody* pCarBody, HdStateMachine* pStm
         if ( ( ( SharedTop* )pStm->pMain )->lastEnteredStateRecovering ) {
             pStm->nPseudostate = pStm->lastEnteredState;
         }
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, " top: Shared2Rgn1" );
     }
 }
 static BOOL SharedTop_Shared2Rgn1_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
@@ -130,7 +131,6 @@ static BOOL Shared2Rgn1Hsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, C
     BOOL bResult = FALSE;
     pStm->nLCAState = STATE_UNDEF;
     pStm->bHandled = FALSE;
-    ( ( SharedTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
     switch( pStm->nCurrentState ){
     case SharedTop_Shared2Rgn1:                 bResult |= SharedTop_Shared2Rgn1_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
     case SharedTop_State22:                     bResult |= SharedTop_State22_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
@@ -167,6 +167,7 @@ static BOOL Shared2Rgn1Hsm_StateDefaultTrans( CarBody* pCarBody, HdStateMachine*
             bResult = TRUE;
         }else{
         }
+    ( ( SharedTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
     return bResult;
 }
 static void SharedTop_SharedStm_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
@@ -177,6 +178,7 @@ static void SharedTop_SharedStm_Entry( CarBody* pCarBody, HdStateMachine* pStm )
         if ( ( ( SharedTop* )pStm->pMain )->lastEnteredStateRecovering ) {
             pStm->nPseudostate = pStm->lastEnteredState;
         }
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, " top: SharedStm" );
     }
 }
 static BOOL SharedTop_SharedStm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
@@ -310,7 +312,6 @@ static BOOL SharedStmHsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, Car
     BOOL bResult = FALSE;
     pStm->nLCAState = STATE_UNDEF;
     pStm->bHandled = FALSE;
-    ( ( SharedTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
     switch( pStm->nCurrentState ){
     case SharedTop_SharedStm:                   bResult |= SharedTop_SharedStm_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
     case SharedTop_Shared1:                     bResult |= SharedTop_Shared1_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
@@ -359,6 +360,7 @@ static BOOL SharedStmHsm_StateDefaultTrans( CarBody* pCarBody, HdStateMachine* p
             bResult = TRUE;
         }else{
         }
+    ( ( SharedTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
     return bResult;
 }
 static BOOL SharedTop_EventProc( CarBody* pCarBody, SharedTop* pUsm, CarBody_EVENT nEventId, void* pEventParams ){
@@ -378,6 +380,7 @@ static BOOL SharedTop_StateDefaultTrans( CarBody* pCarBody, SharedTop* pUsm ){
 }
 static BOOL SharedTop_Reset( CarBody* pCarBody, SharedTop* pUsm, STM_RESET* pResetParams ){
     pUsm->lastEnteredStateRecovering = ( pResetParams != NULL ? pResetParams->lastEnteredStateRecovering : FALSE );
+    SharedStmHsm_Abort( pCarBody, &pUsm->SharedStmHsm );
     return SharedStmHsm_Reset( pCarBody, &pUsm->SharedStmHsm, pResetParams );
 }
 static BOOL SharedTop_Abort( CarBody* pCarBody, SharedTop* pUsm ){
@@ -429,6 +432,7 @@ static void MainTop_S8Rgn1_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
             if ( ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering ) {
                 pStm->nPseudostate = pStm->lastEnteredState;
             }
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, " top: S8Rgn1" );
     }
 }
 static BOOL MainTop_S8Rgn1_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
@@ -519,7 +523,6 @@ static BOOL S8Rgn1Hsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBod
     BOOL bResult = FALSE;
     pStm->nLCAState = STATE_UNDEF;
     pStm->bHandled = FALSE;
-    ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
     switch( pStm->nCurrentState ){
     case MainTop_S8Rgn1:                        bResult |= MainTop_S8Rgn1_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
     case MainTop_S821:                          bResult |= MainTop_S821_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
@@ -558,6 +561,7 @@ static BOOL S8Rgn1Hsm_StateDefaultTrans( CarBody* pCarBody, HdStateMachine* pStm
                 bResult = TRUE;
             }else{
             }
+    ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
     return bResult;
 }
 static void MainTop_S832Rgn1_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
@@ -568,6 +572,7 @@ static void MainTop_S832Rgn1_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
             if ( ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering ) {
                 pStm->nPseudostate = pStm->lastEnteredState;
             }
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, " top: S832Rgn1" );
     }
 }
 static BOOL MainTop_S832Rgn1_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
@@ -628,7 +633,6 @@ static BOOL S832Rgn1Hsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarB
     BOOL bResult = FALSE;
     pStm->nLCAState = STATE_UNDEF;
     pStm->bHandled = FALSE;
-    ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
     switch( pStm->nCurrentState ){
     case MainTop_S832Rgn1:                      bResult |= MainTop_S832Rgn1_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
     case MainTop_S8322:                         bResult |= MainTop_S8322_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
@@ -665,6 +669,7 @@ static BOOL S832Rgn1Hsm_StateDefaultTrans( CarBody* pCarBody, HdStateMachine* pS
                 bResult = TRUE;
             }else{
             }
+    ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
     return bResult;
 }
 static void MainTop_S8Rgn2_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
@@ -675,6 +680,7 @@ static void MainTop_S8Rgn2_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
             if ( ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering ) {
                 pStm->nPseudostate = pStm->lastEnteredState;
             }
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, " top: S8Rgn2" );
     }
 }
 static BOOL MainTop_S8Rgn2_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
@@ -804,7 +810,6 @@ static BOOL S8Rgn2Hsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBod
     BOOL bResult = FALSE;
     pStm->nLCAState = STATE_UNDEF;
     pStm->bHandled = FALSE;
-    ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
     switch( pStm->nCurrentState ){
     case MainTop_S8Rgn2:                        bResult |= MainTop_S8Rgn2_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
     case MainTop_S831:                          bResult |= MainTop_S831_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
@@ -849,6 +854,7 @@ static BOOL S8Rgn2Hsm_StateDefaultTrans( CarBody* pCarBody, HdStateMachine* pStm
                 bResult = TRUE;
             }else{
             }
+    ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
     return bResult;
 }
 static void MainTop_S71Rgn1_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
@@ -859,6 +865,7 @@ static void MainTop_S71Rgn1_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
             if ( ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering ) {
                 pStm->nPseudostate = pStm->lastEnteredState;
             }
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, " top: S71Rgn1" );
     }
 }
 static BOOL MainTop_S71Rgn1_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
@@ -957,7 +964,6 @@ static BOOL S71Rgn1Hsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBo
     BOOL bResult = FALSE;
     pStm->nLCAState = STATE_UNDEF;
     pStm->bHandled = FALSE;
-    ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
     switch( pStm->nCurrentState ){
     case MainTop_S71Rgn1:                       bResult |= MainTop_S71Rgn1_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
     case MainTop_S722:                          bResult |= MainTop_S722_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
@@ -996,6 +1002,7 @@ static BOOL S71Rgn1Hsm_StateDefaultTrans( CarBody* pCarBody, HdStateMachine* pSt
                 bResult = TRUE;
             }else{
             }
+    ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
     return bResult;
 }
 static void MainTop_MainStm_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
@@ -1006,6 +1013,7 @@ static void MainTop_MainStm_Entry( CarBody* pCarBody, HdStateMachine* pStm ){
             if ( ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering ) {
                 pStm->nPseudostate = pStm->lastEnteredState;
             }
+        HdStateMachine_DefaultEntryAction( pStm, pCarBody, " top: MainStm" );
     }
 }
 static BOOL MainTop_MainStm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBody_EVENT nEventId, void* pEventParams ){
@@ -1831,7 +1839,6 @@ static BOOL MainStmHsm_EventProc( CarBody* pCarBody, HdStateMachine* pStm, CarBo
     BOOL bResult = FALSE;
     pStm->nLCAState = STATE_UNDEF;
     pStm->bHandled = FALSE;
-    ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
     switch( pStm->nCurrentState ){
     case MainTop_MainStm:                       bResult |= MainTop_MainStm_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
     case MainTop_S1:                            bResult |= MainTop_S1_EventProc( pCarBody, pStm, nEventId, pEventParams ); break;
@@ -1961,6 +1968,7 @@ static BOOL MainStmHsm_StateDefaultTrans( CarBody* pCarBody, HdStateMachine* pSt
                 bResult = TRUE;
             }else{
             }
+    ( ( MainTop* )pStm->pMain )->lastEnteredStateRecovering = FALSE;
     return bResult;
 }
 static BOOL MainTop_EventProc( CarBody* pCarBody, MainTop* pUsm, CarBody_EVENT nEventId, void* pEventParams ){
@@ -1985,6 +1993,7 @@ static BOOL MainTop_StateDefaultTrans( CarBody* pCarBody, MainTop* pUsm ){
 }
 static BOOL MainTop_Reset( CarBody* pCarBody, MainTop* pUsm, STM_RESET* pResetParams ){
     pUsm->lastEnteredStateRecovering = ( pResetParams != NULL ? pResetParams->lastEnteredStateRecovering : FALSE );
+    MainStmHsm_Abort( pCarBody, &pUsm->MainStmHsm );
     return MainStmHsm_Reset( pCarBody, &pUsm->MainStmHsm, pResetParams );
 }
 static BOOL MainTop_Abort( CarBody* pCarBody, MainTop* pUsm ){
