@@ -44,6 +44,16 @@ SET PACKAGE=NonOOP
 java %JAVA_OPTS% stm.TMain %1 %2
 IF ERRORLEVEL 2 goto noJavaw
 
+SET LANGUAGE=c
+SET SYNTAX=%TOOL_DIR%\Syntax_CTst.csv
+SET SYNTAX_ABSTRACT=%TOOL_DIR%\Syntax_CTst.csv
+SET SYNTAX_INTERFACE=%TOOL_DIR%\Syntax_CTst.csv
+SET SYNTAX_BASECLASS=%TOOL_DIR%\Syntax_CTst.csv
+
+SET PACKAGE=Model
+java %JAVA_OPTS% stm.TMain %1 %2
+IF ERRORLEVEL 2 goto noJavaw
+
 pause
 goto end
 

@@ -10,22 +10,8 @@ enum {
     _carBody,
 #define Text_1sh                ( g_objects[ _Text_1sh ] )
     _Text_1sh,
-#define selectBtn               ( g_objects[ _selectBtn ] )
-    _selectBtn,
 #define resetBtn                ( g_objects[ _resetBtn ] )
     _resetBtn,
-#define toggleBtn               ( g_objects[ _toggleBtn ] )
-    _toggleBtn,
-#define slider                  ( g_objects[ _slider ] )
-    _slider,
-#define Text_30d                ( g_objects[ _Text_30d ] )
-    _Text_30d,
-#define Text_389                ( g_objects[ _Text_389 ] )
-    _Text_389,
-#define Text_3ht                ( g_objects[ _Text_3ht ] )
-    _Text_3ht,
-#define Text_3re                ( g_objects[ _Text_3re ] )
-    _Text_3re,
 #define Text_4by                ( g_objects[ _Text_4by ] )
     _Text_4by,
 #define pushBtn0                ( g_objects[ _pushBtn0 ] )
@@ -52,12 +38,6 @@ enum {
     _pushBtn5,
 #define Text_hkt                ( g_objects[ _Text_hkt ] )
     _Text_hkt,
-#define batteryLife             ( g_objects[ _batteryLife ] )
-    _batteryLife,
-#define Text_40e                ( g_objects[ _Text_40e ] )
-    _Text_40e,
-#define Text_41a                ( g_objects[ _Text_41a ] )
-    _Text_41a,
 #define gear                    ( g_objects[ _gear ] )
     _gear,
 #define batteryOper             ( g_objects[ _batteryOper ] )

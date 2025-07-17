@@ -21,23 +21,24 @@ int main(int argc, char** argv) {
 #if 1
     return ObjsBuilder_startSim();
 #else
-    FILE* fp = csv_open("../output.csv");
-    if ( !fp ) {
-        perror("Cannot open file");
-        return 1;
+    csv_open("../output.csv");
+
+    for( int i = 0; i < 3; i++ ){
+        clear_pre_condition();
+        clear_input_event();
+        clear_expected_behavior();
+        clear_post_condition();
+
+        concat_format_pre_condition( "%s\n", "State A" );
+        concat_format_pre_condition( "%s\n", "State B" );
+        concat_format_input_event( "ev1" );
+        concat_format_expected_behavior( "Transition B1 -> B2" );
+        concat_format_post_condition( "Now in B2" );
+
+        csv_write_row();
     }
 
-    const char* header[] = { "Name", "Comment" };
-    const char* row1[] = { "John Doe", "Hello,\nthis is a multiline comment." };
-    const char* row2[] = { "Jane \"JJ\" Smith", "She said \"Hi!\"" };
-    const char* row3[] = { "Foo, Bar", "Comma, newline\nand \"quotes\" test" };
-
-    csv_write_row(fp, header, 2);
-    csv_write_row(fp, row1, 2);
-    csv_write_row(fp, row2, 2);
-    csv_write_row(fp, row3, 2);
-
-    csv_close(fp);
+    csv_close();
     return 0;
 #endif
 }

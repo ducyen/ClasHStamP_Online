@@ -60,7 +60,7 @@
     <ClInclude Include="Model\TranslationConstraint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="csv_writer.h">
+    <ClInclude Include="testcase_writer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -113,7 +113,7 @@
     <ClCompile Include="Model\TranslationConstraint.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="csv_writer.c">
+    <ClCompile Include="testcase_writer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Model\CarBody_Test.c">

@@ -35,16 +35,6 @@ Sprite* g_objects[] = {
         P( "Text_1sh" )                                         /* Text_1sh */,
         P( "Text 000000 line 2 null 000000 null Monospaced 8 ______________________" )/* Text_1sh */
     ),
-    &FlexButton_Ctor(                                           /* selectBtn */
-        P( { 0.7193922129563677, 0.7866273099565632, 0.032679738562091505, 0.1350356496130985 } )/* m_iniRect */,
-        P( "selectBtn" )                                        /* m_name */,
-        P( "FlexButton.png" )                                   /* m_imgPath */,
-        P( 0 )                                                  /* m_value */,
-        P( 3 )                                                  /* m_valueMax */,
-        P( FlexBtnTop_SelectStyle )                             /* m_style */,
-        P( &EventListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_DOWN, &EventListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_UP, &EventListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
-        P( &EventListener_Ctor( MDD_ON_VALUE_CHANGED, CarBody_EventProc, &carBody, CarBody_UPDATE, null ) )/* m_buttonListeners */
-    ),
     &FlexButton_Ctor(                                           /* resetBtn */
         P( { 0.1918032504515109, 0.17320899439712734, 0.032679738562091505, 0.04395604395604396 } )/* m_iniRect */,
         P( "resetBtn" )                                         /* m_name */,
@@ -54,46 +44,6 @@ Sprite* g_objects[] = {
         P( FlexBtnTop_PushStyle )                               /* m_style */,
         P( &EventListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_DOWN, &EventListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_UP, &EventListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
         P( &EventListener_Ctor( MDD_ON_CLICK, CarBody_Start, &carBody, 0, null ) )/* m_buttonListeners */
-    ),
-    &FlexButton_Ctor(                                           /* toggleBtn */
-        P( { 0.30116528230128764, 0.8344621014091631, 0.06484885620915033, 0.04395604395604396 } )/* m_iniRect */,
-        P( "toggleBtn" )                                        /* m_name */,
-        P( "FlexButton.png" )                                   /* m_imgPath */,
-        P( 0 )                                                  /* m_value */,
-        P( 2 )                                                  /* m_valueMax */,
-        P( FlexBtnTop_ToggleStyle )                             /* m_style */,
-        P( &EventListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_DOWN, &EventListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_UP, &EventListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
-        P( &EventListener_Ctor( MDD_ON_VALUE_CHANGED, CarBody_EventProc, &carBody, CarBody_UPDATE, null ) )/* m_buttonListeners */
-    ),
-    &FlexButton_Ctor(                                           /* slider */
-        P( { 0.6094733771629902, 0.11326641961080262, 0.1302805675115574, 0.04395604395604396 } )/* m_iniRect */,
-        P( "slider" )                                           /* m_name */,
-        P( "FlexButton.png" )                                   /* m_imgPath */,
-        P( 3 )                                                  /* m_value */,
-        P( 4 )                                                  /* m_valueMax */,
-        P( FlexBtnTop_SlideStyle )                              /* m_style */,
-        P( &EventListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_DOWN, &EventListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_UP, &EventListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
-        P( &EventListener_Ctor( MDD_ON_VALUE_CHANGED, CarBody_EventProc, &carBody, CarBody_UPDATE, null ) )/* m_buttonListeners */
-    ),
-    &Primitive_Ctor(                                            /* Text_30d */
-        P( { 0.7628470263515785, 0.7929374789712803, 0.08986928104575163, 0.04053914835164835 } )/* 30d-8d4fb42be642ae6942cda72d744e94eb */,
-        P( "Text_30d" )                                         /* Text_30d */,
-        P( "Text 000000 line 2 null 000000 null Monospaced 8 0: Rest" )/* Text_30d */
-    ),
-    &Primitive_Ctor(                                            /* Text_389 */
-        P( { 0.7629831919289211, 0.8362079361926301, 0.10620915032679738, 0.04053914835164835 } )/* 389-8d4fb42be642ae6942cda72d744e94eb */,
-        P( "Text_389" )                                         /* Text_389 */,
-        P( "Text 000000 line 2 null 000000 null Monospaced 8 1: Brake" )/* Text_389 */
-    ),
-    &Primitive_Ctor(                                            /* Text_3ht */
-        P( { 0.7629831919289213, 0.8810785046123056, 0.1302805675115574, 0.04053914835164835 } )/* 3ht-8d4fb42be642ae6942cda72d744e94eb */,
-        P( "Text_3ht" )                                         /* Text_3ht */,
-        P( "Text 000000 line 2 null 000000 null Monospaced 8 2: Accel" )/* Text_3ht */
-    ),
-    &Primitive_Ctor(                                            /* Text_3re */
-        P( { 0.2399049564116725, 0.9013863230208845, 0.18790849673202614, 0.04053914835164835 } )/* 3re-8d4fb42be642ae6942cda72d744e94eb */,
-        P( "Text_3re" )                                         /* Text_3re */,
-        P( "Text 000000 line 2 null 000000 null Monospaced 8 SeatBelt Off <-> On" )/* Text_3re */
     ),
     &Primitive_Ctor(                                            /* Text_4by */
         P( { 0.25301535103248407, 0.17328339915903207, 0.07352941176470588, 0.04053914835164835 } )/* 4by-8d4fb42be642ae6942cda72d744e94eb */,
@@ -108,12 +58,12 @@ Sprite* g_objects[] = {
         P( 1 )                                                  /* m_valueMax */,
         P( FlexBtnTop_PushStyle )                               /* m_style */,
         P( &EventListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_DOWN, &EventListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_UP, &EventListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
-        P( &EventListener_Ctor( MDD_ON_CLICK, CarBody_EventProc, &carBody, CarBody_E0, null ) )/* m_buttonListeners */
+        P( &EventListener_Ctor( MDD_ON_CLICK, CarBody_EventProc, &carBody, CarBody_PWR_BTN, null ) )/* m_buttonListeners */
     ),
     &Primitive_Ctor(                                            /* Text_76n */
-        P( { 0.8467146941956748, 0.7069355379206791, 0.10620915032679738, 0.04053914835164835 } )/* 76n-8d4fb42be642ae6942cda72d744e94eb */,
+        P( { 0.8569271124963284, 0.7069355379206791, 0.07352941176470588, 0.04053914835164835 } )/* 76n-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_76n" )                                         /* Text_76n */,
-        P( "Text 000000 line 2 null 000000 null Monospaced 8 E0: Power" )/* Text_76n */
+        P( "Text 000000 line 2 null 000000 null Monospaced 8 Power" )/* Text_76n */
     ),
     &FlexButton_Ctor(                                           /* pushBtn1 */
         P( { 0.5747725840182707, 0.6914658885224585, 0.032679738562091505, 0.04395604395604396 } )/* m_iniRect */,
@@ -123,12 +73,12 @@ Sprite* g_objects[] = {
         P( 1 )                                                  /* m_valueMax */,
         P( FlexBtnTop_PushStyle )                               /* m_style */,
         P( &EventListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_DOWN, &EventListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_UP, &EventListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
-        P( &EventListener_Ctor( MDD_ON_CLICK, CarBody_EventProc, &carBody, CarBody_E1, null ) )/* m_buttonListeners */
+        P( &EventListener_Ctor( MDD_ON_CLICK, CarBody_EventProc, &carBody, CarBody_REVERSE, null ) )/* m_buttonListeners */
     ),
     &Primitive_Ctor(                                            /* Text_7ik */
-        P( { 0.6110996148305956, 0.695128892185462, 0.1302805675115574, 0.04053914835164835 } )/* 7ik-8d4fb42be642ae6942cda72d744e94eb */,
+        P( { 0.6110996148305955, 0.695128892185462, 0.1302805675115574, 0.04053914835164835 } )/* 7ik-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_7ik" )                                         /* Text_7ik */,
-        P( "Text 000000 line 2 null 000000 null Monospaced 8 E1: Reverse" )/* Text_7ik */
+        P( "Text 000000 line 2 null 000000 null Monospaced 8 Reverse" )/* Text_7ik */
     ),
     &FlexButton_Ctor(                                           /* pushBtn2 */
         P( { 0.5193337418147226, 0.746550013497075, 0.032679738562091505, 0.04395604395604396 } )/* m_iniRect */,
@@ -138,12 +88,12 @@ Sprite* g_objects[] = {
         P( 1 )                                                  /* m_valueMax */,
         P( FlexBtnTop_PushStyle )                               /* m_style */,
         P( &EventListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_DOWN, &EventListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_UP, &EventListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
-        P( &EventListener_Ctor( MDD_ON_CLICK, CarBody_EventProc, &carBody, CarBody_E2, null ) )/* m_buttonListeners */
+        P( &EventListener_Ctor( MDD_ON_CLICK, CarBody_EventProc, &carBody, CarBody_GEAR_UP, null ) )/* m_buttonListeners */
     ),
     &Primitive_Ctor(                                            /* Text_9uo */
-        P( { 0.5622258986774676, 0.7502130171600787, 0.1302805675115574, 0.04053914835164835 } )/* 9uo-8d4fb42be642ae6942cda72d744e94eb */,
+        P( { 0.5622258986774675, 0.7502130171600787, 0.1302805675115574, 0.04053914835164835 } )/* 9uo-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_9uo" )                                         /* Text_9uo */,
-        P( "Text 000000 line 2 null 000000 null Monospaced 8 E2: Gear Up" )/* Text_9uo */
+        P( "Text 000000 line 2 null 000000 null Monospaced 8 Gear Up" )/* Text_9uo */
     ),
     &FlexButton_Ctor(                                           /* pushBtn3 */
         P( { 0.519532316615013, 0.6335356491190046, 0.032679738562091505, 0.04395604395604396 } )/* m_iniRect */,
@@ -153,27 +103,27 @@ Sprite* g_objects[] = {
         P( 1 )                                                  /* m_valueMax */,
         P( FlexBtnTop_PushStyle )                               /* m_style */,
         P( &EventListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_DOWN, &EventListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_UP, &EventListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
-        P( &EventListener_Ctor( MDD_ON_CLICK, CarBody_EventProc, &carBody, CarBody_E3, null ) )/* m_buttonListeners */
+        P( &EventListener_Ctor( MDD_ON_CLICK, CarBody_EventProc, &carBody, CarBody_GEAR_DOWN, null ) )/* m_buttonListeners */
     ),
     &Primitive_Ctor(                                            /* Text_c7m */
         P( { 0.5624244734777583, 0.6303305209138764, 0.1457992919389979, 0.04395604395604396 } )/* c7m-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_c7m" )                                         /* Text_c7m */,
-        P( "Text 000000 line 2 null 000000 null Monospaced 8 E3: Gear Down" )/* Text_c7m */
+        P( "Text 000000 line 2 null 000000 null Monospaced 8 Gear Down" )/* Text_c7m */
     ),
     &FlexButton_Ctor(                                           /* pushBtn4 */
-        P( { 0.41137389120781315, 0.6339126508597124, 0.032679738562091505, 0.04395604395604396 } )/* m_iniRect */,
+        P( { 0.3017606014474646, 0.7694437863908479, 0.032679738562091505, 0.04395604395604396 } )/* m_iniRect */,
         P( "pushBtn4" )                                         /* m_name */,
         P( "FlexButton.png" )                                   /* m_imgPath */,
         P( 0 )                                                  /* m_value */,
         P( 1 )                                                  /* m_valueMax */,
         P( FlexBtnTop_PushStyle )                               /* m_style */,
         P( &EventListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_DOWN, &EventListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_UP, &EventListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
-        P( &EventListener_Ctor( MDD_ON_CLICK, CarBody_EventProc, &carBody, CarBody_E4, null ) )/* m_buttonListeners */
+        P( &EventListener_Ctor( MDD_ON_CLICK, CarBody_EventProc, &carBody, CarBody_ACCEL_RELEASED, null ) )/* m_buttonListeners */
     ),
     &Primitive_Ctor(                                            /* Text_euz */
-        P( { 0.3754845354655162, 0.6839858291694979, 0.1302805675115574, 0.06349587912087912 } )/* euz-8d4fb42be642ae6942cda72d744e94eb */,
+        P( { 0.26110545049819595, 0.8407766945541132, 0.1457992919389979, 0.04395604395604396 } )/* euz-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_euz" )                                         /* Text_euz */,
-        P( "Text 000000 line 2 null 000000 null Monospaced 8 E4: Air conditioner" )/* Text_euz */
+        P( "Text 000000 line 2 null 000000 null Monospaced 8 Accel Released" )/* Text_euz */
     ),
     &FlexButton_Ctor(                                           /* pushBtn5 */
         P( { 0.30195512370081035, 0.6335740779520765, 0.032679738562091505, 0.04395604395604396 } )/* m_iniRect */,
@@ -183,32 +133,12 @@ Sprite* g_objects[] = {
         P( 1 )                                                  /* m_valueMax */,
         P( FlexBtnTop_PushStyle )                               /* m_style */,
         P( &EventListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_DOWN, &EventListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_UP, &EventListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
-        P( &EventListener_Ctor( MDD_ON_CLICK, CarBody_EventProc, &carBody, CarBody_E5, null ) )/* m_buttonListeners */
+        P( &EventListener_Ctor( MDD_ON_CLICK, CarBody_EventProc, &carBody, CarBody_ACCEL_PRESSED, null ) )/* m_buttonListeners */
     ),
     &Primitive_Ctor(                                            /* Text_hkt */
         P( { 0.2609595588081866, 0.7068995619918461, 0.1457992919389979, 0.04053914835164835 } )/* hkt-8d4fb42be642ae6942cda72d744e94eb */,
         P( "Text_hkt" )                                         /* Text_hkt */,
-        P( "Text 000000 line 2 null 000000 null Monospaced 8 E5: IVI Mode" )/* Text_hkt */
-    ),
-    &FlexButton_Ctor(                                           /* batteryLife */
-        P( { 0.11653205400997141, 0.46507638518319117, 0.1302805675115574, 0.04395604395604396 } )/* m_iniRect */,
-        P( "batteryLife" )                                      /* m_name */,
-        P( "FlexButton.png" )                                   /* m_imgPath */,
-        P( 3 )                                                  /* m_value */,
-        P( 4 )                                                  /* m_valueMax */,
-        P( FlexBtnTop_SlideStyle )                              /* m_style */,
-        P( &EventListener_Ctor( SDL_MOUSEBUTTONDOWN | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_DOWN, &EventListener_Ctor( SDL_MOUSEBUTTONUP | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_UP, &EventListener_Ctor( SDL_MOUSEMOTION | SDL_BUTTON_LEFT, FlexButton_EventProc, NULL, FlexButton_MOUSE_MOVE, null ) ) ) )/* m_mouseListeners */,
-        P( &EventListener_Ctor( MDD_ON_VALUE_CHANGED, CarBody_EventProc, &carBody, CarBody_UPDATE, null ) )/* m_buttonListeners */
-    ),
-    &Primitive_Ctor(                                            /* Text_40e */
-        P( { 0.0882550024486061, 0.5431594132662194, 0.17293028322440085, 0.04053914835164835 } )/* 40e7-388f135aa3dc291f5154473ae5009fe5 */,
-        P( "Text_40e" )                                         /* Text_40e */,
-        P( "Text 000000 line 2 null 000000 null Monospaced 8 Battery: E <-> F" )/* Text_40e */
-    ),
-    &Primitive_Ctor(                                            /* Text_41a */
-        P( { 0.5547121208085966, 0.1926124208318037, 0.24305555555555555, 0.04053914835164835 } )/* 41al-388f135aa3dc291f5154473ae5009fe5 */,
-        P( "Text_41a" )                                         /* Text_41a */,
-        P( "Text 000000 line 2 null 000000 null Monospaced 8 Collision Detected <-> Safe" )/* Text_41a */
+        P( "Text 000000 line 2 null 000000 null Monospaced 8 Accel Pressed" )/* Text_hkt */
     ),
     &ImgSprite_Ctor(                                            /* gear */
         P( { 0.5319173633105511, 0.4842826446937884, 0.04718224000355297, 0.08020965741348217 } )/* m_iniRect */,
@@ -445,13 +375,6 @@ int ObjsBuilder_startSim(
     }
     
     if (nResult == S_OK) {
-
-#if 1
-        for( int eventId = 0; eventId < CarBody_EVENT_NUM; eventId++ ){
-            printf( "Input Event: %s\n", CarBodyEvent_toString( eventId ) );
-            CarBody_printTestCases( carBody, eventId, NULL );
-        }
-#endif
         bool quit = false;
         SDL_Event e;
 
@@ -510,7 +433,17 @@ int ObjsBuilder_startSim(
                     }
                     break;
                 } else if (e.type == SDL_KEYDOWN) {
-#if 0
+#if 1
+                    if( e.key.keysym.sym == SDLK_r ){
+                        csv_open( "../testcases.csv" );
+                        for( int eventId = 0; eventId < CarBody_EVENT_NUM; eventId++ ){
+                            CarBody_printTestCases( carBody, eventId, NULL );
+                        }
+                        csv_close();
+                        printf( "Testcases successfully genereated!\n" );
+                        CarBody_Start( carBody );
+                    }
+#else
                     if( e.key.keysym.sym == SDLK_r ){
                         CarBody_Start( carBody );
                     }else{
@@ -602,8 +535,8 @@ void ObjsBuilder_showDoing(
     void* pStm_,
     char* pMsg
 ){
-    //HdStateMachine* pStm = (HdStateMachine*)pStm_;
-    //ObjsBuilder_showDiagram( pObj, pStm_, pMsg, 0x00, 0x00, 0xFF - pStm->nDepth * 32, 0 );
+    HdStateMachine* pStm = (HdStateMachine*)pStm_;
+    ObjsBuilder_showDiagram( pObj, pStm_, pMsg, 0x00, 0x00, 0xFF - pStm->nDepth * 32, 0 );
 } /* ObjsBuilder_showDoing */
 
 void ObjsBuilder_showExit(
@@ -631,7 +564,14 @@ void ObjsBuilder_showDiagram(
     HdStateMachine* pStm = ( HdStateMachine* )pStm_;
     char stmPath[ 256 ];
     int l, t, w, h, dgrX, dgrY, dgrW, dgrH;
-    sscanf( pMsg, "%s%d%d%d%d%d%d%d%d", stmPath, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH );
+    char stateName[ 100 ];
+    if( sscanf( pMsg, "%s%d%d%d%d%d%d%d%d%s", stmPath, &l, &t, &w, &h, &dgrX, &dgrY, &dgrW, &dgrH, stateName ) ) {
+        if( g != 0 ){
+            add_line_expected_behavior( "enter %s", stateName);
+        } else if( r != 0 ){
+            add_line_expected_behavior( "exit  %s", stateName);
+        }
+    }
     if( pSprite->m_stmWindow == null ){
         char windowName[255];
         sprintf(windowName, "%s - %s", stmPath, pSprite->m_name);

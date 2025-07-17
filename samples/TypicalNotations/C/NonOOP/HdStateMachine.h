@@ -7,6 +7,7 @@ void HdStateMachine_DefaultEntryAction( HdStateMachine* pHdStateMachine, void* p
 void HdStateMachine_DefaultDoingAction( HdStateMachine* pHdStateMachine, void* pObj, char* pMsg );
 void HdStateMachine_DefaultExitAction( HdStateMachine* pHdStateMachine, void* pObj, char* pMsg );
 bool HdStateMachine_IsIn( HdStateMachine* pHdStateMachine, uint64_t targetState );
+bool HdStateMachine_Req( HdStateMachine* pHdStateMachine, uint64_t targetState );
 #endif//__HdStateMachine_H__
 #if !defined( HdStateMachine_Init ) && ( defined( __HdStateMachine_INTERNAL__ )  )
 
@@ -27,6 +28,7 @@ bool HdStateMachine_IsIn( HdStateMachine* pHdStateMachine, uint64_t targetState 
     .bHandled = FALSE,\
     .nDepth = 0,\
     .nStateIterIdx = 0,\
+    .wasHandled = FALSE,\
 
 #define HdStateMachine_Ctor(  )    ( HdStateMachine ){ \
     HdStateMachine_Init(  ) \
@@ -51,6 +53,7 @@ struct tagHdStateMachine{
     bool bHandled;                                                                                                              \
     int nDepth;                                                                                                                    \
     int nStateIterIdx;                                                                                                      \
+    bool wasHandled;                                                                                                          \
 
     HdStateMachine_CLASS    
 };

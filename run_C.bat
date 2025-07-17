@@ -75,6 +75,15 @@ java %JAVA_OPTS% stm.TMain
 set "PACKAGE=Design"
 java %JAVA_OPTS% stm.TMain
 
+set "LANGUAGE=c"
+set "SYNTAX=%TOOL_DIR%\Syntax_CTst.csv"
+set "SYNTAX_ABSTRACT=%TOOL_DIR%\Syntax_CTst.csv"
+set "SYNTAX_INTERFACE=%TOOL_DIR%\Syntax_CTst.csv"
+set "SYNTAX_BASECLASS=%TOOL_DIR%\Syntax_CTst.csv"
+
+set "PACKAGE=Model"
+java %JAVA_OPTS% stm.TMain
+
 echo "Building Code"
 cd "%SAMPLE_HOME%\C"
 make clean

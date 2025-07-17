@@ -20,6 +20,8 @@
 #include <stdio.h>
 #endif
 
+#include "testcase_writer.h"
+
 #if !defined( _MSC_VER )
 typedef int             boolean;
 #endif

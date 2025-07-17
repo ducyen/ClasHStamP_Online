@@ -77,6 +77,24 @@ bool HdStateMachine_IsIn(
     return IS_IN( pHdStateMachine->nCurrentState, targetState );
 } /* HdStateMachine_IsIn */
 
+/** @public @memberof HdStateMachine */
+bool HdStateMachine_Req(
+    HdStateMachine* pHdStateMachine,
+    uint64_t targetState
+){
+    // Global pointer to active HSM state array
+    extern HsmStates** g_activeHsmStates;
+    if( g_activeHsmStates ) {
+        for( int i = 0; g_activeHsmStates[ i ] != NULL; i++ ) {
+            if( g_activeHsmStates[ i ]->pHsm == pHdStateMachine ) {
+                g_activeHsmStates[ i ]->wasQueried = true;  // ✅ log query
+                break;
+            }
+        }
+    }
+    pHdStateMachine->nPseudostate = targetState;
+} /* HdStateMachine_Req */
+
 HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdStateMachine* pSource ){
     pHdStateMachine->nCurrentState = pSource->nCurrentState;
     pHdStateMachine->nLCAState = pSource->nLCAState;
@@ -91,5 +109,6 @@ HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdSt
     pHdStateMachine->bHandled = pSource->bHandled;
     pHdStateMachine->nDepth = pSource->nDepth;
     pHdStateMachine->nStateIterIdx = pSource->nStateIterIdx;
+    pHdStateMachine->wasHandled = pSource->wasHandled;
     return ( HdStateMachine* )pHdStateMachine;
 }

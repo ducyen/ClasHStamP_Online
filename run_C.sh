@@ -92,6 +92,16 @@ java $JAVA_OPTS stm.TMain
 PACKAGE=Design
 java $JAVA_OPTS stm.TMain
 
+export LANGUAGE=c
+export SYNTAX=$TOOL_DIR/Syntax_CTst.csv
+export SYNTAX_ABSTRACT=$TOOL_DIR/Syntax_CTst.csv
+export SYNTAX_INTERFACE=$TOOL_DIR/Syntax_CTst.csv
+export SYNTAX_BASECLASS=$TOOL_DIR/Syntax_CTst.csv
+
+export PACKAGE=Model
+#echo "Running command: java $JAVA_OPTS stm.TMain"
+java $JAVA_OPTS stm.TMain
+
 echo "Building Code"
 
 cd $SAMPLE_HOME/C
