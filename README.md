@@ -50,6 +50,10 @@ T.B.D
 ## For Linux or Mac OS
 T.B.D
 
+# Limitations
+* The Test Cases generation function doesn't work with ChoicePseudostate.
+    * Work around: Replace this ChoicePseudostate by a JoinPseudostate, with one of the incomming transition comes from a region with states representing the above choice conditions.
+
 # References
 * Refer to this YouTube video for more details: https://youtu.be/wyrNfo1aYpg?si=2Yq5X2zFzfMIsATT
 
