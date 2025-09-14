@@ -23,8 +23,8 @@ For example: ```C:\<YourPath>\ClasHStamP_Online```
     * Compile ClasHStamP GUI: ```>javac Main.java```
     * Start ClasHStamP GUI: ```>java Main``` </br> 
     And you will see a screen like this </br>
-    ![This is an alt text.](/doc/clashtamp_gui.png "This is a sample image.")
-* On the top-right panel, enter fields like this:
+    ![This is an alt text.](/doc/clashstamp_gui.png "This is a sample image.")
+* On the top-right panel, enter fields like this:</br>
 | Field                 | Value                 |
 | --------------------- |:---------------------:|
 | Sample Name           | ```TypicalNotations```|
