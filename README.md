@@ -25,11 +25,13 @@ For example: ```C:\<YourPath>\ClasHStamP_Online```
     And you will see a screen like this </br>
     ![This is an alt text.](/doc/clashstamp_gui.png "This is a sample image.")
 * On the top-right panel, enter fields like this:</br>
+
 | Field                 | Value                 |
 | --------------------- |:---------------------:|
 | Sample Name           | ```TypicalNotations```|
 | Launch Diagram Editor | ```pro```             |
 | Select Language       | ```C```               |
+
     * Press ```Generate Code``` button
         * and wait until Output Window has shown ```"Code Generation Finished"```
 * Use Visual C++. open this Solution here: </br>```C:\<YourPath>\ClasHStamP_Online\samples\TypicalNotations\TypicalNotations.sln```</br>
