@@ -16,7 +16,7 @@ https://github.com/ducyen/ClasHStamP_Online.git
 
 For example: ```C:\<YourPath>\ClasHStamP_Online```
 * Copy your Astah Professional folder to overwrite the ```C:\<YourPath>\ClasHStamP_Online\astah-pro``` folder like below </br>
-![This is an alt text.](/image/sample.webp "This is a sample image.")
+![This is an alt text.](/doc/astah_copy.png "This is a sample image.")
 * Start Command Prompt console and enter these commands:
     * Set Java 8 SDK path: ```>set PATH=C:\<YourPath>\jdk1.8.0_451\bin```
     * Change directory to ClasHStamP folder: ```>cd C:\<YourPath>\ClasHStamP_Online\```
