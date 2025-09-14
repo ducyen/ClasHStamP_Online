@@ -23,7 +23,7 @@ For example: ```C:\<YourPath>\ClasHStamP_Online```
     * Compile ClasHStamP GUI: ```>javac Main.java```
     * Start ClasHStamP GUI: ```>java Main``` </br> 
     And you will see a screen like this </br>
-    ![This is an alt text.](/image/sample.webp "This is a sample image.")
+    ![This is an alt text.](/doc/clashtamp_gui.png "This is a sample image.")
 * On the top-right panel, enter fields like this:
 | Field                 | Value                 |
 | --------------------- |:---------------------:|
@@ -35,7 +35,7 @@ For example: ```C:\<YourPath>\ClasHStamP_Online```
 * Use Visual C++. open this Solution here: </br>```C:\<YourPath>\ClasHStamP_Online\samples\TypicalNotations\TypicalNotations.sln```</br>
 * On the Solution Explorer, set C project to be ```Set as Startup Project```
 * Build and Run this C project, you will see a screen like this:</br>
-    ![This is an alt text.](/image/sample.webp "This is a sample image.")
+    ![This is an alt text.](/doc/vs_run.png "This is a sample image.")
 
 # How to Generate Test Cases a Sample Model
 * On the Main window, press ```R``` key
