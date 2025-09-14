@@ -32,8 +32,8 @@ For example: ```C:\<YourPath>\ClasHStamP_Online```
 | Launch Diagram Editor | ```pro```             |
 | Select Language       | ```C```               |
 
-    * Press ```Generate Code``` button
-        * and wait until Output Window has shown ```"Code Generation Finished"```
+* Press ```Generate Code``` button
+   * and wait until Output Window has shown ```"Code Generation Finished"```
 * Use Visual C++. open this Solution here: </br>```C:\<YourPath>\ClasHStamP_Online\samples\TypicalNotations\TypicalNotations.sln```</br>
 * On the Solution Explorer, set C project to be ```Set as Startup Project```
 * Build and Run this C project, you will see a screen like this:</br>
