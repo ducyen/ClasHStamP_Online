@@ -51,8 +51,9 @@ T.B.D
 T.B.D
 
 # Limitations
-* The Test Cases generation function doesn't work with ChoicePseudostate.
-    * Work around: Replace this ChoicePseudostate by a JoinPseudostate, with one of the incomming transition comes from a region with states representing the above choice conditions.
+* The Test Cases generation function doesn't work with Guard or ChoicePseudostate.
+    * Work around: Replace this ChoicePseudostate by a JoinPseudostate, with one of the incomming transition comes from a region with states representing the above choice conditions.</br>
+    For example, in this sample, I have created a substitution for `(CarOn) ---PWR_BTN[Gear==Parked]---> (CarOff)`.
 
 # References
 * Refer to this YouTube video for more details: https://youtu.be/wyrNfo1aYpg?si=2Yq5X2zFzfMIsATT
