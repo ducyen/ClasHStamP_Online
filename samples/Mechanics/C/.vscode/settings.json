@@ -1,0 +1,27 @@
+{
+    "files.associations": {
+        "*.yrf": "json",
+        "*.rpx": "xml",
+        "*.stl": "json",
+        "sdl2_gfxprimitives.h": "c",
+        "sdl_ttf.h": "c",
+        "primitive.h": "c",
+        "commoninclude.h": "c",
+        "flexbutton.h": "c",
+        "sdl.h": "c",
+        "sprite.h": "c",
+        "contextimpl.h": "c",
+        "carbody.h": "c",
+        "stdarg.h": "c",
+        "b2_api.h": "c",
+        "chipmunk.h": "c",
+        "cpshape.h": "c",
+        "phxsprite.h": "c",
+        "phxpivotjoint.h": "c",
+        "phxslidejoint.h": "c",
+        "phxjoint.h": "c",
+        "phxpinjoint.h": "c",
+        "tracktoconstraint.h": "c",
+        "transformconstraint.h": "c"
+    }
+}

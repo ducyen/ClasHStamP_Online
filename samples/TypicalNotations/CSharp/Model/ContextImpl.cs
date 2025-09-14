@@ -7,6 +7,15 @@ using Base;
 namespace Model {
     public  class ContextImpl: Context
     {
+        public  enum AnEnum {
+            One,                                                
+            Two,                                                
+            Three,                                              
+            AN_ENUM_NUM
+        };
+        public  class E1Params: EventParams{
+            public AnEnum x;                                    
+        };
         public enum _EventId {
             E0,
             E1,
@@ -16,15 +25,42 @@ namespace Model {
             E5,
             ContextImplEventNum
         };
-        class S111Stm: Statemachine {
-            public class S111Top: TopState {
-                private static TopState singleInstance = new S111Top();
+        protected override void protectedMethod(
+        ){
+        } /* ContextImpl.protectedMethod */
+
+        protected  static boolean checkE1Params(
+            EventParams e
+        ){
+            return ((E1Params)e).x == AnEnum.Two;
+        } /* ContextImpl.checkE1Params */
+        class S82Stm: Statemachine {
+            public class S82Top: TopState {
+                private static TopState singleInstance = new S82Top();
                 public static new TopState GetInstance() { return singleInstance; }
             }
-            public class Entry1: Pseudostate<Entry1>{};
             public class InitPt: Pseudostate<InitPt>{};
-            public class S14: S111Top {
-                private static TopState singleInstance = new S14();
+            public class S821: S82Top {
+                private static TopState singleInstance = new S821();
+                public static new TopState GetInstance() { return singleInstance; }
+                public override void Entry(Context pContext, Statemachine pStm){
+                    if( pStm.IsEnterable(GetInstance()) ){
+                        Console.WriteLine(GetInstance().GetType() + "entry");
+                    }
+                }
+                public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
+                    bool bResult = false;
+                    pStm.m_pSourceState = GetInstance();
+                    return bResult;
+                }
+                public override void Exit(Context pContext, Statemachine pStm) {
+                    if (pStm.IsExitable(GetInstance())) {
+                        Console.WriteLine(GetInstance().GetType() + "exit");
+                    }
+                }
+            };
+            public class S822: S82Top {
+                private static TopState singleInstance = new S822();
                 public static new TopState GetInstance() { return singleInstance; }
                 public override void Entry(Context pContext, Statemachine pStm){
                     if( pStm.IsEnterable(GetInstance()) ){
@@ -35,8 +71,9 @@ namespace Model {
                     bool bResult = false;
                     pStm.m_pSourceState = GetInstance();
                     switch( (_EventId)nEventId ){
-                    case _EventId.E2:{
-                        pStm.BgnTrans( pContext, S15.GetInstance() );
+                    case _EventId.E1:{
+                        E1Params e = ( E1Params )pParams;
+                        pStm.BgnTrans( pContext, S821.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
                     } break;
@@ -50,38 +87,15 @@ namespace Model {
                     }
                 }
             };
-            public class S15: S111Top {
-                private static TopState singleInstance = new S15();
-                public static new TopState GetInstance() { return singleInstance; }
-                public override void Entry(Context pContext, Statemachine pStm){
-                    if( pStm.IsEnterable(GetInstance()) ){
-                        Console.WriteLine(GetInstance().GetType() + "entry");
-                    }
-                }
-                public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
-                    bool bResult = false;
-                    pStm.m_pSourceState = GetInstance();
-                    return bResult;
-                }
-                public override void Exit(Context pContext, Statemachine pStm) {
-                    if (pStm.IsExitable(GetInstance())) {
-                        Console.WriteLine(GetInstance().GetType() + "exit");
-                    }
-                }
-            };
             public override bool DefaultTrans( Context pContext ){
                 bool bResult = false;
                 Statemachine pStm = this;
                 do {
-                    if (m_pPseudostate == S111Stm.Entry1.GetInstance()) {
-                        pStm.BgnTrans( pContext, S14.GetInstance() );
+                    if (m_pCurrentState == S82Top.GetInstance() && m_pPseudostate == S82Stm.InitPt.GetInstance()) {
+                        pStm.BgnTrans( pContext, S822.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
-                    } else if (m_pCurrentState == S111Top.GetInstance() && m_pPseudostate == S111Stm.InitPt.GetInstance()) {
-                        pStm.BgnTrans( pContext, S15.GetInstance() );
-                        pStm.EndTrans( pContext );
-                        bResult = true;
-                    } else if (m_pCurrentState != m_pPseudostate && m_pPseudostate is S111Top) {
+                    } else if (m_pCurrentState != m_pPseudostate && m_pPseudostate is S82Top) {
                         pStm.BgnTrans( pContext, m_pPseudostate as TopState );
                         pStm.EndTrans( pContext );
                     } else {
@@ -119,26 +133,24 @@ namespace Model {
                 return false;
             }
             public override bool Abort(Context pContext) {
-                m_pSourceState = S111Top.GetInstance();
-                BgnTrans(pContext, S111Top.GetInstance());
+                m_pSourceState = S82Top.GetInstance();
+                BgnTrans(pContext, S82Top.GetInstance());
                 EndTrans(pContext);
                 return true;
             }
             public override bool IsFinished() {
-                return m_pCurrentState == S111Top.GetInstance() && m_pCurrentState == m_pPseudostate;
+                return m_pCurrentState == S82Top.GetInstance() && m_pCurrentState == m_pPseudostate;
             }
-            public S111Stm(): base(S111Top.GetInstance(), S111Top.GetInstance()) {}
+            public S82Stm(): base(S82Top.GetInstance(), S82Top.GetInstance()) {}
         };
-        class S112Stm: Statemachine {
-            public class S112Top: TopState {
-                private static TopState singleInstance = new S112Top();
+        class S83Stm: Statemachine {
+            public class S83Top: TopState {
+                private static TopState singleInstance = new S83Top();
                 public static new TopState GetInstance() { return singleInstance; }
             }
-            public class Entry1: Pseudostate<Entry1>{};
             public class InitPt: Pseudostate<InitPt>{};
-            public class Entry2: Pseudostate<Entry2>{};
-            public class S16: S112Top {
-                private static TopState singleInstance = new S16();
+            public class S831: S83Top {
+                private static TopState singleInstance = new S831();
                 public static new TopState GetInstance() { return singleInstance; }
                 public override void Entry(Context pContext, Statemachine pStm){
                     if( pStm.IsEnterable(GetInstance()) ){
@@ -148,14 +160,6 @@ namespace Model {
                 public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
                     bool bResult = false;
                     pStm.m_pSourceState = GetInstance();
-                    switch( (_EventId)nEventId ){
-                    case _EventId.E3:{
-                        pStm.BgnTrans( pContext, S17.GetInstance() );
-                        pStm.EndTrans( pContext );
-                        bResult = true;
-                    } break;
-                    default: break;
-                    }
                     return bResult;
                 }
                 public override void Exit(Context pContext, Statemachine pStm) {
@@ -164,8 +168,8 @@ namespace Model {
                     }
                 }
             };
-            public class S17: S112Top {
-                private static TopState singleInstance = new S17();
+            public class S832: S83Top {
+                private static TopState singleInstance = new S832();
                 public static new TopState GetInstance() { return singleInstance; }
                 public override void Entry(Context pContext, Statemachine pStm){
                     if( pStm.IsEnterable(GetInstance()) ){
@@ -187,19 +191,11 @@ namespace Model {
                 bool bResult = false;
                 Statemachine pStm = this;
                 do {
-                    if (m_pPseudostate == S112Stm.Entry1.GetInstance()) {
-                        pStm.BgnTrans( pContext, S16.GetInstance() );
+                    if (m_pCurrentState == S83Top.GetInstance() && m_pPseudostate == S83Stm.InitPt.GetInstance()) {
+                        pStm.BgnTrans( pContext, S831.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
-                    } else if (m_pCurrentState == S112Top.GetInstance() && m_pPseudostate == S112Stm.InitPt.GetInstance()) {
-                        pStm.BgnTrans( pContext, S16.GetInstance() );
-                        pStm.EndTrans( pContext );
-                        bResult = true;
-                    } else if (m_pPseudostate == S112Stm.Entry2.GetInstance()) {
-                        pStm.BgnTrans( pContext, S17.GetInstance() );
-                        pStm.EndTrans( pContext );
-                        bResult = true;
-                    } else if (m_pCurrentState != m_pPseudostate && m_pPseudostate is S112Top) {
+                    } else if (m_pCurrentState != m_pPseudostate && m_pPseudostate is S83Top) {
                         pStm.BgnTrans( pContext, m_pPseudostate as TopState );
                         pStm.EndTrans( pContext );
                     } else {
@@ -237,26 +233,26 @@ namespace Model {
                 return false;
             }
             public override bool Abort(Context pContext) {
-                m_pSourceState = S112Top.GetInstance();
-                BgnTrans(pContext, S112Top.GetInstance());
+                m_pSourceState = S83Top.GetInstance();
+                BgnTrans(pContext, S83Top.GetInstance());
                 EndTrans(pContext);
                 return true;
             }
             public override bool IsFinished() {
-                return m_pCurrentState == S112Top.GetInstance() && m_pCurrentState == m_pPseudostate;
+                return m_pCurrentState == S83Top.GetInstance() && m_pCurrentState == m_pPseudostate;
             }
-            public S112Stm(): base(S112Top.GetInstance(), S112Top.GetInstance()) {}
+            public S83Stm(): base(S83Top.GetInstance(), S83Top.GetInstance()) {}
         };
-        class S18Stm: Statemachine {
-            public class S18Top: TopState {
-                private static TopState singleInstance = new S18Top();
+        class SharedStm: Statemachine {
+            public class SharedTop: TopState {
+                private static TopState singleInstance = new SharedTop();
                 public static new TopState GetInstance() { return singleInstance; }
             }
+            public class InitPt: Pseudostate<InitPt>{};
             public class Entry1: Pseudostate<Entry1>{};
             public class Exit1: Pseudostate<Exit1>{};
-            public class InitPt: Pseudostate<InitPt>{};
-            public class S181: S18Top {
-                private static TopState singleInstance = new S181();
+            public class Shared1: SharedTop {
+                private static TopState singleInstance = new Shared1();
                 public static new TopState GetInstance() { return singleInstance; }
                 public override void Entry(Context pContext, Statemachine pStm){
                     if( pStm.IsEnterable(GetInstance()) ){
@@ -268,7 +264,7 @@ namespace Model {
                     pStm.m_pSourceState = GetInstance();
                     switch( (_EventId)nEventId ){
                     case _EventId.E0:{
-                        pStm.BgnTrans( pContext, S182.GetInstance() );
+                        pStm.BgnTrans( pContext, Shared2.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
                     } break;
@@ -282,8 +278,8 @@ namespace Model {
                     }
                 }
             };
-            public class S182: S18Top {
-                private static TopState singleInstance = new S182();
+            public class Shared2: SharedTop {
+                private static TopState singleInstance = new Shared2();
                 public static new TopState GetInstance() { return singleInstance; }
                 public override void Entry(Context pContext, Statemachine pStm){
                     if( pStm.IsEnterable(GetInstance()) ){
@@ -295,13 +291,13 @@ namespace Model {
                     pStm.m_pSourceState = GetInstance();
                     switch( (_EventId)nEventId ){
                     case _EventId.E2:{
-                        pStm.BgnTrans( pContext, S18Top.GetInstance() );
+                        pStm.BgnTrans( pContext, SharedTop.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
                     } break;
                     case _EventId.E3:{
-                        pStm.BgnTrans( pContext, S18Top.GetInstance() );
-                        pStm.m_pParentStm.m_pPseudostate = S18Stm.Exit1.GetInstance();
+                        pStm.BgnTrans( pContext, SharedTop.GetInstance() );
+                        pStm.m_pParentStm.m_pPseudostate = SharedStm.Exit1.GetInstance();
                         pStm.EndTrans( pContext );
                         bResult = true;
                     } break;
@@ -319,15 +315,15 @@ namespace Model {
                 bool bResult = false;
                 Statemachine pStm = this;
                 do {
-                    if (m_pPseudostate == S18Stm.Entry1.GetInstance()) {
-                        pStm.BgnTrans( pContext, S181.GetInstance() );
+                    if (m_pCurrentState == SharedTop.GetInstance() && m_pPseudostate == SharedStm.InitPt.GetInstance()) {
+                        pStm.BgnTrans( pContext, Shared1.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
-                    } else if (m_pCurrentState == S18Top.GetInstance() && m_pPseudostate == S18Stm.InitPt.GetInstance()) {
-                        pStm.BgnTrans( pContext, S181.GetInstance() );
+                    } else if (m_pPseudostate == SharedStm.Entry1.GetInstance()) {
+                        pStm.BgnTrans( pContext, Shared1.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
-                    } else if (m_pCurrentState != m_pPseudostate && m_pPseudostate is S18Top) {
+                    } else if (m_pCurrentState != m_pPseudostate && m_pPseudostate is SharedTop) {
                         pStm.BgnTrans( pContext, m_pPseudostate as TopState );
                         pStm.EndTrans( pContext );
                     } else {
@@ -365,29 +361,34 @@ namespace Model {
                 return false;
             }
             public override bool Abort(Context pContext) {
-                m_pSourceState = S18Top.GetInstance();
-                BgnTrans(pContext, S18Top.GetInstance());
+                m_pSourceState = SharedTop.GetInstance();
+                BgnTrans(pContext, SharedTop.GetInstance());
                 EndTrans(pContext);
                 return true;
             }
             public override bool IsFinished() {
-                return m_pCurrentState == S18Top.GetInstance() && m_pCurrentState == m_pPseudostate;
+                return m_pCurrentState == SharedTop.GetInstance() && m_pCurrentState == m_pPseudostate;
             }
-            public S18Stm(): base(S18Top.GetInstance(), S18Top.GetInstance()) {}
+            public SharedStm(): base(SharedTop.GetInstance(), SharedTop.GetInstance()) {}
         };
         class MainStm: Statemachine {
-            public class StmTop: TopState {
-                private static TopState singleInstance = new StmTop();
+            public class MainTop: TopState {
+                private static TopState singleInstance = new MainTop();
                 public static new TopState GetInstance() { return singleInstance; }
             }
-            S18Stm m_S18S18Stm = new S18Stm();                  
-            S111Stm m_S111S111Stm = new S111Stm();              
-            S112Stm m_S112S112Stm = new S112Stm();              
-            TopState m_pS6History;
-            TopState m_pS9History;
-            public class InitPt: Pseudostate<InitPt>{};
+            SharedStm m_S6SharedStm = new SharedStm();          
+            S82Stm m_S82S82Stm = new S82Stm();                  
+            S83Stm m_S83S83Stm = new S83Stm();                  
+            SharedStm m_S9SharedStm = new SharedStm();          
+            TopState m_pS4History;
+            TopState m_pS7History;
+            public class InitPt0: Pseudostate<InitPt0>{};
+            public class InitPt1: Pseudostate<InitPt1>{};
+            public class InitPt2: Pseudostate<InitPt2>{};
             public class Junction: Pseudostate<Junction>{};
-            public class S1: StmTop {
+            public class InitPt4: Pseudostate<InitPt4>{};
+            public class InitPt3: Pseudostate<InitPt3>{};
+            public class S1: MainTop {
                 private static TopState singleInstance = new S1();
                 public static new TopState GetInstance() { return singleInstance; }
                 public override void Entry(Context pContext, Statemachine pStm){
@@ -400,28 +401,37 @@ namespace Model {
                     pStm.m_pSourceState = GetInstance();
                     switch( (_EventId)nEventId ){
                     case _EventId.E1:{
-                        pStm.BgnTrans( pContext, S2.GetInstance(), InitPt.GetInstance() );
-                        pStm.EndTrans( pContext );
-                        bResult = true;
+                        E1Params e = ( E1Params )pParams;
+                        if (checkE1Params(e)) {
+                            pStm.BgnTrans( pContext, S2.GetInstance(), InitPt1.GetInstance() );
+                            pStm.EndTrans( pContext );
+                            bResult = true;
+                        }
                     } break;
                     case _EventId.E2:{
                         int n = InputValue("Enter condition1: ");
                         if (n == 0) {
-                            if (( ( MainStm )pStm ).m_pS6History != null) {
-                                pStm.BgnTrans( pContext, ( ( MainStm )pStm ).m_pS6History );
+                            if (( ( MainStm )pStm ).m_pS4History != null) {
+                                pStm.BgnTrans( pContext, ( ( MainStm )pStm ).m_pS4History );
+                                DisplayMsg("Do an action4");
                                 pStm.EndTrans( pContext );
                                 bResult = true;
                                 break;
                             }
-                            pStm.BgnTrans( pContext, S6.GetInstance(), InitPt.GetInstance() );
+                            pStm.BgnTrans( pContext, S4.GetInstance(), InitPt2.GetInstance() );
+                            DisplayMsg("Do an action4");
                             pStm.EndTrans( pContext );
                             bResult = true;
                         } else if (InputValue("Enter condition2: ") == 1) {
-                            pStm.BgnTrans( pContext, S10.GetInstance() );
+                            pStm.BgnTrans( pContext, S5.GetInstance() );
+                            DisplayMsg("Do an action1");
+                            DisplayMsg("Do an action2");
                             pStm.EndTrans( pContext );
                             bResult = true;
                         } else {
-                            pStm.BgnTrans( pContext, S9.GetInstance(), InitPt.GetInstance() );
+                            pStm.BgnTrans( pContext, S7.GetInstance(), InitPt3.GetInstance() );
+                            DisplayMsg("Do an action1");
+                            DisplayMsg("Do an action3");
                             pStm.EndTrans( pContext );
                             bResult = true;
                         }
@@ -436,12 +446,13 @@ namespace Model {
                     }
                 }
             };
-            public class S2: StmTop {
+            public class S2: MainTop {
                 private static TopState singleInstance = new S2();
                 public static new TopState GetInstance() { return singleInstance; }
                 public override void Entry(Context pContext, Statemachine pStm){
                     if( pStm.IsEnterable(GetInstance()) ){
                         Console.WriteLine(GetInstance().GetType() + "entry");
+                        DisplayMsg("Do something");
                     }
                 }
                 public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
@@ -449,18 +460,18 @@ namespace Model {
                     pStm.m_pSourceState = GetInstance();
                     switch( (_EventId)nEventId ){
                     case _EventId.E2:{
-                        pStm.BgnTrans( pContext, S5.GetInstance() );
+                        pStm.BgnTrans( pContext, S3.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
                     } break;
                     case _EventId.E3:{
-                        if (( ( MainStm )pStm ).m_pS6History != null) {
-                            pStm.BgnTrans( pContext, ( ( MainStm )pStm ).m_pS6History );
+                        if (( ( MainStm )pStm ).m_pS4History != null) {
+                            pStm.BgnTrans( pContext, ( ( MainStm )pStm ).m_pS4History );
                             pStm.EndTrans( pContext );
                             bResult = true;
                             break;
                         }
-                        pStm.BgnTrans( pContext, S6.GetInstance(), InitPt.GetInstance() );
+                        pStm.BgnTrans( pContext, S4.GetInstance(), InitPt2.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
                     } break;
@@ -470,12 +481,13 @@ namespace Model {
                 }
                 public override void Exit(Context pContext, Statemachine pStm) {
                     if (pStm.IsExitable(GetInstance())) {
+                        DisplayMsg("Do another thing");
                         Console.WriteLine(GetInstance().GetType() + "exit");
                     }
                 }
             };
-            public class S3: S2 {
-                private static TopState singleInstance = new S3();
+            public class S21: S2 {
+                private static TopState singleInstance = new S21();
                 public static new TopState GetInstance() { return singleInstance; }
                 public override void Entry(Context pContext, Statemachine pStm){
                     if( pStm.IsEnterable(GetInstance()) ){
@@ -488,12 +500,13 @@ namespace Model {
                     pStm.m_pSourceState = GetInstance();
                     switch( (_EventId)nEventId ){
                     case _EventId.E0:{
-                        pStm.BgnTrans( pContext, S4.GetInstance() );
+                        pStm.BgnTrans( pContext, S22.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
                     } break;
                     case _EventId.E1:{
-                        pStm.BgnTrans( pContext, S5.GetInstance() );
+                        E1Params e = ( E1Params )pParams;
+                        pStm.BgnTrans( pContext, S3.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
                     } break;
@@ -508,8 +521,8 @@ namespace Model {
                     }
                 }
             };
-            public class S4: S2 {
-                private static TopState singleInstance = new S4();
+            public class S22: S2 {
+                private static TopState singleInstance = new S22();
                 public static new TopState GetInstance() { return singleInstance; }
                 public override void Entry(Context pContext, Statemachine pStm){
                     if( pStm.IsEnterable(GetInstance()) ){
@@ -537,8 +550,8 @@ namespace Model {
                     }
                 }
             };
-            public class S5: StmTop {
-                private static TopState singleInstance = new S5();
+            public class S3: MainTop {
+                private static TopState singleInstance = new S3();
                 public static new TopState GetInstance() { return singleInstance; }
                 public override void Entry(Context pContext, Statemachine pStm){
                     if( pStm.IsEnterable(GetInstance()) ){
@@ -550,7 +563,7 @@ namespace Model {
                     pStm.m_pSourceState = GetInstance();
                     switch( (_EventId)nEventId ){
                     case _EventId.E0:{
-                        pStm.BgnTrans( pContext, StmTop.GetInstance() );
+                        pStm.BgnTrans( pContext, MainTop.GetInstance() );
                         pStm.m_pPseudostate = MainStm.Junction.GetInstance();
                         pStm.EndTrans( pContext );
                         bResult = true;
@@ -565,27 +578,123 @@ namespace Model {
                     }
                 }
             };
-            public class S6: StmTop {
+            public class S4: MainTop {
+                private static TopState singleInstance = new S4();
+                public static new TopState GetInstance() { return singleInstance; }
+                public override void Entry(Context pContext, Statemachine pStm){
+                    if( pStm.IsEnterable(GetInstance()) ){
+                        Console.WriteLine(GetInstance().GetType() + "entry");
+                    }
+                }
+                public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
+                    bool bResult = false;
+                    pStm.m_pSourceState = GetInstance();
+                    switch( (_EventId)nEventId ){
+                    case _EventId.E2:{
+                        pStm.m_bIsExternTrans = true;
+                        pStm.BgnTrans( pContext, S42.GetInstance() );
+                        pStm.EndTrans( pContext );
+                        bResult = true;
+                    } break;
+                    default: break;
+                    }
+                    return bResult;
+                }
+                public override void Exit(Context pContext, Statemachine pStm) {
+                    if (pStm.IsExitable(GetInstance())) {
+                        Console.WriteLine(GetInstance().GetType() + "exit");
+                    }
+                }
+            };
+            public class S41: S4 {
+                private static TopState singleInstance = new S41();
+                public static new TopState GetInstance() { return singleInstance; }
+                public override void Entry(Context pContext, Statemachine pStm){
+                    if( pStm.IsEnterable(GetInstance()) ){
+                        base.Entry( pContext, pStm );
+                        Console.WriteLine(GetInstance().GetType() + "entry");
+                        ((MainStm)pStm).m_pS4History = S41.GetInstance();
+                    }
+                }
+                public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
+                    bool bResult = false;
+                    pStm.m_pSourceState = GetInstance();
+                    switch( (_EventId)nEventId ){
+                    case _EventId.E1:{
+                        E1Params e = ( E1Params )pParams;
+                        pStm.BgnTrans( pContext, S42.GetInstance() );
+                        pStm.EndTrans( pContext );
+                        bResult = true;
+                    } break;
+                    default: break;
+                    }
+                    return bResult ? bResult : base.EventProc( pContext, pStm, nEventId, pParams );
+                }
+                public override void Exit(Context pContext, Statemachine pStm) {
+                    if (pStm.IsExitable(GetInstance())) {
+                        Console.WriteLine(GetInstance().GetType() + "exit");
+                        base.Exit(pContext, pStm);
+                    }
+                }
+            };
+            public class S42: S4 {
+                private static TopState singleInstance = new S42();
+                public static new TopState GetInstance() { return singleInstance; }
+                public override void Entry(Context pContext, Statemachine pStm){
+                    if( pStm.IsEnterable(GetInstance()) ){
+                        base.Entry( pContext, pStm );
+                        Console.WriteLine(GetInstance().GetType() + "entry");
+                        ((MainStm)pStm).m_pS4History = S42.GetInstance();
+                    }
+                }
+                public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
+                    bool bResult = false;
+                    pStm.m_pSourceState = GetInstance();
+                    switch( (_EventId)nEventId ){
+                    case _EventId.E1:{
+                        E1Params e = ( E1Params )pParams;
+                        pStm.BgnTrans( pContext, S4.GetInstance() );
+                        ((MainStm)pStm).m_pS4History = S4.GetInstance();
+                        pStm.EndTrans( pContext );
+                        bResult = true;
+                    } break;
+                    default: break;
+                    }
+                    return bResult ? bResult : base.EventProc( pContext, pStm, nEventId, pParams );
+                }
+                public override void Exit(Context pContext, Statemachine pStm) {
+                    if (pStm.IsExitable(GetInstance())) {
+                        Console.WriteLine(GetInstance().GetType() + "exit");
+                        base.Exit(pContext, pStm);
+                    }
+                }
+            };
+            public class S6: MainTop {
                 private static TopState singleInstance = new S6();
                 public static new TopState GetInstance() { return singleInstance; }
                 public override void Entry(Context pContext, Statemachine pStm){
                     if( pStm.IsEnterable(GetInstance()) ){
                         Console.WriteLine(GetInstance().GetType() + "entry");
+                        ((MainStm)pStm).m_S6SharedStm.Reset( pContext, pStm, null );
                     }
                 }
                 public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
                     bool bResult = false;
                     pStm.m_pSourceState = GetInstance();
                     switch( (_EventId)nEventId ){
-                    case _EventId.E1:{
-                        pStm.BgnTrans( pContext, StmTop.GetInstance() );
-                        pStm.m_pPseudostate = MainStm.Junction.GetInstance();
+                    case _EventId.E3:{
+                        pStm.BgnTrans( pContext, S9.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
                     } break;
-                    case _EventId.E2:{
-                        pStm.m_bIsExternTrans = true;
-                        pStm.BgnTrans( pContext, S8.GetInstance() );
+                    case _EventId.E4:{
+                        if (( ( MainStm )pStm ).m_pS4History != null) {
+                            pStm.BgnTrans( pContext, ( ( MainStm )pStm ).m_pS4History );
+                            pStm.EndTrans( pContext );
+                            bResult = true;
+                            break;
+                        }
+                        pStm.BgnTrans( pContext, S4.GetInstance(), InitPt2.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
                     } break;
@@ -595,186 +704,74 @@ namespace Model {
                 }
                 public override void Exit(Context pContext, Statemachine pStm) {
                     if (pStm.IsExitable(GetInstance())) {
+                        ((MainStm)pStm).m_S6SharedStm.Abort( pContext );
                         Console.WriteLine(GetInstance().GetType() + "exit");
                     }
                 }
             };
-            public class S7: S6 {
-                private static TopState singleInstance = new S7();
-                public static new TopState GetInstance() { return singleInstance; }
-                public override void Entry(Context pContext, Statemachine pStm){
-                    if( pStm.IsEnterable(GetInstance()) ){
-                        base.Entry( pContext, pStm );
-                        Console.WriteLine(GetInstance().GetType() + "entry");
-                        ((MainStm)pStm).m_pS6History = S7.GetInstance();
-                    }
-                }
-                public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
-                    bool bResult = false;
-                    pStm.m_pSourceState = GetInstance();
-                    switch( (_EventId)nEventId ){
-                    case _EventId.E1:{
-                        pStm.BgnTrans( pContext, S8.GetInstance() );
-                        pStm.EndTrans( pContext );
-                        bResult = true;
-                    } break;
-                    default: break;
-                    }
-                    return bResult ? bResult : base.EventProc( pContext, pStm, nEventId, pParams );
-                }
-                public override void Exit(Context pContext, Statemachine pStm) {
-                    if (pStm.IsExitable(GetInstance())) {
-                        Console.WriteLine(GetInstance().GetType() + "exit");
-                        base.Exit(pContext, pStm);
-                    }
-                }
-            };
-            public class S8: S6 {
+            public class S8: MainTop {
                 private static TopState singleInstance = new S8();
                 public static new TopState GetInstance() { return singleInstance; }
                 public override void Entry(Context pContext, Statemachine pStm){
                     if( pStm.IsEnterable(GetInstance()) ){
-                        base.Entry( pContext, pStm );
                         Console.WriteLine(GetInstance().GetType() + "entry");
-                        ((MainStm)pStm).m_pS6History = S8.GetInstance();
-                    }
-                }
-                public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
-                    bool bResult = false;
-                    pStm.m_pSourceState = GetInstance();
-                    return bResult ? bResult : base.EventProc( pContext, pStm, nEventId, pParams );
-                }
-                public override void Exit(Context pContext, Statemachine pStm) {
-                    if (pStm.IsExitable(GetInstance())) {
-                        Console.WriteLine(GetInstance().GetType() + "exit");
-                        base.Exit(pContext, pStm);
-                    }
-                }
-            };
-            public class S18: StmTop {
-                private static TopState singleInstance = new S18();
-                public static new TopState GetInstance() { return singleInstance; }
-                public override void Entry(Context pContext, Statemachine pStm){
-                    if( pStm.IsEnterable(GetInstance()) ){
-                        Console.WriteLine(GetInstance().GetType() + "entry");
-                        ((MainStm)pStm).m_S18S18Stm.Reset( pContext, pStm, null );
+                        ((MainStm)pStm).m_S82S82Stm.Reset( pContext, pStm, null );
+                        ((MainStm)pStm).m_S83S83Stm.Reset( pContext, pStm, null );
                     }
                 }
                 public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
                     bool bResult = false;
                     pStm.m_pSourceState = GetInstance();
                     switch( (_EventId)nEventId ){
+                    case _EventId.E4:{
+                        pStm.BgnTrans( pContext, MainTop.GetInstance() );
+                        pStm.EndTrans( pContext );
+                        bResult = true;
+                    } break;
+                    case _EventId.E5:{
+                        if (( ( MainStm )pStm ).m_pS7History != null) {
+                            pStm.BgnTrans( pContext, ( ( MainStm )pStm ).m_pS7History );
+                            pStm.EndTrans( pContext );
+                            bResult = true;
+                            break;
+                        }
+                    } break;
+                    default: break;
+                    }
+                    return bResult;
+                }
+                public override void Exit(Context pContext, Statemachine pStm) {
+                    if (pStm.IsExitable(GetInstance())) {
+                        ((MainStm)pStm).m_S82S82Stm.Abort( pContext );
+                        ((MainStm)pStm).m_S83S83Stm.Abort( pContext );
+                        Console.WriteLine(GetInstance().GetType() + "exit");
+                    }
+                }
+            };
+            public class S811: S8 {
+                private static TopState singleInstance = new S811();
+                public static new TopState GetInstance() { return singleInstance; }
+                public override void Entry(Context pContext, Statemachine pStm){
+                    if( pStm.IsEnterable(GetInstance()) ){
+                        base.Entry( pContext, pStm );
+                        Console.WriteLine(GetInstance().GetType() + "entry");
+                    }
+                }
+                public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
+                    bool bResult = false;
+                    pStm.m_pSourceState = GetInstance();
+                    switch( (_EventId)nEventId ){
+                    case _EventId.E1:{
+                        E1Params e = ( E1Params )pParams;
+                        pStm.BgnTrans( pContext, S812.GetInstance() );
+                        pStm.EndTrans( pContext );
+                        bResult = true;
+                    } break;
                     case _EventId.E3:{
-                        pStm.BgnTrans( pContext, S19.GetInstance() );
-                        pStm.EndTrans( pContext );
-                        bResult = true;
-                    } break;
-                    case _EventId.E4:{
-                        if (( ( MainStm )pStm ).m_pS6History != null) {
-                            pStm.BgnTrans( pContext, ( ( MainStm )pStm ).m_pS6History );
-                            pStm.EndTrans( pContext );
-                            bResult = true;
-                            break;
-                        }
-                        pStm.BgnTrans( pContext, S6.GetInstance(), InitPt.GetInstance() );
-                        pStm.EndTrans( pContext );
-                        bResult = true;
-                    } break;
-                    default: break;
-                    }
-                    return bResult;
-                }
-                public override void Exit(Context pContext, Statemachine pStm) {
-                    if (pStm.IsExitable(GetInstance())) {
-                        ((MainStm)pStm).m_S18S18Stm.Abort( pContext );
-                        Console.WriteLine(GetInstance().GetType() + "exit");
-                    }
-                }
-            };
-            public class S11: StmTop {
-                private static TopState singleInstance = new S11();
-                public static new TopState GetInstance() { return singleInstance; }
-                public override void Entry(Context pContext, Statemachine pStm){
-                    if( pStm.IsEnterable(GetInstance()) ){
-                        Console.WriteLine(GetInstance().GetType() + "entry");
-                        ((MainStm)pStm).m_S111S111Stm.Reset( pContext, pStm, null );
-                        ((MainStm)pStm).m_S112S112Stm.Reset( pContext, pStm, null );
-                    }
-                }
-                public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
-                    bool bResult = false;
-                    pStm.m_pSourceState = GetInstance();
-                    switch( (_EventId)nEventId ){
-                    case _EventId.E4:{
-                        pStm.BgnTrans( pContext, StmTop.GetInstance() );
-                        pStm.EndTrans( pContext );
-                        bResult = true;
-                    } break;
-                    case _EventId.E5:{
-                        if (( ( MainStm )pStm ).m_pS9History != null) {
-                            pStm.BgnTrans( pContext, ( ( MainStm )pStm ).m_pS9History );
-                            pStm.EndTrans( pContext );
-                            bResult = true;
-                            break;
-                        }
-                    } break;
-                    default: break;
-                    }
-                    return bResult;
-                }
-                public override void Exit(Context pContext, Statemachine pStm) {
-                    if (pStm.IsExitable(GetInstance())) {
-                        ((MainStm)pStm).m_S111S111Stm.Abort( pContext );
-                        ((MainStm)pStm).m_S112S112Stm.Abort( pContext );
-                        Console.WriteLine(GetInstance().GetType() + "exit");
-                    }
-                }
-            };
-            public class S12: S11 {
-                private static TopState singleInstance = new S12();
-                public static new TopState GetInstance() { return singleInstance; }
-                public override void Entry(Context pContext, Statemachine pStm){
-                    if( pStm.IsEnterable(GetInstance()) ){
-                        base.Entry( pContext, pStm );
-                        Console.WriteLine(GetInstance().GetType() + "entry");
-                    }
-                }
-                public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
-                    bool bResult = false;
-                    pStm.m_pSourceState = GetInstance();
-                    switch( (_EventId)nEventId ){
-                    case _EventId.E1:{
-                        pStm.BgnTrans( pContext, S13.GetInstance() );
-                        pStm.EndTrans( pContext );
-                        bResult = true;
-                    } break;
-                    default: break;
-                    }
-                    return bResult ? bResult : base.EventProc( pContext, pStm, nEventId, pParams );
-                }
-                public override void Exit(Context pContext, Statemachine pStm) {
-                    if (pStm.IsExitable(GetInstance())) {
-                        Console.WriteLine(GetInstance().GetType() + "exit");
-                        base.Exit(pContext, pStm);
-                    }
-                }
-            };
-            public class S13: S11 {
-                private static TopState singleInstance = new S13();
-                public static new TopState GetInstance() { return singleInstance; }
-                public override void Entry(Context pContext, Statemachine pStm){
-                    if( pStm.IsEnterable(GetInstance()) ){
-                        base.Entry( pContext, pStm );
-                        Console.WriteLine(GetInstance().GetType() + "entry");
-                    }
-                }
-                public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
-                    bool bResult = false;
-                    pStm.m_pSourceState = GetInstance();
-                    switch( (_EventId)nEventId ){
-                    case _EventId.E5:{
-                        if (((ContextImpl)pContext).IsIn(S111Stm.S15.GetInstance())) {
-                            pStm.BgnTrans( pContext, S20.GetInstance() );
+                        if (((ContextImpl)pContext).IsIn(S82Stm.S821.GetInstance())
+                         || ((ContextImpl)pContext).IsIn(S83Stm.S831.GetInstance())) {
+                            pStm.BgnTrans( pContext, S812.GetInstance() );
+                            ((MainStm)pStm).m_S83S83Stm.Reset(pContext, pStm, S83Stm.S832.GetInstance());
                             pStm.EndTrans( pContext );
                             bResult = true;
                         }
@@ -790,8 +787,72 @@ namespace Model {
                     }
                 }
             };
-            public class S9: StmTop {
-                private static TopState singleInstance = new S9();
+            public class S813: S8 {
+                private static TopState singleInstance = new S813();
+                public static new TopState GetInstance() { return singleInstance; }
+                public override void Entry(Context pContext, Statemachine pStm){
+                    if( pStm.IsEnterable(GetInstance()) ){
+                        base.Entry( pContext, pStm );
+                        Console.WriteLine(GetInstance().GetType() + "entry");
+                    }
+                }
+                public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
+                    bool bResult = false;
+                    pStm.m_pSourceState = GetInstance();
+                    switch( (_EventId)nEventId ){
+                    case _EventId.E5:{
+                        if (((ContextImpl)pContext).IsIn(S82Stm.S822.GetInstance())) {
+                            pStm.BgnTrans( pContext, S10.GetInstance() );
+                            pStm.EndTrans( pContext );
+                            bResult = true;
+                        }
+                    } break;
+                    default: break;
+                    }
+                    return bResult ? bResult : base.EventProc( pContext, pStm, nEventId, pParams );
+                }
+                public override void Exit(Context pContext, Statemachine pStm) {
+                    if (pStm.IsExitable(GetInstance())) {
+                        Console.WriteLine(GetInstance().GetType() + "exit");
+                        base.Exit(pContext, pStm);
+                    }
+                }
+            };
+            public class S812: S8 {
+                private static TopState singleInstance = new S812();
+                public static new TopState GetInstance() { return singleInstance; }
+                public override void Entry(Context pContext, Statemachine pStm){
+                    if( pStm.IsEnterable(GetInstance()) ){
+                        base.Entry( pContext, pStm );
+                        Console.WriteLine(GetInstance().GetType() + "entry");
+                    }
+                }
+                public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
+                    bool bResult = false;
+                    pStm.m_pSourceState = GetInstance();
+                    switch( (_EventId)nEventId ){
+                    case _EventId.E1:{
+                        E1Params e = ( E1Params )pParams;
+                        if (((ContextImpl)pContext).IsIn(S82Stm.S821.GetInstance())) {
+                            pStm.BgnTrans( pContext, S813.GetInstance() );
+                            ((MainStm)pStm).m_S82S82Stm.Reset(pContext, pStm, S82Stm.S822.GetInstance());
+                            pStm.EndTrans( pContext );
+                            bResult = true;
+                        }
+                    } break;
+                    default: break;
+                    }
+                    return bResult ? bResult : base.EventProc( pContext, pStm, nEventId, pParams );
+                }
+                public override void Exit(Context pContext, Statemachine pStm) {
+                    if (pStm.IsExitable(GetInstance())) {
+                        Console.WriteLine(GetInstance().GetType() + "exit");
+                        base.Exit(pContext, pStm);
+                    }
+                }
+            };
+            public class S7: MainTop {
+                private static TopState singleInstance = new S7();
                 public static new TopState GetInstance() { return singleInstance; }
                 public override void Entry(Context pContext, Statemachine pStm){
                     if( pStm.IsEnterable(GetInstance()) ){
@@ -803,20 +864,21 @@ namespace Model {
                     pStm.m_pSourceState = GetInstance();
                     switch( (_EventId)nEventId ){
                     case _EventId.E1:{
+                        E1Params e = ( E1Params )pParams;
                         pStm.m_bIsExternTrans = true;
-                        pStm.BgnTrans( pContext, S91.GetInstance() );
+                        pStm.BgnTrans( pContext, S71.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
                     } break;
                     case _EventId.E2:{
-                        pStm.BgnTrans( pContext, S92.GetInstance() );
+                        pStm.BgnTrans( pContext, S72.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
                     } break;
                     case _EventId.E3:{
-                        pStm.BgnTrans( pContext, S11.GetInstance(), InitPt.GetInstance() );
-                        ((MainStm)pStm).m_S111S111Stm.Reset(pContext, pStm, S111Stm.Entry1.GetInstance());
-                        ((MainStm)pStm).m_S112S112Stm.Reset(pContext, pStm, S112Stm.Entry1.GetInstance());
+                        pStm.BgnTrans( pContext, S8.GetInstance(), InitPt4.GetInstance() );
+                        ((MainStm)pStm).m_S83S83Stm.Reset(pContext, pStm, S83Stm.S831.GetInstance());
+                        ((MainStm)pStm).m_S82S82Stm.Reset(pContext, pStm, S82Stm.S821.GetInstance());
                         pStm.EndTrans( pContext );
                         bResult = true;
                     } break;
@@ -830,14 +892,14 @@ namespace Model {
                     }
                 }
             };
-            public class S91: S9 {
-                private static TopState singleInstance = new S91();
+            public class S71: S7 {
+                private static TopState singleInstance = new S71();
                 public static new TopState GetInstance() { return singleInstance; }
                 public override void Entry(Context pContext, Statemachine pStm){
                     if( pStm.IsEnterable(GetInstance()) ){
                         base.Entry( pContext, pStm );
                         Console.WriteLine(GetInstance().GetType() + "entry");
-                        ((MainStm)pStm).m_pS9History = S91.GetInstance();
+                        ((MainStm)pStm).m_pS7History = S71.GetInstance();
                     }
                 }
                 public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
@@ -852,14 +914,14 @@ namespace Model {
                     }
                 }
             };
-            public class S92: S9 {
-                private static TopState singleInstance = new S92();
+            public class S72: S7 {
+                private static TopState singleInstance = new S72();
                 public static new TopState GetInstance() { return singleInstance; }
                 public override void Entry(Context pContext, Statemachine pStm){
                     if( pStm.IsEnterable(GetInstance()) ){
                         base.Entry( pContext, pStm );
                         Console.WriteLine(GetInstance().GetType() + "entry");
-                        ((MainStm)pStm).m_pS9History = S92.GetInstance();
+                        ((MainStm)pStm).m_pS7History = S72.GetInstance();
                     }
                 }
                 public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
@@ -874,67 +936,7 @@ namespace Model {
                     }
                 }
             };
-            public class S19: StmTop {
-                private static TopState singleInstance = new S19();
-                public static new TopState GetInstance() { return singleInstance; }
-                public override void Entry(Context pContext, Statemachine pStm){
-                    if( pStm.IsEnterable(GetInstance()) ){
-                        Console.WriteLine(GetInstance().GetType() + "entry");
-                    }
-                }
-                public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
-                    bool bResult = false;
-                    pStm.m_pSourceState = GetInstance();
-                    switch( (_EventId)nEventId ){
-                    case _EventId.E0:{
-                        pStm.BgnTrans( pContext, S20.GetInstance() );
-                        pStm.EndTrans( pContext );
-                        bResult = true;
-                    } break;
-                    default: break;
-                    }
-                    return bResult;
-                }
-                public override void Exit(Context pContext, Statemachine pStm) {
-                    if (pStm.IsExitable(GetInstance())) {
-                        Console.WriteLine(GetInstance().GetType() + "exit");
-                    }
-                }
-            };
-            public class S20: StmTop {
-                private static TopState singleInstance = new S20();
-                public static new TopState GetInstance() { return singleInstance; }
-                public override void Entry(Context pContext, Statemachine pStm){
-                    if( pStm.IsEnterable(GetInstance()) ){
-                        Console.WriteLine(GetInstance().GetType() + "entry");
-                    }
-                }
-                public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
-                    bool bResult = false;
-                    pStm.m_pSourceState = GetInstance();
-                    switch( (_EventId)nEventId ){
-                    case _EventId.E1:{
-                        pStm.BgnTrans( pContext, StmTop.GetInstance() );
-                        pStm.EndTrans( pContext );
-                        bResult = true;
-                    } break;
-                    case _EventId.E2:{
-                        pStm.BgnTrans( pContext, S11.GetInstance(), InitPt.GetInstance() );
-                        ((MainStm)pStm).m_S112S112Stm.Reset(pContext, pStm, S112Stm.Entry2.GetInstance());
-                        pStm.EndTrans( pContext );
-                        bResult = true;
-                    } break;
-                    default: break;
-                    }
-                    return bResult;
-                }
-                public override void Exit(Context pContext, Statemachine pStm) {
-                    if (pStm.IsExitable(GetInstance())) {
-                        Console.WriteLine(GetInstance().GetType() + "exit");
-                    }
-                }
-            };
-            public class S10: StmTop {
+            public class S10: MainTop {
                 private static TopState singleInstance = new S10();
                 public static new TopState GetInstance() { return singleInstance; }
                 public override void Entry(Context pContext, Statemachine pStm){
@@ -947,24 +949,59 @@ namespace Model {
                     pStm.m_pSourceState = GetInstance();
                     switch( (_EventId)nEventId ){
                     case _EventId.E1:{
+                        E1Params e = ( E1Params )pParams;
+                        pStm.BgnTrans( pContext, MainTop.GetInstance() );
+                        pStm.EndTrans( pContext );
+                        bResult = true;
+                    } break;
+                    case _EventId.E2:{
+                        pStm.BgnTrans( pContext, S8.GetInstance(), InitPt4.GetInstance() );
+                        ((MainStm)pStm).m_S83S83Stm.Reset(pContext, pStm, S83Stm.S832.GetInstance());
+                        pStm.EndTrans( pContext );
+                        bResult = true;
+                    } break;
+                    default: break;
+                    }
+                    return bResult;
+                }
+                public override void Exit(Context pContext, Statemachine pStm) {
+                    if (pStm.IsExitable(GetInstance())) {
+                        Console.WriteLine(GetInstance().GetType() + "exit");
+                    }
+                }
+            };
+            public class S5: MainTop {
+                private static TopState singleInstance = new S5();
+                public static new TopState GetInstance() { return singleInstance; }
+                public override void Entry(Context pContext, Statemachine pStm){
+                    if( pStm.IsEnterable(GetInstance()) ){
+                        Console.WriteLine(GetInstance().GetType() + "entry");
+                    }
+                }
+                public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
+                    bool bResult = false;
+                    pStm.m_pSourceState = GetInstance();
+                    switch( (_EventId)nEventId ){
+                    case _EventId.E1:{
+                        E1Params e = ( E1Params )pParams;
                         pStm.m_bIsExternTrans = true;
-                        pStm.BgnTrans( pContext, S10.GetInstance() );
+                        pStm.BgnTrans( pContext, S5.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
                     } break;
                     case _EventId.E2:{
                         int n = InputValue("Enter condition1: ");
                         if (n == 0) {
-                            pStm.BgnTrans( pContext, S7.GetInstance() );
+                            pStm.BgnTrans( pContext, S41.GetInstance() );
                             pStm.EndTrans( pContext );
                             bResult = true;
                         } else if (n == 1) {
-                            pStm.BgnTrans( pContext, S11.GetInstance(), InitPt.GetInstance() );
+                            pStm.BgnTrans( pContext, S8.GetInstance(), InitPt4.GetInstance() );
                             pStm.EndTrans( pContext );
                             bResult = true;
                         } else {
-                            pStm.BgnTrans( pContext, S18.GetInstance() );
-                            ((MainStm)pStm).m_S18S18Stm.Reset(pContext, pStm, S18Stm.Entry1.GetInstance());
+                            pStm.BgnTrans( pContext, S6.GetInstance() );
+                            ((MainStm)pStm).m_S6SharedStm.Reset(pContext, pStm, SharedStm.Entry1.GetInstance());
                             pStm.EndTrans( pContext );
                             bResult = true;
                         }
@@ -979,42 +1016,74 @@ namespace Model {
                     }
                 }
             };
+            public class S9: MainTop {
+                private static TopState singleInstance = new S9();
+                public static new TopState GetInstance() { return singleInstance; }
+                public override void Entry(Context pContext, Statemachine pStm){
+                    if( pStm.IsEnterable(GetInstance()) ){
+                        Console.WriteLine(GetInstance().GetType() + "entry");
+                        ((MainStm)pStm).m_S9SharedStm.Reset( pContext, pStm, null );
+                    }
+                }
+                public override bool EventProc( Context pContext, Statemachine pStm, int nEventId, EventParams pParams ){
+                    bool bResult = false;
+                    pStm.m_pSourceState = GetInstance();
+                    return bResult;
+                }
+                public override void Exit(Context pContext, Statemachine pStm) {
+                    if (pStm.IsExitable(GetInstance())) {
+                        ((MainStm)pStm).m_S9SharedStm.Abort( pContext );
+                        Console.WriteLine(GetInstance().GetType() + "exit");
+                    }
+                }
+            };
             public override bool DefaultTrans( Context pContext ){
                 bool bResult = false;
                 Statemachine pStm = this;
-                bResult |= m_S18S18Stm.DefaultTrans( pContext );
-                bResult |= m_S111S111Stm.DefaultTrans( pContext );
-                bResult |= m_S112S112Stm.DefaultTrans( pContext );
+                bResult |= m_S6SharedStm.DefaultTrans( pContext );
+                bResult |= m_S82S82Stm.DefaultTrans( pContext );
+                bResult |= m_S83S83Stm.DefaultTrans( pContext );
+                bResult |= m_S9SharedStm.DefaultTrans( pContext );
                 do {
-                    if (m_pCurrentState == StmTop.GetInstance() && m_pPseudostate == MainStm.InitPt.GetInstance()) {
+                    if (m_pCurrentState == MainTop.GetInstance() && m_pPseudostate == MainStm.InitPt0.GetInstance()) {
                         pStm.BgnTrans( pContext, S1.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
-                    } else if (m_pCurrentState == S2.GetInstance() && m_pPseudostate == MainStm.InitPt.GetInstance()) {
-                        pStm.BgnTrans( pContext, S3.GetInstance() );
+                    } else if (m_pCurrentState == S2.GetInstance() && m_pPseudostate == MainStm.InitPt1.GetInstance()) {
+                        pStm.BgnTrans( pContext, S21.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
-                    } else if (m_pCurrentState == S6.GetInstance() && m_pPseudostate == MainStm.InitPt.GetInstance()) {
-                        pStm.BgnTrans( pContext, S7.GetInstance() );
+                    } else if (m_pPseudostate == MainStm.S4.GetInstance()) {
+                        pStm.BgnTrans( pContext, MainTop.GetInstance() );
+                        pStm.m_pPseudostate = MainStm.Junction.GetInstance();
+                        pStm.EndTrans( pContext );
+                        bResult = true;
+                    } else if (m_pCurrentState == S4.GetInstance() && m_pPseudostate == MainStm.InitPt2.GetInstance()) {
+                        pStm.BgnTrans( pContext, S41.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
                     } else if (m_pPseudostate == MainStm.Junction.GetInstance()) {
-                        pStm.BgnTrans( pContext, S18.GetInstance() );
+                        pStm.BgnTrans( pContext, S6.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
-                    } else if (m_pCurrentState == S18.GetInstance() && m_pPseudostate == S18Stm.Exit1.GetInstance()) {
-                        pStm.BgnTrans( pContext, S19.GetInstance() );
+                    } else if (m_pCurrentState == S6.GetInstance() && m_pPseudostate == SharedStm.Exit1.GetInstance()) {
+                        pStm.BgnTrans( pContext, S9.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
-                    } else if (m_pCurrentState == S11.GetInstance() && m_pPseudostate == MainStm.InitPt.GetInstance()) {
-                        pStm.BgnTrans( pContext, S12.GetInstance() );
+                    } else if (m_pCurrentState == S8.GetInstance() && m_pPseudostate == MainStm.InitPt4.GetInstance()) {
+                        pStm.BgnTrans( pContext, S811.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
-                    } else if (m_pCurrentState == S9.GetInstance() && m_pPseudostate == MainStm.InitPt.GetInstance()) {
-                        pStm.BgnTrans( pContext, S91.GetInstance() );
+                    } else if (m_pCurrentState == S7.GetInstance() && m_pPseudostate == MainStm.InitPt3.GetInstance()) {
+                        pStm.BgnTrans( pContext, S71.GetInstance() );
                         pStm.EndTrans( pContext );
                         bResult = true;
-                    } else if (m_pCurrentState != m_pPseudostate && m_pPseudostate is StmTop) {
+                    } else if (m_pPseudostate == MainStm.S9.GetInstance()) {
+                        if( !m_S9SharedStm.IsFinished() ){ break; }
+                        pStm.BgnTrans( pContext, S10.GetInstance() );
+                        pStm.EndTrans( pContext );
+                        bResult = true;
+                    } else if (m_pCurrentState != m_pPseudostate && m_pPseudostate is MainTop) {
                         pStm.BgnTrans( pContext, m_pPseudostate as TopState );
                         pStm.EndTrans( pContext );
                     } else {
@@ -1026,7 +1095,7 @@ namespace Model {
                 m_pParentStm = pParentStm;
                 if (pEntryPoint == null) {
                     if (IsFinished()) {
-                        m_pPseudostate = InitPt.GetInstance();
+                        m_pPseudostate = InitPt0.GetInstance();
                     }
                 } else {
                     if (IsFinished()) {
@@ -1037,51 +1106,43 @@ namespace Model {
                     }                    
                 }
                 if (pEntryPoint != null) {
-                    m_S18S18Stm.Reset( pContext, this, pEntryPoint );
-                    m_S111S111Stm.Reset( pContext, this, pEntryPoint );
-                    m_S112S112Stm.Reset( pContext, this, pEntryPoint );
+                    m_S6SharedStm.Reset( pContext, this, pEntryPoint );
+                    m_S82S82Stm.Reset( pContext, this, pEntryPoint );
+                    m_S83S83Stm.Reset( pContext, this, pEntryPoint );
+                    m_S9SharedStm.Reset( pContext, this, pEntryPoint );
                 }
                 return RunToCompletion(pContext);
             }
             public override bool EventProc(Context pContext, int nEventId, EventParams pParams){
                 bool bResult = false;
                 m_pLCAState = TopState.GetInstance();
-                bResult |= m_S18S18Stm.EventProc( pContext, nEventId, pParams );
-                bResult |= m_S111S111Stm.EventProc( pContext, nEventId, pParams );
-                bResult |= m_S112S112Stm.EventProc( pContext, nEventId, pParams );
+                bResult |= m_S6SharedStm.EventProc( pContext, nEventId, pParams );
+                bResult |= m_S82S82Stm.EventProc( pContext, nEventId, pParams );
+                bResult |= m_S83S83Stm.EventProc( pContext, nEventId, pParams );
+                bResult |= m_S9SharedStm.EventProc( pContext, nEventId, pParams );
                 bResult |= m_pCurrentState.EventProc(pContext, this, nEventId, pParams);
                 RunToCompletion(pContext);
                 return bResult;
             }
             public override bool IsIn(TopState pCompositeState) {
-                if (m_S18S18Stm.IsIn(pCompositeState)) { return true; }
-                if (m_S111S111Stm.IsIn(pCompositeState)) { return true; }
-                if (m_S112S112Stm.IsIn(pCompositeState)) { return true; }
+                if (m_S6SharedStm.IsIn(pCompositeState)) { return true; }
+                if (m_S82S82Stm.IsIn(pCompositeState)) { return true; }
+                if (m_S83S83Stm.IsIn(pCompositeState)) { return true; }
+                if (m_S9SharedStm.IsIn(pCompositeState)) { return true; }
                 if (base.IsIn(pCompositeState)) { return true; }
                 return false;
             }
             public override bool Abort(Context pContext) {
-                m_pSourceState = StmTop.GetInstance();
-                BgnTrans(pContext, StmTop.GetInstance());
+                m_pSourceState = MainTop.GetInstance();
+                BgnTrans(pContext, MainTop.GetInstance());
                 EndTrans(pContext);
                 return true;
             }
             public override bool IsFinished() {
-                return m_pCurrentState == StmTop.GetInstance() && m_pCurrentState == m_pPseudostate;
+                return m_pCurrentState == MainTop.GetInstance() && m_pCurrentState == m_pPseudostate;
             }
-            public MainStm(): base(StmTop.GetInstance(), StmTop.GetInstance()) {}
+            public MainStm(): base(MainTop.GetInstance(), MainTop.GetInstance()) {}
         };
-        public  ContextImpl(
-            int _attribute0,
-            Composition _aComposition
-        ):  base( _attribute0, _aComposition )
-        {
-            attribute2 = 123;
-            attribute3 = 789;
-        }                                                                                       
-        private int attribute2;                                 
-        private int attribute3;                                 
-        MainStm mainStm = new MainStm();                        
         public bool Start() {
             mainStm.Abort(this);
             return mainStm.Reset(this, null, null);
@@ -1092,5 +1153,17 @@ namespace Model {
         public bool IsIn(TopState pState) {
             return mainStm.IsIn(pState);
         }
+        public  ContextImpl(
+            int _derivableAttribute,
+            String _publicAttribute,
+            int _privateAttribute,
+            int _internalAttribute,
+            int _readOnlyAttribute,
+            List<Aggregration> _anAggregation,
+            List<Composition> _aProtectedComposition
+        ):  base( _derivableAttribute, _publicAttribute, _privateAttribute, _internalAttribute, _readOnlyAttribute, _anAggregation, _aProtectedComposition )
+        {
+        }                                                                                       
+        MainStm mainStm = new MainStm();                        
     }
 }

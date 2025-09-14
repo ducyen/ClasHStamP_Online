@@ -10,6 +10,12 @@
 int InputValue(char* pMsg);
 void DisplayMsg(char* pMsg);
 
+struct A{
+    virtual void foo() {
+        a.foo();
+    }
+}a;
+
 #include "Generic/Statemachine.h"  /* @todo Duc */
 #include "Model/Context.hpp"
 #include "Model/ContextImpl.hpp"

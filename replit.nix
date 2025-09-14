@@ -21,6 +21,7 @@
         #zulu8                    # java 1.8.0_265 to run astah-com
         adoptopenjdk-hotspot-bin-8 # java 1.8.0_292 to run astah-uml
         imagemagick6
+        chipmunk        
     ] ++ SDL;
     env = {
         CPLUS_INCLUDE_PATH = lib.makeSearchPath "include/SDL2" SDL;

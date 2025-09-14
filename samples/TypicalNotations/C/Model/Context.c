@@ -3,44 +3,79 @@
 #include "CommonInclude.h"
 #include "Context.h"
 #include "CalledDependency.h"                                   
+/** @private @static @memberof Context */
+static int classOrStaticAttribute;                              
+/** @private @static @memberof Context */
+static int initializedStaticArray[   ] = { 1, 2, 3 };           
+/** @private @static @memberof Context */
+static const int finalConstantAttribute = 5;                    
+void Context_classOrStaticMethod(
+
+){
+} /* Context_classOrStaticMethod */
+
 /** @public @memberof Context */
-static void Context_virtualFunc(
+static void Context_publicMethod(
+    BaseClass* pBaseClass
+){
+} /* Context_publicMethod */
+
+/** @private @memberof Context */
+static void Context_privateLeafMethod(
+    Context* pContext
+){
+} /* Context_privateLeafMethod */
+
+/** @public @memberof Context */
+void Context_methodWithParams(
     Context* pContext,
-    int param0
+    String parm1,
+    float parm2
 ){
-} /* Context_virtualFunc */
-
-void Context_staticFunc(
-
-){
-} /* Context_staticFunc */
+} /* Context_methodWithParams */
 
 /** @public @memberof Context */
-void Context_leafFunc(
+UsedDependency* Context_methodReturnsSomething(
     Context* pContext
 ){
-} /* Context_leafFunc */
+} /* Context_methodReturnsSomething */
 
 /** @public @memberof Context */
-void Context_operation1(
+void Context_methodThrowsException(
     Context* pContext
 ){
-} /* Context_operation1 */
+} /* Context_methodThrowsException */
 
 /** @public @memberof Context */
-void Context_operation2(
+void Context_finalMethod(
     Context* pContext
 ){
-} /* Context_operation2 */
+} /* Context_finalMethod */
+
+/** @protected @memberof Context */
+static void Context_protectedMethod(
+    BaseClass* pBaseClass
+){
+} /* Context_protectedMethod */
+
+/** @protected @memberof Context */
+static void Context_packageVisibleMethod(
+    BaseClass* pBaseClass
+){
+} /* Context_packageVisibleMethod */
 
 BaseClass* Context_Copy( Context* pContext, const Context* pSource ){
     BaseClass_Copy( ( BaseClass* )pContext, ( BaseClass* )pSource );
-    pContext->attribute1 = pSource->attribute1;
-    pContext->attribute0 = pSource->attribute0;
-    pContext->anAggregation = pSource->anAggregation;
-    memcpy( &pContext->aComposition, &pSource->aComposition, sizeof( pContext->aComposition ) );
+    pContext->publicAttribute = pSource->publicAttribute;
+    pContext->privateAttribute = pSource->privateAttribute;
+    pContext->internalAttribute = pSource->internalAttribute;
+    pContext->isInitializedAttribute = pSource->isInitializedAttribute;
+    memcpy( pContext->anAggregation, pSource->anAggregation, sizeof( pContext->anAggregation ) );
+    memcpy( pContext->aProtectedComposition, pSource->aProtectedComposition, sizeof( pContext->aProtectedComposition ) );
     return ( BaseClass* )pContext;
 }
 const BaseClassVtbl gContextVtbl = {
-    .pvirtualFunc                = Context_virtualFunc,
+    .ppublicMethod               = Context_publicMethod,
+    .pprotectedMethod            = Context_protectedMethod,
+    .ppackageVisibleMethod       = Context_packageVisibleMethod,
 };

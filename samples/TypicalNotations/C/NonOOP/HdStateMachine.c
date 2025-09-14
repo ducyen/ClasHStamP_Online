@@ -5,7 +5,7 @@
 /** @public @memberof HdStateMachine */
 int HdStateMachine_Enterable(
     HdStateMachine* pHdStateMachine,
-    int nThisState
+    uint64_t nThisState
 ){
     BOOL isThisLCA = IS_IN( pHdStateMachine->nLCAState, nThisState );
     if( !isThisLCA || pHdStateMachine->nLCAState == STATE_UNDEF ){
@@ -17,7 +17,7 @@ int HdStateMachine_Enterable(
 /** @public @memberof HdStateMachine */
 int HdStateMachine_Exitable(
     HdStateMachine* pHdStateMachine,
-    int nThisState
+    uint64_t nThisState
 ){
     BOOL isThisLCA = IS_IN( pHdStateMachine->nSourceState, nThisState ) && IS_IN( pHdStateMachine->nTargetState, nThisState );
     if( !isThisLCA || pHdStateMachine->bIsExternTrans ){ 
@@ -30,19 +30,85 @@ int HdStateMachine_Exitable(
 } /* HdStateMachine_Exitable */
 
 /** @public @memberof HdStateMachine */
-int HdStateMachine_IsFinished(
-    HdStateMachine* pHdStateMachine
+void HdStateMachine_DefaultEntryAction(
+    HdStateMachine* pHdStateMachine,
+    void* pObj,
+    char* pMsg
 ){
-    return pHdStateMachine->nCurrentState == STATE_TOP && pHdStateMachine->nCurrentState == pHdStateMachine->nPseudostate;
-} /* HdStateMachine_IsFinished */
+    pHdStateMachine->lastEnteredState = pHdStateMachine->nCurrentState;
+    ObjsBuilder_showEntry( pObj, pHdStateMachine, pMsg );
+    pHdStateMachine->nDepth++;
+} /* HdStateMachine_DefaultEntryAction */
+
+/** @public @memberof HdStateMachine */
+void HdStateMachine_DefaultDoingAction(
+    HdStateMachine* pHdStateMachine,
+    void* pObj,
+    char* pMsg
+){
+    ObjsBuilder_showDoing( pObj, pHdStateMachine, pMsg );
+} /* HdStateMachine_DefaultDoingAction */
+
+/** @public @memberof HdStateMachine */
+void HdStateMachine_DefaultExitAction(
+    HdStateMachine* pHdStateMachine,
+    void* pObj,
+    char* pMsg
+){
+    pHdStateMachine->nDepth--;
+    ObjsBuilder_showExit( pObj, pHdStateMachine, pMsg );
+} /* HdStateMachine_DefaultExitAction */
+
+/** @public @memberof HdStateMachine */
+bool HdStateMachine_IsIn(
+    HdStateMachine* pHdStateMachine,
+    uint64_t targetState
+){
+    // Global pointer to active HSM state array
+    extern HsmStates** g_activeHsmStates;
+    if( g_activeHsmStates ) {
+        for( int i = 0; g_activeHsmStates[ i ] != NULL; i++ ) {
+            if( g_activeHsmStates[ i ]->pHsm == pHdStateMachine ) {
+                g_activeHsmStates[ i ]->wasQueried = true;  // ✅ log query
+                break;
+            }
+        }
+    }
+    return IS_IN( pHdStateMachine->nCurrentState, targetState );
+} /* HdStateMachine_IsIn */
+
+/** @public @memberof HdStateMachine */
+bool HdStateMachine_Req(
+    HdStateMachine* pHdStateMachine,
+    uint64_t targetState
+){
+    // Global pointer to active HSM state array
+    extern HsmStates** g_activeHsmStates;
+    if( g_activeHsmStates ) {
+        for( int i = 0; g_activeHsmStates[ i ] != NULL; i++ ) {
+            if( g_activeHsmStates[ i ]->pHsm == pHdStateMachine ) {
+                g_activeHsmStates[ i ]->wasQueried = true;  // ✅ log query
+                break;
+            }
+        }
+    }
+    pHdStateMachine->nPseudostate = targetState;
+} /* HdStateMachine_Req */
 
 HdStateMachine* HdStateMachine_Copy( HdStateMachine* pHdStateMachine, const HdStateMachine* pSource ){
-    pHdStateMachine->pParentStm = pSource->pParentStm;
     pHdStateMachine->nCurrentState = pSource->nCurrentState;
     pHdStateMachine->nLCAState = pSource->nLCAState;
     pHdStateMachine->nTargetState = pSource->nTargetState;
     pHdStateMachine->nSourceState = pSource->nSourceState;
     pHdStateMachine->nPseudostate = pSource->nPseudostate;
     pHdStateMachine->bIsExternTrans = pSource->bIsExternTrans;
+    pHdStateMachine->m_stmImage = pSource->m_stmImage;
+    pHdStateMachine->m_stmRect = pSource->m_stmRect;
+    pHdStateMachine->pMain = pSource->pMain;
+    pHdStateMachine->lastEnteredState = pSource->lastEnteredState;
+    pHdStateMachine->bHandled = pSource->bHandled;
+    pHdStateMachine->nDepth = pSource->nDepth;
+    pHdStateMachine->nStateIterIdx = pSource->nStateIterIdx;
+    pHdStateMachine->wasHandled = pSource->wasHandled;
     return ( HdStateMachine* )pHdStateMachine;
 }

@@ -2,11 +2,12 @@
 
 WORKING_DIR=`dirname $0`
 
-ASTAH_HOME=$WORKING_DIR/astah-edu
+ASTAH_HOME=$WORKING_DIR/astah-uml
 TOOL_DIR=$WORKING_DIR/release
 export PROJECT=$WORKING_DIR/samples/$1/Design.asta
 export EXT_CODE_OPT=y
 export ENCODING=UTF-8
+export NEWLINE_LF=1
 JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
 
 BAT_DIR=$WORKING_DIR
@@ -89,6 +90,16 @@ PACKAGE=NonOOP
 java $JAVA_OPTS stm.TMain
 
 PACKAGE=Design
+java $JAVA_OPTS stm.TMain
+
+export LANGUAGE=c
+export SYNTAX=$TOOL_DIR/Syntax_CTst.csv
+export SYNTAX_ABSTRACT=$TOOL_DIR/Syntax_CTst.csv
+export SYNTAX_INTERFACE=$TOOL_DIR/Syntax_CTst.csv
+export SYNTAX_BASECLASS=$TOOL_DIR/Syntax_CTst.csv
+
+export PACKAGE=Model
+#echo "Running command: java $JAVA_OPTS stm.TMain"
 java $JAVA_OPTS stm.TMain
 
 echo "Building Code"

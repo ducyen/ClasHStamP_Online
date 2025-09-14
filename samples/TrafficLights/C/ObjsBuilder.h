@@ -16,12 +16,12 @@ enum {
     _eastYellowLight,
 #define eastGreenLight          ( g_objects[ _eastGreenLight ] )
     _eastGreenLight,
-#define northRedLight           ( g_objects[ _northRedLight ] )
-    _northRedLight,
-#define northYellowLight        ( g_objects[ _northYellowLight ] )
-    _northYellowLight,
 #define northGreenLight         ( g_objects[ _northGreenLight ] )
     _northGreenLight,
+#define northYellowLight        ( g_objects[ _northYellowLight ] )
+    _northYellowLight,
+#define northRedLight           ( g_objects[ _northRedLight ] )
+    _northRedLight,
 #define southRedLight           ( g_objects[ _southRedLight ] )
     _southRedLight,
 #define southYellowLight        ( g_objects[ _southYellowLight ] )
@@ -68,12 +68,12 @@ enum {
     _Oval_u0s,
 #define Rectangle_u0t           ( g_objects[ _Rectangle_u0t ] )
     _Rectangle_u0t,
-#define carBody                 ( g_objects[ _carBody ] )
-    _carBody,
 #define rearWheels              ( g_objects[ _rearWheels ] )
     _rearWheels,
 #define frontWheels             ( g_objects[ _frontWheels ] )
-    _frontWheels
+    _frontWheels,
+#define carBody                 ( g_objects[ _carBody ] )
+    _carBody
 };
 int ObjsBuilder_startSim( void   );
 #endif//__ObjsBuilder_H__

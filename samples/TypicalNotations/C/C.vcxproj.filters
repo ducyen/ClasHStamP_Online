@@ -15,60 +15,108 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Model\AFriend.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Context.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ContextImpl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Aggregration.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\BaseClass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\CalledDependency.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Composition.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\UsedDependency.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Model\CommonInclude.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NonOOP\HdStateMachine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Interfaces\Interface1.h">
+    <ClInclude Include="ObjsBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Interfaces\Interface2.h">
+    <ClInclude Include="Model\AttachmentConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\CarBody.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Constraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\EventListener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\FlexButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ImgSprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Primitive.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\RotationConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Sprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\TrackToConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\TransformConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\TranslationConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="testcase_writer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Context.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\BaseClass.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="NonOOP\HdStateMachine.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model\ContextImpl.c">
+    <ClCompile Include="main_win.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Model\UsedDependency.c">
+    <ClCompile Include="Model\CarBody.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjsBuilder.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\AttachmentConstraint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Constraint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\EventListener.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\FlexButton.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ImgSprite.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Primitive.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\RotationConstraint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Sprite.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\TrackToConstraint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\TransformConstraint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\TranslationConstraint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="testcase_writer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\CarBody_Test.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

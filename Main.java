@@ -21,11 +21,9 @@ public class Main extends JFrame {
     private JButton generateCodeButton;
     private JFrame bottomPanelFrame;
     private JScrollPane outputTextScrollPane;
-    private ImageLoader imageLoader;
     private Rectangle screenSize;
     private Process xtermProcess;
     private long xtermPid = -1; // Initialize with an invalid PID
-
 
     public Main() {
         setTitle("Model Driven Development Tool");
@@ -56,7 +54,7 @@ public class Main extends JFrame {
         selectSampleBox = new JComboBox<>();
         populateSampleBox();
 
-        selectDiagramEditorBox = new JComboBox<>(new String[]{"uml", "edu", "com"});
+        selectDiagramEditorBox = new JComboBox<>(new String[]{"uml", "pro"});
 
         JButton launchDiagramEditorButton = new JButton("Launch Diagram Editor");
         launchDiagramEditorButton.addActionListener(this::launchDiagramEditor);
@@ -136,11 +134,13 @@ public class Main extends JFrame {
             // Determine the OS and set the appropriate command
             String osName = System.getProperty("os.name").toLowerCase();
             Process process;
-            String scriptPath = "./astah-" + selectDiagramEditorBox.getSelectedItem() + "/astah-run.sh";
-            String filePath = "./samples/" + selectSampleBox.getSelectedItem() + "/Design.asta";
             if (osName.contains("windows")) {
-                process = new ProcessBuilder("D:/cygwin64/bin/bash", "-c", scriptPath + " " + filePath).start();
+                String scriptPath = ".\\astah-" + selectDiagramEditorBox.getSelectedItem() + "\\astah-" + selectDiagramEditorBox.getSelectedItem() + ".bat";
+                String filePath = ".\\samples\\" + selectSampleBox.getSelectedItem() + "\\Design.asta";
+                process = new ProcessBuilder(scriptPath, filePath).start();
             } else {
+                String scriptPath = "./astah-" + selectDiagramEditorBox.getSelectedItem() + "/astah-run.sh";
+                String filePath = "./samples/" + selectSampleBox.getSelectedItem() + "/Design.asta";
                 process = new ProcessBuilder(scriptPath, filePath).start();
             }
 
@@ -167,21 +167,18 @@ public class Main extends JFrame {
         JButton button = (JButton)e.getSource();
         button.setEnabled(false); // Disable the button
         outputTextArea.setText(""); // Clear the text area
-        
-        bottomPanelFrame.add(outputTextScrollPane);
-        if (imageLoader != null) {
-        	bottomPanelFrame.remove(imageLoader.getContentPane());
-        }
 
         // Launch the target application
         try {
             String osName = System.getProperty("os.name").toLowerCase();
             Process process;
-            String scriptPath = "./run_C.sh";
-            String argument = (String)selectSampleBox.getSelectedItem();
             if (osName.contains("windows")) {
-                process = new ProcessBuilder("D:/cygwin64/bin/bash", "-c", scriptPath + " " + argument).start();
+                String scriptPath = ".\\run_C.bat";
+                String argument = (String)selectSampleBox.getSelectedItem();
+                process = new ProcessBuilder(scriptPath, argument).start();
             } else {
+                String scriptPath = "./run_C.sh";
+                String argument = (String)selectSampleBox.getSelectedItem();
                 process = new ProcessBuilder(scriptPath, argument).start();
             }                    
 
@@ -240,38 +237,33 @@ public class Main extends JFrame {
     private void startSimulator(ActionEvent e) {
         JButton button = (JButton)e.getSource();
         button.setEnabled(false); // Disable the button
-        
-        // Switch to the ImageLoader view in the bottom panel
-        String directoryPath = "./samples/" + selectSampleBox.getSelectedItem() + "/TransImg";
-        imageLoader = new ImageLoader(directoryPath);
-
-        // Add the ImageLoader content to the bottom panel
-
-        // Add the bottom panel to the new frame and make it visible
-        bottomPanelFrame.remove(outputTextScrollPane);
-        bottomPanelFrame.add(imageLoader.getContentPane());
-        bottomPanelFrame.setVisible(true);
-
-        // Calculate the size and position for the xterm console
+    
+        // Calculate the size and position for the console
         int consoleWidth = 80; // 80 characters
         int consoleHeight = 25; // 25 characters
         int xOff = Math.min(screenSize.width - getWidth(), screenSize.width - 80 * 6 - 24); // Horizontal offset
         int yOff = getHeight() + 24; // Vertical offset (top-right corner)
+        String geometry = consoleWidth + "x" + consoleHeight + "+" + xOff + "+" + yOff;
         
-        // Start the external console application
+        // Get selected item from the sample box
+        String arguments = (String)selectSampleBox.getSelectedItem();
+    
+        // Determine the operating system and set the script path and process builder accordingly
+        String osName = System.getProperty("os.name").toLowerCase();
+        ProcessBuilder processBuilder;
+        String scriptPath = osName.contains("windows") ? "start_cmd.bat" : "./start_xterm.sh";
+    
+        if (osName.contains("windows")) {
+            // For Windows, adjust the script calling conventions
+            processBuilder = new ProcessBuilder("cmd", "/c", scriptPath, arguments, geometry);
+        } else {
+            // For Unix-like systems
+            processBuilder = new ProcessBuilder(scriptPath, arguments, geometry);
+        }
+    
         try {
-            String osName = System.getProperty("os.name").toLowerCase();
-            ProcessBuilder processBuilder;
-            String scriptPath = "./start_xterm.sh";
-            String geometry = consoleWidth + "x" + consoleHeight + "+" + xOff + "+" + yOff;
-            String arguments = (String)selectSampleBox.getSelectedItem();
-            if (osName.contains("windows")) {
-                processBuilder = new ProcessBuilder("bash", "-c", scriptPath + " " + arguments + " " + geometry);
-            } else {
-            	processBuilder = new ProcessBuilder(scriptPath, arguments, geometry);
-            }
-            xtermProcess = processBuilder.start();
-
+            Process xtermProcess = processBuilder.start();
+    
             // Wait for the PID file to be updated
             Path pidFile = Paths.get("./xterm.pid");
             String pidString = "";
@@ -286,10 +278,12 @@ public class Main extends JFrame {
                     break;
                 }
             }
+    
+            long xtermPid = 0;
             if (!pidString.isEmpty()) {
-                xtermPid = Long.parseLong(pidString);
+                xtermPid = Long.parseLong(pidString.trim());
             }
-            
+    
             // Monitor the status of the launched application
             new Thread(() -> {
                 try {
@@ -305,9 +299,9 @@ public class Main extends JFrame {
         } catch (IOException | NumberFormatException ex) {
             ex.printStackTrace();
             button.setEnabled(true); // Enable the button in case of an error
-       }
+        }
     }
-    
+        
     private void adjustLayout() {
         int width = (int) (screenSize.width - getWidth());
         int height = screenSize.height;
@@ -320,7 +314,7 @@ public class Main extends JFrame {
     
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
-            MainEntry app = new MainEntry();
+            Main app = new Main();
             app.setVisible(true);
         });
     }

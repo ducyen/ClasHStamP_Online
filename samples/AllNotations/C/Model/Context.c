@@ -16,7 +16,7 @@ void Context_classOrStaticMethod(
 
 /** @public @memberof Context */
 static void Context_publicMethod(
-    Context* pContext
+    BaseClass* pBaseClass
 ){
 } /* Context_publicMethod */
 
@@ -25,12 +25,6 @@ static void Context_privateLeafMethod(
     Context* pContext
 ){
 } /* Context_privateLeafMethod */
-
-/** @public @memberof Context */
- Context_Context(
-    Context* pContext
-){
-} /* Context_Context */
 
 /** @public @memberof Context */
 void Context_methodWithParams(
@@ -60,13 +54,13 @@ void Context_finalMethod(
 
 /** @protected @memberof Context */
 static void Context_protectedMethod(
-    Context* pContext
+    BaseClass* pBaseClass
 ){
 } /* Context_protectedMethod */
 
 /** @protected @memberof Context */
 static void Context_packageVisibleMethod(
-    Context* pContext
+    BaseClass* pBaseClass
 ){
 } /* Context_packageVisibleMethod */
 

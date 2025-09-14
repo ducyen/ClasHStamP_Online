@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "sdl2_gfxprimitives.h": "c",
+        "sdl_ttf.h": "c",
+        "primitive.h": "c",
+        "commoninclude.h": "c",
+        "flexbutton.h": "c",
+        "sdl.h": "c",
+        "sprite.h": "c"
+    }
+}

@@ -1,19 +1,26 @@
 #define __Main_INTERNAL__
 #include <stdio.h>
-
-int InputValue(char* pMsg);
-void DisplayMsg(char* pMsg);
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdarg.h>
+#include <unistd.h> 
+#include <pthread.h> 
+#include <termios.h> 
+#include <fcntl.h>
+#include <png.h>
+#include <sys/stat.h>
 
 #include "CommonInclude.h"
-#include "Model/ContextImpl.h"
+#include "ObjsBuilder.h"
 
 int InputValue(char* pMsg) {
     char n;
-    printf( pMsg );
-    scanf_s( "%c", &n );
+    printf( "%s", pMsg );
+    scanf( "%c", &n );
     char c = 0;
     while( c != '\n' ){
-        scanf_s( "%c", &c );
+        scanf( "%c", &c );
     }
     return n - '0';
 }
@@ -22,19 +29,20 @@ void DisplayMsg(char* pMsg) {
     printf( "%s\n", pMsg );
 }
 
-int main( void ){
-    ContextImpl context = ContextImpl_Ctor( ContextImpl_Init( 
-        4,
-        Composition_Ctor( Composition_Init( 3 ) )
-    ) );
-    char n;
-    do {
-        ContextImpl_Start( &context );
-        do {
-            n = InputValue( "Enter event number('q': quit, 'r':restart): E" );
-            ContextImpl_EventProc( &context, (ContextImpl_EVENT)n, NULL);
-        } while (n+'0' != 'q' && n+'0' != 'r');
-    }while (n+'0' != 'q');
-    return 0;
-}
+static char* g_sInputDir = "../Image/Design";
+const char* getInputDir( void ) { return g_sInputDir; }
+static char* g_sOutputDir = "../TransImg/Design";
+const char* getOutputDir( void ) { return g_sOutputDir; }
 
+int main(int argc, char **argv){
+    printf("Number of arguments (argc): %d\n", argc);
+    for (int i = 0; i < argc; i++) {
+        printf("Argument %d: %s\n", i, argv[i]);
+    }
+    if (argc >= 3) {
+        g_sInputDir  = argv[ 1 ];
+        g_sOutputDir = argv[ 2 ];
+        printf( "arguments: %s %s\n", g_sInputDir, g_sOutputDir );
+    }
+    return ObjsBuilder_startSim();
+}

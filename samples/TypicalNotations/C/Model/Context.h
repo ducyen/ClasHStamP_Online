@@ -7,10 +7,11 @@
 #include "Aggregration.h"
 #include "UsedDependency.h"
 typedef struct tagContext Context;
-void Context_staticFunc(  );
-void Context_leafFunc( Context* pContext );
-void Context_operation1( Context* pContext );
-void Context_operation2( Context* pContext );
+void Context_classOrStaticMethod(  );
+void Context_methodWithParams( Context* pContext, String parm1, float parm2 );
+UsedDependency* Context_methodReturnsSomething( Context* pContext );
+void Context_methodThrowsException( Context* pContext );
+void Context_finalMethod( Context* pContext );
 #endif//__Context_H__
 #if !defined( Context_Init ) && ( defined( __Context_INTERNAL__ )  || defined( __Main_INTERNAL__ )  )
 #define __BaseClass_INTERNAL__
@@ -22,34 +23,40 @@ void Context_operation2( Context* pContext );
 #include "Aggregration.h"
 #define __Composition_INTERNAL__
 #include "Composition.h"
+
 /** @memberof Context
  * @brief Context auto-generated constructor
  */
-#define Context_Init(_attribute0, _aComposition)\
-    BaseClass_Init(  )\
+#define Context_Init(_derivableAttribute, _publicAttribute, _privateAttribute, _internalAttribute, _readOnlyAttribute, _anAggregation, _aProtectedComposition)\
+    BaseClass_Init( P( _derivableAttribute ) )\
     .vTbl = &gContextVtbl,\
-    .attribute1 = 345,\
-    .attribute0 = _attribute0,\
-    .anAggregation = null,\
-    .aComposition = P( _aComposition ),\
+    .publicAttribute = _publicAttribute,\
+    .privateAttribute = _privateAttribute,\
+    .internalAttribute = _internalAttribute,\
+    .isInitializedAttribute = true,\
+    .readOnlyAttribute = _readOnlyAttribute,\
+    .anAggregation = P( _anAggregation ),\
+    .aProtectedComposition = P( _aProtectedComposition ),\
 
-#define Context_Ctor( InitFunc, optionParams )    ( Context ){\
-    InitFunc\
-\
+#define Context_Ctor( _derivableAttribute, _publicAttribute, _privateAttribute, _internalAttribute, _readOnlyAttribute, _anAggregation, _aProtectedComposition )    ( Context ){ \
+    Context_Init( P( _derivableAttribute ), P( _publicAttribute ), P( _privateAttribute ), P( _internalAttribute ), P( _readOnlyAttribute ), P( _anAggregation ), P( _aProtectedComposition ) ) \
 }
 extern const BaseClassVtbl gContextVtbl;
 BaseClass* Context_Copy( Context* pContext, const Context* pSource );
 /** @class Context
  * @extends BaseClass
  */
+struct tagContext{
 #define Context_CLASS                                                                           \
     BaseClass_CLASS                                                                             \
-    int attribute1;                                                                                                           \
-    int attribute0;                                                                                                           \
-    Aggregration* anAggregation;                                \
-    Composition aComposition;                                   \
+    String publicAttribute;                                                                                            \
+    int privateAttribute;                                                                                                \
+    int internalAttribute;                                                                                              \
+    boolean isInitializedAttribute;                                                                            \
+    const int readOnlyAttribute;                                \
+    Aggregration* anAggregation[ 3 ];                           \
+    Composition aProtectedComposition[ 10 ];                    \
 
-typedef struct tagContext{
     Context_CLASS    
-}Context;
+};
 #endif//__Context_INTERNAL__

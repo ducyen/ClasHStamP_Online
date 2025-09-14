@@ -44,9 +44,9 @@ Sprite* g_objects[] = {
         P( "GreenLight.png" )                                   /* m_imgPath */,
         P( null )                                               /* m_constraints */
     ),
-    &RedLight_Ctor(                                             /* northRedLight */
-        P( { 0.5788950962135322, 0.2579392672531836, 0.05865921787709497, 0.07268892540356313 } )/* m_iniRect */,
-        P( "RedLight.png" )                                     /* m_imgPath */,
+    &GreenLight_Ctor(                                           /* northGreenLight */
+        P( { 0.5788950962135322, 0.13438559068191155, 0.05865921787709497, 0.07268892540356313 } )/* m_iniRect */,
+        P( "GreenLight.png" )                                   /* m_imgPath */,
         P( null )                                               /* m_constraints */
     ),
     &YellowLight_Ctor(                                          /* northYellowLight */
@@ -54,9 +54,9 @@ Sprite* g_objects[] = {
         P( "YellowLight.png" )                                  /* m_imgPath */,
         P( null )                                               /* m_constraints */
     ),
-    &GreenLight_Ctor(                                           /* northGreenLight */
-        P( { 0.5788950962135322, 0.13438559068191155, 0.05865921787709497, 0.07268892540356313 } )/* m_iniRect */,
-        P( "GreenLight.png" )                                   /* m_imgPath */,
+    &RedLight_Ctor(                                             /* northRedLight */
+        P( { 0.5788950962135322, 0.2579392672531836, 0.05865921787709497, 0.07268892540356313 } )/* m_iniRect */,
+        P( "RedLight.png" )                                     /* m_imgPath */,
         P( null )                                               /* m_constraints */
     ),
     &RedLight_Ctor(                                             /* southRedLight */
@@ -154,11 +154,6 @@ Sprite* g_objects[] = {
         P( { 0.2984481688392305, 0.8083608084862385, 0.012290502793296089, 0.03211009174311927 } )/* u0t-6f7de2bd597eab2992ffddef9cceacc8 */,
         P( "Rectangle 000000 line 1 true 996633 null" )         /* Rectangle_u0t */
     ),
-    &CarBody_Ctor(                                              /* carBody */
-        P( { 0.10837988826815649, 0.46661669374362885, 0.1452513966480447, 0.19877675840978593 } )/* m_iniRect */,
-        P( "CarBody.png" )                                      /* m_imgPath */,
-        P( &AttachmentConstraint_Ctor( &rearWheels, 1, &TranslationConstraint_Ctor( &rearWheels, 1, &AttachmentConstraint_Ctor( &frontWheels, 1, &TranslationConstraint_Ctor( &frontWheels, 1, null ) ) ) ) )/* m_constraints */
-    ),
     &CarWheel_Ctor(                                             /* rearWheels */
         P( { 0.12675356921166978, 0.5632867583036018, 0.02867783985102426, 0.039245667686034685 } )/* m_iniRect */,
         P( "CarWheel.png" )                                     /* m_imgPath */,
@@ -168,6 +163,11 @@ Sprite* g_objects[] = {
         P( { 0.20825574177529488, 0.5630309208290857, 0.02867783985102426, 0.039245667686034685 } )/* m_iniRect */,
         P( "CarWheel.png" )                                     /* m_imgPath */,
         P( null )                                               /* m_constraints */
+    ),
+    &CarBody_Ctor(                                              /* carBody */
+        P( { 0.10837988826815649, 0.46661669374362885, 0.1452513966480447, 0.19877675840978593 } )/* m_iniRect */,
+        P( "CarBody.png" )                                      /* m_imgPath */,
+        P( &AttachmentConstraint_Ctor( &rearWheels, 1, &TranslationConstraint_Ctor( &rearWheels, 1, &AttachmentConstraint_Ctor( &frontWheels, 1, &TranslationConstraint_Ctor( &frontWheels, 1, null ) ) ) ) )/* m_constraints */
     )
 };
 Sprite* getobj( int id ){

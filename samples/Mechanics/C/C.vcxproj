@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{06DB5912-E02C-48AF-A3D2-D26624D29A79}</ProjectGuid>
+    <RootNamespace>C</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>__syntax__;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Abstracts;$(ProjectDir)Interfaces;$(ProjectDir)NonOOP;$(ProjectDir)Model;$(SolutionDir)..\..\lib\Windows\libsdl2\include;$(SolutionDir)..\..\lib\Windows\libsdl2-image\include;$(SolutionDir)..\..\lib\Windows\libsdl2-mixer\include;$(SolutionDir)..\..\lib\Windows\libsdl2-gfx\include;$(SolutionDir)..\..\lib\Windows\libsdl2-ttf\include;$(SolutionDir)..\..\lib\Windows\chipmunk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>$(SolutionDir)..\..\lib\Windows\libsdl2\lib\$(PlatformTarget)\SDL2.lib;$(SolutionDir)..\..\lib\Windows\libsdl2\lib\$(PlatformTarget)\SDL2main.lib;$(SolutionDir)..\..\lib\Windows\libsdl2-image\lib\$(PlatformTarget)\SDL2_image.lib;$(SolutionDir)..\..\lib\Windows\libsdl2-mixer\lib\$(PlatformTarget)\SDL2_mixer.lib;$(SolutionDir)..\..\lib\Windows\libsdl2-gfx\lib\$(PlatformTarget)\SDL2_gfx.lib;$(SolutionDir)..\..\lib\Windows\libsdl2-ttf\lib\$(PlatformTarget)\SDL2_ttf.lib;$(SolutionDir)..\..\lib\Windows\chipmunk\lib\$(Platform)\$(Configuration)\chipmunk.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="..\GenCode_C.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="main_win.c" />
+    <ClCompile Include="Model\AttachmentConstraint.c" />
+    <ClCompile Include="Model\ClawMachine.c" />
+    <ClCompile Include="Model\Constraint.c" />
+    <ClCompile Include="Model\EventListener.c" />
+    <ClCompile Include="Model\FlexButton.c" />
+    <ClCompile Include="Model\ImgSprite.c" />
+    <ClCompile Include="Model\PhxDampedRotarySpring.c" />
+    <ClCompile Include="Model\PhxDampedSpring.c" />
+    <ClCompile Include="Model\PhxGearJoint.c" />
+    <ClCompile Include="Model\PhxGrooveJoint.c" />
+    <ClCompile Include="Model\PhxJoint.c" />
+    <ClCompile Include="Model\PhxPinJoint.c" />
+    <ClCompile Include="Model\PhxPivotJoint.c" />
+    <ClCompile Include="Model\PhxRatchetJoint.c" />
+    <ClCompile Include="Model\PhxRotaryLimitJoint.c" />
+    <ClCompile Include="Model\PhxSimpleMotor.c" />
+    <ClCompile Include="Model\PhxSlideJoint.c" />
+    <ClCompile Include="Model\PhxSprite.c" />
+    <ClCompile Include="Model\Primitive.c" />
+    <ClCompile Include="Model\RotationConstraint.c" />
+    <ClCompile Include="Model\Sprite.c" />
+    <ClCompile Include="Model\TrackToConstraint.c" />
+    <ClCompile Include="Model\TransformConstraint.c" />
+    <ClCompile Include="Model\TranslationConstraint.c" />
+    <ClCompile Include="NonOOP\HdStateMachine.c" />
+    <ClCompile Include="ObjsBuilder.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Model\AttachmentConstraint.h" />
+    <ClInclude Include="Model\ClawMachine.h" />
+    <ClInclude Include="Model\CommonInclude.h" />
+    <ClInclude Include="Model\Constraint.h" />
+    <ClInclude Include="Model\EventListener.h" />
+    <ClInclude Include="Model\FlexButton.h" />
+    <ClInclude Include="Model\ImgSprite.h" />
+    <ClInclude Include="Model\PhxDampedRotarySpring.h" />
+    <ClInclude Include="Model\PhxDampedSpring.h" />
+    <ClInclude Include="Model\PhxGearJoint.h" />
+    <ClInclude Include="Model\PhxGrooveJoint.h" />
+    <ClInclude Include="Model\PhxJoint.h" />
+    <ClInclude Include="Model\PhxPinJoint.h" />
+    <ClInclude Include="Model\PhxPivotJoint.h" />
+    <ClInclude Include="Model\PhxRatchetJoint.h" />
+    <ClInclude Include="Model\PhxRotaryLimitJoint.h" />
+    <ClInclude Include="Model\PhxSimpleMotor.h" />
+    <ClInclude Include="Model\PhxSlideJoint.h" />
+    <ClInclude Include="Model\PhxSprite.h" />
+    <ClInclude Include="Model\Primitive.h" />
+    <ClInclude Include="Model\RotationConstraint.h" />
+    <ClInclude Include="Model\Sprite.h" />
+    <ClInclude Include="Model\TrackToConstraint.h" />
+    <ClInclude Include="Model\TransformConstraint.h" />
+    <ClInclude Include="Model\TranslationConstraint.h" />
+    <ClInclude Include="NonOOP\HdStateMachine.h" />
+    <ClInclude Include="ObjsBuilder.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

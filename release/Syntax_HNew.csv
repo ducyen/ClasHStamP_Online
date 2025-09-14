@@ -36,7 +36,8 @@ c_struct,"typedef struct tag[nAME] {
 ","}[nAME];
 "
 i_struct,,,,,
-constructor,"/** @memberof [nAME]
+constructor,"
+/** @memberof [nAME]
  * @brief [nAME] auto-generated constructor
  */
 #define [nAME]_Init(",,"    .vTbl = &g[nAME]Vtbl,\
@@ -50,15 +51,15 @@ attr_group,"[cONTAINER]* [nAME]_Copy( [nAME]* p[nAME], const [nAME]* pSource );
 /** @class [nAME]
  * @extends [tYPE]
  */
+struct tag[nAME]{
 #define [nAME]_CLASS[->96]\
 ","    const [cONTAINER]Vtbl* const vTbl;[->96]\
     size_t cbSize;[->96]\
 ","    [cONTAINER]_CLASS[->96]\
 ","    size_t cbSize;[->96]\
 ","
-typedef struct tag[nAME]{
     [nAME]_CLASS    
-}[nAME];
+};
 "
 ctor_call,")\
     [cONTAINER]_Init( [vALUE] )\
@@ -168,11 +169,13 @@ event_decl,"typedef enum tag[nAME]Event {
 ",,"    [nAME]_EVENT_NUM
 }[nAME]_EVENT;
 const TCHAR* [nAME]Event_toString( [nAME]_EVENT value );
+BOOL [tYPE]_Start( [tYPE]* p[tYPE] );
+BOOL [tYPE]_EventProc( [tYPE]* p[tYPE], [tYPE]_EVENT nEventId, void* pEventParams );
+void [tYPE]_printTestCases( [tYPE]* p[tYPE], int eventId, void* pParams );
 "
 state_decl,"#define [sCOPE]_[nAME] [->48]( 1ULL << [vALUE] )
-","#define [sCOPE]_[nAME]_Dmy [->48]( 1ULL << [mODIFIER] )
-#define [sCOPE]_[nAME] [->48]( [sCOPE]_[nAME]_Dmy | [sCOPE]_[vALUE]", | [sCOPE]_[vALUE],"#define [sCOPE]_[nAME] [->48]( 1ULL << ( MAX_STATE_NUM - [vALUE] ) )
-"," )
+",#define [sCOPE]_[nAME] [->48]( [sCOPE]_[vALUE], | [sCOPE]_[vALUE],"/* states' declaration */
+[vALUE]"," )
 "
 state_entry,,,,,
 state_exit,,,,,
@@ -193,29 +196,35 @@ statemachine,"#define __HdStateMachine_INTERNAL__
 #include ""HdStateMachine.h""
 ","    [tYPE][mODIFIER] mainStm;[->64][dESC]
 ","    .mainStm = [tYPE]_Init(),\
-","/** @class [nAME]
+","[vALUE]/** @class [nAME]
  * @extends HdStateMachine
  */
 typedef struct tag[nAME] {
-    HdStateMachine base;
-","}[nAME];
+","    HdStateMachine* pParentStm;
+    BOOL lastEnteredStateRecovering;
+}[nAME];
 #define [nAME]_Init() {\
-    .base = { HdStateMachine_Init( [nAME]_[tYPE], [nAME]_[tYPE] ) },\
+    .pParentStm = NULL,\
+    .lastEnteredStateRecovering = FALSE,\
 [vALUE]}
 "
 default_trans,,,,,
-substm_impl,,,,,
-substm_decl,"    .[nAME][tYPE] = [tYPE]_Init(),\
-","    [tYPE][mODIFIER] [nAME][tYPE];[->64][dESC]
+substm,"    [cONTAINER] [nAME];[->64][dESC]
+","    .[nAME] = [cONTAINER]_Init(),\
 ",,,
-history,"    uint64_t n[nAME]History;
-","    .n[nAME]History = 0,\
+region,"    HdStateMachine [nAME];[->64][dESC]
+","    .[nAME] = { HdStateMachine_Init() },\
 ",,,
-junction,"#error junction@name;
-",,,#error junction@begin,#error junction@end
-api_call,"BOOL [tYPE]_EventProc( [tYPE]* p[tYPE], [tYPE]_EVENT nEventId, void* pEventParams );
-BOOL [tYPE]_Start( [tYPE]* p[tYPE] );
-",,#error XXXX,#error XXXX,#error XXXX
+state_action,,,,,
+trans_action,,,,,
+history,"    uint64_t [nAME];
+","    .[nAME] = STATE_UNDEF,\
+",,,
+deep_hist,"    uint64_t [nAME];
+","    .[nAME] = STATE_UNDEF,\
+",,,
+stm_api,,,,,
+api_call,,,#error XXXX,#error XXXX,
 friend,"#define __[nAME]_INTERNAL__
 #include ""[nAME].h""
 ","#endif//__[nAME]_H__
