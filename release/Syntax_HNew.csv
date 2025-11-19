@@ -214,7 +214,7 @@ substm,"    [cONTAINER] [nAME];[->64][dESC]
 ",,,
 region,"    HdStateMachine [nAME];[->64][dESC]
 ","    .[nAME] = { HdStateMachine_Init() },\
-",,,
+",,,[vALUE]
 state_action,,,,,
 trans_action,,,,,
 history,"    uint64_t [nAME];

@@ -132,7 +132,7 @@ statemachine,,,,"static void [sCOPE]_forEachHsmStateCombination( [tYPE]* pContex
 ",
 default_trans,,,,,
 substm,,,,,
-region,,,,,
+region,,,,,[vALUE]
 state_action,,,,,
 trans_action,,,,,
 history,,,,,

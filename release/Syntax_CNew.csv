@@ -461,7 +461,7 @@ static BOOL [cONTAINER]_EventProc( [tYPE]* p[tYPE], HdStateMachine* pStm, [tYPE]
 ","    pUsm->[nAME].pMain = pUsm;
 ","
 [->] && ( ( [sCOPE]* )pStm->pMain )->[cONTAINER].nPseudostate == [sCOPE]_[vALUE]","[->][cONTAINER]_Reset( p[tYPE], &( ( [sCOPE]* )pStm->pMain )->[mODIFIER], &( STM_RESET ){ .entryPt = [sCOPE]_[nAME] } );
-",
+",[vALUE]
 state_action,"[->]if( !( ( [sCOPE]* )pStm->pMain )->lastEnteredStateRecovering && pStm->nTargetState == [sCOPE]_[nAME] ){
 [->]    pStm->nPseudostate = [sCOPE]_[mODIFIER];
 [->]}
