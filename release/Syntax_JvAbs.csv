@@ -409,7 +409,7 @@ action,"[->][nAME]Params* e = ( [nAME]Params* )pEventParams;
 param_dir,,,,0,.
 statemachine,,"    [tYPE][mODIFIER] mainStm;[->64][dESC]
 ","    mainStm = new [tYPE]();
-","    protected class [nAME] {
+","    protected class [nAME] extends BaseStmTop {
         protected StateMachine pParentStm = null;
         protected boolean lastEnteredStateRecovering = false;
 [vALUE]/* Duc Here */
@@ -435,34 +435,34 @@ default_trans,"        boolean StateDefaultTrans( [tYPE] p[tYPE] ){
             return bResult;
         }
 "
-substm_impl,"    [cONTAINER] [nAME] = new [cONTAINER]();[->64][dESC]
+substm,"    [cONTAINER] [nAME] = new [cONTAINER]();[->64][dESC]
 ","    [nAME].Prepare( [mODIFIER] );
 ","
 [->] && ( ( [sCOPE] )pMain ).[mODIFIER].IsFinished()","[->]( ( [sCOPE] )pMain ).[mODIFIER].Reset( p[tYPE], [cONTAINER].[nAME], ( ( [sCOPE] )pMain ).lastEnteredStateRecovering );
 ","[->]( ( [sCOPE] )pMain ).pParentStm.Req( [sCOPE].[nAME] );
 "
-substm_decl,"        _[cONTAINER] [nAME] = new _[cONTAINER]();[->64][dESC]
+region,"        _[cONTAINER] [nAME] = new _[cONTAINER]();[->64][dESC]
 ","            [nAME].pMain = this;
 ","
 [->] && ( ( [sCOPE] )pMain ).[cONTAINER].nPseudostate == [sCOPE]_[vALUE]","[->]( ( [sCOPE] )pMain ).[mODIFIER].Reset( p[tYPE], [sCOPE].[nAME] );
 ","        class _[nAME] extends StateMachine {
 [vALUE]        }
 "
-history,"[->]if( !( ( [sCOPE] )pMain ).lastEnteredStateRecovering && nTargetState == [sCOPE].[nAME] ){
+state_action,"[->]if( !( ( [sCOPE] )pMain ).lastEnteredStateRecovering && nTargetState == [sCOPE].[nAME] ){
 [->]    nPseudostate = [sCOPE].[mODIFIER];
 [->]}
 ","[->]bIsExternTrans = true;
 ",[->][nAME],"[->]( ( [sCOPE] )pMain ).[mODIFIER].Reset( p[tYPE] );
 ","[->]( ( [sCOPE] )pMain ).[mODIFIER].Abort( p[tYPE] );
 "
-junction,"[->][nAME]Params* e = ( [nAME]Params* )pEventParams; // need merge from ""action"" ★
+trans_action,"[->][nAME]Params* e = ( [nAME]Params* )pEventParams; // need merge from ""action"" ★
 ",( ( [sCOPE] )pMain ).[mODIFIER].IsIn( [sCOPE].[vALUE] ),"
 [->] && HdStateMachine_IsIn( &( ( [sCOPE] )pMain ).[mODIFIER], [sCOPE].[vALUE] )","[->]BgnTrans( p[tYPE], [sCOPE].[nAME] );
 [mODIFIER][->]EndTrans( p[tYPE] );
 [->]bResult |= true;
 ","[mODIFIER][->]bResult |= true; // internal transition
 "
-api_call,"        long [nAME];
+history,"        long [nAME];
 ","            [nAME] = StateMachine.STATE_UNDEF;
 ","[->]( ( [sCOPE] )pMain ).[nAME] = [sCOPE].[vALUE];
 ","[->]if( ( ( [sCOPE] )pMain ).[nAME] != StateMachine.STATE_UNDEF ){
@@ -473,7 +473,7 @@ api_call,"        long [nAME];
 [vALUE][->]}
 ","[->]( ( [sCOPE] )pMain ).[nAME] = StateMachine.STATE_UNDEF;
 "
-friend,"        long [nAME];
+deep_hist,"        long [nAME];
 ","            [nAME] = StateMachine.STATE_UNDEF;
 ","[->]( ( [sCOPE] )pMain ).[nAME] = lastEnteredState;
 ","[->]if( ( ( [sCOPE] )pMain ).[nAME] != StateMachine.STATE_UNDEF ){
@@ -487,7 +487,7 @@ friend,"        long [nAME];
 [->]    nPseudostate = lastEnteredState;
 [->]}
 "
-visibility,"        public boolean EventProc( [tYPE] p[tYPE], EventId nEventId, EventParams pEventParams ){
+stm_api,"        public boolean EventProc( [tYPE] p[tYPE], EventId nEventId, EventParams pEventParams ){
             return [cONTAINER].EventProc( p[tYPE], nEventId, pEventParams );
         }
         public boolean StateDefaultTrans( [tYPE] p[tYPE] ){
@@ -518,3 +518,18 @@ visibility,"        public boolean EventProc( [tYPE] p[tYPE], EventId nEventId, 
 ","                bResult |= [mODIFIER][cONTAINER].StateDefaultTrans( p[tYPE] );
 ","[mODIFIER].StateDefaultTrans( p[tYPE] )
 [->]        || "
+api_call,0,,#error XXXX,#error XXXX,
+friend,,,,,
+visibility,,,protected ,public ,private 
+object,"Sprite* g_objects[] = {
+[vALUE]
+};
+Sprite* getobj( int id ){
+    return g_objects[ id ];
+}
+","
+[->]    P( { [vALUE] } )[->64]/* [nAME] */",",
+[->]    P( [vALUE] )[->64]/* [nAME] */","[->]&[tYPE]_Ctor( [->64]/* [nAME] */[vALUE]
+[->])",",
+[->]&[tYPE]_Ctor( [->64]/* [nAME] */[vALUE]
+[->])"

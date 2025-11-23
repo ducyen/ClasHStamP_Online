@@ -412,7 +412,7 @@ action,"[->][nAME]Params* e = ( [nAME]Params* )pEventParams;
 param_dir,,,,0,.
 statemachine,,"    [tYPE][mODIFIER] mainStm;[->64][dESC]
 ","    mainStm = new [tYPE]();
-","    protected class [nAME] {
+","    protected class [nAME] extends BaseStmTop {
         protected StateMachine pParentStm = null;
         protected boolean lastEnteredStateRecovering = false;
 [vALUE]/* Duc Here */
