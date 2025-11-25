@@ -213,16 +213,16 @@ state_decl,"        public static final long [nAME] [->48] = ( 1 << [vALUE] );
 state_entry,"        void EndTrans( [tYPE] p[tYPE] ){
             nCurrentState = nTargetState;
             bIsExternTrans = false;
-","            if( nCurrentState == [nAME] ) [->32]{ [nAME]_Entry( p[tYPE] ); }
-","            else if( nCurrentState == [nAME] ) [->32]{ [nAME]_Entry( p[tYPE] ); }
+","            if( nCurrentState == [sCOPE].[nAME] ) [->32]{ [nAME]_Entry( p[tYPE] ); }
+","            else if( nCurrentState == [sCOPE].[nAME] ) [->32]{ [nAME]_Entry( p[tYPE] ); }
 ","            else {}
 ","        }
 "
 state_exit,"        void BgnTrans( [tYPE] p[tYPE], long targetState ){
             nTargetState = targetState;
             nPseudostate = targetState;
-","            if( nCurrentState == [nAME] ) [->32]{ [nAME]_Exit( p[tYPE] ); }
-","            else if( nCurrentState == [nAME] ) [->32]{ [nAME]_Exit( p[tYPE] ); }
+","            if( nCurrentState == [sCOPE].[nAME] ) [->32]{ [nAME]_Exit( p[tYPE] ); }
+","            else if( nCurrentState == [sCOPE].[nAME] ) [->32]{ [nAME]_Exit( p[tYPE] ); }
 ","            else {}
 ","        }
 "
@@ -251,8 +251,8 @@ state_impl,"        public boolean Reset(  [tYPE] p[tYPE] ) {
             nLCAState = StateMachine.STATE_UNDEF;
             bHandled = false;
             wasHandled = false;
-","            if( nCurrentState == [nAME] ) [->32]{ [nAME]_EventProc( p[tYPE], nEventId, pEventParams ); }
-","            else if( nCurrentState == [nAME] ) [->32]{ [nAME]_EventProc( p[tYPE], nEventId, pEventParams ); }
+","            if( nCurrentState == [sCOPE].[nAME] ) [->32]{ [nAME]_EventProc( p[tYPE], nEventId, pEventParams ); }
+","            else if( nCurrentState == [sCOPE].[nAME] ) [->32]{ [nAME]_EventProc( p[tYPE], nEventId, pEventParams ); }
 ","            else {}
 ","            return bResult;
         }
@@ -275,9 +275,9 @@ transition,"        void [nAME]_Entry( [tYPE] p[tYPE] ){
                 nSourceState = [sCOPE].[nAME];
                 DefaultDoingAction( p[tYPE], ""[dESC]"" );
 ","                switch( nEventId ){
-                case EventId.[nAME]:{
+                case [tYPE].EventId.[nAME]:{
 ","                } break;
-                case EventId.[nAME]:{
+                case [tYPE].EventId.[nAME]:{
 ","                } break;
                 default: break;
                 }
@@ -302,9 +302,9 @@ trans_top,"        void [nAME]_Entry( [tYPE] p[tYPE] ){
 [mODIFIER]            if( !bHandled ){
                 nSourceState = [sCOPE].[nAME];
 ","                switch( nEventId ){
-                case EventId.[nAME]:{
+                case [tYPE].EventId.[nAME]:{
 ","                } break;
-                case EventId.[nAME]:{
+                case [tYPE].EventId.[nAME]:{
 ","                } break;
                 default: break;
                 }
@@ -336,15 +336,15 @@ action,"[->][nAME]Params* e = ( [nAME]Params* )pEventParams;
 param_dir,,,,0,.
 statemachine,,"    [tYPE][mODIFIER] mainStm;[->64][dESC]
 ","    mainStm = new [tYPE]();
-","    protected class [nAME] extends BaseStmTop {
+","class [nAME] extends BaseStmTop {
         protected StateMachine pParentStm = null;
         protected boolean lastEnteredStateRecovering = false;
-[vALUE]/* Duc Here */
+[vALUE]
 ","
         public void Prepare( StateMachine pParent ){
             pParentStm = pParent;
 [vALUE]        }
-    } /* [nAME] */
+} /* [nAME] */
 "
 default_trans,"        boolean StateDefaultTrans( [tYPE] p[tYPE] ){
             boolean bResult = false;
@@ -372,8 +372,8 @@ region,"        _[cONTAINER] [nAME] = new _[cONTAINER]();[->64][dESC]
 ","            [nAME].pMain = this;
 ","
 [->] && ( ( [sCOPE] )pMain ).[cONTAINER].nPseudostate == [sCOPE]_[vALUE]","[->]( ( [sCOPE] )pMain ).[mODIFIER].Reset( p[tYPE], [sCOPE].[nAME] );
-","        class _[nAME] extends StateMachine {
-[vALUE]        }
+","class _[nAME] extends StateMachine {
+[vALUE]}
 "
 state_action,"[->]if( !( ( [sCOPE] )pMain ).lastEnteredStateRecovering && nTargetState == [sCOPE].[nAME] ){
 [->]    nPseudostate = [sCOPE].[mODIFIER];
@@ -414,7 +414,7 @@ deep_hist,"        long [nAME];
 [->]    nPseudostate = lastEnteredState;
 [->]}
 "
-stm_api,"        public boolean EventProc( [tYPE] p[tYPE], EventId nEventId, EventParams pEventParams ){
+stm_api,"        public boolean EventProc( [tYPE] p[tYPE], [tYPE].EventId nEventId, EventParams pEventParams ){
             return [cONTAINER].EventProc( p[tYPE], nEventId, pEventParams );
         }
         public boolean StateDefaultTrans( [tYPE] p[tYPE] ){
